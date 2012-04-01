@@ -1,0 +1,8 @@
+service ssh
+{
+	socket_type = stream
+	user = root
+	server = @SBINDIR@/dropbear
+	server_args = -i
+	wait = no
+}

@@ -1,0 +1,30 @@
+diff -Naur linux-2.6.18-org/fs/jffs2/summary.c linux-2.6.18/fs/jffs2/summary.c
+--- linux-2.6.18-org/fs/jffs2/summary.c	2011-03-15 16:32:15.374923000 +0100
++++ linux-2.6.18/fs/jffs2/summary.c	2011-03-15 16:33:05.246923008 +0100
+@@ -37,7 +37,7 @@
+ 
+ 	memset(c->summary, 0, sizeof(struct jffs2_summary));
+ 
+-	c->summary->sum_buf = kmalloc(sum_size, GFP_KERNEL);
++	c->summary->sum_buf = vmalloc(c->sector_size);
+ 
+ 	if (!c->summary->sum_buf) {
+ 		JFFS2_WARNING("Can't allocate buffer for writing out summary information!\n");
+@@ -56,7 +56,7 @@
+ 
+ 	jffs2_sum_disable_collecting(c->summary);
+ 
+-	kfree(c->summary->sum_buf);
++	vfree(c->summary->sum_buf);
+ 	c->summary->sum_buf = NULL;
+ 
+ 	kfree(c->summary);
+@@ -667,7 +667,7 @@
+ 	int ret;
+ 	size_t retlen;
+ 
+-	if (padsize + datasize > MAX_SUMMARY_SIZE) {
++	if (0 && padsize + datasize > MAX_SUMMARY_SIZE) {
+ 		/* It won't fit in the buffer. Abort summary for this jeb */
+ 		jffs2_sum_disable_collecting(c->summary);
+ 

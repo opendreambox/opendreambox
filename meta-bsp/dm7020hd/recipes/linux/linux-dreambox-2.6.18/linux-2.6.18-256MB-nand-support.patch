@@ -1,0 +1,28 @@
+--- linux-2.6.18-old/drivers/mtd/brcmnand/bcm7xxx-nand.c	2011-02-14 16:36:11.397990373 +0100
++++ linux-2.6.18/drivers/mtd/brcmnand/bcm7xxx-nand.c	2011-03-14 13:24:34.955771000 +0100
+@@ -83,19 +83,19 @@
+ 	{
+ 		.name = "complete",
+ 		.offset = 0,
+-		.size = 64 * 1024 * 1024,
++		.size = 1024 * 1024 * 1024,
+ 	}, {
+ 		.name = "loader",
+ 		.offset = 0,
+-		.size = 256 * 1024,
++		.size = 1024 * 1024,
+ 	}, {
+ 		.name = "boot partition",
+-		.offset = 256 * 1024,
+-		.size = (4 * 1024 - 256) * 1024,
++		.offset = 1024 * 1024,
++		.size = (8 * 1024 - 1024) * 1024,
+ 	}, {
+ 		.name = "root partition",
+-		.offset = 4 * 1024 * 1024,
+-		.size = 60 * 1024 * 1024,
++		.offset = 8 * 1024 * 1024,
++		.size = 248 * 1024 * 1024,
+ 	},
+ };
+ 

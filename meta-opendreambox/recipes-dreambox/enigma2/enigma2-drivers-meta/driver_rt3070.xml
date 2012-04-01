@@ -1,0 +1,16 @@
+<default>
+	<prerequisites>
+		<tag type="System" />
+	</prerequisites>
+        <info>
+		<author>Ralink Technology</author>
+		<name>Ralink RT8070/RT3070/RT3370 USB</name>
+		<packagename>rt3070</packagename>
+		<needsRestart>Yes</needsRestart>
+		<shortdescription>RT8070/RT3070/RT3370 USB wireless-n driver</shortdescription>
+		<description>Driver for Ralink RT8070/RT3070/RT3370 based wireless-n USB devices.</description>
+	</info>
+	<files type="package"> <!-- without version, without .ipk -->
+		<file type="package" name="rt3070" />
+	</files>
+</default>

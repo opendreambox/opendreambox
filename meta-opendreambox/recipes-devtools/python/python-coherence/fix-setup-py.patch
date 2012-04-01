@@ -1,0 +1,10 @@
+--- Coherence/setup.py.orig	2012-03-15 22:02:18.563561154 +0100
++++ Coherence/setup.py	2012-03-15 22:02:33.219561014 +0100
+@@ -6,6 +6,7 @@
+ try:
+     from setuptools import setup, find_packages
+     packages = find_packages()
++    setuptools = True
+ except:
+     setuptools = None
+     from distutils.core import setup

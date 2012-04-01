@@ -1,0 +1,31 @@
+#!/bin/sh
+
+SHOWIFRAME=/usr/bin/showiframe
+
+test -x $SHOWIFRAME || exit 0
+
+case "$1" in
+  start)
+    # first boot?
+    [ -f /etc/dropbear/dropbear_rsa_host_key ] && LOGO=bootlogo || LOGO=bootlogo_wait
+    echo -n "Displaying $LOGO"
+    (
+      while [ ! -c /dev/dvb/adapter0/video0 ]; do
+        usleep 100000
+      done
+      $SHOWIFRAME /usr/share/dreambox-bootlogo/$LOGO.mvi
+    ) &
+    echo "."
+    ;;
+  stop)
+    LOGO=/usr/share/dreambox-bootlogo/switchoff.mvi
+    [ -f $LOGO ] && $SHOWIFRAME $LOGO
+    ;;
+  restart)
+    ;;
+  *)
+    echo "Usage: /etc/init.d/dreambox-bootlogo {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

@@ -1,0 +1,16 @@
+<default>
+	<prerequisites>
+		<tag type="System" />
+	</prerequisites>
+        <info>
+		<author>Realtek</author>
+		<name>Realtek r8712u</name>
+		<packagename>r8712u</packagename>
+		<needsRestart>Yes</needsRestart>
+		<shortdescription>driver for Realtek USB wireless devices</shortdescription>
+		<description>Driver for Realtek r8712u based wireless-n USB devices.</description>
+	</info>
+	<files type="package"> <!-- without version, without .ipk -->
+		<file type="package" name="r8712u" />
+	</files>
+</default>

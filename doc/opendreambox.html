@@ -1,0 +1,711 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title>opendreambox</title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<!-- html --> 
+<meta name="src" content="opendreambox.tex"> 
+<meta name="date" content="2012-03-29 16:19:00"> 
+<link rel="stylesheet" type="text/css" href="opendreambox.css"> 
+</head><body 
+>
+<div class="maketitle">
+                                                                  
+
+                                                                  
+                                                                  
+
+                                                                  
+
+<h2 class="titleHead">opendreambox</h2>
+<div class="author" ><span 
+class="cmr-12">Andreas Oberritter </span><span 
+class="cmtt-9">&#x003C;obi@opendreambox.org&#x003E;</span></div>
+<br />
+<div class="date" ><span 
+class="cmr-12">March 2012</span></div>
+</div>
+<h3 class="likesectionHead"><a 
+ id="x1-1000"></a>Contents</h3>
+<div class="tableofcontents">
+<span class="sectionToc" >1 <a 
+href="#x1-20001" id="QQ2-1-2">Introduction</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.1 <a 
+href="#x1-30001.1" id="QQ2-1-3">Target audience</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.2 <a 
+href="#x1-40001.2" id="QQ2-1-4">Supported products</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.3 <a 
+href="#x1-50001.3" id="QQ2-1-5">License</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.4 <a 
+href="#x1-60001.4" id="QQ2-1-6">Obtaining the source code</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.5 <a 
+href="#x1-70001.5" id="QQ2-1-7">Quick start</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.6 <a 
+href="#x1-80001.6" id="QQ2-1-8">Directory structure</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >1.6.1 <a 
+href="#x1-90001.6.1" id="QQ2-1-9">openembedded-core and meta-openembedded</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >1.6.2 <a 
+href="#x1-100001.6.2" id="QQ2-1-10">meta-opendreambox</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >1.6.3 <a 
+href="#x1-110001.6.3" id="QQ2-1-11">meta-bsp</a></span>
+<br /><span class="sectionToc" >2 <a 
+href="#x1-120002" id="QQ2-1-12">Prerequisites</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.1 <a 
+href="#x1-130002.1" id="QQ2-1-13">Required software</a></span>
+<br /><span class="sectionToc" >3 <a 
+href="#x1-140003" id="QQ2-1-14">Major changes since previous releases</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.1 <a 
+href="#x1-150003.1" id="QQ2-1-15">Changes since release 1.6</a></span>
+<br /><span class="sectionToc" >4 <a 
+href="#x1-160004" id="QQ2-1-16">Known Bugs</a></span>
+<br /><span class="sectionToc" >5 <a 
+href="#x1-170005" id="QQ2-1-17">Building OpenDreambox</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.1 <a 
+href="#x1-180005.1" id="QQ2-1-18">Makefile targets</a></span>
+                                                                  
+
+                                                                  
+<br />&#x00A0;<span class="subsectionToc" >5.2 <a 
+href="#x1-190005.2" id="QQ2-1-19">Configuration variables</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >5.2.1 <a 
+href="#x1-200005.2.1" id="QQ2-1-20">BB_NUMBER_THREADS</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >5.2.2 <a 
+href="#x1-210005.2.2" id="QQ2-1-21">MACHINE</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >5.2.3 <a 
+href="#x1-220005.2.3" id="QQ2-1-22">PARALLEL_MAKE</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >5.2.4 <a 
+href="#x1-230005.2.4" id="QQ2-1-23">RM_WORK</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.3 <a 
+href="#x1-240005.3" id="QQ2-1-24">Adding custom layers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.4 <a 
+href="#x1-250005.4" id="QQ2-1-25">Adding custom options</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.5 <a 
+href="#x1-260005.5" id="QQ2-1-26">Setting up a build directory</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.6 <a 
+href="#x1-270005.6" id="QQ2-1-27">Building a firmware image</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.7 <a 
+href="#x1-280005.7" id="QQ2-1-28">Building a package</a></span>
+<br /><span class="sectionToc" >6 <a 
+href="#x1-290006" id="QQ2-1-29">Development hints</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.1 <a 
+href="#x1-300006.1" id="QQ2-1-30">Cross-compilation of external software</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.2 <a 
+href="#x1-310006.2" id="QQ2-1-31">Coding style</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.3 <a 
+href="#x1-320006.3" id="QQ2-1-32">Package architecture</a></span>
+<br /><span class="sectionToc" >7 <a 
+href="#x1-330007" id="QQ2-1-33">Bug reports and patches</a></span>
+</div>
+                                                                  
+
+                                                                  
+<!--l. 54--><p class="noindent" >
+<h3 class="sectionHead"><span class="titlemark">1   </span> <a 
+ id="x1-20001"></a>Introduction</h3>
+<div class="flushleft" 
+>
+<!--l. 55--><p class="noindent" >
+ This document describes the OpenDreambox distribution, an embedded Linux
+distribution for Set-Top-Boxes manufactured by <a 
+href="http://www.dream-multimedia-tv.de/" >Dream Multimedia GmbH</a>.
+<!--l. 59--><p class="noindent" >OpenDreambox is based on <a 
+href="http://www.openembedded.org/" >OpenEmbedded</a> build framework, which uses
+<a 
+href="http://bitbake.berlios.de/" >BitBake</a> to transform build instructions into distributable firmare images and
+software packages.</div>
+<!--l. 64--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.1   </span> <a 
+ id="x1-30001.1"></a>Target audience</h4>
+<div class="flushleft" 
+>
+<!--l. 65--><p class="noindent" >
+ Developers familiar with previous versions of OpenDreambox or
+OpenEmbedded in general.</div>
+<!--l. 70--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.2   </span> <a 
+ id="x1-40001.2"></a>Supported products</h4>
+<div class="flushleft" 
+>
+<!--l. 72--><p class="noindent" >
+ The current version includes support for the following machines:
+<div class="tabular"> <table id="TBL-2" class="tabular" 
+cellspacing="0" cellpadding="0" rules="groups" 
+><colgroup id="TBL-2-1g"><col 
+id="TBL-2-1"></colgroup><colgroup id="TBL-2-2g"><col 
+id="TBL-2-2"></colgroup><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-1-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-1-1"  
+class="td11"><span 
+class="cmbx-10">Product name  </span></td><td  style="white-space:nowrap; text-align:left;" id="TBL-2-1-2"  
+class="td11"><span 
+class="cmbx-10">Environment variable</span></td></tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-2-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-2-1"  
+class="td11"> </td><td  style="white-space:nowrap; text-align:left;" id="TBL-2-2-2"  
+class="td11"></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-3-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-3-1"  
+class="td11">DM 500 HD         </td><td  style="white-space:nowrap; text-align:left;" id="TBL-2-3-2"  
+class="td11"><span 
+class="cmtt-9">MACHINE=dm500hd        </span></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-4-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-4-1"  
+class="td11">DM 800 HD PVR  </td><td  style="white-space:nowrap; text-align:left;" id="TBL-2-4-2"  
+class="td11"><span 
+class="cmtt-9">MACHINE=dm800          </span></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-5-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-5-1"  
+class="td11">DM 800 HD SE    </td><td  style="white-space:nowrap; text-align:left;" id="TBL-2-5-2"  
+class="td11"><span 
+class="cmtt-9">MACHINE=dm800se        </span></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-6-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-6-1"  
+class="td11">DM 7020 HD       </td><td  style="white-space:nowrap; text-align:left;" id="TBL-2-6-2"  
+class="td11"><span 
+class="cmtt-9">MACHINE=dm7020hd       </span></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-7-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-7-1"  
+class="td11">DM 8000 HD PVR</td><td  style="white-space:nowrap; text-align:left;" id="TBL-2-7-2"  
+class="td11"><span 
+class="cmtt-9">MACHINE=dm8000         </span></td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-8-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-8-1"  
+class="td11">                </td><td  style="white-space:nowrap; text-align:left;" id="TBL-2-8-2"  
+class="td11">                     </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-9-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-9-1"  
+class="td11">                </td>
+</tr></table></div></div>
+                                                                  
+
+                                                                  
+<!--l. 89--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.3   </span> <a 
+ id="x1-50001.3"></a>License</h4>
+                                                                  
+
+                                                                  
+<div class="verbatim" id="verbatim-1">
+Copyright&#x00A0;(c)&#x00A0;2010-2012&#x00A0;Dream&#x00A0;Multimedia&#x00A0;GmbH,&#x00A0;Germany
+&#x00A0;<br />&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;http://www.dream-multimedia-tv.de/
+&#x00A0;<br />Authors:
+&#x00A0;<br />&#x00A0;&#x00A0;Andreas&#x00A0;Frisch&#x00A0;&#x003C;fraxinas@opendreambox.org&#x003E;
+&#x00A0;<br />&#x00A0;&#x00A0;Andreas&#x00A0;Monzner&#x00A0;&#x003C;ghost@opendreambox.org&#x003E;
+&#x00A0;<br />&#x00A0;&#x00A0;Andreas&#x00A0;Oberritter&#x00A0;&#x003C;obi@opendreambox.org&#x003E;
+&#x00A0;<br />&#x00A0;&#x00A0;Mladen&#x00A0;Horvat&#x00A0;&#x003C;acid-burn@opendreambox.org&#x003E;
+&#x00A0;<br />&#x00A0;&#x00A0;Stefan&#x00A0;Pluecken&#x00A0;&#x003C;thedoc@opendreambox.org&#x003E;
+&#x00A0;<br />&#x00A0;&#x00A0;Stephan&#x00A0;Reichholf&#x00A0;&#x003C;reichi@opendreambox.org&#x003E;
+&#x00A0;<br />
+&#x00A0;<br />Permission&#x00A0;is&#x00A0;hereby&#x00A0;granted,&#x00A0;free&#x00A0;of&#x00A0;charge,&#x00A0;to&#x00A0;any&#x00A0;person&#x00A0;obtaining&#x00A0;a&#x00A0;copy
+&#x00A0;<br />of&#x00A0;this&#x00A0;software&#x00A0;and&#x00A0;associated&#x00A0;documentation&#x00A0;files&#x00A0;(the&#x00A0;"Software"),&#x00A0;to&#x00A0;deal
+&#x00A0;<br />in&#x00A0;the&#x00A0;Software&#x00A0;without&#x00A0;restriction,&#x00A0;including&#x00A0;without&#x00A0;limitation&#x00A0;the&#x00A0;rights
+&#x00A0;<br />to&#x00A0;use,&#x00A0;copy,&#x00A0;modify,&#x00A0;merge,&#x00A0;publish,&#x00A0;distribute,&#x00A0;sublicense,&#x00A0;and/or&#x00A0;sell
+&#x00A0;<br />copies&#x00A0;of&#x00A0;the&#x00A0;Software,&#x00A0;and&#x00A0;to&#x00A0;permit&#x00A0;persons&#x00A0;to&#x00A0;whom&#x00A0;the&#x00A0;Software&#x00A0;is
+&#x00A0;<br />furnished&#x00A0;to&#x00A0;do&#x00A0;so,&#x00A0;subject&#x00A0;to&#x00A0;the&#x00A0;following&#x00A0;conditions:
+&#x00A0;<br />
+&#x00A0;<br />The&#x00A0;above&#x00A0;copyright&#x00A0;notice&#x00A0;and&#x00A0;this&#x00A0;permission&#x00A0;notice&#x00A0;shall&#x00A0;be&#x00A0;included&#x00A0;in
+&#x00A0;<br />all&#x00A0;copies&#x00A0;or&#x00A0;substantial&#x00A0;portions&#x00A0;of&#x00A0;the&#x00A0;Software.
+&#x00A0;<br />
+&#x00A0;<br />THE&#x00A0;SOFTWARE&#x00A0;IS&#x00A0;PROVIDED&#x00A0;"AS&#x00A0;IS",&#x00A0;WITHOUT&#x00A0;WARRANTY&#x00A0;OF&#x00A0;ANY&#x00A0;KIND,&#x00A0;EXPRESS&#x00A0;OR
+&#x00A0;<br />IMPLIED,&#x00A0;INCLUDING&#x00A0;BUT&#x00A0;NOT&#x00A0;LIMITED&#x00A0;TO&#x00A0;THE&#x00A0;WARRANTIES&#x00A0;OF&#x00A0;MERCHANTABILITY,
+&#x00A0;<br />FITNESS&#x00A0;FOR&#x00A0;A&#x00A0;PARTICULAR&#x00A0;PURPOSE&#x00A0;AND&#x00A0;NONINFRINGEMENT.&#x00A0;IN&#x00A0;NO&#x00A0;EVENT&#x00A0;SHALL&#x00A0;THE
+&#x00A0;<br />AUTHORS&#x00A0;OR&#x00A0;COPYRIGHT&#x00A0;HOLDERS&#x00A0;BE&#x00A0;LIABLE&#x00A0;FOR&#x00A0;ANY&#x00A0;CLAIM,&#x00A0;DAMAGES&#x00A0;OR&#x00A0;OTHER
+&#x00A0;<br />LIABILITY,&#x00A0;WHETHER&#x00A0;IN&#x00A0;AN&#x00A0;ACTION&#x00A0;OF&#x00A0;CONTRACT,&#x00A0;TORT&#x00A0;OR&#x00A0;OTHERWISE,&#x00A0;ARISING&#x00A0;FROM,
+&#x00A0;<br />OUT&#x00A0;OF&#x00A0;OR&#x00A0;IN&#x00A0;CONNECTION&#x00A0;WITH&#x00A0;THE&#x00A0;SOFTWARE&#x00A0;OR&#x00A0;THE&#x00A0;USE&#x00A0;OR&#x00A0;OTHER&#x00A0;DEALINGS&#x00A0;IN
+&#x00A0;<br />THE&#x00A0;SOFTWARE.
+&#x00A0;<br />&#x00A0;&#x00A0;&#x00A0;&#x00A0;</div>
+<!--l. 119--><p class="nopar" >
+<!--l. 121--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.4   </span> <a 
+ id="x1-60001.4"></a>Obtaining the source code</h4>
+<!--l. 122--><p class="noindent" >OpenDreambox uses the Git version control system. To obtain the source code, it is
+required to install Git. See <a 
+href="http://git-scm.com/" class="url" ><span 
+class="cmtt-10">http://git-scm.com/</span></a>.
+<!--l. 125--><p class="noindent" >To initially download the source into the current directory, issue the following
+command:
+<!--l. 128--><p class="noindent" ><span 
+class="cmtt-9">git clone git://git.opendreambox.org/git/opendreambox.git</span>
+                                                                  
+
+                                                                  
+<!--l. 130--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.5   </span> <a 
+ id="x1-70001.5"></a>Quick start</h4>
+<!--l. 131--><p class="noindent" >For the impatient:
+<!--l. 133--><p class="noindent" ><span 
+class="cmtt-9">make -C opendreambox image</span>
+<!--l. 135--><p class="noindent" >If this command fails, prerequisites my be missing. See section <a 
+href="#x1-120002">2<!--tex4ht:ref: prerequisites --></a>.
+<!--l. 137--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">1.6   </span> <a 
+ id="x1-80001.6"></a>Directory structure</h4>
+<!--l. 138--><p class="noindent" >OpenDreambox consists of a set of layers containing build instructions. This meta
+data is used by BitBake to download and compile source code and to assemble
+installable software packages and firmware images.
+<!--l. 142--><p class="noindent" >Currently, there are five layers, ordered by priority from lowest to highest:
+     <ul class="itemize1">
+     <li class="itemize"><span 
+class="cmtt-9">openembedded-core</span>
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">meta-openembedded</span>
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">meta-opendreambox</span>
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">meta-bsp/common</span>
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">meta-bsp/$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmsy-9">}</span></li></ul>
+<!--l. 153--><p class="noindent" >If a recipe for the same package exists in multiple layers, then the higher priority
+layer takes precedence over the lower priority layer.
+<!--l. 157--><p class="noindent" >For example, <span 
+class="cmtt-9">libmad</span><span 
+class="cmtt-9">_0.15.1b.bb </span>exists in both <span 
+class="cmtt-9">meta-openembedded </span>and
+<span 
+class="cmtt-9">openembedded-core</span>. The recipe in <span 
+class="cmtt-9">meta-openembedded </span>will be used, because
+<span 
+class="cmtt-9">openembedded-core </span>has lower priority.
+<!--l. 162--><p class="noindent" ><span 
+class="cmbx-10">NOTE: </span>This would still be true even if the version of <span 
+class="cmtt-9">libmad </span>in <span 
+class="cmtt-9">openembeded-core</span>
+was higher than the version in <span 
+class="cmtt-9">meta-openembedded</span>, unless <span 
+class="cmtt-9">PREFERRED</span><span 
+class="cmtt-9">_VERSION</span><span 
+class="cmtt-9">_libmad</span>
+was set to the version in <span 
+class="cmtt-9">openembedded-core</span>. There is currently no way to prefer a
+version of a lower priority layer, if the same version is present in a higher priority
+layer.
+<!--l. 168--><p class="noindent" >
+<h5 class="subsubsectionHead"><span class="titlemark">1.6.1   </span> <a 
+ id="x1-90001.6.1"></a>openembedded-core and meta-openembedded</h5>
+                                                                  
+
+                                                                  
+<!--l. 169--><p class="noindent" >These directories contain copies of Git repositories from git.openembedded.org,
+including the OpenEmbedded Core layer (&#8221;meta&#8221;) and the OpenEmbedded layer
+(&#8221;meta-oe&#8221;). They get created automatically when building the distribution for the
+first time.
+<!--l. 173--><p class="noindent" >Throughout this document, the combination of these directories will be referred to as
+OpenEmbedded.
+<!--l. 176--><p class="noindent" >
+<h5 class="subsubsectionHead"><span class="titlemark">1.6.2   </span> <a 
+ id="x1-100001.6.2"></a>meta-opendreambox</h5>
+<!--l. 177--><p class="noindent" >This directory contains:
+     <ul class="itemize1">
+     <li class="itemize">Recipes   for   packages   written   specifically   for   the   OpenDreambox
+     distribution
+     </li>
+     <li class="itemize">Modifications to recipes from OpenEmbedded
+     </li>
+     <li class="itemize">Recipes   for   software   versions   older   than   those   available   from
+     OpenEmbedded
+     </li>
+     <li class="itemize">Recipes   for   software   versions   newer   than   those   available   from
+     OpenEmbedded</li></ul>
+<!--l. 186--><p class="noindent" >
+<h5 class="subsubsectionHead"><span class="titlemark">1.6.3   </span> <a 
+ id="x1-110001.6.3"></a>meta-bsp</h5>
+<!--l. 187--><p class="noindent" >The directory <span 
+class="cmtt-9">meta-bsp </span>contains Board Support Packages (BSP) for the supported
+Dreambox models. This includes:
+     <ul class="itemize1">
+     <li class="itemize">Hardware drivers
+     </li>
+     <li class="itemize">Machine specific overrides
+     </li>
+     <li class="itemize">The Linux kernel
+     </li>
+     <li class="itemize">The boot loader
+                                                                  
+
+                                                                  
+     </li>
+     <li class="itemize">Splash images</li></ul>
+<!--l. 198--><p class="noindent" >
+<h3 class="sectionHead"><span class="titlemark">2   </span> <a 
+ id="x1-120002"></a>Prerequisites</h3>
+<!--l. 201--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">2.1   </span> <a 
+ id="x1-130002.1"></a>Required software</h4>
+<!--l. 203--><p class="noindent" >The OpenEmbedded project provides a general list of prerequisites for many Linux
+distributions and also for some other operating systems.
+     <ul class="itemize1">
+     <li class="itemize"><a 
+href="http://www.openembedded.org/index.php/OEandYourDistro" class="url" ><span 
+class="cmtt-10">http://www.openembedded.org/index.php/OEandYourDistro</span></a>
+     </li>
+     <li class="itemize"><a 
+href="http://www.openembedded.org/index.php/Required\_software" class="url" ><span 
+class="cmtt-10">http://www.openembedded.org/index.php/Required\_software</span></a></li></ul>
+<!--l. 211--><p class="noindent" >It is highly recommended to use Linux to build OpenDreambox. In theory, any recent
+distribution will do, but not many distributions have been verified to build
+OpenDreambox without errors. Tested distributions include:
+     <ul class="itemize1">
+     <li class="itemize">Debian &#8221;squeeze&#8221; 6.0 (i386)
+     </li>
+     <li class="itemize">Debian &#8221;wheezy&#8221; (i386)
+     </li>
+     <li class="itemize">Ubuntu &#8221;oneiric&#8221; 11.10 (amd64)</li></ul>
+<!--l. 221--><p class="noindent" >Distributions known to cause problems:
+     <ul class="itemize1">
+     <li class="itemize">Arch  Linux:  make  3.82  causes  build  failures  for  some  packages.  Try
+     downgrading to make 3.81.
+     </li>
+     <li class="itemize">Ubuntu &#8221;lucid&#8221; 10.04 LTS (i386): The dynamic linker crashes frequently,
+     interrupting the build process.</li></ul>
+<!--l. 230--><p class="noindent" >Distributions known not to work:
+                                                                  
+
+                                                                  
+     <ul class="itemize1">
+     <li class="itemize">Debian &#8221;lenny&#8221; 5.0: Comes with Python 2.5, which is too old.</li></ul>
+                                                                  
+
+                                                                  
+<!--l. 238--><p class="noindent" >
+<h3 class="sectionHead"><span class="titlemark">3   </span> <a 
+ id="x1-140003"></a>Major changes since previous releases</h3>
+<!--l. 240--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">3.1   </span> <a 
+ id="x1-150003.1"></a>Changes since release 1.6</h4>
+     <ul class="itemize1">
+     <li class="itemize">Recipes were split across multiple layers and categorized.
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">env.source  </span>has   been   replaced   by   two   files,   <span 
+class="cmtt-9">bitbake.env  </span>and
+     <span 
+class="cmtt-9">cross-compile.env</span>. The former sets a minimal environment that is needed
+     to execute bitbake. The latter creates machine-specific command aliases,
+     in order to compile external software.
+     </li>
+     <li class="itemize">All machines share a common <span 
+class="cmtt-9">tmp </span>directory.
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmsy-9">}</span><span 
+class="cmtt-9">/build </span>directories were renamed to <span 
+class="cmtt-9">build/$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmsy-9">}</span>.
+     </li>
+     <li class="itemize">Kernel packages were renamed from <span 
+class="cmtt-9">linux-$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmsy-9">} </span>to <span 
+class="cmtt-9">linux-dreambox</span>.
+     </li>
+     <li class="itemize">Support for machines based on ATI Xilleon or IBM STB was dropped.</li></ul>
+<!--l. 253--><p class="noindent" >
+<h3 class="sectionHead"><span class="titlemark">4   </span> <a 
+ id="x1-160004"></a>Known Bugs</h3>
+<!--l. 255--><p class="noindent" >None.
+                                                                  
+
+                                                                  
+<!--l. 259--><p class="noindent" >
+<h3 class="sectionHead"><span class="titlemark">5   </span> <a 
+ id="x1-170005"></a>Building OpenDreambox</h3>
+<!--l. 261--><p class="noindent" >In the top level directory, there is a <span 
+class="cmtt-9">Makefile</span>, which is used to set up build
+directories and to fetch or update all used repositories. The Makefile can
+be influenced by environment variables, either by specifing them on the
+command-line or by storing them in a file called <span 
+class="cmtt-9">conf/make.conf</span>. It is not
+recommended to edit the <span 
+class="cmtt-9">Makefile </span>directly in order to avoid conflicts with future
+updates.
+<!--l. 268--><p class="noindent" >When the <span 
+class="cmtt-9">Makefile </span>is run for the first time, the following steps will be executed:
+     <ul class="itemize1">
+     <li class="itemize">Creation of configuration files
+         <ul class="itemize2">
+         <li class="itemize"><span 
+class="cmtt-9">bitbake.env</span>
+         </li>
+         <li class="itemize"><span 
+class="cmtt-9">conf/opendreambox.conf</span>
+         </li>
+         <li class="itemize"><span 
+class="cmtt-9">build/$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmsy-9">}</span><span 
+class="cmtt-9">/conf/bblayers.conf</span>
+         </li>
+         <li class="itemize"><span 
+class="cmtt-9">build/$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmsy-9">}</span><span 
+class="cmtt-9">/conf/local.conf</span></li></ul>
+     </li>
+     <li class="itemize">Update or checkout of Git repositories
+         <ul class="itemize2">
+         <li class="itemize">OpenDreambox
+         </li>
+         <li class="itemize">BitBake
+         </li>
+         <li class="itemize">OpenEmbedded</li></ul>
+     </li></ul>
+<!--l. 287--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">5.1   </span> <a 
+ id="x1-180005.1"></a>Makefile targets</h4>
+<!--l. 288--><p class="noindent" >Run <span 
+class="cmtt-9">make help </span>to get a list of targets of the top level Makefile, together with a brief
+description.
+                                                                  
+
+                                                                  
+<!--l. 290--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">5.2   </span> <a 
+ id="x1-190005.2"></a>Configuration variables</h4>
+<!--l. 291--><p class="noindent" >
+<h5 class="subsubsectionHead"><span class="titlemark">5.2.1   </span> <a 
+ id="x1-200005.2.1"></a>BB_NUMBER_THREADS</h5>
+<!--l. 292--><p class="noindent" >Controls how many BitBake tasks may run at a time. Defaults to the number of cores
+available on the build system. The number of cores is obtained from <span 
+class="cmtt-9">/proc/cpuinfo</span>. If
+this file is unavailable, the default value is 1.
+<!--l. 297--><p class="noindent" >
+<h5 class="subsubsectionHead"><span class="titlemark">5.2.2   </span> <a 
+ id="x1-210005.2.2"></a>MACHINE</h5>
+<!--l. 298--><p class="noindent" >Controls the target machine to build packages for. See section <a 
+href="#x1-40001.2">1.2<!--tex4ht:ref: products --></a> for a list of
+supported products.
+<!--l. 301--><p class="noindent" >
+<h5 class="subsubsectionHead"><span class="titlemark">5.2.3   </span> <a 
+ id="x1-220005.2.3"></a>PARALLEL_MAKE</h5>
+<!--l. 302--><p class="noindent" >Controls how many processes per recipe <span 
+class="cmtt-9">make </span>may use. Defaults to the number of
+cores available on the build system. The number of cores is obtained from
+<span 
+class="cmtt-9">/proc/cpuinfo</span>. If this file is unavailable, the default value is 1.
+<!--l. 307--><p class="noindent" >Don&#8217;t increase this option unless you know what you&#8217;re doing.
+<!--l. 309--><p class="noindent" >
+<h5 class="subsubsectionHead"><span class="titlemark">5.2.4   </span> <a 
+ id="x1-230005.2.4"></a>RM_WORK</h5>
+<!--l. 310--><p class="noindent" >Controls whether the temporary work directory of each package may be cleaned
+automatically after the respective package has been built successfully. Valid values
+are <span 
+class="cmtt-9">yes </span>(default) and <span 
+class="cmtt-9">no</span>.
+<!--l. 314--><p class="noindent" >If set to <span 
+class="cmtt-9">yes</span>, only log files will be preserved. Setting <span 
+class="cmtt-9">RM</span><span 
+class="cmtt-9">_WORK </span>to <span 
+class="cmtt-9">no </span>may be useful to
+debug packaging errors.
+                                                                  
+
+                                                                  
+<!--l. 317--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">5.3   </span> <a 
+ id="x1-240005.3"></a>Adding custom layers</h4>
+<!--l. 319--><p class="noindent" >It is possible to add custom layers to the configuration. This can be done globally
+and per machine. To add a layer globally, edit <span 
+class="cmtt-9">conf/bblayers-ext.conf</span>. To add a
+machine-specific layer, edit <span 
+class="cmtt-9">conf/bblayers-$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmsy-9">}</span><span 
+class="cmtt-9">-ext.conf</span>. Assuming that an
+additional layer is available at <span 
+class="cmtt-9">/home/username/custom-layer</span>, the entry to add to the
+file will look like this:
+<!--l. 325--><p class="noindent" ><span 
+class="cmtt-9">BBLAYERS =+ "/home/username/custom-layer"</span>
+<!--l. 327--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">5.4   </span> <a 
+ id="x1-250005.4"></a>Adding custom options</h4>
+<!--l. 328--><p class="noindent" >It is possible to tweak a lot more options than those used by the <span 
+class="cmtt-9">Makefile </span>by editing
+<span 
+class="cmtt-9">conf/local-ext.conf </span>or <span 
+class="cmtt-9">conf/local-$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmsy-9">}</span><span 
+class="cmtt-9">-ext.conf</span>.
+<!--l. 331--><p class="noindent" >For example, if the firmware shall use the package feed built on the develoment
+machine, which happens to be 192.168.1.1 and has a webserver configured to point to
+<span 
+class="cmtt-9">tmp/deploy/ipk</span>, a line like the following may be added:
+<!--l. 335--><p class="noindent" ><span 
+class="cmtt-9">DISTRO</span><span 
+class="cmtt-9">_FEED</span><span 
+class="cmtt-9">_URI = "http://192.168.1.1/$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">DISTRO</span><span 
+class="cmsy-9">}</span><span 
+class="cmtt-9">/$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">DISTRO</span><span 
+class="cmtt-9">_VERSION</span><span 
+class="cmsy-9">}</span><span 
+class="cmtt-9">"</span>
+<!--l. 337--><p class="noindent" >In general, any variable in OpenEmbedded that uses weak assignment (<span 
+class="cmtt-9">?=</span>) may be
+overridden from those files.
+<!--l. 340--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">5.5   </span> <a 
+ id="x1-260005.5"></a>Setting up a build directory</h4>
+<!--l. 341--><p class="noindent" >To set up a build directory for e.g. <span 
+class="cmbx-10">DM 500 HD </span>run <span 
+class="cmtt-9">make MACHINE=dm500hd</span>. If
+<span 
+class="cmtt-9">MACHINE=dm500hd </span>has been set in <span 
+class="cmtt-9">conf/make.conf</span>, you can simply run <span 
+class="cmtt-9">make </span>with no
+arguments instead. This will create and initialize the directory <span 
+class="cmtt-9">build/dm500hd</span>.
+<!--l. 345--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">5.6   </span> <a 
+ id="x1-270005.6"></a>Building a firmware image</h4>
+<!--l. 346--><p class="noindent" >To build a firmware image for e.g. <span 
+class="cmbx-10">DM 500 HD </span>run <span 
+class="cmtt-9">make MACHINE=dm500hd image</span>. If
+<span 
+class="cmtt-9">MACHINE=dm500hd </span>has been set in <span 
+class="cmtt-9">conf/make.conf</span>, you can simply run <span 
+class="cmtt-9">make image</span>
+instead.
+                                                                  
+
+                                                                  
+<!--l. 350--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">5.7   </span> <a 
+ id="x1-280005.7"></a>Building a package</h4>
+<!--l. 351--><p class="noindent" >To build a single package, BitBake has to be used directly. First, the environment has
+to be set up, in order to make BitBake available to the shell. This can be done with
+the following command:
+<!--l. 355--><p class="noindent" ><span 
+class="cmtt-9">source bitbake.env</span>
+<!--l. 357--><p class="noindent" >BitBake must be run from the machine&#8217;s build directory. For <span 
+class="cmbx-10">DM 500 HD</span>
+run:
+<!--l. 359--><p class="noindent" ><span 
+class="cmtt-9">cd build/dm500hd</span>
+<!--l. 361--><p class="noindent" >In order to build enigma2, run:
+<!--l. 363--><p class="noindent" ><span 
+class="cmtt-9">bitbake enigma2</span>.
+<!--l. 365--><p class="noindent" >
+<h3 class="sectionHead"><span class="titlemark">6   </span> <a 
+ id="x1-290006"></a>Development hints</h3>
+<!--l. 367--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">6.1   </span> <a 
+ id="x1-300006.1"></a>Cross-compilation of external software</h4>
+<!--l. 368--><p class="noindent" >OpenDreambox provides a script called <span 
+class="cmtt-9">cross-compile.env</span>. Once run, the script will
+create the following commands (shell aliases), aiming to ease cross-compilation of
+external source trees:
+     <ul class="itemize1">
+     <li class="itemize"><span 
+class="cmtt-9">oe</span><span 
+class="cmtt-9">_autoreconf </span>- Calls OE&#8217;s version of <span 
+class="cmtt-9">autoreconf</span>. Useful for projects based
+     on GNU autotools.
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">oe</span><span 
+class="cmtt-9">_runconf </span>- Calls <span 
+class="cmtt-9">./configure </span>with parameters suitable for OE. Useful
+     for projects based on GNU autotools.
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">oe</span><span 
+class="cmtt-9">_runmake </span>-  Calls  <span 
+class="cmtt-9">make </span>with  parameters  suitable  for  OE.  Useful  for
+     projects based on GNU autotools or GNU make.
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">oe</span><span 
+class="cmtt-9">_env </span>- Useful to execute arbitrary commands in the OE environment
+     (e.g. <span 
+class="cmtt-9">oe</span><span 
+class="cmtt-9">_env env</span>).
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">oe</span><span 
+class="cmtt-9">_setenv </span>- Exports the OE environment to the currently running shell
+     session.</li></ul>
+                                                                  
+
+                                                                  
+<!--l. 379--><p class="noindent" >The script needs to know the target machine, which can be one of the supported
+products (see <a 
+href="#x1-40001.2">1.2<!--tex4ht:ref: products --></a>). Because the script adds aliases to your currently running shell
+session, it has to be invoked using <span 
+class="cmtt-9">source </span>or <span 
+class="cmtt-9">. </span>(the dot operator), e.g.:
+<!--l. 382--><p class="noindent" ><span 
+class="cmtt-9">source cross-compile.env dm7020hd</span>
+<!--l. 384--><p class="noindent" >The script may be called from any location, but must reside inside the OpenDreambox
+Git tree. You may want to create a symlink to <span 
+class="cmtt-9">cross-compile.env </span>somewhere in your
+<span 
+class="cmtt-9">PATH</span>.
+<!--l. 387--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">6.2   </span> <a 
+ id="x1-310006.2"></a>Coding style</h4>
+<!--l. 388--><p class="noindent" >Run <span 
+class="cmtt-9">scripts/do</span><span 
+class="cmtt-9">_stylize.sh </span>on new recipes to ensure proper coding style.
+<!--l. 390--><p class="noindent" >
+<h4 class="subsectionHead"><span class="titlemark">6.3   </span> <a 
+ id="x1-320006.3"></a>Package architecture</h4>
+<!--l. 391--><p class="noindent" >Set <span 
+class="cmtt-9">PACKAGE</span><span 
+class="cmtt-9">_ARCH = "$</span><span 
+class="cmsy-9">{</span><span 
+class="cmtt-9">MACHINE</span><span 
+class="cmtt-9">_ARCH</span><span 
+class="cmsy-9">}</span><span 
+class="cmtt-9">" </span>if either condition is met:
+     <ul class="itemize1">
+     <li class="itemize">The     recipe     uses     <span 
+class="cmtt-9">COMBINED</span><span 
+class="cmtt-9">_FEATURES</span>,     <span 
+class="cmtt-9">MACHINE</span><span 
+class="cmtt-9">_FEATURES    </span>or
+     <span 
+class="cmtt-9">DREAMBOX</span><span 
+class="cmtt-9">_FEATURES</span>.
+     </li>
+     <li class="itemize">The recipe is part of <span 
+class="cmtt-9">meta-bsp</span>.</li></ul>
+<!--l. 397--><p class="noindent" >
+<h3 class="sectionHead"><span class="titlemark">7   </span> <a 
+ id="x1-330007"></a>Bug reports and patches</h3>
+<!--l. 399--><p class="noindent" >Please send bug reports and patches to the Enigma2 development mailing list
+<span 
+class="cmtt-9">&#x003C;enigma2-devel@lists.elitedvb.net&#x003E;</span>.
+<!--l. 401--><p class="noindent" >A comfortable way to create patches is to use <span 
+class="cmtt-9">git format-patch</span>, after all changes
+have been committed to your local copy of the repository.
+ 
+</body></html> 
+
+                                                                  
+
+

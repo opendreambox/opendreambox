@@ -1,0 +1,404 @@
+%
+% Copyright (c) 2010-2011 Dream Multimedia GmbH, Germany
+%                         http://www.dream-multimedia-tv.de/
+% Authors:
+%   Andreas Oberritter <obi@opendreambox.org>
+%
+% Permission is hereby granted, free of charge, to any person obtaining a copy
+% of this software and associated documentation files (the "Software"), to deal
+% in the Software without restriction, including without limitation the rights
+% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+%
+% The above copyright notice and this permission notice shall be included in
+% all copies or substantial portions of the Software.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+% THE SOFTWARE.
+%
+
+\documentclass[a4paper]{article}
+\usepackage{alltt}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{parskip}
+\hypersetup{
+    colorlinks,%
+    citecolor=black,%
+    filecolor=black,%
+    linkcolor=black,%
+    urlcolor=black
+}
+%\setlength{\textwidth}{12cm}
+
+\newcommand{\plaintext}[1]{\texttt{\small #1}}
+\newcommand{\shell}[1]{\texttt{\small #1}}
+
+\begin{document}
+\title{opendreambox}
+\author{Andreas Oberritter \shell{<obi@opendreambox.org>}}
+\date{March 2012}
+\maketitle
+%\thispagestyle{empty}
+%\pagestyle{empty}
+\tableofcontents
+\pagebreak
+
+\section{Introduction}
+  \begin{flushleft}
+    This document describes the OpenDreambox distribution, an embedded Linux
+    distribution for Set-Top-Boxes manufactured by \href{http://www.dream-multimedia-tv.de/}{Dream Multimedia GmbH}.
+
+    OpenDreambox is based on \href{http://www.openembedded.org/}{OpenEmbedded} build framework, which
+    uses \href{http://bitbake.berlios.de/}{BitBake} to transform build instructions into
+    distributable firmare images and software packages.
+  \end{flushleft}
+
+  \subsection{Target audience}
+    \begin{flushleft}
+      Developers familiar with previous versions of OpenDreambox or OpenEmbedded
+      in general.
+    \end{flushleft}
+
+  \subsection{Supported products}
+    \label{products}
+    \begin{flushleft}
+      The current version includes support for the following machines:
+
+        \begin{tabular}{ | l | l | }
+          \hline
+          \textbf{Product name} & \textbf{Environment variable} \\ \hline
+          & \\
+          DM 500 HD & \shell{MACHINE=dm500hd} \\
+          DM 800 HD PVR & \shell{MACHINE=dm800} \\
+          DM 800 HD SE & \shell{MACHINE=dm800se} \\
+          DM 7020 HD & \shell{MACHINE=dm7020hd} \\
+          DM 8000 HD PVR & \shell{MACHINE=dm8000} \\
+          & \\
+          \hline
+        \end{tabular}
+    \end{flushleft}
+
+  \subsection{License}
+
+    \begin{verbatim}
+Copyright (c) 2010-2012 Dream Multimedia GmbH, Germany
+                        http://www.dream-multimedia-tv.de/
+Authors:
+  Andreas Frisch <fraxinas@opendreambox.org>
+  Andreas Monzner <ghost@opendreambox.org>
+  Andreas Oberritter <obi@opendreambox.org>
+  Mladen Horvat <acid-burn@opendreambox.org>
+  Stefan Pluecken <thedoc@opendreambox.org>
+  Stephan Reichholf <reichi@opendreambox.org>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+    \end{verbatim}
+
+  \subsection{Obtaining the source code}
+    OpenDreambox uses the Git version control system. To obtain the source
+    code, it is required to install Git. See \url{http://git-scm.com/}.
+
+    To initially download the source into the current directory, issue the
+    following command:
+
+    \shell{git clone git://git.opendreambox.org/git/opendreambox.git}
+
+  \subsection{Quick start}
+    For the impatient:
+
+    \shell{make -C opendreambox image}
+
+    If this command fails, prerequisites my be missing. See section \ref{prerequisites}.
+
+  \subsection{Directory structure}
+    OpenDreambox consists of a set of layers containing build instructions.
+    This meta data is used by BitBake to download and compile source code
+    and to assemble installable software packages and firmware images.
+
+    Currently, there are five layers, ordered by priority from lowest to
+    highest:
+
+    \begin{itemize}
+      \item \shell{openembedded-core}
+      \item \shell{meta-openembedded}
+      \item \shell{meta-opendreambox}
+      \item \shell{meta-bsp/common}
+      \item \shell{meta-bsp/\$\{MACHINE\}}
+    \end{itemize}
+
+    If a recipe for the same package exists in multiple layers,
+    then the higher priority layer takes precedence over the lower priority
+    layer.
+
+    For example, \shell{libmad\_0.15.1b.bb} exists in both
+    \shell{meta-openembedded} and \shell{openembedded-core}. The recipe in
+    \shell{meta-openembedded} will be used, because \shell{openembedded-core}
+    has lower priority.
+
+    \textbf{NOTE:} This would still be true even if the version of \shell{libmad} in
+    \shell{openembeded-core} was higher than the version in \shell{meta-openembedded},
+    unless \shell{PREFERRED\_VERSION\_libmad} was set to the version in \shell{openembedded-core}.
+    There is currently no way to prefer a version of a lower priority layer, if the
+    same version is present in a higher priority layer.
+
+    \subsubsection{openembedded-core and meta-openembedded}
+       These directories contain copies of Git repositories from git.openembedded.org, including
+       the OpenEmbedded Core layer ("meta") and the OpenEmbedded layer ("meta-oe"). They get created
+       automatically when building the distribution for the first time.
+
+       Throughout this document, the combination of these directories will be
+       referred to as OpenEmbedded.
+
+    \subsubsection{meta-opendreambox}
+      This directory contains:
+
+      \begin{itemize}
+        \item Recipes for packages written specifically for the OpenDreambox distribution
+        \item Modifications to recipes from OpenEmbedded
+        \item Recipes for software versions older than those available from OpenEmbedded
+        \item Recipes for software versions newer than those available from OpenEmbedded
+      \end{itemize}
+
+    \subsubsection{meta-bsp}
+      The directory \shell{meta-bsp} contains Board Support Packages (BSP)
+      for the supported Dreambox models. This includes:
+
+      \begin{itemize}
+        \item Hardware drivers
+        \item Machine specific overrides
+        \item The Linux kernel
+        \item The boot loader
+        \item Splash images
+      \end{itemize}
+
+\section{Prerequisites}
+  \label{prerequisites}
+
+  \subsection{Required software}
+
+   The OpenEmbedded project provides a general list of prerequisites for
+   many Linux distributions and also for some other operating systems.
+
+   \begin{itemize}
+     \item \url{http://www.openembedded.org/index.php/OEandYourDistro}
+     \item \url{http://www.openembedded.org/index.php/Required\_software}
+   \end{itemize}
+
+   It is highly recommended to use Linux to build OpenDreambox. In theory,
+   any recent distribution will do, but not many distributions have been
+   verified to build OpenDreambox without errors. Tested distributions include:
+
+   \begin{itemize}
+     \item Debian "squeeze" 6.0 (i386)
+     \item Debian "wheezy" (i386)
+     \item Ubuntu "oneiric" 11.10 (amd64)
+   \end{itemize}
+
+   Distributions known to cause problems:
+
+   \begin{itemize}
+     \item Arch Linux: make 3.82 causes build failures for some packages.
+           Try downgrading to make 3.81.
+     \item Ubuntu "lucid" 10.04 LTS (i386): The dynamic linker crashes
+           frequently, interrupting the build process.
+   \end{itemize}
+
+   Distributions known not to work:
+
+   \begin{itemize}
+     \item Debian "lenny" 5.0: Comes with Python 2.5, which is too old.
+   \end{itemize}
+
+\pagebreak
+
+\section{Major changes since previous releases}
+
+  \subsection{Changes since release 1.6}
+    \begin{itemize}
+      \item Recipes were split across multiple layers and categorized.
+      \item \shell{env.source} has been replaced by two files,
+        \shell{bitbake.env} and \shell{cross-compile.env}. The former sets a minimal
+        environment that is needed to execute bitbake. The latter creates
+        machine-specific command aliases, in order to compile external software.
+      \item All machines share a common \shell{tmp} directory.
+      \item \shell{\$\{MACHINE\}/build} directories were renamed to \shell{build/\$\{MACHINE\}}.
+      \item Kernel packages were renamed from \shell{linux-\$\{MACHINE\}} to \shell{linux-dreambox}.
+      \item Support for machines based on ATI Xilleon or IBM STB was dropped.
+    \end{itemize}
+
+\section{Known Bugs}
+
+  None.
+
+\pagebreak
+
+\section{Building OpenDreambox}
+
+  In the top level directory, there is a \shell{Makefile}, which is used to
+  set up build directories and to fetch or update all used repositories.
+  The Makefile can be influenced by environment variables, either
+  by specifing them on the command-line or by storing them in a file called
+  \shell{conf/make.conf}. It is not recommended to edit the \shell{Makefile} directly
+  in order to avoid conflicts with future updates.
+
+  When the \shell{Makefile} is run for the first time, the following steps will
+  be executed:
+
+  \begin{itemize}
+    \item Creation of configuration files
+      \begin{itemize}
+        \item \shell{bitbake.env}
+        \item \shell{conf/opendreambox.conf}
+        \item \shell{build/\$\{MACHINE\}/conf/bblayers.conf}
+        \item \shell{build/\$\{MACHINE\}/conf/local.conf}
+      \end{itemize}
+    \item Update or checkout of Git repositories
+      \begin{itemize}
+        \item OpenDreambox
+        \item BitBake
+        \item OpenEmbedded
+      \end{itemize}
+  \end{itemize}
+
+  \subsection{Makefile targets}
+    Run \shell{make help} to get a list of targets of the top level Makefile, together with a brief description.
+
+  \subsection{Configuration variables}
+    \subsubsection{BB\_NUMBER\_THREADS}
+      Controls how many BitBake tasks may run at a time. Defaults to the
+      number of cores available on the build system. The number of cores is
+      obtained from \shell{/proc/cpuinfo}. If this file is unavailable, the
+      default value is 1.
+
+    \subsubsection{MACHINE}
+      Controls the target machine to build packages for. See section \ref{products}
+      for a list of supported products.
+
+    \subsubsection{PARALLEL\_MAKE}
+      Controls how many processes per recipe \shell{make} may use. Defaults to
+      the number of cores available on the build system. The number of cores is
+      obtained from \shell{/proc/cpuinfo}. If this file is unavailable, the
+      default value is 1.
+
+      Don't increase this option unless you know what you're doing.
+
+    \subsubsection{RM\_WORK}
+      Controls whether the temporary work directory of each package may be
+      cleaned automatically after the respective package has been built
+      successfully. Valid values are \shell{yes} (default) and \shell{no}.
+
+      If set to \shell{yes}, only log files will be preserved. Setting
+      \shell{RM\_WORK} to \shell{no} may be useful to debug packaging errors.
+
+  \subsection{Adding custom layers}
+  \label{custom_layers}
+     It is possible to add custom layers to the configuration. This can be done globally
+     and per machine. To add a layer globally, edit \shell{conf/bblayers-ext.conf}. To
+     add a machine-specific layer, edit \shell{conf/bblayers-\$\{MACHINE\}-ext.conf}.
+     Assuming that an additional layer is available at \shell{/home/username/custom-layer},
+     the entry to add to the file will look like this:
+
+     \shell{BBLAYERS =+ "/home/username/custom-layer"}
+
+  \subsection{Adding custom options}
+     It is possible to tweak a lot more options than those used by the
+     \shell{Makefile} by editing \shell{conf/local-ext.conf} or \shell{conf/local-\$\{MACHINE\}-ext.conf}.
+
+     For example, if the firmware shall use the package feed built on the develoment machine, which
+     happens to be 192.168.1.1 and has a webserver configured to point to \shell{tmp/deploy/ipk},
+     a line like the following may be added:
+
+     \shell{DISTRO\_FEED\_URI = "http://192.168.1.1/\$\{DISTRO\}/\$\{DISTRO\_VERSION\}"}
+
+     In general, any variable in OpenEmbedded that uses weak assignment (\shell{?=}) may be
+     overridden from those files.
+
+  \subsection{Setting up a build directory}
+     To set up a build directory for e.g. \textbf{DM 500 HD} run \shell{make MACHINE=dm500hd}. If
+     \shell{MACHINE=dm500hd} has been set in \shell{conf/make.conf}, you can simply run \shell{make}
+     with no arguments instead. This will create and initialize the directory \shell{build/dm500hd}.
+
+  \subsection{Building a firmware image}
+     To build a firmware image for e.g. \textbf{DM 500 HD} run \shell{make MACHINE=dm500hd image}.
+     If \shell{MACHINE=dm500hd} has been set in \shell{conf/make.conf}, you can simply run
+     \shell{make image} instead.
+
+  \subsection{Building a package}
+     To build a single package, BitBake has to be used directly. First, the environment
+     has to be set up, in order to make BitBake available to the shell. This can be done
+     with the following command:
+
+     \shell{source bitbake.env}
+
+     BitBake must be run from the machine's build directory. For \textbf{DM 500 HD} run:
+
+     \shell{cd build/dm500hd}
+
+     In order to build enigma2, run:
+
+     \shell{bitbake enigma2}.
+
+\section{Development hints}
+
+  \subsection{Cross-compilation of external software}
+    OpenDreambox provides a script called \shell{cross-compile.env}. Once run, the script will create
+    the following commands (shell aliases), aiming to ease cross-compilation of external source trees:
+
+    \begin{itemize}
+      \item \shell{oe\_autoreconf} - Calls OE's version of \shell{autoreconf}. Useful for projects based on GNU autotools.
+      \item \shell{oe\_runconf} - Calls \shell{./configure} with parameters suitable for OE. Useful for projects based on GNU autotools.
+      \item \shell{oe\_runmake} - Calls \shell{make} with parameters suitable for OE. Useful for projects based on GNU autotools or GNU make.
+      \item \shell{oe\_env} - Useful to execute arbitrary commands in the OE environment (e.g. \shell{oe\_env env}).
+      \item \shell{oe\_setenv} - Exports the OE environment to the currently running shell session.
+    \end{itemize}
+
+    The script needs to know the target machine, which can be one of the supported products (see \ref{products}). Because the script
+    adds aliases to your currently running shell session, it has to be invoked using \shell{source} or \shell{.} (the dot operator), e.g.:
+
+    \shell{source cross-compile.env dm7020hd}
+
+    The script may be called from any location, but must reside inside the OpenDreambox Git tree.
+    You may want to create a symlink to \shell{cross-compile.env} somewhere in your \shell{PATH}.
+
+  \subsection{Coding style}
+    Run \shell{scripts/do\_stylize.sh} on new recipes to ensure proper coding style.
+
+  \subsection {Package architecture}
+    Set \shell{PACKAGE\_ARCH = "\$\{MACHINE\_ARCH\}"} if either condition is met:
+    \begin{itemize}
+      \item The recipe uses \shell{COMBINED\_FEATURES}, \shell{MACHINE\_FEATURES} or \shell{DREAMBOX\_FEATURES}.
+      \item The recipe is part of \shell{meta-bsp}.
+    \end{itemize}
+
+\section{Bug reports and patches}
+
+  Please send bug reports and patches to the Enigma2 development mailing list \shell{<enigma2-devel@lists.elitedvb.net>}.
+
+  A comfortable way to create patches is to use \shell{git format-patch}, after all changes have been committed to your
+  local copy of the repository.
+
+\end{document}

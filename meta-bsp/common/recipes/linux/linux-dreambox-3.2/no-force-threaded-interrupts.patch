@@ -1,0 +1,13 @@
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index d514c78..ad7ca30 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -24,7 +24,7 @@ config MIPS
+ 	select GENERIC_IRQ_PROBE
+ 	select GENERIC_IRQ_SHOW
+ 	select HAVE_ARCH_JUMP_LABEL
+-	select IRQ_FORCED_THREADING
++	select IRQ_FORCED_THREADING if !BRCMSTB
+ 
+ menu "Machine selection"
+ 

@@ -1,0 +1,9 @@
+[submodule "openembedded-core"]
+	path = openembedded-core
+	url = git://git.openembedded.org/openembedded-core-contrib
+[submodule "meta-openembedded"]
+	path = meta-openembedded
+	url = git://git.openembedded.org/meta-openembedded-contrib
+[submodule "bitbake"]
+	path = bitbake
+	url = git://git.openembedded.org/bitbake

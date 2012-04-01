@@ -1,0 +1,89 @@
+From 3f5fed662fbbdcacad15ef2c52470d381c78c34e Mon Sep 17 00:00:00 2001
+From: Mladen Horvat <acid-burn@opendreambox.org>
+Date: Mon, 12 Mar 2012 13:00:04 +0100
+Subject: [PATCH 2/2] Components/Harddisk.py: -reconfigure old linked default
+ storage device to direct mounted default storage device
+ - fix crash with multiple partitions inside
+ suggestMountpoint. - allow updatePartitionInfo to be
+ called manually with a path and devicename.
+
+---
+ lib/python/Components/Harddisk.py |   26 ++++++++++++++++++--------
+ 1 files changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/lib/python/Components/Harddisk.py b/lib/python/Components/Harddisk.py
+index 179e23a..382ba9d 100644
+--- a/usr/lib/enigma2/python/Components/Harddisk.py
++++ b/usr/lib/enigma2/python/Components/Harddisk.py
+@@ -501,18 +501,26 @@ class Partition:
+ 		if self.device is not None:
+ 			self.updatePartitionInfo()
+ 
+-	def updatePartitionInfo(self):
++	def updatePartitionInfo(self, dstpath = "", dev = None ):
+ 		curdir = getcwd()
++		testpath = ""
++		if dstpath != "" and dev is not None:
++			self.device = device
++			testpath = dstpath + self.device
++			
+ 		if self.device is not None:
++			if testpath == "":
++				testpath = "/autofs/" + self.device
++
+ 			self.uuid = harddiskmanager.getPartitionUUID(self.device)
+ 			try:
+-				chdir("/autofs/" + self.device)
++				chdir(testpath)
+ 				self.isMountable = True
+ 			except OSError:
+ 				pass
+-			if self.isMountable:
++			if self.isMountable:		
+ 				try:
+-					listdir("/autofs/" + self.device)
++					listdir(testpath)
+ 					self.isReadable = True
+ 				except OSError:
+ 					pass
+@@ -520,7 +528,7 @@ class Partition:
+ 				mountpoint, self.fsType, mountopt = harddiskmanager.getMountInfo("/dev/" + self.device)
+ 				if mountopt is not None and mountopt == 'rw':
+ 					self.isWriteable = True
+-					if not access("/autofs/" + self.device, W_OK):
++					if not access(testpath, W_OK):
+ 						self.isWriteable = False
+ 			if self.uuid is not None:
+ 				if self.fsType is None:
+@@ -528,8 +536,8 @@ class Partition:
+ 					if fstype is not None:
+ 						self.fsType = fstype
+ 			if self.isWriteable:
+-				if access("/autofs/" + self.device + "/movie", W_OK):
+-					self.isInitialized = True
++				if access(testpath + "/movie", W_OK):
++					self.isInitialized = True			
+ 		else:
+ 			self.uuid = None
+ 			self.isMountable = False
+@@ -1142,7 +1150,7 @@ class HarddiskManager:
+ 					val += "HDD" + str(cnt)
+ 				if hdd.numPartitions() >= 2:
+ 					partNum = p.device[3:]
+-					if int(partNum).isdigit():
++					if str(partNum).isdigit():
+ 						val += "Part" + str(partNum)
+ 				print "suggestDeviceMountpath for uuid: '%s' -> '%s'" %(uuid,val)
+ 				return "/media/" + val
+@@ -1593,6 +1601,8 @@ class HarddiskManager:
+ 					dev = self.getDeviceNamebyUUID(uuid)
+ 					if uuid == config.storage_options.default_device.value and config.storage[uuid]["mountpoint"].value != "/media/hdd":
+ 						print "[setupConfigEntries] initial_call discovered a default storage device misconfiguration, reapplied default storage config for:",uuid
++						if path.exists("/media/hdd") and path.islink("/media/hdd") and self.getLinkPath("/media/hdd") == config.storage[uuid]["mountpoint"].value:
++							unlink("/media/hdd")
+ 						if dev is not None:						
+ 							self.unmountPartitionbyMountpoint(config.storage[uuid]["mountpoint"].value, dev)
+ 						config.storage[uuid]["mountpoint"].value = "/media/hdd"
+-- 
+1.7.9.1
+

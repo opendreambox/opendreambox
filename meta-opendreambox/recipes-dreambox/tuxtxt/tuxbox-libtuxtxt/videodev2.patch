@@ -1,0 +1,11 @@
+--- libs/libtuxtxt/tuxtxt_common.h.orig	2012-02-10 22:37:29.736849856 +0100
++++ libs/libtuxtxt/tuxtxt_common.h	2012-02-10 22:38:01.344849000 +0100
+@@ -25,7 +25,7 @@
+ #include <dbox/avia_gt_pig.h>
+ #else
+ #include <linux/input.h>
+-#include <linux/videodev.h>
++#include <linux/videodev2.h>
+ #endif
+ 
+ const char *ObjectSource[] =

@@ -1,0 +1,10 @@
+service streamproxy
+{
+	type = UNLISTED
+	socket_type = stream
+	protocol = tcp
+	wait = no
+	user = root
+	server = @BINDIR@/streamproxy
+	port = 8001
+}

@@ -1,0 +1,3 @@
+PR .= "-dream1"
+
+CFLAGS += "-DSQLITE_ENABLE_COLUMN_METADATA"

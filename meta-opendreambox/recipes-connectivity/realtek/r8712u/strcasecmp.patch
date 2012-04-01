@@ -1,0 +1,14 @@
+diff --git a/ioctl/rtl871x_ioctl_linux.c b/ioctl/rtl871x_ioctl_linux.c
+index 6f707de..561c50f 100755
+--- a/ioctl/rtl871x_ioctl_linux.c
++++ b/ioctl/rtl871x_ioctl_linux.c
+@@ -52,6 +52,9 @@
+ #define  iwe_stream_add_point(a, b, c, d, e)  iwe_stream_add_point(b, c, d, e)
+ #endif
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,22))
++#define  strcasecmp(s1, s2)	strcmp(s1, s2)
++#endif
+ 
+ #define RTL_IOCTL_WPA_SUPPLICANT	SIOCIWFIRSTPRIV+0x1E
+ 

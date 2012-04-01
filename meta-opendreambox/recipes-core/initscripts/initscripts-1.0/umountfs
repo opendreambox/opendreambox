@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# umountfs	Turn off swap and unmount all local filesystems.
+#
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Ensure /proc is mounted
+test -r /proc/mounts || mount -t proc proc /proc
+
+echo "Deactivating swap..."
+swapoff -a
+
+# We leave /proc mounted, the umount of /dev/devpts seems to fail
+# quite frequently, the busybox umount apparently gives up at the
+# first failure, so it is necessary to go file system by file
+# system.  It is necessary to go backward in the /proc list, because
+# later things may have been mounted on earlier mounts.
+unmount() {
+	local dev mp type opts
+	if read dev mp type opts
+	then
+		# recurse - unmount later items
+		unmount
+		# skip / and needed virtual filesystems
+		case "$mp" in
+		/|/dev|/proc|/sys) return 0;;
+		esac
+		# then unmount this, if possible, otherwise make
+		# it read-only
+		umount -f -r "$mp"
+	fi
+}
+
+echo "Unmounting local filesystems..."
+unmount </proc/mounts
+
+mount -o remount,ro /

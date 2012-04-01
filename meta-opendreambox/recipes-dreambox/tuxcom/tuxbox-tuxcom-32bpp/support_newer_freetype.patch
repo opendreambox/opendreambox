@@ -1,0 +1,78 @@
+diff -auNr tuxcom/tuxcom.c tuxcom-freetype/tuxcom.c
+--- tuxcom/tuxcom.c	2008-12-27 16:54:07.000000000 +0100
++++ tuxcom-freetype/tuxcom.c	2008-12-27 16:59:35.000000000 +0100
+@@ -322,9 +322,15 @@
+ 
+ 		switch (size)
+ 		{
++#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
++			case VERY_SMALL: desc.width = desc.height = FONTHEIGHT_VERY_SMALL; break;
++			case SMALL     : desc.width = desc.height = FONTHEIGHT_SMALL     ; break;
++			case BIG       : desc.width = desc.height = FONTHEIGHT_BIG       ; break;
++#else
+ 			case VERY_SMALL: desc.font.pix_width = desc.font.pix_height = FONTHEIGHT_VERY_SMALL; break;
+ 			case SMALL     : desc.font.pix_width = desc.font.pix_height = FONTHEIGHT_SMALL     ; break;
+ 		    case BIG       : desc.font.pix_width = desc.font.pix_height = FONTHEIGHT_BIG       ; break;
++#endif
+ 	 	}
+ 
+ 	//reset kerning
+@@ -354,9 +360,15 @@
+ 
+ 		switch (size)
+ 		{
++#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
++			case VERY_SMALL: desc.width = desc.height = FONTHEIGHT_VERY_SMALL; break;
++			case SMALL     : desc.width = desc.height = FONTHEIGHT_SMALL     ; break;
++			case BIG       : desc.width = desc.height = FONTHEIGHT_BIG       ; break;
++#else
+ 			case VERY_SMALL: desc.font.pix_width = desc.font.pix_height = FONTHEIGHT_VERY_SMALL; break;
+ 			case SMALL     : desc.font.pix_width = desc.font.pix_height = FONTHEIGHT_SMALL     ; break;
+ 		    case BIG       : desc.font.pix_width = desc.font.pix_height = FONTHEIGHT_BIG       ; break;
++#endif
+ 	 	}
+ 
+ 	//set alignment
+@@ -608,17 +620,26 @@
+ 			return;
+ 		}
+ 		else
++#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
++			desc.face_id = FONT2;
++#else
+ 			desc.font.face_id = FONT2;
++#endif
+ 	}
+ 	else
++#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
++		desc.face_id = FONT;
++#else
+ 		desc.font.face_id = FONT;
+-
++#endif
+ 
+ 	use_kerning = FT_HAS_KERNING(face);
+ 
+-
++#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
++	desc.flags = FT_LOAD_MONOCHROME;
++#else
+ 	desc.image_type = ftc_image_mono;
+-
++#endif
+ 
+ 
+ 	//init backbuffer
+diff -auNr tuxcom/tuxcom.h tuxcom-freetype/tuxcom.h
+--- tuxcom/tuxcom.h	2008-12-27 16:54:07.000000000 +0100
++++ tuxcom-freetype/tuxcom.h	2008-12-27 16:55:23.000000000 +0100
+@@ -191,6 +191,9 @@
+ 
+ 
+ //freetype stuff
++#if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
++typedef FTC_ImageTypeRec FTC_Image_Desc;
++#endif
+ 
+ //#define FONT "/usr/share/fonts/md_khmurabi_10.ttf"
+ #define FONT "/usr/share/fonts/pakenham.ttf"

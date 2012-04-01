@@ -1,0 +1,25 @@
+--- a/arch/mips/brcmstb/brcm97400d0/bcm_uart.c
++++ b/arch/mips/brcmstb/brcm97400d0/bcm_uart.c
+@@ -265,7 +265,7 @@ void
+ uart_init(unsigned long ignored)
+ {
+ 	serial_init(0, NULL);
+-	serial_init(1, NULL);		/* Uart B */
++	//serial_init(1, NULL);		/* Uart B */
+ 	//serial_init(2, NULL);		/* Uart C */
+ 	//console_initialized = 1;
+ }
+--- a/include/asm-mips/serial.h
++++ b/include/asm-mips/serial.h
+@@ -122,9 +122,9 @@
+ #else
+ /* 3 16550A compatible UARTs */
+ #define BRCM_UART_PORT_DEFNS				\
+-	_BRCM_16550_INIT(BRCM_SERIAL1_IRQ, BRCM_SERIAL1_BASE),		\
++	_BRCM_16550_INIT(BRCM_SERIAL1_IRQ, BRCM_SERIAL1_BASE),/*		\
+ 	_BRCM_16550_INIT(BRCM_SERIAL2_IRQ, BRCM_SERIAL2_BASE),      \
+-	_BRCM_16550_INIT(BRCM_SERIAL3_IRQ, BRCM_SERIAL3_BASE),	
++	_BRCM_16550_INIT(BRCM_SERIAL3_IRQ, BRCM_SERIAL3_BASE),	*/
+ #endif  //end SIM
+ 
+ #elif defined(CONFIG_MIPS_BCM7440A0) || defined(CONFIG_MIPS_BCM7325)

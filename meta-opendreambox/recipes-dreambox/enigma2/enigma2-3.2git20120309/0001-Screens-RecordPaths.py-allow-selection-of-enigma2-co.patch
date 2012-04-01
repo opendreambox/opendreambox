@@ -1,0 +1,28 @@
+From 646d509da5c2e0d3db405944d21ccc74efcd55ba Mon Sep 17 00:00:00 2001
+From: Mladen Horvat <acid-burn@opendreambox.org>
+Date: Mon, 12 Mar 2012 12:54:00 +0100
+Subject: [PATCH 1/2] Screens/RecordPaths.py: allow selection of enigma2
+ configured default storage devices only for devices
+ initialized by enigma2. Default recording location is
+ not affected from this.
+
+---
+ lib/python/Screens/RecordPaths.py |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/lib/python/Screens/RecordPaths.py b/lib/python/Screens/RecordPaths.py
+index 98b58e8..a962acb 100644
+--- a/usr/lib/enigma2/python/Screens/RecordPaths.py
++++ b/usr/lib/enigma2/python/Screens/RecordPaths.py
+@@ -51,7 +51,7 @@ class RecordPathsSettings(Screen,ConfigListScreen):
+ 		self.styles = [ ("<default>", _("<Default movie location>")), ("<current>", _("<Current movielist location>")), ("<timer>", _("<Last timer location>")) ]
+ 		styles_keys = [x[0] for x in self.styles]
+ 
+-		mountpoints = [ (p.mountpoint, p.description) for p in harddiskmanager.getConfiguredStorageDevices()]
++		mountpoints = [ (p.mountpoint, p.description) for p in harddiskmanager.getConfiguredStorageDevices() if p.isInitialized]
+ 		mountpoints.sort(reverse = True)
+ 		self.storage_styles = [ ("<undefined>", _("<No default storage device selected.>"))]
+ 		self.storage_styles += mountpoints
+-- 
+1.7.9.1
+

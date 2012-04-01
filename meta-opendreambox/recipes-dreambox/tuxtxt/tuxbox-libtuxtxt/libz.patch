@@ -1,0 +1,10 @@
+--- libs/libtuxtxt/Makefile.am	2012-02-17 00:44:38.933059300 +0100
++++ libs/libtuxtxt/Makefile.am	2012-02-17 01:31:00.077032773 +0100
+@@ -4,6 +4,7 @@
+ pkginclude_HEADERS = tuxtxt_def.h tuxtxt_common.h
+ 
+ libtuxtxt_la_SOURCES = libtuxtxt.c
++libtuxtxt_la_LIBADD = -lz
+ 
+ AM_CPPFLAGS = \
+ 	@FREETYPE_CFLAGS@
