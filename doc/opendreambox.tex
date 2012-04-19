@@ -218,16 +218,10 @@ THE SOFTWARE.
      \item Debian 6.0 (Squeeze) [i386]
      \item Debian "Testing" (Wheezy) [i386]
      \item Fedora 16 [i386, amd64]
+     \item Ubuntu 10.04 LTS (Lucid Lynx) [i386]
      \item Ubuntu 10.10 (Maverick Meerkat) [i386]
      \item Ubuntu 11.10 (Oneiric Ocelot) [amd64]
      \item Ubuntu 12.04 LTS (Precise Pangolin) [i386, amd64]
-   \end{itemize}
-
-   Distributions known to cause problems:
-
-   \begin{itemize}
-     \item Ubuntu 10.04 LTS (Lucid Lynx) [i386]: The dynamic linker crashes
-           frequently, interrupting the build process. Setting \shell{PARALLEL\_MAKE = -j1} in \shell{conf/make.conf} may help.
    \end{itemize}
 
    Distributions known not to work:
