@@ -19,7 +19,7 @@ opendreambox
     2.1 Required software
    3 Major changes since previous releases
     3.1 Changes since release 1.6
-   4 Known Bugs
+   4 Known Issues
    5 Building OpenDreambox
     5.1 Makefile targets
     5.2 Configuration variables
@@ -211,9 +211,10 @@ opendreambox
      * Kernel packages were renamed from linux-${MACHINE} to linux-dreambox.
      * Support for machines based on ATI Xilleon or IBM STB was dropped.
 
-  4 Known Bugs
+  4 Known Issues
 
-   None.
+     * Building on eCryptfs fails, because it doesn't support sufficiently long
+       filenames (eCryptfs bug #344878).
 
   5 Building OpenDreambox
 
