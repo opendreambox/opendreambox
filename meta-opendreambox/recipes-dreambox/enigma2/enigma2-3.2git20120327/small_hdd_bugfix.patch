@@ -1,0 +1,26 @@
+diff --git a/lib/python/Components/Harddisk.py b/lib/python/Components/Harddisk.py
+index beb9b7c..478f18e 100644
+--- a/usr/lib/enigma2/python/Components/Harddisk.py
++++ b/usr/lib/enigma2/python/Components/Harddisk.py
+@@ -1220,7 +1220,7 @@ class HarddiskManager:
+ 						if cur_default_dev is None or (path.exists(cur_default_newmp) and self.isMount(cur_default_newmp)):
+ 							if new_default_cfg["enabled"].value and path.exists(new_default_cfg["mountpoint"].value) and self.isMount(new_default_cfg["mountpoint"].value):
+ 								self.unmountPartitionbyMountpoint(new_default_cfg["mountpoint"].value, new_default_dev )
+-							if not new_default_cfg["enabled"].value or (path.exists(new_default_cfg["mountpoint"].value) and not self.isMount(new_default_cfg["mountpoint"].value)):
++							if not new_default_cfg["enabled"].value or not self.isMount(new_default_cfg["mountpoint"].value):
+ 								new_default_cfg["mountpoint"].value = def_mp
+ 								new_default_cfg["enabled"].value = True
+ 								self.storageDeviceChanged(uuid)
+diff --git a/lib/python/Plugins/SystemPlugins/Hotplug/plugin.py b/lib/python/Plugins/SystemPlugins/Hotplug/plugin.py
+index 078950f..497d5df 100644
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/Hotplug/plugin.py
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/Hotplug/plugin.py
+@@ -83,7 +83,7 @@ def autostart(reason, **kwargs):
+ 					except socket.error, err:
+ 						print "hotplug: receive from netlink socket failed.", os.strerror(err.errno)
+ 					else:
+-						print "HOTPLUG(%d):" %(what), received
++#						print "HOTPLUG(%d):" %(what), received
+ 						data = received[0].split('\0')[:-1]
+ 						v = {}
+ 	

@@ -1,0 +1,104 @@
+--- linux-2.6.18-org/drivers/serial/8250.c	2010-03-19 19:12:10.000000000 +0100
++++ linux-2.6.18/drivers/serial/8250.c	2010-03-19 19:34:54.000000000 +0100
+@@ -1871,8 +1871,20 @@
+ 	/*
+ 	 * Ask the core to calculate the divisor for us.
+ 	 */
+-	baud = uart_get_baud_rate(port, termios, old, 0, port->uartclk/16); 
+-	quot = serial8250_get_divisor(port, baud);
++
++#ifdef CONFIG_MIPS_BCM7405
++	if (up->port.irq != 22)
++#endif
++	{
++		baud = uart_get_baud_rate(port, termios, old, 0, port->uartclk/16);
++		quot = serial8250_get_divisor(port, baud);
++	}
++#ifdef CONFIG_MIPS_BCM7405
++	else {
++		quot = 5;
++		baud = 1000000;
++	}
++#endif
+ 
+ 	/*
+ 	 * Oxford Semi 952 rev B workaround
+--- a/arch/mips/brcmstb/brcm97405b0/bcm_uart.c
++++ b/arch/mips/brcmstb/brcm97405b0/bcm_uart.c
+@@ -115,20 +115,18 @@ unsigned long serial_init(int chan, void *ignored)
+ 	shift = 2;
+ 
+ 
+-#if 1 /* Enable UARTB */
+-if (chan == 1) {
+-// MUX for UARTB is: RX: ctrl3: bit 29:27 (001'b) and TX: ctrl4: bit 02:00 (001'b)
+-
++#if 1 /* Enable UARTC */
++if (chan == 2) {
+ #define SUN_TOP_CTRL_PIN_MUX_CTRL_3	(0xb040410c)
+ 	volatile unsigned long* pSunTopMuxCtrl3 = (volatile unsigned long*) SUN_TOP_CTRL_PIN_MUX_CTRL_3;
+-#define SUN_TOP_CTRL_PIN_MUX_CTRL_4	(0xb0404110)
+-	volatile unsigned long* pSunTopMuxCtrl4 = (volatile unsigned long*) SUN_TOP_CTRL_PIN_MUX_CTRL_4;
++#define SUN_TOP_CTRL_PIN_MUX_CTRL_9	(0xb0404124)
++	volatile unsigned long* pSunTopMuxCtrl9 = (volatile unsigned long*) SUN_TOP_CTRL_PIN_MUX_CTRL_9;
+ 	
+-	*pSunTopMuxCtrl3 &= 0xc7ffffff;	// Clear it
+-	*pSunTopMuxCtrl3 |= 0x08000000;  // Write 001'b at 27:29
++	*pSunTopMuxCtrl3 &= 0xf81fffff;	// Clear it
++	*pSunTopMuxCtrl3 |= 0x02400000;  // Write 010'b at 21:23, 010'b at 24:26
+ 
+-	*pSunTopMuxCtrl4 &= 0xfffffff8;	// Clear it
+-	*pSunTopMuxCtrl4 |= 0x00000001;  // Write 001'b  at 00:02
++	*pSunTopMuxCtrl9 &= 0xf03fffff;	// Clear it
++	*pSunTopMuxCtrl9 |= 0x09000000;  // Write 100'b at 25:27, 100'b at 22:24
+ }
+ #endif
+ 
+@@ -147,7 +145,7 @@ if (chan == 1) {
+ 		writel(0, (void *)(uartBaseAddr + (UART_FCR << shift)));
+ 
+ 		if (chan == 1) {
+-			uartB_puts("Done initializing UARTB\n");
++			uartB_puts("Done initializing UARTC\n");
+ 		}
+ 	}
+ 	return (uartBaseAddr);
+@@ -211,7 +209,7 @@ void
+ //PutChar(char c)
+ uartB_putc(char c)
+ {
+-    serial_putc(UARTB_ADR_BASE, c);
++    serial_putc(UARTC_ADR_BASE, c);
+ }
+ /* --------------------------------------------------------------------------
+     Name: PutString
+@@ -253,7 +251,7 @@ uart_getc(void)
+ char
+ uartB_getc(void)
+ {
+-	return serial_getc(UARTB_ADR_BASE);
++	return serial_getc(UARTC_ADR_BASE);
+ }
+ 
+ 
+@@ -277,8 +275,7 @@ void
+ uart_init(unsigned long ignored)
+ {
+ 	serial_init(0, NULL);
+-	serial_init(1, NULL);		/* Uart B */
+-	//serial_init(2, NULL);		/* Uart C */
++	//serial_init(1, NULL);		/* Uart B */
++	serial_init(2, NULL);		/* Uart C */
+ 	//console_initialized = 1;
+ }
+-
+--- a/include/asm-mips/serial.h
++++ b/include/asm-mips/serial.h
+@@ -123,7 +123,6 @@
+ /* 3 16550A compatible UARTs */
+ #define BRCM_UART_PORT_DEFNS				\
+ 	_BRCM_16550_INIT(BRCM_SERIAL1_IRQ, BRCM_SERIAL1_BASE),		\
+-	_BRCM_16550_INIT(BRCM_SERIAL2_IRQ, BRCM_SERIAL2_BASE),      \
+ 	_BRCM_16550_INIT(BRCM_SERIAL3_IRQ, BRCM_SERIAL3_BASE),	
+ #endif  //end SIM
+ 

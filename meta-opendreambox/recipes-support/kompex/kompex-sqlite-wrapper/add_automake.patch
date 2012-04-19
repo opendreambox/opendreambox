@@ -1,0 +1,87 @@
+diff -Naur KompexSQLiteWrapper-Source_1.7.8.org/configure.ac KompexSQLiteWrapper-Source_1.7.8/configure.ac
+--- KompexSQLiteWrapper-Source_1.7.8.org/configure.ac	1970-01-01 01:00:00.000000000 +0100
++++ KompexSQLiteWrapper-Source_1.7.8/configure.ac	2011-10-18 22:31:30.852073545 +0200
+@@ -0,0 +1,38 @@
++#                                               -*- Autoconf -*-
++# Process this file with autoconf to produce a configure script.
++AC_INIT([libKompexSQLiteWrapper],[1.7.8],[SvenBroeske@web.de],[libKompexSQLiteWrapper])
++AM_INIT_AUTOMAKE([dist-bzip2 no-define foreign])
++AC_CONFIG_SRCDIR([src/KompexSQLiteDatabase.cpp])
++AC_CONFIG_HEADERS([libKompexSQLiteWrapper-config.h])
++
++# Silent rules are available since 1.11, but older versions
++# are still in use. So don't use them unconditionally.
++m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
++
++# Checks for programs.
++AC_PROG_CXX
++
++m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
++
++dnl - If any interfaces have been added, removed, or changed since the last
++dnl   update, increment current, and set revision to 0.
++LT_CURRENT=1
++AC_SUBST([LT_CURRENT])
++dnl - If the library source code has changed at all since the last update,
++dnl   then increment revision (c:r:a becomes c:r+1:a).
++LT_REVISION=0
++AC_SUBST([LT_REVISION])
++dnl - If any interfaces have been added since the last public release, then
++dnl   increment age.
++dnl - If any interfaces have been removed since the last public release, then
++dnl   set age to 0.
++LT_AGE=0
++AC_SUBST([LT_AGE])
++
++AC_CONFIG_FILES([
++Makefile
++inc/Makefile
++src/Makefile
++libKompexSQLiteWrapper.pc
++])
++AC_OUTPUT
+diff -Naur KompexSQLiteWrapper-Source_1.7.8.org/inc/Makefile.am KompexSQLiteWrapper-Source_1.7.8/inc/Makefile.am
+--- KompexSQLiteWrapper-Source_1.7.8.org/inc/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ KompexSQLiteWrapper-Source_1.7.8/inc/Makefile.am	2011-10-18 22:35:41.044070801 +0200
+@@ -0,0 +1,8 @@
++pkgincludedir = ${includedir}
++pkginclude_HEADERS = \
++	KompexSQLiteBlob.h \
++	KompexSQLiteDatabase.h \
++	KompexSQLiteException.h \
++	KompexSQLitePrerequisites.h \
++	KompexSQLiteStatement.h \
++	KompexSQLiteStreamRedirection.h
+diff -Naur KompexSQLiteWrapper-Source_1.7.8.org/libKompexSQLiteWrapper.pc.in KompexSQLiteWrapper-Source_1.7.8/libKompexSQLiteWrapper.pc.in
+--- KompexSQLiteWrapper-Source_1.7.8.org/libKompexSQLiteWrapper.pc.in	1970-01-01 01:00:00.000000000 +0100
++++ KompexSQLiteWrapper-Source_1.7.8/libKompexSQLiteWrapper.pc.in	2011-10-18 22:40:51.356067402 +0200
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: libKompexSQLiteWrapper
++Description: A SQLite3 C++ Wrapper Library
++Version: @VERSION@
++Libs: -L${libdir} -lKompexSQLiteWrapper
++Cflags: -I${includedir}
+diff -Naur KompexSQLiteWrapper-Source_1.7.8.org/Makefile.am KompexSQLiteWrapper-Source_1.7.8/Makefile.am
+--- KompexSQLiteWrapper-Source_1.7.8.org/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ KompexSQLiteWrapper-Source_1.7.8/Makefile.am	2011-10-18 22:38:31.204068947 +0200
+@@ -0,0 +1,4 @@
++SUBDIRS = inc src
++
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = libKompexSQLiteWrapper.pc
+diff -Naur KompexSQLiteWrapper-Source_1.7.8.org/src/Makefile.am KompexSQLiteWrapper-Source_1.7.8/src/Makefile.am
+--- KompexSQLiteWrapper-Source_1.7.8.org/src/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ KompexSQLiteWrapper-Source_1.7.8/src/Makefile.am	2011-10-18 22:37:20.692069711 +0200
+@@ -0,0 +1,7 @@
++AM_CPPFLAGS = -I$(top_srcdir)/inc -include $(top_builddir)/libKompexSQLiteWrapper-config.h
++lib_LTLIBRARIES = libKompexSQLiteWrapper.la
++libKompexSQLiteWrapper_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++libKompexSQLiteWrapper_la_SOURCES = \
++	KompexSQLiteBlob.cpp \
++	KompexSQLiteDatabase.cpp \
++	KompexSQLiteStatement.cpp

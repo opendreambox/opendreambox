@@ -1,0 +1,25 @@
+From 5f2fcb0b81adb0aad534c8cdb1241cfc84b23294 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Tue, 10 Apr 2012 01:35:24 +0200
+Subject: [PATCH] breakpoints.c: fix compile for mips
+
+---
+ breakpoints.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/breakpoints.c b/breakpoints.c
+index ec84e6e..57fa608 100644
+--- a/breakpoints.c
++++ b/breakpoints.c
+@@ -152,7 +152,7 @@ enable_all_breakpoints(Process *proc) {
+ 				memcpy(new_sym,sym,sizeof(*new_sym) + strlen(sym->name) + 1);
+ 				new_sym->next=proc->list_of_symbols;
+ 				proc->list_of_symbols=new_sym;
+-				insert_breakpoint(proc, addr, new_sym);
++				insert_breakpoint(proc, addr, new_sym, 1);
+ 				sym=sym->next;
+ 			}
+ 		}
+-- 
+1.7.5.4
+

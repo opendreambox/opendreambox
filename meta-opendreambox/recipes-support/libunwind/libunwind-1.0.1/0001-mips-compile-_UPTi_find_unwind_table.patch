@@ -1,0 +1,26 @@
+From 2724f0b9f0c61fd5be8c09f1680863f65898b508 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Tue, 10 Apr 2012 01:03:41 +0200
+Subject: [PATCH] mips: compile _UPTi_find_unwind_table()
+
+c.f. http://lists.gnu.org/archive/html/libunwind-devel/2010-11/msg00012.html
+---
+ src/ptrace/_UPT_find_proc_info.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/ptrace/_UPT_find_proc_info.c b/src/ptrace/_UPT_find_proc_info.c
+index ee0b698..2123447 100644
+--- a/src/ptrace/_UPT_find_proc_info.c
++++ b/src/ptrace/_UPT_find_proc_info.c
+@@ -147,7 +147,7 @@ _UPTi_find_unwind_table (struct UPT_info *ui, unw_addr_space_t as,
+ }
+ 
+ #elif UNW_TARGET_X86 || UNW_TARGET_X86_64 || UNW_TARGET_HPPA \
+-|| UNW_TARGET_PPC32 || UNW_TARGET_PPC64 || UNW_TARGET_ARM
++|| UNW_TARGET_PPC32 || UNW_TARGET_PPC64 || UNW_TARGET_ARM || UNW_TARGET_MIPS
+ 
+ #include "dwarf-eh.h"
+ #include "dwarf_i.h"
+-- 
+1.7.5.4
+

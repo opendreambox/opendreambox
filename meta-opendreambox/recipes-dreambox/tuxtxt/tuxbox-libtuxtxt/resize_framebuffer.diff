@@ -1,0 +1,48 @@
+diff -u libs/libtuxtxt_orig/tuxtxt_common.h libs/libtuxtxt/tuxtxt_common.h
+--- libs/libtuxtxt_orig/tuxtxt_common.h	2009-01-29 21:19:23.000000000 +0100
++++ libs/libtuxtxt/tuxtxt_common.h	2009-01-29 21:24:32.000000000 +0100
+@@ -5375,15 +5375,6 @@
+ 			 ymosaic[0], ymosaic[1], ymosaic[2], renderinfo->StartX, renderinfo->StartY, renderinfo->ascender);
+ #endif
+ 
+-	/* get fixed screeninfo */
+-	if (ioctl(renderinfo->fb, FBIOGET_FSCREENINFO, &renderinfo->fix_screeninfo) == -1)
+-	{
+-		perror("TuxTxt <FBIOGET_FSCREENINFO>");
+-		FTC_Manager_Done(renderinfo->manager);
+-		FT_Done_FreeType(renderinfo->library);
+-		return 0;
+-	}
+-
+ 	/* get variable screeninfo */
+ 	if (ioctl(renderinfo->fb, FBIOGET_VSCREENINFO, &renderinfo->var_screeninfo) == -1)
+ 	{
+@@ -5393,6 +5384,12 @@
+ 		return 0;
+ 	}
+ 
++	/* change to PAL resolution */
++	if (renderinfo->var_screeninfo.xres != 720) 
++	{
++		renderinfo->var_screeninfo.xres_virtual = renderinfo->var_screeninfo.xres = 720;
++		renderinfo->var_screeninfo.yres_virtual = renderinfo->var_screeninfo.yres = 576;
++	}
+ 
+ 	/* set variable screeninfo for double buffering */
+ 	renderinfo->var_screeninfo.yres_virtual = 2*renderinfo->var_screeninfo.yres;
+@@ -5407,6 +5404,15 @@
+ 		return 0;
+ 	}
+ 
++	/* get fixed screeninfo */
++	if (ioctl(renderinfo->fb, FBIOGET_FSCREENINFO, &renderinfo->fix_screeninfo) == -1)
++	{
++		perror("TuxTxt <FBIOGET_FSCREENINFO>");
++		FTC_Manager_Done(renderinfo->manager);
++		FT_Done_FreeType(renderinfo->library);
++		return 0;
++	}
++
+ #if TUXTXT_DEBUG
+ 	if (ioctl(fb, FBIOGET_VSCREENINFO, &renderinfo->var_screeninfo) == -1)
+ 	{

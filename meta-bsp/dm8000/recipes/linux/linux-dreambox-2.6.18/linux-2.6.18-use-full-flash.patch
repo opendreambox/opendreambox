@@ -1,0 +1,100 @@
+--- linux-2.6.18-org/arch/mips/kernel/setup.c	2011-03-21 15:00:29.000000000 +0100
++++ linux-2.6.18/arch/mips/kernel/setup.c	2011-03-22 11:01:22.249357772 +0100
+@@ -611,7 +611,6 @@
+ #define brcm_reserve_bootmem_node(firstUsableAddr)
+ #endif // #define CONFIG_MIPS_BRCM
+ 
+-
+ static inline void parse_cmdline_early(void)
+ {
+ 	char c = ' ', *to = command_line, *from = saved_command_line;
+@@ -818,6 +817,14 @@
+ 	printk("User-defined physical RAM map:\n");
+ 	brcm_print_memory_map();
+ 
++	{
++		const char *legacy_flash_mapping_str = prom_getenv("legacy_flash_mapping");
++		if (legacy_flash_mapping_str) {
++			extern int use_legacy_flash_mapping;
++			use_legacy_flash_mapping = simple_strtol(legacy_flash_mapping_str, NULL, 0);
++		}
++	}
++
+ }
+ 
+ static inline int parse_rd_cmdline(unsigned long* rd_start, unsigned long* rd_end)
+--- linux-2.6.18-org/drivers/mtd/nand/dm8000_nand.c	2011-03-22 11:08:12.321357609 +0100
++++ linux-2.6.18/drivers/mtd/nand/dm8000_nand.c	2011-03-22 11:07:25.185357627 +0100
+@@ -25,6 +25,9 @@
+ #include <linux/mtd/partitions.h>
+ #include <asm/io.h>
+ 
++int use_legacy_flash_mapping=0;
++EXPORT_SYMBOL(use_legacy_flash_mapping);
++
+ static struct mtd_info *dm8000_mtd;
+ /*
+  * Define partitions for flash device
+@@ -41,6 +44,26 @@
+ 	}, {
+ 		.name	= "boot partition",
+ 		.offset	= 1024*1024,
++		.size	= 7*1024*1024
++	}, {
++		.name	= "root partition",
++		.offset	= 8*1024*1024,
++		.size	= 248*1024*1024
++	}
++};
++
++static const struct mtd_partition partition_info_legacy[] = {
++	{
++		.name	= "complete",
++		.offset	= 0,
++		.size	= 256*1024*1024
++	}, {
++		.name	= "loader",
++		.offset	= 0,
++		.size	= 1024*1024
++	}, {
++		.name	= "boot partition",
++		.offset	= 1024*1024,
+ 		.size	= 3*1024*1024
+ 	}, {
+ 		.name	= "root partition",
+@@ -48,19 +71,18 @@
+ 		.size	= 60*1024*1024
+ 	}, {
+ 		.name	= "home partition",
+-		.offset = 64*1024*1024,
++		.offset	= 64*1024*1024,
+ 		.size	= 64*1024*1024
+ 	}, {
+ 		.name	= "unused partition",
+-		.offset = 128*1024*1024,
++		.offset	= 128*1024*1024,
+ 		.size	= 120*1024*1024
+ 	}, {
+ 		.name	= "preset partition",
+-		.offset = 248*1024*1024,
++		.offset	= 248*1024*1024,
+ 		.size	= 8*1024*1024
+ 	}
+ };
+-#define NUM_PARTITIONS 7
+ 
+ static int dm8000_nand_dev_ready(struct mtd_info *mtd);
+ 
+@@ -176,7 +198,11 @@
+ 	}
+ 
+ 	/* Register the partitions */
+-	ret = add_mtd_partitions(dm8000_mtd, partition_info, NUM_PARTITIONS);
++	if (use_legacy_flash_mapping)
++		ret = add_mtd_partitions(dm8000_mtd, partition_info_legacy, 7);
++	else
++		ret = add_mtd_partitions(dm8000_mtd, partition_info, 4);
++
+ 	if (ret < 0)
+ 		goto err_nand_release;
+ 

@@ -1,0 +1,738 @@
+diff -Naur libs-org/libtuxtxt/libtuxtxt.c libs/libtuxtxt/libtuxtxt.c
+--- libs-org/libtuxtxt/libtuxtxt.c	2010-03-06 10:51:52.000000000 +0100
++++ libs/libtuxtxt/libtuxtxt.c	2010-03-06 10:55:25.000000000 +0100
+@@ -7,6 +7,15 @@
+  *    Info entnommen aus videotext-0.6.19991029,                              *
+  *    Copyright (c) 1994-96 Martin Buck  <martin-2.buck@student.uni-ulm.de>   *
+  *                                                                            *
++ *              ported 2006 to Dreambox 7025 / 32Bit framebuffer              *
++ *                   by Seddi <seddi@i-have-a-dreambox.com>                   *
++ *                                                                            *
++ *              ported 32Bit framebuffer to Tuxtxt v1.99 (2008)               *
++ *                      by the PLi team (Sat-Turner)                          *
++ *                                                                            *
++ *              ported to 20090130                                            *
++ *                      by the PLi team (pieterg)                             *
++ *                                                                            *
+  ******************************************************************************/
+ 
+ #ifdef DEBUG
+diff -Naur libs-org/libtuxtxt/tuxtxt_common.h libs/libtuxtxt/tuxtxt_common.h
+--- libs-org/libtuxtxt/tuxtxt_common.h	2010-03-06 10:51:52.000000000 +0100
++++ libs/libtuxtxt/tuxtxt_common.h	2010-03-06 10:56:26.000000000 +0100
+@@ -627,6 +627,19 @@
+ 	aG3_70, aG3_71, aG3_72, aG3_73, aG3_74, aG3_75, aG3_76, aG3_77, aG3_78, aG3_79, aG3_7a, aG3_7b, aG3_7c, aG3_7d, aG3_7e
+ };
+ 
++/* 32bit colortable */
++unsigned char bgra[][4] = {
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF",
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF",
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF",
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF",
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF",
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF",
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF",
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xFF",
++"\0\0\0\xFF", "\0\0\0\xFF", "\0\0\0\xC0", "\0\0\0\x00",
++"\0\0\0\x33" };
++
+ tuxtxt_cache_struct tuxtxt_cache;
+ static pthread_mutex_t tuxtxt_cache_lock = PTHREAD_MUTEX_INITIALIZER;
+ int tuxtxt_get_zipsize(int p,int sp)
+@@ -3294,14 +3307,21 @@
+ void tuxtxt_FillRect(unsigned char *lfb, int xres, int x, int y, int w, int h, int color)
+ {
+ 	if (!lfb) return;
+-	unsigned char *p = lfb + x + y * xres;
++	unsigned char *p = lfb + x*4 + y * xres;
++	unsigned char linebuf[w*4];
++	int xtmp;
+ 
+ 	if (w > 0)
++	{
++		for (xtmp=0; xtmp<w; xtmp++)
++			memcpy(linebuf+xtmp*4,bgra[color],4);
++
+ 		for ( ; h > 0 ; h--)
+ 		{
+-			memset(p, color, w);
++			memcpy(p,linebuf,w*4);
+ 			p += xres;
+ 		}
++	}
+ }
+ 
+ void tuxtxt_RenderDRCS(int xres,
+@@ -3311,7 +3331,7 @@
+ 	unsigned char fgcolor, unsigned char bgcolor)
+ {
+ 	if (d == NULL) return;
+-	int bit, x, y;
++	int bit, x, y, ltmp;
+ 	unsigned char *ay = ax + 13; /* array[0..10] of y-offsets for each pixel */
+ 
+ 	for (y = 0; y < 10; y++) /* 10*2 bytes a 6 pixels per char definition */
+@@ -3335,9 +3355,21 @@
+ 			for (i = 0; i < h; i++)
+ 			{
+ 				if (ax[x+1] > ax[x])
+-					memset(d + ax[x], f1, ax[x+1] - ax[x]);
++				{
++//					memset(d + ax[x], f1, ax[x+1] - ax[x]);
++					for (ltmp=0 ; ltmp < (ax[x+1]-ax[x]); ltmp++)
++					{
++						memcpy(d + ax[x]*4 +ltmp*4,bgra[f1],4);
++					}
++				}
+ 				if (ax[x+7] > ax[x+6])
+-					memset(d + ax[x+6], f2, ax[x+7] - ax[x+6]); /* 2nd byte 6 pixels to the right */
++				{
++//					memset(d + ax[x+6], f2, ax[x+7] - ax[x+6]); /* 2nd byte 6 pixels to the right */
++					for (ltmp=0 ; ltmp < (ax[x+7]-ax[x+6]); ltmp++)
++					{
++						memcpy(d + ax[x+6]*4 +ltmp*4,bgra[f2],4);
++					}
++				}
+ 				d += xres;
+ 			}
+ 			d -= h * xres;
+@@ -3350,20 +3382,26 @@
+ void tuxtxt_DrawVLine(unsigned char *lfb, int xres, int x, int y, int l, int color)
+ {
+ 	if (!lfb) return;
+-	unsigned char *p = lfb + x + y * xres;
++	unsigned char *p = lfb + 4*x + y * xres;
+ 
+ 	for ( ; l > 0 ; l--)
+ 	{
+-		*p = color;
++		memcpy(p,bgra[color],4);
+ 		p += xres;
+ 	}
+ }
+ 
+ void tuxtxt_DrawHLine(unsigned char* lfb,int xres,int x, int y, int l, int color)
+ {
++	int ltmp;
+ 	if (!lfb) return;
+ 	if (l > 0)
+-		memset(lfb + x + y * xres, color, l);
++	{
++		for (ltmp=0; ltmp < l; ltmp++)
++		{
++			memcpy(lfb + x*4 + ltmp*4 + y * xres, bgra[color], 4);
++		}
++	}
+ }
+ 
+ void tuxtxt_FillRectMosaicSeparated(unsigned char *lfb, int xres,int x, int y, int w, int h, int fgcolor, int bgcolor, int set)
+@@ -3378,48 +3416,54 @@
+ 
+ void tuxtxt_FillTrapez(unsigned char *lfb, int xres,int x0, int y0, int l0, int xoffset1, int h, int l1, int color)
+ {
+-	unsigned char *p = lfb + x0 + y0 * xres;
++	unsigned char *p = lfb + x0*4 + y0 * xres;
+ 	int xoffset, l;
+ 	int yoffset;
++	int ltmp;
+ 
+ 	for (yoffset = 0; yoffset < h; yoffset++)
+ 	{
+ 		l = l0 + ((l1-l0) * yoffset + h/2) / h;
+ 		xoffset = (xoffset1 * yoffset + h/2) / h;
+ 		if (l > 0)
+-			memset(p + xoffset, color, l);
++		{
++			for (ltmp=0; ltmp < l; ltmp++)
++			{
++				memcpy(p + xoffset*4 +ltmp*4, bgra[color], 4);
++			}
++		}
+ 		p += xres;
+ 	}
+ }
+ void tuxtxt_FlipHorz(unsigned char *lfb, int xres,int x, int y, int w, int h)
+ {
+-	unsigned char buf[w];
+-	unsigned char *p = lfb + x + y * xres;
++	unsigned char buf[w*4];
++	unsigned char *p = lfb + x*4 + y * xres;
+ 	int w1,h1;
+ 
+ 	for (h1 = 0 ; h1 < h ; h1++)
+ 	{
+-		memcpy(buf,p,w);
++		memcpy(buf,p,w*4);
+ 		for (w1 = 0 ; w1 < w ; w1++)
+ 		{
+-			*(p+w1) = buf[w-(w1+1)];
++			memcpy(p+w1*4,buf+((w-w1)*4)-4,4);
+ 		}
+ 		p += xres;
+ 	}
+ }
+ void tuxtxt_FlipVert(unsigned char *lfb, int xres,int x, int y, int w, int h)
+ {
+-	unsigned char buf[w];
+-	unsigned char *p = lfb + x + y * xres, *p1, *p2;
++	unsigned char buf[w*4];
++	unsigned char *p = lfb + x*4 + y * xres, *p1, *p2;
+ 	int h1;
+ 
+ 	for (h1 = 0 ; h1 < h/2 ; h1++)
+ 	{
+ 		p1 = (p+(h1*xres));
+ 		p2 = (p+(h-(h1+1))*xres);
+-		memcpy(buf,p1,w);
+-		memcpy(p1,p2,w);
+-		memcpy(p2,buf,w);
++		memcpy(buf,p1,w*4);
++		memcpy(p1,p2,w*4);
++		memcpy(p2,buf,w*4);
+ 	}
+ }
+ 
+@@ -3683,7 +3727,7 @@
+ 				if (lfb) 
+ 				{
+ 					int x,y,f,c;
+-					unsigned char* p = lfb + *pPosX + PosY* xres;
++					unsigned char* p = lfb + (*pPosX)*4 + PosY* xres;
+ 					for (y=0; y<fontheight;y++)
+ 					{
+ 						for (f=0; f<factor; f++)
+@@ -3691,7 +3735,7 @@
+ 							for (x=0; x<curfontwidth*xfactor;x++)
+ 							{
+ 								c = (y&4 ? (x/3)&1 :((x+3)/3)&1);
+-								*(p+x) = (c ? fgcolor : bgcolor);
++								memcpy((p+x*4),bgra[(c ? fgcolor : bgcolor)],4);
+ 							}
+ 							p += xres;
+ 						}
+@@ -3729,7 +3773,7 @@
+ 			}
+ 			axdrcs[12] = curfontwidth; /* adjust last x-offset according to position, FIXME: double width */
+ 			tuxtxt_RenderDRCS(xres,p,
+-						  lfb + *pPosX + PosY * xres,
++						  lfb + (*pPosX)*4 + PosY * xres,
+ 						  axdrcs, fgcolor, bgcolor);
+ 		}
+ 		else
+@@ -3996,12 +4040,12 @@
+ void tuxtxt_FillBorder(tstRenderInfo* renderinfo, int color)
+ {
+ 	int ys =  renderinfo->var_screeninfo.yres-renderinfo->var_screeninfo.yoffset;
+-	tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,0     , ys                     ,renderinfo->StartX      ,renderinfo->var_screeninfo.yres                       ,color);
+-	tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->StartX, ys                     ,renderinfo->displaywidth,renderinfo->StartY                                    ,color);
+-	tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->StartX, ys+renderinfo->StartY+25*renderinfo->fontheight,renderinfo->displaywidth,renderinfo->var_screeninfo.yres-(renderinfo->StartY+25*renderinfo->fontheight),color);
++	tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,0     , ys                     ,renderinfo->StartX      ,renderinfo->var_screeninfo.yres                       ,color);
++	tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->StartX, ys                     ,renderinfo->displaywidth,renderinfo->StartY                                    ,color);
++	tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->StartX, ys+renderinfo->StartY+25*renderinfo->fontheight,renderinfo->displaywidth,renderinfo->var_screeninfo.yres-(renderinfo->StartY+25*renderinfo->fontheight),color);
+ 
+ 	if (renderinfo->screenmode == 0 )
+-		tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->StartX+renderinfo->displaywidth, ys,renderinfo->var_screeninfo.xres-(renderinfo->StartX+renderinfo->displaywidth),renderinfo->var_screeninfo.yres   ,color);
++		tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->StartX+renderinfo->displaywidth, ys,renderinfo->var_screeninfo.xres-(renderinfo->StartX+renderinfo->displaywidth),renderinfo->var_screeninfo.yres   ,color);
+ }
+ 
+ 
+@@ -4037,12 +4081,12 @@
+ }
+ void tuxtxt_ClearBB(tstRenderInfo* renderinfo,int color)
+ {
+-	memset(renderinfo->lfb + (renderinfo->var_screeninfo.yres-renderinfo->var_screeninfo.yoffset )*renderinfo->var_screeninfo.xres, color, renderinfo->var_screeninfo.xres*renderinfo->var_screeninfo.yres);
++	tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,0, renderinfo->var_screeninfo.yres - renderinfo->var_screeninfo.yoffset, renderinfo->var_screeninfo.xres, renderinfo->var_screeninfo.yres, color);
+ }
+ 
+ void tuxtxt_ClearFB(tstRenderInfo* renderinfo,int color)
+ {
+-	memset(renderinfo->lfb + renderinfo->var_screeninfo.xres*renderinfo->var_screeninfo.yoffset, color, renderinfo->var_screeninfo.xres*renderinfo->var_screeninfo.yres);
++	tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,0, renderinfo->var_screeninfo.yoffset, renderinfo->var_screeninfo.xres, renderinfo->var_screeninfo.yres, color);
+ }
+ 
+ int  tuxtxt_GetCurFontWidth(tstRenderInfo* renderinfo)
+@@ -4079,7 +4123,7 @@
+ 	renderinfo->PosX += t;
+ 	int curfontwidth2 = tuxtxt_GetCurFontWidth(renderinfo);
+ 	renderinfo->PosX -= t;
+-	int alphachar = tuxtxt_RenderChar(renderinfo->lfb+(yoffset+renderinfo->StartY)*renderinfo->var_screeninfo.xres,  renderinfo->var_screeninfo.xres,Char, &renderinfo->PosX, renderinfo->PosY-renderinfo->StartY, Attribute, zoom, curfontwidth, curfontwidth2, renderinfo->fontheight, renderinfo->transpmode,renderinfo->axdrcs, renderinfo->ascender);
++	int alphachar = tuxtxt_RenderChar(renderinfo->lfb+(yoffset+renderinfo->StartY)*renderinfo->fix_screeninfo.line_length, renderinfo->fix_screeninfo.line_length, Char, &renderinfo->PosX, renderinfo->PosY-renderinfo->StartY, Attribute, zoom, curfontwidth, curfontwidth2, renderinfo->fontheight, renderinfo->transpmode,renderinfo->axdrcs, renderinfo->ascender);
+ 	if (alphachar <= 0) return;
+ 
+ 	if (zoom && Attribute->doubleh)
+@@ -4112,7 +4156,7 @@
+ #if TUXTXT_DEBUG
+ 		printf("TuxTxt <FT_Get_Char_Index for Char %x \"%c\" failed\n", alphachar, alphachar);
+ #endif
+-		tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->PosX, renderinfo->PosY + yoffset, curfontwidth, factor*renderinfo->fontheight, bgcolor);
++		tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->PosX, renderinfo->PosY + yoffset, curfontwidth, factor*renderinfo->fontheight, bgcolor);
+ 		renderinfo->PosX += curfontwidth;
+ 		return;
+ 	}
+@@ -4127,7 +4171,7 @@
+ 		printf("TuxTxt <FTC_SBitCache_Lookup: 0x%x> c%x a%x g%x w%d h%d x%d y%d\n",
+ 				 error, alphachar, Attribute, glyph, curfontwidth, renderinfo->fontheight, renderinfo->PosX, renderinfo->PosY);
+ #endif
+-		tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->PosX, renderinfo->PosY + yoffset, curfontwidth, renderinfo->fontheight, bgcolor);
++		tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->PosX, renderinfo->PosY + yoffset, curfontwidth, renderinfo->fontheight, bgcolor);
+ 		renderinfo->PosX += curfontwidth;
+ 		return;
+ 	}
+@@ -4188,13 +4232,13 @@
+ 		    Row = 0;
+ 		}
+ 		else		
+-		    tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->PosX, renderinfo->PosY + yoffset, curfontwidth, Row, bgcolor); /* fill upper margin */
++				tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->PosX, renderinfo->PosY + yoffset, curfontwidth, Row, bgcolor); /* fill upper margin */
+ 
+ 		if (renderinfo->ascender - renderinfo->sbit->top + renderinfo->TTFShiftY + he > renderinfo->fontheight)
+ 			he = renderinfo->fontheight - renderinfo->ascender + renderinfo->sbit->top - renderinfo->TTFShiftY; /* limit char height to defined/calculated fontheight */
+ 		if (he < 0) he = renderinfo->fontheight;
+ 
+-		p = renderinfo->lfb + renderinfo->PosX + (yoffset + renderinfo->PosY + Row) * renderinfo->var_screeninfo.xres; /* running pointer into framebuffer */
++		p = renderinfo->lfb + renderinfo->PosX*4 + (yoffset + renderinfo->PosY + Row) * renderinfo->fix_screeninfo.line_length; /* running pointer into framebuffer */
+ 		for (Row = he; Row; Row--) /* row counts up, but down may be a little faster :) */
+ 		{
+ 			int pixtodo = (renderinfo->usettf ? renderinfo->sbit->width : curfontwidth);
+@@ -4203,8 +4247,8 @@
+ 			for (Bit = xfactor * (renderinfo->sbit->left + renderinfo->TTFShiftX); Bit > 0; Bit--) /* fill left margin */
+ 			{
+ 				for (f = factor-1; f >= 0; f--)
+-					*(p + f*renderinfo->var_screeninfo.xres) = bgcolor;
+-				p++;
++					memcpy((p + f*renderinfo->fix_screeninfo.line_length),bgra[bgcolor],4);/*bgcolor*/
++				p+=4;
+ 				if (!renderinfo->usettf)
+ 					pixtodo--;
+ 			}
+@@ -4224,14 +4268,14 @@
+ 						color = bgcolor;
+ 
+ 					for (f = factor-1; f >= 0; f--)
+-						*(p + f*renderinfo->var_screeninfo.xres) = color;
+-					p++;
++						memcpy((p + f*renderinfo->fix_screeninfo.line_length),bgra[color],4);
++					p+=4;
+ 
+ 					if (xfactor > 1) /* double width */
+ 					{
+ 						for (f = factor-1; f >= 0; f--)
+-							*(p + f*renderinfo->var_screeninfo.xres) = color;
+-						p++;
++							memcpy((p + f*renderinfo->fix_screeninfo.line_length),bgra[color],4);
++						p+=4;
+ 						if (!renderinfo->usettf)
+ 							pixtodo--;
+ 					}
+@@ -4242,17 +4286,17 @@
+ 				  Bit > 0; Bit--) /* fill rest of char width */
+ 			{
+ 				for (f = factor-1; f >= 0; f--)
+-					*(p + f*renderinfo->var_screeninfo.xres) = bgcolor;
+-				p++;
++					memcpy((p + f*renderinfo->fix_screeninfo.line_length),bgra[bgcolor],4);
++				p+=4;
+ 			}
+ 
+-			p = pstart + factor*renderinfo->var_screeninfo.xres;
++			p = pstart + factor*renderinfo->fix_screeninfo.line_length;
+ 		}
+ 
+ 		Row = renderinfo->ascender - renderinfo->sbit->top + he + renderinfo->TTFShiftY;
+-		tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->PosX, renderinfo->PosY + yoffset + Row*factor, curfontwidth, (renderinfo->fontheight - Row) * factor, bgcolor); /* fill lower margin */
++		tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->PosX, renderinfo->PosY + yoffset + Row*factor, curfontwidth, (renderinfo->fontheight - Row) * factor, bgcolor); /* fill lower margin */
+ 		if (Attribute->underline)
+-			tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->PosX, renderinfo->PosY + yoffset + (renderinfo->fontheight-2)* factor, curfontwidth,2*factor, fgcolor); /* underline char */
++			tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->PosX, renderinfo->PosY + yoffset + (renderinfo->fontheight-2)* factor, curfontwidth,2*factor, fgcolor); /* underline char */
+ 
+ 		renderinfo->PosX += curfontwidth;
+ 		renderinfo->TTFShiftY = backupTTFshiftY; // restore TTFShiftY
+@@ -4300,9 +4344,8 @@
+ 
+ void tuxtxt_SwitchScreenMode(tstRenderInfo* renderinfo,int newscreenmode)
+ {
+-#if HAVE_DVB_API_VERSION >= 3
+ 	struct v4l2_format format;
+-#endif
++
+ 	/* reset transparency mode */
+ 	if (renderinfo->transpmode)
+ 		renderinfo->transpmode = 0;
+@@ -4370,42 +4413,53 @@
+ 
+ 		tuxtxt_setfontwidth(renderinfo,fw);
+ 
+-#if HAVE_DVB_API_VERSION < 3
+-		avia_pig_hide(renderinfo->pig);
+-		avia_pig_set_pos(renderinfo->pig, tx, ty);
+-		avia_pig_set_size(renderinfo->pig, tw, th);
+-		avia_pig_set_stack(renderinfo->pig, 2);
+-		avia_pig_show(renderinfo->pig);
+-#else
+-		int sm = 0;
+-		ioctl(renderinfo->pig, VIDIOC_OVERLAY, &sm);
+-		sm = 1;
+-		ioctl(renderinfo->pig, VIDIOC_G_FMT, &format);
+-		format.type = V4L2_BUF_TYPE_VIDEO_OVERLAY;
+-		format.fmt.win.w.left   = tx;
+-		format.fmt.win.w.top    = ty;
+-		format.fmt.win.w.width  = tw;
+-		format.fmt.win.w.height = th;
+-		ioctl(renderinfo->pig, VIDIOC_S_FMT, &format);
+-		ioctl(renderinfo->pig, VIDIOC_OVERLAY, &sm);
+-#endif
+-		ioctl(renderinfo->avs, AVSIOSSCARTPIN8, &fncmodes[renderinfo->screen_mode2]);
+-		ioctl(renderinfo->saa, SAAIOSWSS, &saamodes[renderinfo->screen_mode2]);
++		// Video picture scale/pos for e2
++		int i;
++		for (i=0; i<4; ++i)
++		{
++			char *targets[]={"left", "top", "width", "height"};
++			char filename[128];
++			snprintf(filename, 128, "/proc/stb/vmpeg/%d/dst_%s", 0, targets[i]);
++			FILE *f = fopen(filename, "w");
++			if (!f)
++				break;
++			int val = 0;
++			switch (i)
++			{
++			case 0: val = tx; break;
++			case 1: val = ty; break;
++			case 2: val = tw; break;
++			case 3: val = th; break;
++			}
++			fprintf(f, "%08x\n", val);
++			fclose(f);
++		}
++		
++		writeproc("/proc/stb/avs/0/sb", fncmodes[renderinfo->screen_mode2]);
++		writeproc("/proc/stb/denc/0/wss", saamodes[renderinfo->screen_mode2]);
+ 	}
+ 	else /* not split */
+ 	{
+-#if HAVE_DVB_API_VERSION < 3
+-		avia_pig_hide(renderinfo->pig);
+-#else
+-		ioctl(renderinfo->pig, VIDIOC_OVERLAY, &renderinfo->screenmode);
+-#endif
++		// Video picture scale/pos for e2
++		int i;
++		for (i=0; i<4; ++i)
++		{
++			char *targets[]={"left", "top", "width", "height"};
++			char filename[128];
++			snprintf(filename, 128, "/proc/stb/vmpeg/%d/dst_%s", 0, targets[i]);
++			FILE *f = fopen(filename, "w");
++			if (!f)
++				break;
++			fprintf(f, "%08x\n", 0);
++			fclose(f);
++		}
+ 
+ 		tuxtxt_setfontwidth(renderinfo,renderinfo->fontwidth_normal);
+ 		renderinfo->displaywidth= (renderinfo->ex-renderinfo->sx);
+ 		renderinfo->StartX = renderinfo->sx; //+ (ex-sx - 40*fontwidth) / 2; /* center screen */
+ 
+-		ioctl(renderinfo->avs, AVSIOSSCARTPIN8, &fncmodes[renderinfo->screen_mode1]);
+-		ioctl(renderinfo->saa, SAAIOSWSS, &saamodes[renderinfo->screen_mode1]);
++		writeproc("/proc/stb/avs/0/sb", fncmodes[renderinfo->screen_mode1]);
++		writeproc("/proc/stb/denc/0/wss", saamodes[renderinfo->screen_mode1]);
+ 	}
+ }
+ 
+@@ -4431,7 +4485,7 @@
+ 	if (renderinfo->boxed)
+ 	{
+ 		renderinfo->PosX = renderinfo->StartX + column*width;
+-		tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->PosX, renderinfo->PosY+yoffset, renderinfo->displaywidth, renderinfo->fontheight, tuxtxt_color_transp);
++		tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->PosX, renderinfo->PosY+yoffset, renderinfo->displaywidth, renderinfo->fontheight, tuxtxt_color_transp);
+ 		return;
+ 	}
+ 
+@@ -4442,7 +4496,7 @@
+ 
+ 		if (l > 9) /* smaller font, if no space for one half space at front and end */
+ 			tuxtxt_setfontwidth(renderinfo,oldfontwidth * 10 / (l+1));
+-		tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->PosX, renderinfo->PosY+yoffset, width+(renderinfo->displaywidth%4), renderinfo->fontheight, tuxtxt_atrtable[ATR_L250 + column].bg);
++		tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->PosX, renderinfo->PosY+yoffset, width+(renderinfo->displaywidth%4), renderinfo->fontheight, tuxtxt_atrtable[ATR_L250 + column].bg);
+ 		renderinfo->PosX += ((width) - (l*renderinfo->fontwidth+l*renderinfo->fontwidth/abx))/2; /* center */
+ 		for (p = tuxtxt_cache.adip[linkpage]; *p; p++)
+ 			tuxtxt_RenderCharBB(renderinfo,*p, &tuxtxt_atrtable[ATR_L250 + column]);
+@@ -4451,7 +4505,7 @@
+ 	else /* display number */
+ 	{
+ 		renderinfo->PosX = renderinfo->StartX + column*width;
+-		tuxtxt_FillRect(renderinfo->lfb,renderinfo->var_screeninfo.xres,renderinfo->PosX, renderinfo->PosY+yoffset, renderinfo->displaywidth+renderinfo->sx-renderinfo->PosX, renderinfo->fontheight, tuxtxt_atrtable[ATR_L250 + column].bg);
++		tuxtxt_FillRect(renderinfo->lfb,renderinfo->fix_screeninfo.line_length,renderinfo->PosX, renderinfo->PosY+yoffset, renderinfo->displaywidth+renderinfo->sx-renderinfo->PosX, renderinfo->fontheight, tuxtxt_atrtable[ATR_L250 + column].bg);
+ 		if (linkpage < tuxtxt_cache.page)
+ 		{
+ 			line[6] = '<';
+@@ -4620,7 +4674,7 @@
+ void tuxtxt_CopyBB2FB(tstRenderInfo* renderinfo)
+ {
+ 	unsigned char *src, *dst, *topsrc;
+-	int fillcolor, i, screenwidth;
++	int fillcolor, i, screenwidth, swtmp;
+ 
+ 	/* line 25 */
+ 	if (!renderinfo->pagecatching)
+@@ -4636,8 +4690,8 @@
+ 		if (ioctl(renderinfo->fb, FBIOPAN_DISPLAY, &renderinfo->var_screeninfo) == -1)
+ 			perror("TuxTxt <FBIOPAN_DISPLAY>");
+ 
+-		if (renderinfo->StartX > 0 && *renderinfo->lfb != *(renderinfo->lfb + renderinfo->var_screeninfo.xres * renderinfo->var_screeninfo.yres)) /* adapt background of backbuffer if changed */
+-			tuxtxt_FillBorder(renderinfo,*(renderinfo->lfb + renderinfo->var_screeninfo.xres * renderinfo->var_screeninfo.yoffset));
++		if (renderinfo->StartX > 0 && *renderinfo->lfb != *(renderinfo->lfb + renderinfo->fix_screeninfo.line_length * renderinfo->var_screeninfo.yres)) /* adapt background of backbuffer if changed */
++			tuxtxt_FillBorder(renderinfo,*(renderinfo->lfb + renderinfo->fix_screeninfo.line_length * renderinfo->var_screeninfo.yoffset));
+ //			 ClearBB(*(lfb + renderinfo->var_screeninfo.xres * renderinfo->var_screeninfo.yoffset));
+ 
+ 		if (renderinfo->clearbbcolor >= 0)
+@@ -4648,18 +4702,18 @@
+ 		return;
+ 	}
+ 
+-	src = dst = topsrc = renderinfo->lfb + renderinfo->StartY*renderinfo->var_screeninfo.xres;
++	src = dst = topsrc = renderinfo->lfb + renderinfo->StartY*renderinfo->fix_screeninfo.line_length;
+ 
+ 
+ 	if (renderinfo->var_screeninfo.yoffset)
+-		dst += renderinfo->var_screeninfo.xres * renderinfo->var_screeninfo.yres;
++		dst += renderinfo->fix_screeninfo.line_length * renderinfo->var_screeninfo.yres;
+ 	else
+ 	{
+-		src += renderinfo->var_screeninfo.xres * renderinfo->var_screeninfo.yres;
+-		topsrc += renderinfo->var_screeninfo.xres * renderinfo->var_screeninfo.yres;
++		src += renderinfo->fix_screeninfo.line_length * renderinfo->var_screeninfo.yres;
++		topsrc += renderinfo->fix_screeninfo.line_length * renderinfo->var_screeninfo.yres;
+ 	}
+ 	if (!renderinfo->pagecatching )
+-		memcpy(dst+(24*renderinfo->fontheight)*renderinfo->var_screeninfo.xres, src + (24*renderinfo->fontheight)*renderinfo->var_screeninfo.xres, renderinfo->var_screeninfo.xres*renderinfo->fontheight); /* copy line25 in normal height */
++		memcpy(dst+(24*renderinfo->fontheight)*renderinfo->fix_screeninfo.line_length, src + (24*renderinfo->fontheight)*renderinfo->fix_screeninfo.line_length, renderinfo->fix_screeninfo.line_length*renderinfo->fontheight); /* copy line25 in normal height */
+ 
+ 	if (renderinfo->transpmode)
+ 		fillcolor = tuxtxt_color_transp;
+@@ -4667,94 +4721,81 @@
+ 		fillcolor = tuxtxt_cache.FullScrColor;
+ 
+ 	if (renderinfo->zoommode == 2)
+-		src += 12*renderinfo->fontheight*renderinfo->var_screeninfo.xres;
++		src += 12*renderinfo->fontheight*renderinfo->fix_screeninfo.line_length;
+ 
+ 	if (renderinfo->screenmode == 1) /* copy topmenu in normal height (since PIG also keeps dimensions) */
+ 	{
+ 		unsigned char *topdst = dst;
+ 
+-		screenwidth = TV43STARTX;
++		screenwidth = (TV43STARTX) * 4;
+ 
+ 		topsrc += screenwidth;
+ 		topdst += screenwidth;
+ 		for (i=0; i < 24*renderinfo->fontheight; i++)
+ 		{
+ 			memcpy(topdst, topsrc,renderinfo->ex-screenwidth);
+-			topdst += renderinfo->var_screeninfo.xres;
+-			topsrc += renderinfo->var_screeninfo.xres;
++			topdst += renderinfo->fix_screeninfo.line_length;
++			topsrc += renderinfo->fix_screeninfo.line_length;
+ 		}
+ 	}
+ 	else if (renderinfo->screenmode == 2)
+-		screenwidth = TV169FULLSTARTX;
++		screenwidth = (TV169FULLSTARTX) * 4;
+ 	else
+-		screenwidth = renderinfo->var_screeninfo.xres;
++		screenwidth = renderinfo->fix_screeninfo.line_length;
+ 
+ 	for (i = renderinfo->StartY; i>0;i--)
+ 	{
+-		memset(dst - i*renderinfo->var_screeninfo.xres, fillcolor, screenwidth);
++		for (swtmp=0; swtmp<screenwidth/4; swtmp++)
++		{
++			memcpy(dst - i*renderinfo->fix_screeninfo.line_length+swtmp*4, bgra[fillcolor], 4);
++		}
+ 	}
+ 
+ 	for (i = 12*renderinfo->fontheight; i; i--)
+ 	{
+ 		memcpy(dst, src, screenwidth);
+-		dst += renderinfo->var_screeninfo.xres;
++		dst += renderinfo->fix_screeninfo.line_length;
+ 		memcpy(dst, src, screenwidth);
+-		dst += renderinfo->var_screeninfo.xres;
+-		src += renderinfo->var_screeninfo.xres;
++		dst += renderinfo->fix_screeninfo.line_length;
++		src += renderinfo->fix_screeninfo.line_length;
+ 	}
+ 
+ //	if (!pagecatching )
+ //		memcpy(dst, lfb + (StartY+24*fontheight)*renderinfo->var_screeninfo.xres, renderinfo->var_screeninfo.xres*fontheight); /* copy line25 in normal height */
+-	for (i = renderinfo->var_screeninfo.yres - renderinfo->StartY - 25*renderinfo->fontheight; i >= 0;i--)
+-	{
+-		memset(dst + renderinfo->var_screeninfo.xres*(renderinfo->fontheight+i), fillcolor, screenwidth);
+-	}
++	dst -= renderinfo->fix_screeninfo.line_length;
++
++	unsigned char linebuf[screenwidth];
++	for (swtmp=0; swtmp < screenwidth/4;swtmp++)
++		memcpy(linebuf+swtmp*4, bgra[fillcolor], 4);
++	for (i = renderinfo->var_screeninfo.yres - renderinfo->StartY - 25 * renderinfo->fontheight; i >= 0;i--)
++		memcpy(dst + renderinfo->fix_screeninfo.line_length*(renderinfo->fontheight+i), linebuf, screenwidth);
+ }
+ 
+ void tuxtxt_setcolors(tstRenderInfo* renderinfo,unsigned short *pcolormap, int offset, int number)
+ {
+-	struct fb_cmap colormap_0 = {0, tuxtxt_color_SIZECOLTABLE, renderinfo->rd0, renderinfo->gn0, renderinfo->bl0, renderinfo->tr0};
+-	int i, changed=0;
++	int i,trans_tmp;
+ 	int j = offset; /* index in global color table */
+ 
+-	unsigned short t = renderinfo->tr0[tuxtxt_color_transp2];
+-	renderinfo->tr0[tuxtxt_color_transp2] = (renderinfo->trans_mode+7)<<11 | 0x7FF;
+-#ifndef HAVE_DREAMBOX_HARDWARE
+-	/* "correct" semi-transparent for Nokia (GTX only allows 2(?) levels of transparency) */
+-	if (tuxbox_get_vendor() == TUXBOX_VENDOR_NOKIA)
+-		renderinfo->tr0[tuxtxt_color_transp2] = 0xFFFF;
+-#endif
+-	if (t != renderinfo->tr0[tuxtxt_color_transp2]) changed = 1;
++	trans_tmp=25-renderinfo->trans_mode;
++
++	bgra[tuxtxt_color_transp2][3]=((trans_tmp+7)<<11 | 0x7FF)>>8;
++
+ 	for (i = 0; i < number; i++)
+ 	{
+-		int r = (pcolormap[i] << 12) & 0xf000;
+-		int g = (pcolormap[i] <<  8) & 0xf000;
+-		int b = (pcolormap[i] <<  4) & 0xf000;
+-
++		int r = (pcolormap[i] << 12 & 0xF000) >> 8;
++		int g = (pcolormap[i] << 8 & 0xF000) >> 8;
++		int b = (pcolormap[i] << 4 & 0xF000) >> 8;
+ 
+ 		r = (r * (0x3f+(renderinfo->color_mode<<3))) >> 8;
+ 		g = (g * (0x3f+(renderinfo->color_mode<<3))) >> 8;
+ 		b = (b * (0x3f+(renderinfo->color_mode<<3))) >> 8;
+-		if (renderinfo->rd0[j] != r)
+-		{
+-			renderinfo->rd0[j] = r;
+-			changed = 1;
+-		}
+-		if (renderinfo->gn0[j] != g)
+-		{
+-			renderinfo->gn0[j] = g;
+-			changed = 1;
+-		}
+-		if (renderinfo->bl0[j] != b)
+-		{
+-			renderinfo->bl0[j] = b;
+-			changed = 1;
+-		}
++
++		bgra[j][2]=r;
++		bgra[j][1]=g;
++		bgra[j][0]=b;
++
+ 		j++;
+ 	}
+-	if (changed)
+-		if (ioctl(renderinfo->fb, FBIOPUTCMAP, &colormap_0) == -1)
+-			perror("TuxTxt <FBIOPUTCMAP>");
+ }
+ 
+ /******************************************************************************
+@@ -4968,11 +5009,11 @@
+ 
+ 			for (row = 0; row < DRCSROWS; row++)
+ 				for (col = 0; col < DRCSCOLS; col++)
+-					tuxtxt_RenderDRCS(renderinfo->var_screeninfo.xres,
++					tuxtxt_RenderDRCS(renderinfo->fix_screeninfo.line_length,
+ 						renderinfo->page_char + 20 * (DRCSCOLS * row + col + 2),
+ 						renderinfo->lfb
+-						+ (renderinfo->StartY + renderinfo->fontheight + DRCSYSPC * row + renderinfo->var_screeninfo.yres - renderinfo->var_screeninfo.yoffset) * renderinfo->var_screeninfo.xres
+-						+ renderinfo->StartX + DRCSXSPC * col,
++						+ (renderinfo->StartY + renderinfo->fontheight + DRCSYSPC * row + renderinfo->var_screeninfo.yres - renderinfo->var_screeninfo.yoffset) * renderinfo->fix_screeninfo.line_length
++					                  + (renderinfo->StartX + DRCSXSPC * col)*4,
+ 						ax, tuxtxt_color_white, tuxtxt_color_black);
+ 
+ 			memset(renderinfo->page_char + 40, 0xff, 24*40); /* don't render any char below row 0 */
+@@ -5062,13 +5103,13 @@
+ 				renderinfo->pageinfo = p;
+ 				renderinfo->boxed = p->boxed;
+ 			}
++			if (tuxtxt_cache.colortable) /* as late as possible to shorten the time the old page is displayed with the new colors */
++				tuxtxt_setcolors(renderinfo,tuxtxt_cache.colortable, 16, 16); /* set colors for CLUTs 2+3 */
+ 			if (renderinfo->boxed || renderinfo->transpmode)
+ //				tuxtxt_cache.FullScrColor = tuxtxt_color_transp;
+ 				tuxtxt_FillBorder(renderinfo,tuxtxt_color_transp);
+ 			else
+ 				tuxtxt_FillBorder(renderinfo,tuxtxt_cache.FullScrColor);
+-			if (tuxtxt_cache.colortable) /* as late as possible to shorten the time the old page is displayed with the new colors */
+-				tuxtxt_setcolors(renderinfo,tuxtxt_cache.colortable, 16, 16); /* set colors for CLUTs 2+3 */
+ 		}
+ 		else
+ 			startrow = 1;
+@@ -5408,39 +5449,6 @@
+ 		renderinfo->page_atrb[i].doublew = 0;
+ 		renderinfo->page_atrb[i].IgnoreAtBlackBgSubst = 0;
+ 	}
+-	if (setTVFormat)
+-	{
+-		/* open avs */
+-		if ((renderinfo->avs = open(AVS, O_RDWR)) == -1)
+-		{
+-			perror("TuxTxt <open AVS>");
+-			FTC_Manager_Done(renderinfo->manager);
+-			FT_Done_FreeType(renderinfo->library);
+-			return 0;
+-		}
+-
+-		ioctl(renderinfo->avs, AVSIOGSCARTPIN8, &renderinfo->fnc_old);
+-		ioctl(renderinfo->avs, AVSIOSSCARTPIN8, &fncmodes[renderinfo->screen_mode1]);
+-		/* open saa */
+-		if ((renderinfo->saa = open(SAA, O_RDWR)) == -1)
+-		{
+-			perror("TuxTxt <open SAA>");
+-			FTC_Manager_Done(renderinfo->manager);
+-			FT_Done_FreeType(renderinfo->library);
+-			return 0;
+-		}
+-	
+-		ioctl(renderinfo->saa, SAAIOGWSS, &renderinfo->saa_old);
+-		ioctl(renderinfo->saa, SAAIOSWSS, &saamodes[renderinfo->screen_mode1]);
+-	}
+-	/* open pig */
+-	if ((renderinfo->pig = open(PIG, O_RDWR)) == -1)
+-	{
+-		perror("TuxTxt <open PIG>");
+-		FTC_Manager_Done(renderinfo->manager);
+-		FT_Done_FreeType(renderinfo->library);
+-		return 0;
+-	}
+ 	return 1;	
+ }
+ /******************************************************************************
+@@ -5489,7 +5497,7 @@
+ 		FT_Done_FreeType(renderinfo->library);
+ 	renderinfo->manager = 0;
+ 	renderinfo->library = 0;
+-	tuxtxt_ClearFB(renderinfo,renderinfo->previousbackcolor);
++	memset(renderinfo->lfb, 0, renderinfo->fix_screeninfo.smem_len);
+ 	/* unmap framebuffer */
+ 	munmap(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len);
+ 	printf("[TTX] Rendering ended\n");
+diff -Naur libs-org/libtuxtxt/tuxtxt_def.h libs/libtuxtxt/tuxtxt_def.h
+--- libs-org/libtuxtxt/tuxtxt_def.h	2010-03-06 10:51:52.000000000 +0100
++++ libs/libtuxtxt/tuxtxt_def.h	2010-03-06 10:55:25.000000000 +0100
+@@ -72,8 +72,10 @@
+ #define hold_mosaic         0x1E
+ #define release_mosaic      0x1F
+ 
+-const int fncmodes[] = {AVS_FNCOUT_EXT43, AVS_FNCOUT_EXT169};
+-const int saamodes[] = {SAA_WSS_43F, SAA_WSS_169F};
++extern unsigned char bgra[][4];
++
++const char * fncmodes[] = {"12", "6"};
++const char * saamodes[] = {"4:3_full_format", "16:9_full_format"};
+ 
+ typedef enum /* object type */
+ {

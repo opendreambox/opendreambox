@@ -1,0 +1,15 @@
+diff --git a/lib/python/Plugins/SystemPlugins/NetworkSetup/earlyplugin.py b/lib/python/Plugins/SystemPlugins/NetworkSetup/earlyplugin.py
+index aed7804..1742e57 100644
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/NetworkSetup/earlyplugin.py
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/NetworkSetup/earlyplugin.py
+@@ -661,8 +661,8 @@ class Network:
+ 		moduledir = self.getWlanModuleDir(iface)
+ 		if moduledir:
+ 			module = os_path.basename(os_path.realpath(moduledir))
+-			if module in ('ath_pci','ath5k'):
+-				return 'madwifi'
++#			if module in ('ath_pci','ath5k'):
++#				return 'madwifi'
+ 			if module in ('rt73','rt73'):
+ 				return 'ralink'
+ 			if module == 'zd1211b':

@@ -1,0 +1,71 @@
+--- linux-2.6.18-org/drivers/ata/sata_svw.c	2010-10-18 22:40:58.000000000 +0200
++++ linux-2.6.18/drivers/ata/sata_svw.c	2010-12-01 16:59:17.072938908 +0100
+@@ -253,7 +253,7 @@
+ 	K2_SATA_GLOBAL_MASK		= 0x1018,
+ };
+ 
+-#define PORT_BASE(x, y)		((x) + (K2_SATA_PORT_OFFSET * (unsigned)(y)))
++#define PORT_BASE(x, y)		((x) + (K2_SATA_PORT_OFFSET * (unsigned)(y?0:1)))
+ #define PORT_MMIO(x)		PORT_BASE((void __iomem *) \
+ 					((x)->host->mmio_base), \
+ 					(x)->port_no)
+@@ -277,7 +277,7 @@
+ 	int reg)
+ {
+ 	void __iomem *mdio = mmio_base + K2_SATA_MDIO_OFFSET;
+-	volatile unsigned int pSel = 1 << port;
++	volatile unsigned int pSel = 1 << (port?0:1);
+ 	uint32_t cmd  = WRITE_CMD;
+ 	
+ 	if( reg > 0x13 )
+@@ -299,7 +299,7 @@
+ 	int reg, uint16_t val )
+ {
+ 	void __iomem *mdio = mmio_base + K2_SATA_MDIO_OFFSET;
+-	volatile unsigned int pSel = 1 << port;
++	volatile unsigned int pSel = 1 << (port?0:1);
+ 	uint32_t cmd  = WRITE_CMD;
+ 	
+ 	if( reg > 0x13 )
+@@ -589,8 +589,8 @@
+         unsigned int first=1;
+ 
+ retry_brcm_initsata2:
+-        for (port=0; port < num_ports; port++) 
+-	writel(1, (void *)(mmio_base + port*K2_SATA_PORT_OFFSET + K2_SATA_SCR_CONTROL_OFFSET));
++        for (port=0; port < num_ports; port++)
++                writel(1, PORT_BASE(mmio_base, port)+K2_SATA_SCR_CONTROL_OFFSET);
+ 
+         for (port=0; port < num_ports; port++) {
+                 /*
+@@ -615,9 +615,9 @@
+ 
+                 for (port=0; port < num_ports; port++)
+                 {
+-                        unsigned int status = readl((void *)(mmio_base + port*K2_SATA_PORT_OFFSET + K2_SATA_SCR_STATUS_OFFSET));
+-                        if( (status & 0xf) >= 0x5 && (status & 0xf0) == 0 && (status & 0xf00) == 0 ) 
+-			new_speed_mask |= 1<<port;
++                        unsigned int status = readl(PORT_BASE(mmio_base, port) + K2_SATA_SCR_STATUS_OFFSET);
++                        if( (status & 0xf) >= 0x5 && (status & 0xf0) == 0 && (status & 0xf00) == 0 )
++                                new_speed_mask |= 1<<port;
+                 }
+                 first = 0;
+                 if(new_speed_mask)
+@@ -676,7 +676,7 @@
+ 			*/
+ 			for (port = 0; port < probe_ent->n_ports; port++) {
+ 				// Put PHY in reset
+-				port_base = PORT_BASE(mmio_base, 0);
++				port_base = PORT_BASE(mmio_base, port);
+ 				reg = readl(port_base+K2_SATA_SCR_CONTROL_OFFSET);
+ 				writel((reg & ~0xf) | 1, port_base+K2_SATA_SCR_CONTROL_OFFSET);
+ 
+@@ -2284,7 +2284,7 @@
+ 	/* All ports are on the same function. Multi-function device is no
+ 	 * longer available. This should not be seen in any system. */
+ 	for (i = 0; i < ent->driver_data; i++)
+-		k2_sata_setup_port(&probe_ent->port[i], base + i * K2_SATA_PORT_OFFSET);
++		k2_sata_setup_port(&probe_ent->port[i], PORT_BASE(base, i));
+ 
+ 	pci_set_master(pdev);
+ 

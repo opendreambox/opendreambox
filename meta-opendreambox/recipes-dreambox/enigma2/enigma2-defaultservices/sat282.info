@@ -1,0 +1,17 @@
+<default>
+	<prerequisites>
+		<tag type="services" />
+		<bcastsystem type="DVB-S" />
+		<satellite type="284" />
+	</prerequisites>
+	
+	<info>
+		<author>tmbinc@elitedvb.net</author>
+		<name>Astra/Eurobird (28.2E)</name>
+	</info>
+
+	<files type="directories">
+		<file type="services" name="lamedb.282">
+		</file>
+	</files>
+</default>

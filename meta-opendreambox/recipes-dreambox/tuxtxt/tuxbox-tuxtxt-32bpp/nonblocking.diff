@@ -1,0 +1,142 @@
+diff -u tuxtxt_orig/tuxtxt.c tuxtxt/tuxtxt.c
+--- tuxtxt_orig/tuxtxt.c	2008-12-26 19:41:28.000000000 +0100
++++ tuxtxt/tuxtxt.c	2009-01-29 21:36:31.000000000 +0100
+@@ -535,7 +535,6 @@
+ 
+ 
+ 	/* setup rc */
+-	fcntl(rc, F_SETFL, O_NONBLOCK);
+ 	ioctl(rc, RC_IOCTL_BCODES, 1);
+ 
+ 
+@@ -1214,7 +1213,7 @@
+ 
+ void ConfigMenu(int Init)
+ {
+-	int val, menuitem = M_Start;
++	int menuitem = M_Start;
+ 	int current_pid = 0;
+ 	int hotindex;
+ 	int oldscreenmode;
+@@ -1257,10 +1256,6 @@
+ 	renderinfo.clearbbcolor = tuxtxt_color_black;
+ 	Menu_Init(menu, current_pid, menuitem, hotindex);
+ 
+-	/* set blocking mode */
+-	val = fcntl(rc, F_GETFL);
+-	fcntl(rc, F_SETFL, val &~ O_NONBLOCK);
+-
+ 	/* loop */
+ 	do {
+ 		if (GetRCCode() == 1)
+@@ -1721,7 +1716,6 @@
+ 						current_service = current_pid;
+ //						RenderMessage(ShowServiceName);
+ 
+-						fcntl(rc, F_SETFL, O_NONBLOCK);
+ 						RCCode = -1;
+ 						if (oldscreenmode)
+ 							tuxtxt_SwitchScreenMode(&renderinfo,oldscreenmode); /* restore divided screen */
+@@ -1792,8 +1786,6 @@
+ 		UpdateLCD(); /* update number of cached pages */
+ 	} while ((RCCode != RC_HOME) && (RCCode != RC_DBOX) && (RCCode != RC_MUTE));
+ 
+-	/* reset to nonblocking mode */
+-	fcntl(rc, F_SETFL, O_NONBLOCK);
+ 	tuxtxt_cache.pageupdate = 1;
+ 	RCCode = -1;
+ 	if (oldscreenmode)
+@@ -2013,7 +2005,7 @@
+ void PageCatching()
+ {
+ 	int active_national_subset=tuxtxt_cache.national_subset;
+-	int val, byte;
++	int byte;
+ 	int oldzoommode = renderinfo.zoommode;
+ 
+ 	renderinfo.pagecatching = 1;
+@@ -2046,10 +2038,6 @@
+ 		return;
+ 	}
+ 
+-	/* set blocking mode */
+-	val = fcntl(rc, F_GETFL);
+-	fcntl(rc, F_SETFL, val &~ O_NONBLOCK);
+-
+ 	/* loop */
+ 	do {
+ 		GetRCCode();
+@@ -2088,7 +2076,6 @@
+ 		case RC_HOME:
+ 		case RC_HELP:
+ 		case RC_MUTE:
+-			fcntl(rc, F_SETFL, O_NONBLOCK);
+ 			tuxtxt_cache.pageupdate = 1;
+ 			renderinfo.pagecatching = 0;
+ 			RCCode = -1;
+@@ -2112,9 +2099,6 @@
+ 		tuxtxt_cache.subpage = subp;
+ 	else
+ 		tuxtxt_cache.subpage = 0;
+-
+-	/* reset to nonblocking mode */
+-	fcntl(rc, F_SETFL, O_NONBLOCK);
+ }
+ 
+ /******************************************************************************
+@@ -2712,16 +2696,34 @@
+ 
+ int GetRCCode()
+ {
++	int maxfd = 0;
++	fd_set rset;
++	struct timeval timeout;
+ #if HAVE_DVB_API_VERSION < 3
+ 	static unsigned short LastKey = -1;
+ #else
+ 	struct input_event ev;
+ 	static __u16 rc_last_key = KEY_RESERVED;
+ #endif
++	FD_ZERO(&rset);
++	timeout.tv_sec = 0;
++	timeout.tv_usec = 100000;
+ 	/* get code */
+-#if HAVE_DVB_API_VERSION < 3
+-	if (read(rc, &RCCode, 2) == 2)
++	if (rc >= 0)
++	{
++		FD_SET(rc, &rset);
++		if (rc > maxfd)
++		{
++			maxfd = rc;
++		}
++	}
++	if (select(maxfd + 1, &rset, NULL, NULL, &timeout) > 0)
+ 	{
++		if (rc >= 0 && FD_ISSET(rc, &rset))
++		{
++#if HAVE_DVB_API_VERSION < 3
++			read(rc, &RCCode, 2);
++		}
+ 		if (RCCode != LastKey)
+ 		{
+ 			LastKey = RCCode;
+@@ -2730,8 +2732,8 @@
+ 			{
+ 				switch (RCCode)
+ #else
+-	if (read(rc, &ev, sizeof(ev)) == sizeof(ev))
+-	{
++			read(rc, &ev, sizeof(ev));
++		}
+ 		if (ev.value)
+ 		{
+ 			if (ev.code != rc_last_key)
+@@ -2789,7 +2791,6 @@
+ 	}
+ 
+ 	RCCode = -1;
+-	usleep(1000000/100);
+ 
+ 	return 0;
+ }
