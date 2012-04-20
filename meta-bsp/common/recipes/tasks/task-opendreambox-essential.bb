@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenDreambox: Essential packages"
+SUMMARY = "OpenDreambox: Essential packages"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
@@ -9,7 +9,7 @@ RDEPENDS_${PN} = " \
 RRECOMMENDS_${PN} = " \
         ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${ESSENTIAL_RRECOMMENDS_LEGACY}', '${ESSENTIAL_RRECOMMENDS}', d)} \
 "
-PR = "r3"
+PR = "r4"
 
 inherit task
 

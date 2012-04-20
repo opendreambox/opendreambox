@@ -1,15 +1,15 @@
-DESCRIPTION = "OpenDreambox: Base Task for the OpenDreambox Distribution"
+SUMMARY = "OpenDreambox: Base Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-PR = "r13"
+PR = "r14"
 
 inherit task
 
 #
 # task-opendreambox-base
 #
-DESCRIPTION_${PN} = "OpenDreambox: Basesystem utilities"
+SUMMARY_${PN} = "OpenDreambox: Basesystem utilities"
 
 RDEPENDS_${PN} = " \
   distro-feed-configs \

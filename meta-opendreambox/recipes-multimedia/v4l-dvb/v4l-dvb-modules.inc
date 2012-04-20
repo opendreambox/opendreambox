@@ -1,8 +1,9 @@
-DESCRIPTION = "v4l-dvb drivers"
+SUMMARY = "v4l-dvb drivers"
 HOMEPAGE = "http://linuxtv.org/"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a907e355dcd2c89b14aa4dbcb7764d4f"
+INC_PR = "r3"
 
 inherit module
 

@@ -1,9 +1,9 @@
-DESCRIPTION = "Hardware drivers for Dreambox"
+SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
 LICENSE = "CLOSED"
 DEPENDS += "virtual/kernel"
 PRIORITY = "required"
-INC_PR = "r6"
+INC_PR = "r7"
 
 DREAMBOX_DVB_MODULES_MIRROR ?= "http://sources.dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-dvb-modules"
 

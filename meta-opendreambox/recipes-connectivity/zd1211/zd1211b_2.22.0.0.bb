@@ -1,4 +1,4 @@
-DESCRIPTION = "Driver for zd1211b family of wireless USB Dongles"
+SUMMARY = "Driver for zd1211b family of wireless USB Dongles"
 HOMEPAGE = "http://zd1211.ath.cx/"
 SECTION = "kernel/modules"
 LICENSE = "MPL-1.1 | GPLv2"
@@ -7,7 +7,7 @@ RDEPENDS = "wireless-tools"
 
 inherit module
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = " \
         http://www.reactivated.net/software/zd1211-vendor/releases/ZD1211LnxDrv_2_22_0_0.tar.gz \

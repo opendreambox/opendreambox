@@ -1,11 +1,11 @@
-DESCRIPTION = "tuxbox tuxtxt for 32bit framebuffer"
+SUMMARY = "tuxbox tuxtxt for 32bit framebuffer"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://tuxtxt.c;endline=19;md5=4f3fd30feb71f556493f38c7a8b3ca4d"
 DEPENDS = "freetype tuxbox-libtuxtxt"
 RDEPENDS_${PN} = "enigma2"
 SRCDATE = "20090130"
 PV = "0.0+cvs${SRCDATE}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "cvs://anoncvs@cvs.tuxbox.org/cvs/tuxbox;module=apps/tuxbox/plugins/tuxtxt;method=ext \
         file://makefiles.diff \

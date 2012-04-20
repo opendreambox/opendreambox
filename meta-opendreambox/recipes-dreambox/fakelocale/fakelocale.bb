@@ -1,8 +1,8 @@
-DESCRIPTION = "Fake locale support"
+SUMMARY = "Fake locale support"
 LICENSE = "CLOSED"
 SECTION = "base"
 PRIORITY = "required"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://sources.dreamboxupdate.com/download/opendreambox/fakelocale.tar.gz file://locale.alias"
 SRC_URI[md5sum] = "d11a901c9e4dc2947cbc560044de2b67"

@@ -1,8 +1,9 @@
-DESCRIPTION = "Firmware images for the zd1211rw wireless driver"
+SUMMARY = "Firmware images for the zd1211rw wireless driver"
 SECTION = "kernel"
 HOMEPAGE = "http://zd1211.wiki.sourceforge.net/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
+PR = "r1"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2"
 SRC_URI[md5sum] = "19f28781d76569af8551c9d11294c870"

@@ -1,4 +1,4 @@
-DESCRIPTION = "OpenDreambox: WLAN support"
+SUMMARY = "OpenDreambox: WLAN support"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
@@ -7,7 +7,7 @@ DEPENDS = " \
   ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${WLAN_USB_MODULES_LEGACY}', '', d)} \
   virtual/kernel \
 "
-PR = "r12"
+PR = "r13"
 
 inherit task
 

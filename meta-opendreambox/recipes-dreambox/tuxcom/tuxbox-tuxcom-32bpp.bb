@@ -1,8 +1,9 @@
-DESCRIPTION = "TuxCom for dreambox 8000/32bit framebuffer"
+SUMMARY = "TuxCom for dreambox 8000/32bit framebuffer"
 LICENSE = "Proprietary"
 DEPENDS = "freetype"
 SRCDATE = "20060123"
 PV = "0.0+cvs${SRCDATE}"
+PR = "r1"
 
 SRC_URI = "cvs://anoncvs@cvs.tuxbox.org/cvs/tuxbox;module=apps/tuxbox/plugins/tuxcom;method=ext \
         file://makefiles.diff \

@@ -1,10 +1,11 @@
-DESCRIPTION = "lightweight, efficient FTP server written for security"
+SUMMARY = "lightweight, efficient FTP server written for security"
 HOMEPAGE = "https://security.appspot.com/vsftpd.html"
 SECTION = "console/network"
 LICENSE = "GPL-2.0-with-OpenSSL-exception"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271"
 DEPENDS = "libcap openssl"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
+PR = "r1"
 
 SRC_URI = " \
         https://security.appspot.com/downloads/${BP}.tar.gz \

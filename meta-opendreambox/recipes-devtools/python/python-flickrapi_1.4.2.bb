@@ -1,8 +1,9 @@
-DESCRIPTION = "The official Python interface to the Flickr API"
+SUMMARY = "The official Python interface to the Flickr API"
 HOMEPAGE = "http://stuvel.eu/flickrapi"
 SECTION = "devel/python"
 PRIORITY = "optional"
 LICENSE = "PSF"
+PR = "r1"
 # NOTE: requires python-misc for webbrowser and subprocess as missing dependency of the webbrowser
 RDEPENDS_${PN} = "\
   python-core \

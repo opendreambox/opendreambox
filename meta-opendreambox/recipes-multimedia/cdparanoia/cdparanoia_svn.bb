@@ -1,5 +1,5 @@
 # Copyright (C) 2005, Advanced Micro Devices, Inc.  All Rights Reserved
-DESCRIPTION = "audio extraction tool for sampling CDs"
+SUMMARY = "audio extraction tool for sampling CDs"
 HOMEPAGE = "http://xiph.org/paranoia/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING-GPL;md5=1ed9d357695b2e3ef099df37fed63d96 \
@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING-GPL;md5=1ed9d357695b2e3ef099df37fed63d96 \
 SECTION = "multimedia"
 SRCREV = "17289"
 PV = "10.2+svnr${SRCPV}"
+PR = "r1"
 
 SRC_URI = "svn://svn.xiph.org/trunk;module=cdparanoia;proto=http \
 	 file://fixes10.patch \

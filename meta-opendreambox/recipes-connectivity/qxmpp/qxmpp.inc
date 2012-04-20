@@ -1,8 +1,9 @@
-DESCRIPTION = "QXmpp is an xmpp client library based on Qt & C++"
+SUMMARY = "QXmpp is an xmpp client library based on Qt & C++"
 HOMEPAGE = "https://code.google.com/p/qxmpp/"
 SECTION = "libs"
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24"
+INC_PR = "r1"
 
 SRC_URI = "https://qxmpp.googlecode.com/files/qxmpp-${PV}.tar.gz"
 

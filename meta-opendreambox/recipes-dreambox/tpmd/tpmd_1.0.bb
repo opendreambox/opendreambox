@@ -1,5 +1,5 @@
-DESCRIPTION = "Dreambox TPM Daemon"
-PR = "r3"
+SUMMARY = "Dreambox TPM Daemon"
+PR = "r4"
 
 SRC_URI[mips32el.md5sum] = "36218ca3eff5bd0bcb13055026e50d63"
 SRC_URI[mips32el.sha256sum] = "969438a72ca7c473903516e845cefe52313c01b4de5692bf2fa613a7814a1a84"

@@ -1,4 +1,4 @@
-DESCRIPTION = "Framebuffer-based digital media application"
+SUMMARY = "Framebuffer-based digital media application"
 LICENSE = "Proprietary"
 
 PACKAGES += "${PN}-meta"

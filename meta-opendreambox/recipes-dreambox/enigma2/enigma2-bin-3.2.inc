@@ -1,5 +1,5 @@
 DEPENDS = "ethtool freetype gstreamer libdreamdvd libdvbsi++ libfribidi libpng libsigc++-1.2 libxml2 libxmlccwrap openssl python-wifi"
-INC_PR = "r6"
+INC_PR = "r7"
 
 # Shlibs can't find them. See dreambox-compat.
 RDEPENDS_${PN} += "giflib jpeg libdvbsi++ libpython2"

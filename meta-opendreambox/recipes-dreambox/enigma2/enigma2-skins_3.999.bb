@@ -1,6 +1,7 @@
-DESCRIPTION = "Skins for Enigma2"
+SUMMARY = "Skins for Enigma2"
 LICENSE = "CLOSED"
 SRCREV = "68c8f8d97f77c2a2101290a3f027c37fa6f34785"
+PR = "r1"
 
 inherit allarch autotools schwerkraft-git
 

@@ -1,7 +1,8 @@
-DESCRIPTION = "Driver for Ralink RT8070/3070/3370/5370/5372 USB 802.11abgn WiFi sticks"
+SUMMARY = "Driver for Ralink RT8070/3070/3370/5370/5372 USB 802.11abgn WiFi sticks"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://os/linux/rt_linux.c;endline=25;md5=21ed2a5918a3062a6c0323ef549f0803"
+PR = "r1"
 
 SRC_URI = " \
         http://sources.dreamboxupdate.com/download/sources/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO.tar.bz2 \

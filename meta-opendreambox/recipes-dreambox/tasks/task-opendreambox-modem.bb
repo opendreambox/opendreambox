@@ -1,15 +1,15 @@
-DESCRIPTION = "OpenDreambox: Modem task for the OpenDreambox distribution"
+SUMMARY = "OpenDreambox: Modem task for the OpenDreambox distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-PR = "r1"
+PR = "r2"
 
 inherit task
 
 #
 # task-opendreambox-modem
 #
-DESCRIPTION_${PN} = "OpenDreambox: Modem support"
+SUMMARY_${PN} = "OpenDreambox: Modem support"
 DEPENDS = "enigma2"
 RDEPENDS_${PN} = "\
   dreambox-modem-ppp-scripts \

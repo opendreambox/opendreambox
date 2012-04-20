@@ -1,5 +1,5 @@
-DESCRIPTION = "Dreambox watchdog to automatically restart binaries"
-PR = "r1"
+SUMMARY = "Dreambox watchdog to automatically restart binaries"
+PR = "r2"
 
 inherit opendreambox-precompiled-binary
 

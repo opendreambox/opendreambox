@@ -1,7 +1,8 @@
-DESCRIPTION = "driver for Realtek USB wireless devices"
+SUMMARY = "driver for Realtek USB wireless devices"
 HOMEPAGE = "http://www.realtek.com/"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://os_intf/linux/os_intfs.c;endline=19;md5=d1bbd9348c57df9fd08439bddfa32ec5"
+PR = "r1"
 
 SRC_URI = " \
         http://dreamboxupdate.com/download/sources/rtl8712_8188_8191_8192SU_usb_linux_v${PV}.tar.gz \

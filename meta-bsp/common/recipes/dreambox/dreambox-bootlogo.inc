@@ -1,8 +1,8 @@
-DESCRIPTION = "Bootlogo support"
+SUMMARY = "Bootlogo support"
 SECTION = "base"
 LICENSE = "CLOSED"
 PRIORITY = "required"
-INC_PR = "r10"
+INC_PR = "r11"
 
 inherit opendreambox-precompiled-binary opendreambox-sysvinit
 

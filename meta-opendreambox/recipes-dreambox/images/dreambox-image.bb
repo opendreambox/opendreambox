@@ -1,4 +1,4 @@
-DESCRIPTION = "A Dreambox firmware image"
+SUMMARY = "A Dreambox firmware image"
 
 # packages to build for the feed
 DEPENDS = " \

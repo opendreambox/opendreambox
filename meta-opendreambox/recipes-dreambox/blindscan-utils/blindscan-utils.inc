@@ -1,6 +1,6 @@
-DESCRIPTION = "Utilities needed to do transponder blindscan with dreambox dvb receivers"
+SUMMARY = "Utilities needed to do transponder blindscan with dreambox dvb receivers"
 DEPENDS = "ncurses"
-INC_PR = "r0"
+INC_PR = "r1"
 
 PACKAGES_DYNAMIC = "blindscan-*"
 

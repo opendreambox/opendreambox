@@ -1,15 +1,15 @@
-DESCRIPTION = "OpenDreambox: DVD-Player Task for the OpenDreambox Distribution"
+SUMMARY = "OpenDreambox: DVD-Player Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-PR = "r1"
+PR = "r2"
 
 inherit task
 
 #
 # task-opendreambox-dvdplayer
 #
-DESCRIPTION_${PN} = "OpenDreambox: DVD-Player Support"
+SUMMARY_${PN} = "OpenDreambox: DVD-Player Support"
 DEPENDS = "enigma2"
 RDEPENDS_${PN} = "\
   kernel-module-udf \
