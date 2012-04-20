@@ -5,7 +5,6 @@ DEPENDS = " \
 	gdb \
 	lsof \
 	ltrace \
-	openvpn \
 	strace \
 "
 
