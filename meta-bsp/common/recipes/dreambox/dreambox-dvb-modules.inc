@@ -30,8 +30,8 @@ RDEPENDS_${PN} += "dreambox-secondstage kernel-${DM_LOCALVERSION}"
 
 python __anonymous () {
         import bb, re
-        kv = bb.data.getVar('DREAMBOX_KERNEL_VERSION', d, 1)
-        pv = bb.data.getVar('PV', d, 1)
+        kv = d.getVar('DREAMBOX_KERNEL_VERSION', True)
+        pv = d.getVar('PV', True)
         if kv != pv.split('-')[0]:
                 raise bb.parse.SkipPackage("incompatible with kernel version %s" % kv)
 }

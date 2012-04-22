@@ -18,7 +18,7 @@ python populate_packages_prepend() {
 python populate_packages_append() {
         enigma2_skindir = bb.data.expand('${datadir}/enigma2', d)
         #clear rdepends by default
-        for package in bb.data.getVar('PACKAGES', d, 1).split():
-                bb.data.setVar('RDEPENDS_' + package, '', d)
+        for package in d.getVar('PACKAGES', True).split():
+                d.setVar('RDEPENDS_' + package, '')
         #todo add support for control files in skindir.. like plugins
 }

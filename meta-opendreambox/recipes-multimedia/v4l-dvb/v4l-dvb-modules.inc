@@ -49,10 +49,10 @@ python populate_packages_prepend() {
 	import os
 	def extract_modinfo(file):
 		import tempfile, re
-		tempfile.tempdir = bb.data.getVar("WORKDIR", d, 1)
+		tempfile.tempdir = d.getVar("WORKDIR", True)
 		tf = tempfile.mkstemp()
 		tmpfile = tf[1]
-		cmd = "PATH=\"%s\" %sobjcopy -j .modinfo -O binary %s %s" % (bb.data.getVar("PATH", d, 1), bb.data.getVar("HOST_PREFIX", d, 1) or "", file, tmpfile)
+		cmd = "PATH=\"%s\" %sobjcopy -j .modinfo -O binary %s %s" % (d.getVar("PATH", True), d.getVar("HOST_PREFIX", True) or "", file, tmpfile)
 		os.system(cmd)
 		f = open(tmpfile)
 		l = f.read().split("\000")
@@ -71,19 +71,19 @@ python populate_packages_prepend() {
 	def parse_depmod():
 		import re
 
-		dvar = bb.data.getVar('PKGD', d, 1)
+		dvar = d.getVar('PKGD', True)
 		if not dvar:
 			bb.error("D not defined")
 			return
 
-		kernelver = bb.data.getVar('KERNEL_VERSION', d, 1)
+		kernelver = d.getVar('KERNEL_VERSION', True)
 		kernelver_stripped = kernelver
 		m = re.match('^(.*-hh.*)[\.\+].*$', kernelver)
 		if m:
 			kernelver_stripped = m.group(1)
-		path = bb.data.getVar("PATH", d, 1)
-		host_prefix = bb.data.getVar("HOST_PREFIX", d, 1) or ""
-		major_version = bb.data.getVar('KERNEL_MAJOR_VERSION', d, 1)
+		path = d.getVar("PATH", True)
+		host_prefix = d.getVar("HOST_PREFIX", True) or ""
+		major_version = d.getVar('KERNEL_MAJOR_VERSION', True)
 
 		cmd = "PATH=\"%s\" %sdepmod-%s -n -a -r -b %s -F %s/boot/System.map-%s %s" % (path, host_prefix, major_version, dvar, dvar, kernelver, kernelver_stripped)
 		f = os.popen(cmd, 'r')
@@ -120,7 +120,7 @@ python populate_packages_prepend() {
 		return deps
 
 	def get_dependencies(file, pattern, format):
-		file = file.replace(bb.data.getVar('PKGD', d, 1) or '', '', 1)
+		file = file.replace(d.getVar('PKGD', True) or '', '', 1)
 
 		if module_deps.has_key(file):
 			import re
@@ -139,30 +139,30 @@ python populate_packages_prepend() {
 		import re
 		vals = extract_modinfo(file)
 
-		dvar = bb.data.getVar('PKGD', d, 1)
+		dvar = d.getVar('PKGD', True)
 
 		# If autoloading is requested, output /etc/modutils/<name> and append
 		# appropriate modprobe commands to the postinst
-		autoload = bb.data.getVar('module_autoload_%s' % basename, d, 1)
+		autoload = d.getVar('module_autoload_%s' % basename, True)
 		if not autoload:
 		    # Also, try canonical name with dashes
-		    autoload = bb.data.getVar('module_autoload_%s' % basename.replace('_', '-'), d, 1)
+		    autoload = d.getVar('module_autoload_%s' % basename.replace('_', '-'), True)
 		if autoload:
 			name = '%s/etc/modutils/%s' % (dvar, basename)
 			f = open(name, 'w')
 			for m in autoload.split():
 				f.write('%s\n' % m)
 			f.close()
-			postinst = bb.data.getVar('pkg_postinst_%s' % pkg, d, 1)
+			postinst = d.getVar('pkg_postinst_%s' % pkg, True)
 			if not postinst:
 				bb.fatal("pkg_postinst_%s not defined" % pkg)
-			postinst += bb.data.getVar('autoload_postinst_fragment', d, 1) % autoload
-			bb.data.setVar('pkg_postinst_%s' % pkg, postinst, d)
+			postinst += d.getVar('autoload_postinst_fragment', True) % autoload
+			d.setVar('pkg_postinst_%s' % pkg, postinst)
 
 		# Write out any modconf fragment
-		modconf = bb.data.getVar('module_conf_%s' % basename, d, 1)
+		modconf = d.getVar('module_conf_%s' % basename, True)
 		if modconf:
-			if bb.data.getVar("KERNEL_MAJOR_VERSION", d, 1) == "2.6":
+			if d.getVar("KERNEL_MAJOR_VERSION", True) == "2.6":
 				name = '%s/etc/modprobe.d/%s.conf' % (dvar, basename)
 			else:
 				name = '%s/etc/modutils/%s.conf' % (dvar, basename)
@@ -170,56 +170,56 @@ python populate_packages_prepend() {
 			f.write("%s\n" % modconf)
 			f.close()
 
-		files = bb.data.getVar('FILES_%s' % pkg, d, 1)
+		files = d.getVar('FILES_%s' % pkg, True)
 		files = "%s /etc/modutils/%s /etc/modutils/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename, basename)
-		bb.data.setVar('FILES_%s' % pkg, files, d)
+		d.setVar('FILES_%s' % pkg, files)
 
 		if vals.has_key("description"):
-			old_desc = bb.data.getVar('DESCRIPTION_' + pkg, d, 1) or ""
-			bb.data.setVar('DESCRIPTION_' + pkg, old_desc + "; " + vals["description"], d)
+			old_desc = d.getVar('DESCRIPTION_' + pkg, True) or ""
+			d.setVar('DESCRIPTION_' + pkg, old_desc + "; " + vals["description"])
 
-		rdepends_str = bb.data.getVar('RDEPENDS_' + pkg, d, 1)
+		rdepends_str = d.getVar('RDEPENDS_' + pkg, True)
 		if rdepends_str:
 			rdepends = rdepends_str.split()
 		else:
 			rdepends = []
 		rdepends.extend(get_dependencies(file, pattern, format))
-		bb.data.setVar('RDEPENDS_' + pkg, ' '.join(rdepends), d)
+		d.setVar('RDEPENDS_' + pkg, ' '.join(rdepends))
 
 	module_deps = parse_depmod()
 	module_regex = '^(.*)\.k?o$'
 	module_pattern = 'v4l-dvb-module-%s'
 
-	postinst = bb.data.getVar('pkg_postinst_modules', d, 1)
-	postrm = bb.data.getVar('pkg_postrm_modules', d, 1)
+	postinst = d.getVar('pkg_postinst_modules', True)
+	postrm = d.getVar('pkg_postrm_modules', True)
 
         maybe_update_modules = "update-modules "
-        if bb.data.getVar("ONLINE_PACKAGE_MANAGEMENT", d) == "none":
+        if d.getVar("ONLINE_PACKAGE_MANAGEMENT", True) == "none":
                 maybe_update_modules = ""
 
 	do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.bin$', output_pattern='v4l-dvb-firmware-%s', description='Firmware for %s', recursive=True, extra_depends='')
 	do_split_packages(d, root='/lib/firmware', file_regex='^(.*)\.fw$', output_pattern='v4l-dvb-firmware-%s', description='Firmware for %s', recursive=True, extra_depends='')
-	do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='%skernel-%s' % (maybe_update_modules, bb.data.getVar("KERNEL_VERSION", d, 1)))
+	do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='%skernel-%s' % (maybe_update_modules, d.getVar("KERNEL_VERSION", True)))
 
 	import re
-	metapkg = bb.data.getVar('PN', d, 1)
-	bb.data.setVar('ALLOW_EMPTY_' + metapkg, "1", d)
-	bb.data.setVar('FILES_' + metapkg, "", d)
+	metapkg = d.getVar('PN', True)
+	d.setVar('ALLOW_EMPTY_' + metapkg, "1")
+	d.setVar('FILES_' + metapkg, "")
 	blacklist = []
 	for l in module_deps.values():
 		for i in l:
 			pkg = module_pattern % legitimize_package_name(re.match(module_regex, os.path.basename(i)).group(1))
 			blacklist.append(pkg)
 	metapkg_rdepends = []
-	packages = bb.data.getVar('PACKAGES', d, 1).split()
+	packages = d.getVar('PACKAGES', True).split()
 	for pkg in packages[1:]:
 		if not pkg in blacklist and not pkg in metapkg_rdepends:
 			metapkg_rdepends.append(pkg)
 		p = pkg.find('v4l-dvb-module')
 		if p != -1:
 			name = pkg.split('-')[-1]
-			bb.data.setVar('RREPLACES_' + pkg, 'kernel-module-' + name, d)
-			bb.data.setVar('RCONFLICTS_' + pkg, 'kernel-module-' + name, d)
-	bb.data.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends), d)
-	bb.data.setVar('DESCRIPTION_' + metapkg, 'v4l-dvb modules meta package', d)
+			d.setVar('RREPLACES_' + pkg, 'kernel-module-' + name)
+			d.setVar('RCONFLICTS_' + pkg, 'kernel-module-' + name)
+	d.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends))
+	d.setVar('DESCRIPTION_' + metapkg, 'v4l-dvb modules meta package')
 }

@@ -34,15 +34,15 @@ python populate_packages_prepend() {
                 for line in src.splitlines():
                         name, value = line.strip().split(': ', 1)
                         if name == 'Description':
-                                bb.data.setVar('DESCRIPTION_' + package, value, d)
+                                d.setVar('DESCRIPTION_' + package, value)
                         elif name == 'Depends':
-                                bb.data.setVar('RDEPENDS_' + package, ' '.join(value.split(', ')), d)
+                                d.setVar('RDEPENDS_' + package, ' '.join(value.split(', ')))
                         elif name == 'Replaces':
-                                bb.data.setVar('RREPLACES_' + package, ' '.join(value.split(', ')), d)
+                                d.setVar('RREPLACES_' + package, ' '.join(value.split(', ')))
                         elif name == 'Conflicts':
-                                bb.data.setVar('RCONFLICTS_' + package, ' '.join(value.split(', ')), d)
-        srcdir = bb.data.getVar('S', d, 1)
-        for package in bb.data.getVar('PACKAGES', d, 1).split():
+                                d.setVar('RCONFLICTS_' + package, ' '.join(value.split(', ')))
+        srcdir = d.getVar('S', True)
+        for package in d.getVar('PACKAGES', True).split():
                 if package.startswith('enigma2-plugin-') and not package.endswith('-dev') and not package.endswith('-dbg') and not package.endswith('-staticdev'):
                         parseControlFile(srcdir, d, package)
 }

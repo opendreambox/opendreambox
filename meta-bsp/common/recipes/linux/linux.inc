@@ -58,19 +58,16 @@ CORTEXA8FIXUP ?= "yes"
 LOCALVERSION ?= ""
 
 python __anonymous () {
-
-    import bb
-    
-    devicetree = bb.data.getVar('KERNEL_DEVICETREE', d, 1) or ''
-    machine = bb.data.getVar('MACHINE', d, 1)
+    devicetree = d.getVar('KERNEL_DEVICETREE', True) or ''
+    machine = d.getVar('MACHINE', True)
     if devicetree:
-    	depends = bb.data.getVar("DEPENDS", d, 1)
-    	bb.data.setVar("DEPENDS", "%s dtc-native" % depends, d)
-    	packages = bb.data.getVar("PACKAGES", d, 1)
-    	bb.data.setVar("PACKAGES", "%s kernel-devicetree" % packages, d)
+    	depends = d.getVar("DEPENDS", True)
+    	d.setVar("DEPENDS", "%s dtc-native" % depends)
+    	packages = d.getVar("PACKAGES", True)
+    	d.setVar("PACKAGES", "%s kernel-devicetree" % packages)
     if 'nokia900' in machine or 'om-gta0' in machine or 'eee701' in machine:
-        depends = bb.data.getVar("DEPENDS", d, 1)
-        bb.data.setVar("DEPENDS", "%s lzma-native" % depends, d)
+        depends = d.getVar("DEPENDS", True)
+        d.setVar("DEPENDS", "%s lzma-native" % depends)
 }
 
 do_configure_prepend() {
