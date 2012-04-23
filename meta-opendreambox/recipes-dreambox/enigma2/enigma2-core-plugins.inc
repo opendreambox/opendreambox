@@ -18,6 +18,8 @@ SUMMARY_enigma2-plugin-systemplugins-wirelesslan = "Wireless network settings"
 RDEPENDS_enigma2-plugin-extensions-browser = " \
         python-sqlite3 \
         python-xml \
+        qt4-embedded-fonts-ttf-dejavu \
+        qt4-embedded-fonts-ttf-vera \
         qt4-embedded-plugin-imageformat-gif \
         qt4-embedded-plugin-imageformat-ico \
         qt4-embedded-plugin-imageformat-jpeg \
