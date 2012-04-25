@@ -22,7 +22,12 @@ RDEPENDS_${PN} += " \
         python-zopeinterface \
 "
 
-FILES_${PN} += "${datadir}/fonts ${datadir}/keymaps ${libdir}/libopen.so"
+# Qt won't start without this fonts directory.
+do_install_append() {
+        install -d ${D}${libdir}/fonts
+}
+
+FILES_${PN} += "${datadir}/fonts ${datadir}/keymaps ${libdir}/fonts ${libdir}/libopen.so"
 FILES_${PN}-meta = "${datadir}/meta"
 
 require enigma2-core-plugins.inc

@@ -8,6 +8,6 @@ DEPENDS = " \
         python \
         qt4-embedded \
 "
-INC_PR = "r0"
+INC_PR = "r1"
 
 require enigma2-bin-common.inc
