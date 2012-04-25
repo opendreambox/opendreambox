@@ -28,8 +28,8 @@ SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch \
             file://parallel-make-fix.patch"
 
-SRC_URI[md5sum] = "cb41e94f762ed63e41d1cca2b8430ede"
-SRC_URI[sha256sum] = "0548e4b9171a62dcbbe85e63d9b897a35de718e0fe19b3fe56002c8f5a3ba587"
+SRC_URI[md5sum] = "4ceb7d570e42c094b360cc7b8e848a0b"
+SRC_URI[sha256sum] = "537411fe2cfe249a8a5b98b3f809a07ed5f913b94a216b3c510fd353318e4593"
 
 EXTRA_OECONF += "no-idea no-mdc2 no-rc5"
 
