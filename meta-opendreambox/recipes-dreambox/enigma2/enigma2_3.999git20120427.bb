@@ -1,0 +1,8 @@
+PR = "${INC_PR}.0"
+
+SRC_URI[mips32el.md5sum] = "5f4028548da63e7a5e63154da101b423"
+SRC_URI[mips32el.sha256sum] = "2281b65756333f8f815163514bb9960e7134bad774991e605a0e43b1b35253ea"
+SRC_URI[mips32el-nf.md5sum] = "d9947d61300e7c0ca76ac963d8dc118c"
+SRC_URI[mips32el-nf.sha256sum] = "eb01052af744f973c65bd1613d0603388b614b4f935e820687b726cf93ef2c64"
+
+require enigma2-bin-4.0.inc
