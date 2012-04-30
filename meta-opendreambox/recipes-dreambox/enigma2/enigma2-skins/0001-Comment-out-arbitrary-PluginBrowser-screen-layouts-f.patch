@@ -1,0 +1,734 @@
+From ce6996f27ff7a6ea428cfc088d70479191f82f7a Mon Sep 17 00:00:00 2001
+From: Andreas Frisch <fraxinas@opendreambox.org>
+Date: Mon, 30 Apr 2012 12:54:25 +0200
+Subject: [PATCH 1/2] Comment out arbitrary PluginBrowser screen layouts from
+ all skins to prevent crashes derived from switching
+ PluginBrowser to TemplatedMultiContentList, remove all
+ disestablished PluginDownloadBrowser skins
+
+---
+ skins/BASIC-HD/skin.xml              |   10 ++--------
+ skins/BrushedAlu-HD/skin.xml         |   19 ++-----------------
+ skins/DMConcinnity-HD/skin.xml       |   16 ++--------------
+ skins/DreamMM-HD/skin.xml            |   11 ++---------
+ skins/Elgato-HD/skin.xml             |   13 ++-----------
+ skins/Kerni-HD1/skin.xml             |   20 ++------------------
+ skins/Kerni-HD1R2/skin.xml           |   19 ++-----------------
+ skins/Nemesis.BlackBox/skin.xml      |    4 ++--
+ skins/Nemesis.Flatline.Blue/skin.xml |    4 ++--
+ skins/Nemesis.Flatline/skin.xml      |    4 ++--
+ skins/Nemesis.GlassLine/skin.xml     |    4 ++--
+ skins/Nemesis.ShadowLine/skin.xml    |    4 ++--
+ skins/SWAIN-HD/skin.xml              |    9 ++-------
+ skins/SWAIN/skin.xml                 |    9 ++-------
+ skins/UltraViolet/skin.xml           |   21 ++-------------------
+ skins/Vali-XD/skin.xml               |    4 ++--
+ skins/Vali.HD.atlantis/skin.xml      |    4 ++--
+ skins/Vali.HD.nano/skin.xml          |    4 ++--
+ skins/Vali.HD.warp/skin.xml          |    4 ++--
+ skins/YADS-HD/skin.xml               |   23 ++---------------------
+ skins/dTV-HD-Reloaded/skin.xml       |   15 ++-------------
+ skins/dTV-HD/skin.xml                |   10 ++--------
+ skins/dmm-HD/skin.xml                |   18 ++----------------
+ skins/dreamTV-HD/skin.xml            |   10 ++--------
+ skins/simple/skin.xml                |    8 ++------
+ 25 files changed, 50 insertions(+), 217 deletions(-)
+
+diff --git a/skins/BASIC-HD/skin.xml b/skins/BASIC-HD/skin.xml
+index 7fb02df..1c9ce89 100755
+--- a/skins/BASIC-HD/skin.xml
++++ b/skins/BASIC-HD/skin.xml
+@@ -904,7 +904,7 @@
+ 	</screen>
+ 
+ 	<!-- Plugin browser -->
+-	<screen name="PluginBrowser" position="240,130" size="800,500" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="240,130" size="800,500" title="Plugin browser">
+ 		<ePixmap position="8,4" size="190,32" pixmap="BASIC-HD/button/button_red_sm.png" alphatest="on" />
+ 		<ePixmap position="206,4" size="190,32" pixmap="BASIC-HD/button/button_green_sm.png" alphatest="on" />
+ 		<ePixmap position="404,4" size="190,32" pixmap="BASIC-HD/button/button_yellow_sm.png" alphatest="on" />
+@@ -912,13 +912,7 @@
+ 		<widget name="red" position="8,4" size="190,32" valign="center" halign="center" zPosition="1" font="Regular;18" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+ 		<widget name="green" position="206,4" size="190,32" valign="center" halign="center" zPosition="1" font="Regular;18" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-1,-1" />
+ 		<widget name="list" position="10,40" size="780,450" backgroundColor="Background" scrollbarMode="showOnDemand" />
+-	</screen>
+-
+-	<!-- Plugin downloads -->
+-	<screen name="PluginDownloadBrowser" position="240,130" size="800,520" title="Downloadable plugins">
+-		<widget name="text" position="10,10" zPosition="1" size="780,500" font="Regular;20" halign="center" valign="center" />
+-		<widget name="list" position="10,10" zPosition="2" size="780,500" scrollbarMode="showOnDemand" />
+-	</screen>
++	</screen>-->
+ 
+ 	<!-- Adapter Setup -->
+ 	<screen name="AdapterSetupConfiguration" position="240,130" size="800,500" title="Network Configuration...">
+diff --git a/skins/BrushedAlu-HD/skin.xml b/skins/BrushedAlu-HD/skin.xml
+index 870f659..09d3d49 100755
+--- a/skins/BrushedAlu-HD/skin.xml
++++ b/skins/BrushedAlu-HD/skin.xml
+@@ -769,7 +769,7 @@
+ 		<ePixmap pixmap="BrushedAlu-HD/kerni.png" position="980,500" size="200,110" alphatest="blend" />
+ 	</screen>
+ 	<!-- Erweiterungen -->
+-	<screen name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser" flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser" flags="wfNoBorder">
+ 		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="BrushedAlu-HD/menu/menu.png" />
+ 		<widget source="global.CurrentTime" render="Label" position="1130,40" size="80,26" font="Regular;26" halign="right" foregroundColor="grey" backgroundColor="darkgrey" shadowColor="black" shadowOffset="2,2" transparent="1">
+ 			<convert type="ClockToText">Default</convert>
+@@ -785,22 +785,7 @@
+ 		<ePixmap pixmap="BrushedAlu-HD/buttons/green.png" position="80,600" size="30,30" alphatest="blend" />
+ 		<widget name="red" position="130,552" size="320,26" font="Regular;24" halign="left" foregroundColor="grey" backgroundColor="black" shadowColor="black" shadowOffset="2,2" transparent="1" />
+ 		<widget name="green" position="130,602" size="320,26" font="Regular;24" halign="left" foregroundColor="grey" backgroundColor="black" shadowColor="black" shadowOffset="2,2" transparent="1" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="0,0" size="1280,720" title="Downloadable plugins" flags="wfNoBorder">
+-		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="BrushedAlu-HD/menu/menu.png" />
+-		<widget source="global.CurrentTime" render="Label" position="1130,40" size="80,26" font="Regular;26" halign="right" foregroundColor="grey" backgroundColor="darkgrey" shadowColor="black" shadowOffset="2,2" transparent="1">
+-			<convert type="ClockToText">Default</convert>
+-		</widget>
+-		<widget source="global.CurrentTime" render="Label" position="1000,72" size="210,22" font="Regular;20" halign="right" foregroundColor="grey" backgroundColor="darkgrey" shadowColor="black" shadowOffset="2,2" transparent="1">
+-			<convert type="ClockToText">Format:%d.%m.%Y</convert>
+-		</widget>
+-		<widget source="Title" render="Label" position="80,110" size="350,72" zPosition="3" font="Regular;32" foregroundColor="grey" backgroundColor="darkgrey" shadowColor="black" shadowOffset="2,2" transparent="1" />
+-		<ePixmap position="70,200" size="390,225" zPosition="2" pixmap="BrushedAlu-HD/frame/pig_bg.png" />
+-		<widget source="session.VideoPicture" render="Pig" position="75,205" size="380,215" zPosition="3" backgroundColor="#ff000000" />
+-		<widget name="text" position="550,120" size="660,50" zPosition="2" font="Regular;23" halign="center" valign="center" transparent="1" />
+-		<widget name="list" position="550,120" size="660,500" zPosition="3" scrollbarMode="showNever" backgroundColor="darkgrey" selectionPixmap="BrushedAlu-HD/frame/sel660_50.png" backgroundPixmap="BrushedAlu-HD/frame/sel660_50_bg.png" transparent="1" />
+-		<ePixmap position="60,540" size="270,105" pixmap="BrushedAlu-HD/db.png" transparent="1" alphatest="blend" />
+-	</screen>
++	</screen>-->
+ 	<!-- Einstellungen -->
+ 	<!-- Kanalsuche -->
+ 	<screen name="NimSelection" position="0,0" size="1280,720" title="Choose Tuner" flags="wfNoBorder">
+diff --git a/skins/DMConcinnity-HD/skin.xml b/skins/DMConcinnity-HD/skin.xml
+index 212645c..ba951bb 100755
+--- a/skins/DMConcinnity-HD/skin.xml
++++ b/skins/DMConcinnity-HD/skin.xml
+@@ -1368,7 +1368,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<eLabel text="Parental control setup" position="270,20" size="540,43" font="Regular;35" halign="right" foregroundColor="black" backgroundColor="white" transparent="1" />
+ 		<widget name="config" position="30,90" size="780,450" itemHeight="30" scrollbarMode="showOnDemand" selectionPixmap="DMConcinnity-HD/menu/sel900x30.png" backgroundColor="background" transparent="1" />
+ 	</screen>
+-	<screen name="PluginBrowser" position="center,center" size=" 840,605" title="Plugin browser" flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" position="center,center" size=" 840,605" title="Plugin browser" flags="wfNoBorder">
+ 		<ePixmap position="0,0" zPosition="-10" size="1100,605" pixmap="DMConcinnity-HD/menu/setupbg.png" />
+ 		<widget source="global.CurrentTime" render="Label" position=" 20,20" size=" 80,25" font="Regular;23" foregroundColor="black" backgroundColor="white" transparent="1">
+ 			<convert type="ClockToText">Default</convert>
+@@ -1382,19 +1382,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<ePixmap pixmap="DMConcinnity-HD/buttons/green.png" position="390,570" size="35,27" alphatest="blend" />
+ 		<widget name="red" position=" 80,571" size="300,26" zPosition="1" font="Regular;22" halign="left" foregroundColor="black" backgroundColor="grey" transparent="1" />
+ 		<widget name="green" position="440,571" size="300,26" zPosition="1" font="Regular;22" halign="left" foregroundColor="black" backgroundColor="grey" transparent="1" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="center,center" size=" 840,605" title="Downloadable plugins" flags="wfNoBorder">
+-		<ePixmap position="0,0" zPosition="-10" size="1100,605" pixmap="DMConcinnity-HD/menu/setupbg.png" />
+-		<widget source="global.CurrentTime" render="Label" position=" 20,20" size=" 80,25" font="Regular;23" foregroundColor="black" backgroundColor="white" transparent="1">
+-			<convert type="ClockToText">Default</convert>
+-		</widget>
+-		<widget source="global.CurrentTime" render="Label" position="110,20" size="140,25" font="Regular;23" foregroundColor="blue" backgroundColor="white" transparent="1">
+-			<convert type="ClockToText">Format:%d.%m.%Y</convert>
+-		</widget>
+-		<widget source="Title" render="Label" position="270,20" size="540,43" font="Regular;35" halign="right" foregroundColor="black" backgroundColor="white" transparent="1" />
+-		<widget name="list" position="30,80" size="780,450" scrollbarMode="showOnDemand" backgroundColor="background" selectionPixmap="DMConcinnity-HD/menu/sel800x50.png" transparent="1" />
+-		<widget name="text" position="0,0" size="0,0" />
+-	</screen>
++	</screen>-->
+ 	<screen name="PositionerSetup" position="center,center" size="1100,605" title="Positioner setup..." flags="wfNoBorder">
+ 		<ePixmap position="0,0" zPosition="-10" size="1100,605" pixmap="DMConcinnity-HD/menu/mainbg.png" />
+ 		<widget source="global.CurrentTime" render="Label" position=" 20,20" size=" 80,25" font="Regular;23" foregroundColor="black" backgroundColor="white" transparent="1">
+diff --git a/skins/DreamMM-HD/skin.xml b/skins/DreamMM-HD/skin.xml
+index 2dc2d77..f84b8d9 100755
+--- a/skins/DreamMM-HD/skin.xml
++++ b/skins/DreamMM-HD/skin.xml
+@@ -1743,7 +1743,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<widget name="video" position="0,0" size="240,192" backgroundColor="transparent" />
+ 	</screen>
+ 	<!-- Plugin browser -->
+-	<screen name="PluginBrowser" position="center,110" size="620,510" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="center,110" size="620,510" title="Plugin browser">
+ 		<ePixmap pixmap="DreamMM-HD/buttons/red.png" position=" 0,2" size="260,40" alphatest="on" />
+ 		<ePixmap pixmap="DreamMM-HD/buttons/green.png" position="260,2" size="260,40" alphatest="on" />
+ 		<widget name="red" position=" 0,2" zPosition="1" size="260,38" font="Regular;22" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" />
+@@ -1751,14 +1751,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<eLabel position="10,50" size="600,458" zPosition="-2" backgroundColor="background1" />
+ 		<eLabel position="14,54" size="596,454" zPosition="-1" backgroundColor="background2" />
+ 		<widget name="list" position="14,54" size="592,450" zPosition=" 2" scrollbarMode="showOnDemand" selectionPixmap="DreamMM-HD/selpic/sel50.png" />
+-	</screen>
+-	<!-- Plugin downloads -->
+-	<screen name="PluginDownloadBrowser" position="center,110" size="620,520" title="Downloadable plugins">
+-		<widget name="text" position="14,14" zPosition="1" size="592,500" font="Regular;20" halign="center" valign="center" />
+-		<eLabel position="10,10" size="600,508" zPosition="-2" backgroundColor="background1" />
+-		<eLabel position="14,14" size="596,504" zPosition="-1" backgroundColor="background2" />
+-		<widget name="list" position="14,14" size="592,500" zPosition=" 2" scrollbarMode="showOnDemand" selectionPixmap="DreamMM-HD/selpic/sel50.png" />
+-	</screen>
++	</screen>-->
+ 	<!-- PVR state -->
+ 	<screen name="PVRState" position="70,70" zPosition="2" size="150,30" backgroundColor="transpBlack" flags="wfNoBorder">
+ 		<widget name="state" position="0,0" size="150,30" font="Regular;25" halign="center" backgroundColor="background" foregroundColor="white" />
+diff --git a/skins/Elgato-HD/skin.xml b/skins/Elgato-HD/skin.xml
+index a01c097..c5e830f 100755
+--- a/skins/Elgato-HD/skin.xml
++++ b/skins/Elgato-HD/skin.xml
+@@ -2367,7 +2367,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 	<screen name="PiPSetup" 						position="70,580" size="600,100" backgroundColor="transparent" flags="wfNoBorder">
+ 		<widget name="text" position="0,0" size="600,100" font="Regular;23" halign="center" valign="center" transparent="1"/>
+ 	</screen>
+-	<screen name="PluginBrowser" 					position="center,center" size="750,600" title="Plugin browser" backgroundColor="transparent" flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" 					position="center,center" size="750,600" title="Plugin browser" backgroundColor="transparent" flags="wfNoBorder">
+ 		<ePixmap position="0,0" size="750,600" zPosition="-1" pixmap="Elgato-HD/menu_bg2.png"/>
+ 		<widget source="Title" render="Label" position=" 50,12" size="600, 33" halign="center" font="Regular;30" backgroundColor="background" shadowColor="black" shadowOffset="-3,-3" transparent="1"/>
+ 		<ePixmap position="25,16" size=" 15, 20" pixmap="Elgato-HD/al.png" alphatest="on"/>
+@@ -2379,16 +2379,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<ePixmap pixmap="Elgato-HD/buttons/green.png" 	position="320,590" size="250,2" alphatest="on"/>
+ 		<widget name="red" position=" 50,560" zPosition="1" size="250,30" font="Regular;24" halign="center" backgroundColor="background" transparent="1" />
+ 		<widget name="green" position="300,560" zPosition="1" size="290,30" font="Regular;24" halign="center" backgroundColor="background" transparent="1" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" 			position="center,center" size="750,600" title="Downloadable plugins" backgroundColor="transparent" flags="wfNoBorder">
+-		<ePixmap position="0,0" size="750,600" zPosition="-1" pixmap="Elgato-HD/menu_bg2.png"/>
+-		<widget source="Title" render="Label" position=" 50,12" size="600, 33" halign="center" font="Regular;30" backgroundColor="background" shadowColor="black" shadowOffset="-3,-3" transparent="1"/>
+-		<ePixmap position="25,16" size=" 15, 20" pixmap="Elgato-HD/al.png" alphatest="on"/>
+-		<ePixmap position="690,10" size="  35, 35" pixmap="Elgato-HD/micon/setup.png" alphatest="blend"/>
+-		<eLabel position=" 20,55" size="710,  1" backgroundColor="white" />
+-		<widget name="list" 	position="20,80" size="710,500" zPosition="2" scrollbarMode="showOnDemand" selectionPixmap="Elgato-HD/selpic/sel50.png" backgroundPixmap="Elgato-HD/selpic/sep750.png" transparent="1"/>
+-		<widget name="text" 	position="0,0" size="0,0"/>
+-	</screen>
++	</screen>-->
+ 	<!-- Pluginmanager Start -->
+ 	<screen name="PluginManager" 					position="center,center" size="1100,600" title="Plugin manager" backgroundColor="transparent" flags="wfNoBorder">
+ 		<ePixmap position="0,0" size="1100,600" zPosition="-1" pixmap="Elgato-HD/menu_bg3.png"/>
+diff --git a/skins/Kerni-HD1/skin.xml b/skins/Kerni-HD1/skin.xml
+index c5e112f..e15f05f 100755
+--- a/skins/Kerni-HD1/skin.xml
++++ b/skins/Kerni-HD1/skin.xml
+@@ -1630,7 +1630,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<widget name="config" 					position="490,156" size="710,450" zPosition="3" itemHeight="30" enableWrapAround="1" scrollbarMode="showOnDemand" />
+ 		<ePixmap position="80,490" size="110,110" zPosition="2" pixmap="Kerni-HD1/icons/look.png" transparent="1" alphatest="blend" />
+ 	</screen>
+-	<screen name="PluginBrowser" 					position="0,0" 		size="1280,720" 	title="Plugin browser" 				flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" 					position="0,0" 		size="1280,720" 	title="Plugin browser" 				flags="wfNoBorder">
+ 		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="Kerni-HD1/menu/back-main.png" transparent="1"/>
+ 		<widget source="global.CurrentTime" render="Label" position="1130,40" size="80,26" font="Regular;26" halign="right" backgroundColor="backtop" transparent="1">
+ 			<convert type="ClockToText">Default</convert>
+@@ -1648,23 +1648,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<widget name="red" position="120,636" size="320,26" font="Regular;22" halign="left" backgroundColor="black" transparent="1" />
+ 		<widget name="green" position="490,636" size="320,26" font="Regular;22" halign="left" backgroundColor="black" transparent="1" />
+ 		<ePixmap position="80,490" size="110,110" zPosition="2" pixmap="Kerni-HD1/icons/plugin.png" transparent="1" alphatest="blend" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" 			position="0,0" 		size="1280,720" 	title="Downloadable plugins" 		flags="wfNoBorder">
+-		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="Kerni-HD1/menu/back-main.png" transparent="1"/>
+-		<widget source="global.CurrentTime" render="Label" position="1130,40" size="80,26" font="Regular;26" halign="right" backgroundColor="backtop" transparent="1">
+-			<convert type="ClockToText">Default</convert>
+-		</widget>
+-		<widget source="global.CurrentTime" render="Label" position="900,70" size="310,22" font="Regular;20" halign="right" backgroundColor="backtop" transparent="1">
+-			<convert type="ClockToText">Date</convert>
+-		</widget>
+-		<eLabel text="Plugins" 	position="80,60" size="800,35" font="Regular;32" backgroundColor="backtop" transparent="1"/>
+-		<widget source="Title" render="Label" 	position="480,110" size="730,30" font="Regular;24" backgroundColor="backtop" transparent="1"/>
+-		<eLabel 								position="480,146" size="730,470" zPosition="1" backgroundColor="grey" />
+-		<eLabel 								position="482,148" size="726,466" zPosition="2" backgroundColor="background" />
+-		<widget name="list" 					position="490,156" size="710,450" zPosition="4" enableWrapAround="1" scrollbarMode="showOnDemand" />
+-		<widget name="text" 					position="490,156" size="710,450" zPosition="3" font="Regular;24" halign="center" valign="center" />
+-		<ePixmap position="80,490" size="110,110" zPosition="2" pixmap="Kerni-HD1/icons/plugin.png" transparent="1" alphatest="blend" />
+-	</screen>
++	</screen>-->
+ 	<screen name="PositionerSetup" 					position="0,0" 		size="1280,720" 	title="Positioner setup..." 		flags="wfNoBorder">
+ 		<ePixmap position="0,0" size="1280,720" zPosition="-10" pixmap="Kerni-HD1/menu/back-epg.png" transparent="1"/>
+ 		<widget source="global.CurrentTime" render="Label" position="1130,40" size="80,26" font="Regular;26" halign="right" backgroundColor="backtop" transparent="1">
+diff --git a/skins/Kerni-HD1R2/skin.xml b/skins/Kerni-HD1R2/skin.xml
+index 5f742fd..96ec05d 100755
+--- a/skins/Kerni-HD1R2/skin.xml
++++ b/skins/Kerni-HD1R2/skin.xml
+@@ -1664,7 +1664,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<eLabel text="Parental control setup" position="70,47" size="800,43" font="Regular;35" backgroundColor="backtop" transparent="1" />
+ 		<widget name="config" position="70,120" size="700,480" itemHeight="30" scrollbarMode="showOnDemand" enableWrapAround="1" backgroundColor="background" transparent="1" />
+ 	</screen>
+-	<screen name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser" flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser" flags="wfNoBorder">
+ 		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="Kerni-HD1R2/menu/back2.png" />
+ 		<eLabel position="800,120" size="430,244" zPosition="2" backgroundColor="white" />
+ 		<widget source="session.VideoPicture" render="Pig" position="802,122" size="426,240" zPosition="3" backgroundColor="#ff000000" />
+@@ -1681,22 +1681,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<ePixmap pixmap="Kerni-HD1R2/buttons/green.png" position="350,635" size="24,24" alphatest="on" />
+ 		<widget name="red" position="100,635" size="250,22" zPosition="1" font="Regular;20" halign="left" backgroundColor="black" transparent="1" />
+ 		<widget name="green" position="380,635" size="250,22" zPosition="1" font="Regular;20" halign="left" backgroundColor="black" transparent="1" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="0,0" size="1280,720" title="Downloadable plugins" flags="wfNoBorder">
+-		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="Kerni-HD1R2/menu/back2.png" />
+-		<eLabel position="800,120" size="430,244" zPosition="2" backgroundColor="white" />
+-		<widget source="session.VideoPicture" render="Pig" position="802,122" size="426,240" zPosition="3" backgroundColor="#ff000000" />
+-		<ePixmap position="870,560" zPosition="-9" size="350,44" pixmap="Kerni-HD1R2/menu/db.png" />
+-		<widget source="global.CurrentTime" render="Label" position="1120,37" size="100,28" font="Regular;26" halign="right" backgroundColor="backtop" transparent="1">
+-			<convert type="ClockToText">Default</convert>
+-		</widget>
+-		<widget source="global.CurrentTime" render="Label" position="870,67" size="350,25" font="Regular;20" halign="right" backgroundColor="backtop" transparent="1">
+-			<convert type="ClockToText">Date</convert>
+-		</widget>
+-		<widget source="Title" render="Label" position="70,47" size="800,43" font="Regular;35" backgroundColor="backtop" transparent="1" />
+-		<widget name="list" position="70,115" size="700,500" scrollbarMode="showOnDemand" backgroundColor="background" transparent="1" />
+-		<widget name="text" position="0,0" size="0,0" />
+-	</screen>
++	</screen>-->
+ 	<screen name="PositionerSetup" position="0,0" size="1280,720" title="Positioner setup..." flags="wfNoBorder">
+ 		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="Kerni-HD1R2/menu/back2.png" />
+ 		<eLabel position="800,120" size="430,244" zPosition="2" backgroundColor="white" />
+diff --git a/skins/Nemesis.BlackBox/skin.xml b/skins/Nemesis.BlackBox/skin.xml
+index 33dbd99..be9be5b 100644
+--- a/skins/Nemesis.BlackBox/skin.xml
++++ b/skins/Nemesis.BlackBox/skin.xml
+@@ -506,13 +506,13 @@
+ 		<widget source="introduction" render="Label" position="10,305" size="440,23" zPosition="10" font="Regular;20" halign="center" transparent="1" />
+ 	</screen>
+ 	<!-- Plugin browser -->
+-	<screen name="PluginBrowser" position="center,center" size="420,410" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="center,center" size="420,410" title="Plugin browser">
+ 		<ePixmap position="5,5" zPosition="1" pixmap="Nemesis.BlackBox/key_red_big.png" size="200,40" alphatest="on" />
+ 		<ePixmap position="215,5" zPosition="1" pixmap="Nemesis.BlackBox/key_green_big.png" size="200,40" alphatest="on" />
+ 		<widget name="red" position="5,5" zPosition="2" size="200,40" font="Regular;18" valign="center" halign="center" backgroundColor="black" transparent="1" />
+ 		<widget name="green" position="215,5" zPosition="2" size="200,40" font="Regular;18" valign="center" halign="center" backgroundColor="black" transparent="1" />
+ 		<widget name="list" position="10,50" size="400,350" scrollbarMode="showOnDemand" />
+-	</screen>
++	</screen>-->
+ 	<!-- Radio infobar -->
+ 	<screen name="RadioInfoBar" position="90,420" size="560,110" zPosition="-1" title="Radio">
+ 		<widget source="session.CurrentService" render="Label" position="5,2" size="325,26" font="Regular;22" transparent="1">
+diff --git a/skins/Nemesis.Flatline.Blue/skin.xml b/skins/Nemesis.Flatline.Blue/skin.xml
+index 5e74d4d..f068458 100644
+--- a/skins/Nemesis.Flatline.Blue/skin.xml
++++ b/skins/Nemesis.Flatline.Blue/skin.xml
+@@ -348,13 +348,13 @@
+ 		<ePixmap position="140,110" zPosition="1" size="140,40" pixmap="Nemesis.Flatline.Blue/key-red.png"  transparent="1" alphatest="on" />
+ 		<widget name="initializetext" position="140,110" size="140,40" valign="center" halign="center" zPosition="2" font="keyFont;18" transparent="1" foregroundColor="KeyForeground" shadowColor="black" shadowOffset="-1,-1" />
+ 	</screen>
+-	<screen name="PluginBrowser" position="center,center" size="420,370" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="center,center" size="420,370" title="Plugin browser">
+ 		<widget name="list" position="10,10" size="400,300" scrollbarMode="showOnDemand" />
+ 		<ePixmap name="remove" position="5,325" size="200,40" pixmap="Nemesis.Flatline.Blue/key-red_200.png" transparent="1" alphatest="on" />
+ 		<ePixmap name="download" position="215,325" size="200,40" pixmap="Nemesis.Flatline.Blue/key-green_200.png" transparent="1" alphatest="on" />
+ 		<widget name="red" position="5,325" zPosition="2" size="200,40" valign="center" halign="center" font="keyFont;18" transparent="1" foregroundColor="KeyForeground" shadowColor="black" shadowOffset="-1,-1" />
+ 		<widget name="green" position="215,325" zPosition="2" size="200,40" valign="center" halign="center" font="keyFont;18" transparent="1" foregroundColor="KeyForeground" shadowColor="black" shadowOffset="-1,-1" />
+-	</screen>
++	</screen>-->
+ 	<screen name="ServiceInfo" position="center,center" size="560,370" title="Serviceinfo">
+ 		<ePixmap name="bg_red" position="0,0" size="140,40" pixmap="Nemesis.Flatline.Blue/key-red.png" transparent="1" alphatest="on" />
+ 		<ePixmap name="bg_green" position="140,0" size="140,40" pixmap="Nemesis.Flatline.Blue/key-green.png" transparent="1" alphatest="on" />
+diff --git a/skins/Nemesis.Flatline/skin.xml b/skins/Nemesis.Flatline/skin.xml
+index c22b471..10872e9 100644
+--- a/skins/Nemesis.Flatline/skin.xml
++++ b/skins/Nemesis.Flatline/skin.xml
+@@ -346,13 +346,13 @@
+ 		<ePixmap position="140,110" zPosition="1" size="140,40" pixmap="Nemesis.Flatline/key-red.png"  transparent="1" alphatest="on" />
+ 		<widget name="initializetext" position="140,110" size="140,40" valign="center" halign="center" zPosition="2" font="keyFont;18" transparent="1" foregroundColor="KeyForeground" shadowColor="black" shadowOffset="-1,-1" />
+ 	</screen>
+-	<screen name="PluginBrowser" position="center,center" size="420,370" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="center,center" size="420,370" title="Plugin browser">
+ 		<widget name="list" position="10,10" size="400,300" scrollbarMode="showOnDemand" />
+ 		<ePixmap name="remove" position="5,325" size="200,40" pixmap="Nemesis.Flatline/key-red_200.png" transparent="1" alphatest="on" />
+ 		<ePixmap name="download" position="215,325" size="200,40" pixmap="Nemesis.Flatline/key-green_200.png" transparent="1" alphatest="on" />
+ 		<widget name="red" position="5,325" zPosition="2" size="200,40" valign="center" halign="center" font="keyFont;18" transparent="1" foregroundColor="KeyForeground" shadowColor="black" shadowOffset="-1,-1" />
+ 		<widget name="green" position="215,325" zPosition="2" size="200,40" valign="center" halign="center" font="keyFont;18" transparent="1" foregroundColor="KeyForeground" shadowColor="black" shadowOffset="-1,-1" />
+-	</screen>
++	</screen>-->
+ 	<screen name="ServiceInfo" position="center,center" size="560,370" title="Serviceinfo">
+ 		<ePixmap name="bg_red" position="0,0" size="140,40" pixmap="Nemesis.Flatline/key-red.png" transparent="1" alphatest="on" />
+ 		<ePixmap name="bg_green" position="140,0" size="140,40" pixmap="Nemesis.Flatline/key-green.png" transparent="1" alphatest="on" />
+diff --git a/skins/Nemesis.GlassLine/skin.xml b/skins/Nemesis.GlassLine/skin.xml
+index bccf5f5..2121650 100644
+--- a/skins/Nemesis.GlassLine/skin.xml
++++ b/skins/Nemesis.GlassLine/skin.xml
+@@ -629,13 +629,13 @@
+ 		<widget name="help2" position="265,98" size="130,30" font="Console;16" halign="center" valign="center" />
+ 	</screen>
+ 	<!-- Plugin browser -->
+-	<screen name="PluginBrowser" position="145,85" size="430,410" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="145,85" size="430,410" title="Plugin browser">
+ 		<widget name="list" position="5,10" size="420,350" scrollbarMode="showOnDemand" />
+ 		<ePixmap name="key_red" position="5,380" size="21,21" pixmap="Nemesis.GlassLine/key_red.png" alphatest="on" />
+ 		<ePixmap name="key_green" position="400,380" size="21,21" pixmap="Nemesis.GlassLine/key_green.png" alphatest="on" />
+ 		<widget name="red" position="35,380" size="180,21" font="Regular;19" valign="top" halign="left" backgroundColor="background" transparent="1" />
+ 		<widget name="green" position="215,380" size="180,21" font="Regular;19" valign="top" halign="right" backgroundColor="background" transparent="1" />
+-	</screen>
++	</screen>-->
+ 	<!-- Radio infobar -->
+ 	<screen name="RadioInfoBar" position="85,408" size="560,120" zPosition="-1" title="Radio">
+ 		<widget source="session.CurrentService" render="Label" position="5,1" size="325,26" font="Regular;20" noWrap="1" transparent="1">
+diff --git a/skins/Nemesis.ShadowLine/skin.xml b/skins/Nemesis.ShadowLine/skin.xml
+index 1ef0de2..ef47fd7 100644
+--- a/skins/Nemesis.ShadowLine/skin.xml
++++ b/skins/Nemesis.ShadowLine/skin.xml
+@@ -414,13 +414,13 @@
+ 		<ePixmap position="0,0" size="34,45" pixmap="Nemesis.ShadowLine/mute.png"/>
+ 	</screen>
+ 	<!-- Plugin browser -->
+-	<screen name="PluginBrowser" position="center,center" size="420,370" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="center,center" size="420,370" title="Plugin browser">
+ 		<widget name="list" position="10,10" size="400,300" scrollbarMode="showOnDemand" />
+ 		<ePixmap name="remove" position="10,335" size="17,17" pixmap="Nemesis.ShadowLine/key-red.png" alphatest="on" />
+ 		<ePixmap name="download" position="390,335" size="17,17" pixmap="Nemesis.ShadowLine/key-green.png" alphatest="on" />
+ 		<widget name="red" position="35,325" size="200,40" valign="center" halign="left" font="Regular;18" backgroundColor="background" transparent="1" />
+ 		<widget name="green" position="178,325" size="200,40" valign="center" halign="right" font="Regular;18" backgroundColor="background" transparent="1" />
+-	</screen>
++	</screen>-->
+ 	<!-- Radio Infobar -->
+ 	<screen name="RadioInfoBar" position="85,408" size="560,120" zPosition="-1" title="Radio">
+ 		<widget source="session.CurrentService" render="Label" position="5,1" size="325,26" font="Regular;20" noWrap="1" transparent="1">
+diff --git a/skins/SWAIN-HD/skin.xml b/skins/SWAIN-HD/skin.xml
+index 0049683..311a49c 100755
+--- a/skins/SWAIN-HD/skin.xml
++++ b/skins/SWAIN-HD/skin.xml
+@@ -987,17 +987,12 @@
+ 		<widget name="blue" position="800,525" size="265,35" font="Regular;24" halign="center" valign="center" backgroundColor="blue" />
+ 	</screen>
+ 	<!-- Erweiterungen -->
+-	<screen name="PluginBrowser" position="172,132" size="1108,588" title="Plugin browser" backgroundColor="transparent">
++<!--	<screen name="PluginBrowser" position="172,132" size="1108,588" title="Plugin browser" backgroundColor="transparent">
+ 		<eLabel position="5,5" size="600,510" zPosition="-1" backgroundColor="background" />
+ 		<widget name="list" position="15,10" size="580,500" scrollbarMode="showOnDemand" />
+ 		<widget name="red" position="5,525" size="300,35" font="Regular;24" halign="center" valign="center" backgroundColor="red" />
+ 		<widget name="green" position="305,525" size="300,35" font="Regular;24" halign="center" valign="center" backgroundColor="green" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="172,132" size="1108,588" title="Downloadable plugins" backgroundColor="transparent">
+-		<eLabel position="5,5" size="600,510" zPosition="-1" backgroundColor="background" />
+-		<widget name="text" position="15,10" size="580,500" zPosition="1" font="Regular;24" halign="center" valign="center" />
+-		<widget name="list" position="15,10" size="580,500" zPosition="2" scrollbarMode="showOnDemand" />
+-	</screen>
++	</screen>-->
+ 	<!-- Einstellungen -->
+ 	<!-- Kanalsuche -->
+ 	<screen name="NimSelection" position="172,132" size="1108,588" title="Choose Tuner" backgroundColor="transparent">
+diff --git a/skins/SWAIN/skin.xml b/skins/SWAIN/skin.xml
+index f1578b1..e546fe5 100755
+--- a/skins/SWAIN/skin.xml
++++ b/skins/SWAIN/skin.xml
+@@ -950,17 +950,12 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<widget name="blue" position="452,420" size="150,28" font="Regular;20" halign="center" valign="center" backgroundColor="blue" />
+ 	</screen>
+ 	<!-- Erweiterungen -->
+-	<screen name="PluginBrowser" position=" 96,105" size="623,470" title="Plugin browser" backgroundColor="transparent">
++<!--	<screen name="PluginBrowser" position=" 96,105" size="623,470" title="Plugin browser" backgroundColor="transparent">
+ 		<eLabel position="2, 4" size="500, 408" zPosition="-1" backgroundColor="background" />
+ 		<widget name="list" position="5, 8" size="494, 400" scrollbarMode="showOnDemand" />
+ 		<widget name="red" position="2, 420" size="250, 28" font="Regular;20" halign="center" valign="center" backgroundColor="red" />
+ 		<widget name="green" position="252, 420" size="250, 28" font="Regular;20" halign="center" valign="center" backgroundColor="green" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position=" 96,105" size="623,470" title="Downloadable plugins" backgroundColor="transparent">
+-		<eLabel position="2, 4" size="537, 408" zPosition="-1" backgroundColor="background" />
+-		<widget name="text" position="8, 8" size="526, 400" zPosition="1" font="Regular;20" halign="center" valign="center" />
+-		<widget name="list" position="8, 8" size="526, 400" zPosition="2" scrollbarMode="showOnDemand" />
+-	</screen>
++	</screen>-->
+ 	<!-- Einstellungen -->
+ 	<!-- Kanalsuche -->	
+ 	<screen name="NimSelection" position="96,105" size="623,470" title="Choose Tuner" backgroundColor="transparent">
+diff --git a/skins/UltraViolet/skin.xml b/skins/UltraViolet/skin.xml
+index 8a38996..ea8eec9 100755
+--- a/skins/UltraViolet/skin.xml
++++ b/skins/UltraViolet/skin.xml
+@@ -2185,7 +2185,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<widget source="key_yellow" render="Label" position=" 750,665" size="210,29" halign="left" font="Regular;24" backgroundColor="grey" shadowColor="black" shadowOffset="-2,-2" transparent="1"/>
+ 		<widget source="key_blue" render="Label" position="1000,665" size="210,29" halign="left" font="Regular;22" backgroundColor="grey" shadowColor="black" shadowOffset="-2,-2" transparent="1"/>
+ 	</screen>
+-	<screen name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser" flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser" flags="wfNoBorder">
+ 		<ePixmap position="0,0" size="1280,720" zPosition="-10" pixmap="UltraViolet/menu/menubg1.png"/>
+ 		<widget source="global.CurrentTime" render="Label" position="1060,35" size=" 80,26" font="Regular;26" halign="right" backgroundColor="background" shadowColor="black" shadowOffset="-2,-2" transparent="1">
+ 			<convert type="ClockToText">Default</convert>
+@@ -2204,24 +2204,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<ePixmap pixmap="UltraViolet/buttons/green.png" position="560,662" size="35,35" alphatest="blend"/>
+ 		<widget name="red" position=" 250,665" size="310,29" halign="left" font="Regular;24" backgroundColor="grey" shadowColor="black" shadowOffset="-2,-2" transparent="1"/>
+ 		<widget name="green" position=" 600,665" size="310,29" halign="left" font="Regular;24" backgroundColor="grey" shadowColor="black" shadowOffset="-2,-2" transparent="1"/>
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="0,0" size="1280,720" title="Downloadable plugins" flags="wfNoBorder">
+-		<ePixmap position="0,0" size="1280,720" zPosition="-10" pixmap="UltraViolet/menu/menubg1.png"/>
+-		<widget source="global.CurrentTime" render="Label" position="1060,35" size=" 80,26" font="Regular;26" halign="right" backgroundColor="background" shadowColor="black" shadowOffset="-2,-2" transparent="1">
+-			<convert type="ClockToText">Default</convert>
+-		</widget>
+-		<widget source="global.CurrentTime" render="Label" position=" 930,67" size="210,22" font="Regular;20" halign="right" backgroundColor="background" shadowColor="black" shadowOffset="-2,-2" transparent="1">
+-			<convert type="ClockToText">Format:%d.%m.%Y</convert>
+-		</widget>
+-		<eLabel text="Download/Remove plugins" position="180,50" size="550,36" zPosition="3" font="Regular;32" backgroundColor="background2" shadowColor="black" shadowOffset="-3,-3" transparent="1"/>
+-		<eLabel position="122,210" size="496,301" zPosition="1" backgroundColor="white"/>
+-		<widget source="session.VideoPicture" render="Pig" position="125,213" size="490,295" zPosition="2" backgroundColor="#ff000000"/>
+-		<eLabel position="656,156" size="528,408" zPosition="3" backgroundColor="background"/>
+-		<eLabel position="660,160" size="524,404" zPosition="4" backgroundColor="background2"/>
+-		<widget name="text" position="660,160" size="520,400" zPosition="5" font="Regular;24" halign="center" valign="center"/>
+-		<eLabel position="660,160" size="520,1" zPosition="7"/>
+-		<widget name="list" position="660,160" size="520,400" zPosition="6" scrollbarMode="showOnDemand" selectionPixmap="UltraViolet/selpic/sel50-520.png" backgroundPixmap="UltraViolet/selpic/sep.png" transparent="1"/>
+-	</screen>
++	</screen>-->
+ 	<screen name="PluginManager" position="0,0" size="1280,720" title="Plugin manager" flags="wfNoBorder">
+ 		<ePixmap position="0,0" size="1280,720" zPosition="-10" pixmap="UltraViolet/menu/menubg1.png"/>
+ 		<widget source="global.CurrentTime" render="Label" position="1060,35" size=" 80,26" font="Regular;26" halign="right" backgroundColor="background" shadowColor="black" shadowOffset="-2,-2" transparent="1">
+diff --git a/skins/Vali-XD/skin.xml b/skins/Vali-XD/skin.xml
+index 5f5606d..9b2fb64 100644
+--- a/skins/Vali-XD/skin.xml
++++ b/skins/Vali-XD/skin.xml
+@@ -484,7 +484,7 @@
+ 	</screen>
+ 	
+ 	<!--  ##### PluginBrowser ##### -->
+-	<screen backgroundColor="background" flags="wfNoBorder" name="PluginBrowser" position="524,0" size="500,576" title="Plugin browser">
++<!--	<screen backgroundColor="background" flags="wfNoBorder" name="PluginBrowser" position="524,0" size="500,576" title="Plugin browser">
+ 		<eLabel backgroundColor="secondBG" position="0,0" size="500,77" zPosition="0"/>
+ 		<ePixmap alphatest="off" pixmap="Vali-XD/border/left-shadow.png" position="0,0" size="8,720" zPosition="1"/>
+ 		<eLabel backgroundColor="secondBG" font="Regular;22" foregroundColor="secondFG" halign="left" position="20,30" size="430,47" text="Plugin browser" transparent="1" valign="center" zPosition="3"/>
+@@ -493,7 +493,7 @@
+ 		<ePixmap alphatest="on" name="bg_green" pixmap="Vali-XD/buttons/green.png" position="15,524" size="35,25" transparent="1" zPosition="2"/>
+ 		<widget backgroundColor="#7C1C1C" font="Regular;18" halign="left" name="red" position="55,500" size="300,22" transparent="1" zPosition="2"/>
+ 		<widget backgroundColor="#266926" font="Regular;18" halign="left" name="green" position="55,524" size="300,24" transparent="1" zPosition="2"/>
+-	</screen>
++	</screen>-->
+ 	
+ 	<!--  ##### Shooter-II ##### -->
+ 	<screen flags="wfNoBorder" name="Shooter_II" position="524,0" size="500,576" title="Shooter-II">
+diff --git a/skins/Vali.HD.atlantis/skin.xml b/skins/Vali.HD.atlantis/skin.xml
+index 3f80934..3e9cd29 100755
+--- a/skins/Vali.HD.atlantis/skin.xml
++++ b/skins/Vali.HD.atlantis/skin.xml
+@@ -1159,7 +1159,7 @@ self.instance.move(ePoint((1280-wsizex)/2, (720-wsizey)/2))
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" position="435,645" render="Label" size="220,26" source="key_green" transparent="1" zPosition="1"/>
+ 	<ePixmap alphatest="blend" pixmap="Vali.HD.atlantis/images/setup.png" position="135,285" size="150,150"/>
+   </screen>
+-  <screen flags="wfNoBorder" name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser">
++<!--  <screen flags="wfNoBorder" name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser">
+     <ePixmap alphatest="on" pixmap="Vali.HD.atlantis/bg.png" position="0,0" size="1280,720" zPosition="-1"/>
+ 	<ePixmap alphatest="blend" pixmap="Vali.HD.atlantis/images/plugin.png" position="135,285" size="150,150"/>
+     <widget backgroundColor="secondBG" font="Regular;24" position="70,35" render="Label" size="850,50" source="Title" transparent="1" valign="center" zPosition="1"/>
+@@ -1173,7 +1173,7 @@ self.instance.move(ePoint((1280-wsizex)/2, (720-wsizey)/2))
+     <ePixmap alphatest="blend" pixmap="Vali.HD.atlantis/blue.png" position="970,643" size="30,30"/>
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" name="red" position="145,645" size="220,26" transparent="1" zPosition="1"/>
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" name="green" position="435,645" size="220,26" transparent="1" zPosition="1"/>
+-  </screen>
++  </screen>-->
+   <screen flags="wfNoBorder" name="DirectoryBrowser" position="0,0" size="1280,720" title="Directory browser">
+     <ePixmap alphatest="on" pixmap="Vali.HD.atlantis/bg.png" position="0,0" size="1280,720" zPosition="-1"/>
+     <ePixmap alphatest="blend" pixmap="Vali.HD.atlantis/images/hdd.png" position="135,285" size="150,150"/>
+diff --git a/skins/Vali.HD.nano/skin.xml b/skins/Vali.HD.nano/skin.xml
+index 652343e..e691417 100755
+--- a/skins/Vali.HD.nano/skin.xml
++++ b/skins/Vali.HD.nano/skin.xml
+@@ -1298,7 +1298,7 @@
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" position="145,645" render="Label" size="220,26" source="key_red" transparent="1" zPosition="1" />
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" position="435,645" render="Label" size="220,26" source="key_green" transparent="1" zPosition="1" />
+   </screen>
+-  <screen flags="wfNoBorder" name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser">
++<!--  <screen flags="wfNoBorder" name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser">
+     <eLabel backgroundColor="secondBG" position="0,0" size="1280,90" zPosition="-1" />
+     <eLabel backgroundColor="secondBG" position="0,630" size="1280,90" zPosition="-1" />
+     <widget backgroundColor="transparent" position="0,90" render="Pig" size="497,280" source="session.VideoPicture" zPosition="1" />
+@@ -1313,7 +1313,7 @@
+     <ePixmap alphatest="on" pixmap="Vali.HD.nano/blue.png" position="970,643" size="30,30" />
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" name="red" position="145,645" size="220,26" transparent="1" zPosition="1" />
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" name="green" position="435,645" size="220,26" transparent="1" zPosition="1" />
+-  </screen>
++  </screen>-->
+   <screen flags="wfNoBorder" name="DirectoryBrowser" position="0,0" size="1280,720" title="Directory browser">
+     <eLabel backgroundColor="secondBG" position="0,0" size="1280,90" zPosition="-1" />
+     <eLabel backgroundColor="secondBG" position="0,630" size="1280,90" zPosition="-1" />
+diff --git a/skins/Vali.HD.warp/skin.xml b/skins/Vali.HD.warp/skin.xml
+index ff3ec37..3636fe3 100755
+--- a/skins/Vali.HD.warp/skin.xml
++++ b/skins/Vali.HD.warp/skin.xml
+@@ -1218,7 +1218,7 @@ self.instance.move(ePoint((1280-wsizex)/2, (720-wsizey)/2))
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" position="435,645" render="Label" size="220,26" source="key_green" transparent="1" zPosition="1"/>
+ 	<ePixmap alphatest="blend" pixmap="Vali.HD.warp/images/setup.png" position="135,285" size="150,150"/>
+   </screen>
+-  <screen flags="wfNoBorder" name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser">
++<!--  <screen flags="wfNoBorder" name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser">
+     <eLabel backgroundColor="secondBG" position="0,0" size="1280,90" zPosition="-1"/>
+     <eLabel backgroundColor="secondBG" position="0,630" size="1280,90" zPosition="-1"/>
+ 	<ePixmap alphatest="blend" pixmap="Vali.HD.warp/images/plugin.png" position="135,285" size="150,150"/>
+@@ -1233,7 +1233,7 @@ self.instance.move(ePoint((1280-wsizex)/2, (720-wsizey)/2))
+     <ePixmap alphatest="on" pixmap="Vali.HD.warp/blue.png" position="970,643" size="30,30"/>
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" name="red" position="145,645" size="220,26" transparent="1" zPosition="1"/>
+     <widget backgroundColor="secondBG" font="Regular;22" halign="left" name="green" position="435,645" size="220,26" transparent="1" zPosition="1"/>
+-  </screen>
++  </screen>-->
+   <screen flags="wfNoBorder" name="DirectoryBrowser" position="0,0" size="1280,720" title="Directory browser">
+     <eLabel backgroundColor="secondBG" position="0,0" size="1280,90" zPosition="-1"/>
+     <eLabel backgroundColor="secondBG" position="0,630" size="1280,90" zPosition="-1"/>
+diff --git a/skins/YADS-HD/skin.xml b/skins/YADS-HD/skin.xml
+index c1292b2..70418d2 100755
+--- a/skins/YADS-HD/skin.xml
++++ b/skins/YADS-HD/skin.xml
+@@ -2735,7 +2735,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<widget source="key_red" render="Label"	position="100,650" zPosition="1" size="248,30" font="Regular;24" halign="center" valign="center" backgroundColor="#9f1313" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
+ 	</screen>
+ 	<!-- Plugin browser -->
+-	<screen name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser" flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" position="0,0" size="1280,720" title="Plugin browser" flags="wfNoBorder">
+ 		<ePixmap position="0,40" size="1280,95" pixmap="YADS-HD/top1.png" alphatest="on" />
+ 		<widget source="global.CurrentTime" render="Label" position="65,44" size="180,25" zPosition="1" font="Regular;25" halign="left" backgroundColor="background1" shadowColor="black" shadowOffset="-2,-2" transparent="1">
+ 			<convert type="ClockToText">Format:%d.%m.%Y</convert>
+@@ -2757,26 +2757,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<ePixmap pixmap="YADS-HD/buttons/green.png" position="520,650" size="248,32" zPosition="1" alphatest="on" />
+ 		<widget name="red" position="100,650" zPosition="3" size="348,30" font="Regular;24" halign="center" valign="center" backgroundColor="#9f1313" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
+ 		<widget name="green" position="420,650" zPosition="3" size="348,30" font="Regular;24" halign="center" valign="center" backgroundColor="#1f771f" shadowColor="black" shadowOffset="-2,-2" transparent="1" />
+-	</screen>
+-	<!-- Plugin downloads -->
+-	<screen name="PluginDownloadBrowser" position="0,0" size="1280,720" title="Downloadable plugins" flags="wfNoBorder">
+-		<ePixmap position="0,40" size="1280,95" pixmap="YADS-HD/top1.png" alphatest="on" />
+-		<widget source="global.CurrentTime" render="Label" position="65,44" size="180,25" zPosition="1" font="Regular;25" halign="left" backgroundColor="background1" shadowColor="black" shadowOffset="-2,-2" transparent="1">
+-			<convert type="ClockToText">Format:%d.%m.%Y</convert>
+-		</widget>
+-		<ePixmap pixmap="YADS-HD/icons/clock.png" position="1112,48" size="18,18" zPosition="1" alphatest="blend" />
+-		<widget source="session.RecordState" render="Pixmap" position="1102,38" size="38,38" zPosition="2" pixmap="YADS-HD/rec.png" alphatest="blend">
+-			<convert type="ConditionalShowHide">Blink</convert>
+-		</widget>
+-		<widget source="global.CurrentTime" render="Label" position="1130,44" size="80,25" zPosition="1" font="Regular;25" halign="right" backgroundColor="background1" shadowColor="black" shadowOffset="-2,-2" transparent="1">
+-			<convert type="ClockToText">Default</convert>
+-		</widget>
+-		<widget source="Title" render="Label" position="0,90" size="1280,33" zPosition="1" halign="center" font="Regular;30" backgroundColor="background" shadowColor="black" shadowOffset="-3,-3" transparent="1" />
+-		<ePixmap position="90,140" size="1100,500" zPosition="-1" pixmap="YADS-HD/back2.png" />
+-		<widget name="list" position="110,160" size="700,450" zPosition="2" scrollbarMode="showOnDemand" selectionPixmap="YADS-HD/selpic/sel50.png" backgroundPixmap="YADS-HD/selpic/sep750.png" transparent="1" />
+-		<widget source="session.VideoPicture" render="Pig" position="830,150" size="350,205" zPosition="3" backgroundColor="#ff000000" />
+-		<widget name="text" position="830,400" size="350,100" font="Regular;24" halign="center" valign="center" transparent="1" />
+-	</screen>
++	</screen>-->
+ 	<!-- Pluginmanager -->
+ 	<screen name="PluginManager" 					position="0,0" size="1280,720" title="Plugin manager" flags="wfNoBorder">
+ 		<ePixmap 												position="0,40" size="1280,95" pixmap="YADS-HD/top1.png"  alphatest="on"/>
+diff --git a/skins/dTV-HD-Reloaded/skin.xml b/skins/dTV-HD-Reloaded/skin.xml
+index e532996..7b47ef3 100755
+--- a/skins/dTV-HD-Reloaded/skin.xml
++++ b/skins/dTV-HD-Reloaded/skin.xml
+@@ -1350,7 +1350,7 @@
+ 		<eLabel text="Parental control setup" position="71,66" size="600,32" font="Regular;25" halign="center" />
+ 		<widget name="config" position="26,108" size="690,435" itemHeight="29" selectionPixmap="dTV-HD-Reloaded/menu/select1080_25.png" transparent="1" />
+ 	</screen>
+-	<screen name="PluginBrowser" position="center,74" size="742,572" title="Plugin browser" backgroundColor="transparent2" flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" position="center,74" size="742,572" title="Plugin browser" backgroundColor="transparent2" flags="wfNoBorder">
+ 		<ePixmap pixmap="dTV-HD-Reloaded/menu/menuback.png" position="1,1" size="740,570" zPosition="-5" alphatest="on" />
+ 		<eLabel position="21, 99" size="700,2" backgroundColor="grey" zPosition="5" />
+ 		<eLabel position="21,101" size=" 2,400" backgroundColor="grey" zPosition="5" />
+@@ -1363,18 +1363,7 @@
+ 		<ePixmap pixmap="dTV-HD-Reloaded/button300.png" position="391,517" zPosition="1" size="300,38" />
+ 		<widget name="red" position="51,516" zPosition="2" size="300,38" font="Regular;22" halign="center" valign="center" foregroundColor="red" backgroundColor="black" transparent="1" />
+ 		<widget name="green" position="391,516" zPosition="2" size="300,38" font="Regular;22" halign="center" valign="center" foregroundColor="green" backgroundColor="black" transparent="1" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="center,74" size="742,572" title="Downloadable plugins" backgroundColor="transparent2" flags="wfNoBorder">
+-		<ePixmap pixmap="dTV-HD-Reloaded/menu/menuback.png" position="1,1" size="740,570" zPosition="-5" alphatest="on" />
+-		<eLabel position="21,99" size="700,2" backgroundColor="grey" zPosition="5" />
+-		<eLabel position="21,101" size=" 2,450" backgroundColor="grey" zPosition="5" />
+-		<eLabel position="719,101" size=" 2,450" backgroundColor="grey" zPosition="5" />
+-		<eLabel position="21,549" size="700, 2" backgroundColor="grey" zPosition="5" />
+-		<ePixmap position="131,11" size="480,66" pixmap="dTV-HD-Reloaded/menu/db.png" alphatest="blend" />
+-		<widget source="Title" render="Label" position="71,66" size="600,32" font="Regular;25" halign="center" />
+-		<widget name="text" position="40,130" size="660,50" font="Regular;23" />
+-		<widget name="list" position="21,101" size="700,450" scrollbarMode="showOnDemand" selectionPixmap="dTV-HD-Reloaded/menu/select800_50.png" />
+-	</screen>
++	</screen>-->
+ 	<screen name="PositionerSetup" position="center,125" size="800,492" title="Positioner setup...">
+ 		<eLabel position="0,0" size="800,2" backgroundColor="grey" />
+ 		<widget name="list" position="200,10" size="400,155" selectionPixmap="dTV-HD-Reloaded/menu/select1080_25.png" transparent="1" />
+diff --git a/skins/dTV-HD/skin.xml b/skins/dTV-HD/skin.xml
+index 574c24f..af190ba 100755
+--- a/skins/dTV-HD/skin.xml
++++ b/skins/dTV-HD/skin.xml
+@@ -1132,7 +1132,7 @@
+ 		<eLabel position="0,0" size="600,2" backgroundColor="grey" zPosition="5" />
+ 		<widget name="config" position="10,12" size="580,475" selectionPixmap="dTV-HD/menu/select1080_25.png" transparent="1" />
+ 	</screen>
+-	<screen name="PluginBrowser" position="240,125" size="800,502" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="240,125" size="800,502" title="Plugin browser">
+ 		<eLabel position="0,0" size="800,2" backgroundColor="grey" />
+ 		<widget name="list" position="0,0" size="801,452" scrollbarMode="showOnDemand" selectionPixmap="dTV-HD/menu/select800_50.png" />
+ 		<eLabel position="0,450" size="800,2" backgroundColor="grey" />
+@@ -1140,13 +1140,7 @@
+ 		<ePixmap pixmap="dTV-HD/button300.png" position="420,464" zPosition="1" size="300,38" alphatest="blend" />
+ 		<widget name="red" position="80,463" zPosition="2" size="300,38" font="Regular;24" halign="center" valign="center" foregroundColor="red" backgroundColor="darkgrey" transparent="1" />
+ 		<widget name="green" position="420,463" zPosition="2" size="300,38" font="Regular;24" halign="center" valign="center" foregroundColor="green" backgroundColor="darkgrey" transparent="1" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="240,125" size="800,502" title="Downloadable plugins">
+-		<eLabel position="0,0" size="800,2" backgroundColor="grey" />
+-		<widget name="text" position="20,30" size="760,50" font="Regular;23" />
+-		<widget name="list" position="0,0" size="801,452" scrollbarMode="showOnDemand" selectionPixmap="dTV-HD/menu/select800_50.png" />
+-		<eLabel position="0,450" size="800,2" backgroundColor="grey" />
+-	</screen>
++	</screen>-->
+ 	<screen name="PositionerSetup" position="240,125" size="800,492" title="Positioner setup...">
+ 		<eLabel position="0,0" size="800,2" backgroundColor="grey" />
+ 		<widget name="list" position="200,10" size="400,155" selectionPixmap="dTV-HD/menu/select1080_25.png" transparent="1" />
+diff --git a/skins/dmm-HD/skin.xml b/skins/dmm-HD/skin.xml
+index 688bced..2ba1375 100755
+--- a/skins/dmm-HD/skin.xml
++++ b/skins/dmm-HD/skin.xml
+@@ -1597,7 +1597,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<eLabel text="Parental control setup" position="80,40" size="1000,40" font="Regular;34" backgroundColor="darkgrey" transparent="1"/>
+ 		<widget name="config" position="550,120" size="660,510" enableWrapAround="1" itemHeight="30" backgroundColor="background" transparent="1"/>
+ 	</screen>
+-	<screen name="PluginBrowser" 				position="0,0" 		size="1280,720"	title="Plugin browser"				flags="wfNoBorder">
++<!--	<screen name="PluginBrowser" 				position="0,0" 		size="1280,720"	title="Plugin browser"				flags="wfNoBorder">
+ 		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="dmm-HD/menu/back-menu.png" />
+ 		<widget source="global.CurrentTime" render="Label" position="1130,40" size="80,26" font="Regular;26" halign="right" backgroundColor="darkgrey" transparent="1">
+ 			<convert type="ClockToText">Default</convert>
+@@ -1613,21 +1613,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<ePixmap pixmap="dmm-HD/buttons/green.png" 	position="80,500"  size="30,30" alphatest="blend"   />
+ 		<widget name="red" 							position="130,452"  size="320,26"  font="Regular;24" halign="left" backgroundColor="black" transparent="1" />
+ 		<widget name="green" 						position="130,502"  size="320,26"  font="Regular;24" halign="left" backgroundColor="black" transparent="1" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" 		position="0,0" 		size="1280,720" title="Downloadable plugins"		flags="wfNoBorder">
+-		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="dmm-HD/menu/back-menu.png" />
+-		<widget source="global.CurrentTime" render="Label" position="1130,40" size="80,26" font="Regular;26" halign="right" backgroundColor="darkgrey" transparent="1">
+-			<convert type="ClockToText">Default</convert>
+-		</widget>
+-		<widget source="global.CurrentTime" render="Label" position="900,72" size="310,22" font="Regular;20" halign="right" backgroundColor="darkgrey" transparent="1">
+-			<convert type="ClockToText">Date</convert>
+-		</widget>
+-		<ePixmap 											position="70,110" size="390,225" zPosition="2" pixmap="dmm-HD/pig_bg.png"/>
+-		<widget source="session.VideoPicture" render="Pig"  position="75,115" size="380,215" zPosition="3" backgroundColor="#ff000000"/>
+-		<widget source="Title" render="Label" position="80,40" size="1000,40" font="Regular;34" backgroundColor="darkgrey" transparent="1"/>
+-		<widget name="text" position="550,150" size="660,50" font="Regular;23" />
+-		<widget name="list" position="550,120" size="660,500" selectionPixmap="dmm-HD/sel.png" backgroundPixmap="dmm-HD/sep.png" scrollbarMode="showOnDemand" transparent="1"/>
+-	</screen>
++	</screen>-->
+ 	<screen name="PositionerSetup" 				position="0,0" 		size="1280,720" title="Positioner setup..."			flags="wfNoBorder">
+ 		<ePixmap position="0,0" zPosition="-10" size="1280,720" pixmap="dmm-HD/menu/back-menu.png"/>
+ 		<widget source="global.CurrentTime" render="Label" position="1130,40" size="80,26" font="Regular;26" halign="right" backgroundColor="darkgrey" transparent="1">
+diff --git a/skins/dreamTV-HD/skin.xml b/skins/dreamTV-HD/skin.xml
+index 1dfd6d8..bd68bb7 100755
+--- a/skins/dreamTV-HD/skin.xml
++++ b/skins/dreamTV-HD/skin.xml
+@@ -1268,19 +1268,13 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2, orgpos.y()))
+ 		<eLabel position="0,0" size="600,2" backgroundColor="grey" zPosition="5" />
+ 		<widget name="config" position="10,12" size="580,475" selectionPixmap="dreamTV-HD/menu/select1080_25.png" />
+ 	</screen>
+-	<screen name="PluginBrowser" position="240,134" size="800,492" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="240,134" size="800,492" title="Plugin browser">
+ 		<eLabel position="0,0" size="800,2" backgroundColor="grey" />
+ 		<widget name="list" position="0,0" size="801,452" scrollbarMode="showOnDemand" selectionPixmap="dreamTV-HD/menu/select800_50.png" />
+ 		<eLabel position="0,450" size="800,2" backgroundColor="grey" />
+ 		<widget name="red" position="50,457" size="350,30" font="Regular;24" halign="center" valign="center" foregroundColor="red" />
+ 		<widget name="green" position="400,457" size="350,30" font="Regular;24" halign="center" valign="center" foregroundColor="green" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="240,134" size="800,492" title="Downloadable plugins">
+-		<eLabel position="0,0" size="800,2" backgroundColor="grey" />
+-		<widget name="text" position="20,30" size="760,50" font="Regular;23" />
+-		<widget name="list" position="0,0" size="801,452" scrollbarMode="showOnDemand" selectionPixmap="dreamTV-HD/menu/select800_50.png" />
+-		<eLabel position="0,450" size="800,2" backgroundColor="grey" />
+-	</screen>
++	</screen>-->
+ 	<screen name="PositionerSetup" position="240,134" size="800,492" title="Positioner setup...">
+ 		<eLabel position="0,0" size="800,2" backgroundColor="grey" />
+ 		<widget name="list" position="200,10" size="400,155" selectionPixmap="dreamTV-HD/menu/select1080_25.png" />
+diff --git a/skins/simple/skin.xml b/skins/simple/skin.xml
+index dcacf43..a897d76 100755
+--- a/skins/simple/skin.xml
++++ b/skins/simple/skin.xml
+@@ -983,15 +983,11 @@
+ 		<eLabel position=" 0,397" size="620,33" backgroundColor="background2" />
+ 		<widget source="introduction" render="Label" position="10,402" size="600,25" zPosition="1" font="Regular;22" backgroundColor="background2" shadowColor="background" shadowOffset="-2,-2" transparent="1" halign="center" />
+ 	</screen>
+-	<screen name="PluginBrowser" position="100,90" size="520,405" title="Plugin browser">
++<!--	<screen name="PluginBrowser" position="100,90" size="520,405" title="Plugin browser">
+ 		<widget name="red" position=" 8,5" zPosition="1" size="250,35" font="Regular;20" halign="center" valign="center" backgroundColor="red" shadowColor="background" shadowOffset="-2,-2" />
+ 		<widget name="green" position="262,5" zPosition="1" size="250,35" font="Regular;20" halign="center" valign="center" backgroundColor="green" shadowColor="background" shadowOffset="-2,-2" />
+ 		<widget name="list" position="10,45" size="500,355" scrollbarMode="showOnDemand" />
+-	</screen>
+-	<screen name="PluginDownloadBrowser" position="100,90" size="520,420" title="Downloadable plugins">
+-		<widget name="text" position="10,10" zPosition="1" size="500,405" font="Regular;20" halign="center" valign="center" />
+-		<widget name="list" position="10,10" zPosition="2" size="500,405" scrollbarMode="showOnDemand" />
+-	</screen>
++	</screen>-->
+ 	<screen name="RdsInfoDisplay" position=" 0, 0" size="720,576" zPosition="-2" backgroundColor="transparent" flags="wfNoBorder">
+ 		<widget name="RadioText" position="50,481" size="620,29" font="Regular;21" valign="center" noWrap="1" backgroundColor="transpBlack" shadowOffset="-2,-2" shadowColor="black" />
+ 		<widget name="RtpText" position="50,510" size="620,29" font="Regular;21" valign="center" halign="right" noWrap="1" backgroundColor="transpBlack" shadowOffset="-2,-2" shadowColor="black" />
+-- 
+1.7.9.6
+

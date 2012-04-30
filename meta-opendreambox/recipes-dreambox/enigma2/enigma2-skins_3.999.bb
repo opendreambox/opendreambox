@@ -1,7 +1,12 @@
 SUMMARY = "Skins for Enigma2"
 LICENSE = "CLOSED"
 SRCREV = "68c8f8d97f77c2a2101290a3f027c37fa6f34785"
-PR = "r1"
+PR = "r2"
+
+SRC_URI += " \
+        file://0001-Comment-out-arbitrary-PluginBrowser-screen-layouts-f.patch \
+        file://0002-Remove-arbitrary-TitleList-screen-layouts-from-all-s.patch \
+"
 
 inherit allarch autotools schwerkraft-git
 
