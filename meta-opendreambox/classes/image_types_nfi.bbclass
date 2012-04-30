@@ -3,7 +3,6 @@ inherit image_types
 IMAGE_CMD_jffs2.nfi = " \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS}/boot \
-		--faketime \
 		--disable-compressor=lzo \
 		--compression-mode=size \
 		--output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
@@ -12,7 +11,6 @@ IMAGE_CMD_jffs2.nfi = " \
 	printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS} \
-		--faketime \
 		--disable-compressor=lzo \
 		--compression-mode=size \
 		--output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 \
@@ -27,7 +25,6 @@ IMAGE_CMD_jffs2.nfi = " \
 IMAGE_CMD_sum.jffs2.nfi = " \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS}/boot \
-		--faketime \
 		--disable-compressor=lzo \
 		--compression-mode=size \
 		--output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
@@ -40,7 +37,6 @@ IMAGE_CMD_sum.jffs2.nfi = " \
 	printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS} \
-		--faketime \
 		--disable-compressor=lzo \
 		--compression-mode=size \
 		--output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 \
