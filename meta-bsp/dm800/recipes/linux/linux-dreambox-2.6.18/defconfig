@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
-# Linux kernel version: 2.6.18-7.3
-# Sat Mar 20 14:05:55 2010
+# Linux kernel version: 2.6.18-7.4
+# Wed May  2 23:38:43 2012
 #
 CONFIG_MIPS=y
 
@@ -26,7 +26,7 @@ CONFIG_MIPS=y
 # CONFIG_MIPS_BCM97459BX_NAND is not set
 # CONFIG_MIPS_BCM7335BX is not set
 # CONFIG_MIPS_BCM7335BX_NAND is not set
-# CONFIG_MIPS_BCM7340AX is not set
+# CONFIG_MIPS_BCM7340BX_NAND is not set
 # CONFIG_MIPS_BCM7336AX is not set
 # CONFIG_MIPS_BCM7420AX is not set
 # CONFIG_MIPS_BCM7420BX is not set
@@ -559,6 +559,7 @@ CONFIG_SCSI_PROC_FS=y
 # SCSI support type (disk, tape, CD-ROM)
 #
 CONFIG_BLK_DEV_SD=y
+# CONFIG_SCSI_NO_RW10_RETRIES is not set
 # CONFIG_CHR_DEV_ST is not set
 # CONFIG_CHR_DEV_OSST is not set
 CONFIG_BLK_DEV_SR=y
@@ -788,7 +789,6 @@ CONFIG_NET_WIRELESS_RTNETLINK=y
 # CONFIG_HOSTAP is not set
 # CONFIG_BCM43XX is not set
 # CONFIG_ZD1211RW is not set
-# CONFIG_ZD1211RW_DEBUG is not set
 CONFIG_NET_WIRELESS=y
 
 #
@@ -1408,7 +1408,6 @@ CONFIG_FAT_DEFAULT_IOCHARSET="iso8859-1"
 CONFIG_NTFS_FS=m
 # CONFIG_NTFS_DEBUG is not set
 # CONFIG_NTFS_RW is not set
-CONFIG_CDFS_FS=m
 
 #
 # Pseudo filesystems
@@ -1473,7 +1472,7 @@ CONFIG_NFSD_TCP=y
 CONFIG_ROOT_NFS=y
 CONFIG_LOCKD=y
 CONFIG_LOCKD_V4=y
-CONFIG_EXPORTFS=y
+CONFIG_EXPORTFS=m
 CONFIG_NFS_COMMON=y
 CONFIG_SUNRPC=y
 # CONFIG_RPCSEC_GSS_KRB5 is not set
