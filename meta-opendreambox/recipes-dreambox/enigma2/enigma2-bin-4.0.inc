@@ -6,6 +6,7 @@ DEPENDS = " \
         libsigc++-2.0 \
         minidlna \
         python \
+        python-coherence \
         qt4-embedded \
 "
 INC_PR = "r1"
