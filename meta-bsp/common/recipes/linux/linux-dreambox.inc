@@ -1,6 +1,6 @@
 require recipes/linux/linux.inc
 
-INC_PR = "r5"
+INC_PR = "r6"
 
 PACKAGES_DYNAMIC = "kernel-*"
 
