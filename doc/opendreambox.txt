@@ -49,6 +49,8 @@ opendreambox
    to transform build instructions into distributable firmare images and software
    packages.
 
+   The current version, OpenDreambox 2.0, is based on OpenEmbedded "denzil".
+
     1.1 Target audience
 
    Developers familiar with previous versions of OpenDreambox or OpenEmbedded in
@@ -111,6 +113,10 @@ opendreambox
 
    git clone git://git.opendreambox.org/git/opendreambox.git
 
+   The Git repository can be viewed online at:
+
+   http://cgit.opendreambox.org/opendreambox.git
+
     1.5 Quick start
 
    For the impatient:
@@ -154,6 +160,12 @@ opendreambox
 
    Throughout this document, the combination of these directories will be referred
    to as OpenEmbedded.
+
+   The latest changes to these Git repositories can be seen at:
+
+   http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/current
+
+   http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/current
 
       1.6.2 meta-opendreambox
 
