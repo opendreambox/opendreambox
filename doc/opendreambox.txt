@@ -1,7 +1,7 @@
 opendreambox
 
    Andreas Oberritter <obi@opendreambox.org>
-   March 2012
+   May 2012
 
   Contents
 
@@ -190,7 +190,6 @@ opendreambox
      * Debian "Testing" (Wheezy) [i386]
      * Fedora 16 [i386, amd64]
      * Ubuntu 10.04 LTS (Lucid Lynx) [i386]
-     * Ubuntu 10.10 (Maverick Meerkat) [i386]
      * Ubuntu 11.10 (Oneiric Ocelot) [amd64]
      * Ubuntu 12.04 LTS (Precise Pangolin) [i386, amd64]
 
