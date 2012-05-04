@@ -1,4 +1,5 @@
-PR .= "-dream1"
+DEPENDS += "libcdio"
+PR .= "-dream2"
 
 SRC_URI += "file://dvdsubdec-addproperty-singlebuffer.patch"
 
