@@ -1,4 +1,4 @@
-PR = "${INC_PR}.9"
+PR = "${INC_PR}.10"
 
 PATCHREV = "ac6cc9511a5f70eaa584c63fc5c3de33cae1d0e7"
 
@@ -21,6 +21,7 @@ SRC_URI = " \
         file://0001-MIPS-Fix-possible-hang-in-LL-SC-futex-loops.patch \
         file://0001-Add-support-for-FTDI-FT4232H-based-devices.patch \
         file://0001-proc-mounts_poll-make-consistent-to-mdstat_poll.patch \
+        file://0001-fixed-broken-usb-with-gcc-4.6.x.patch \
 "
 SRC_URI[kernel.md5sum] = "296a6d150d260144639c3664d127d174"
 SRC_URI[kernel.sha256sum] = "c95280ff6c5d2a17788f7cc582d23ae8a9a7ba3f202ec6e4238eaadfce7c163d"
