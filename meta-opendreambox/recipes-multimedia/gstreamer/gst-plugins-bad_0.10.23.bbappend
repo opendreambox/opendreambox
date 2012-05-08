@@ -1,9 +1,10 @@
-PR .= "-dream2"
+PR .= "-dream3"
 
 SRC_URI += " \
         file://0001-mpegtsdemux-fix-bd-streamtype-detection.diff.patch \
         file://0002-add-indexing-capabilities-to-generate-a-SPN-PTS-map-.patch \
         file://0003-mpegpsdemux_speedup.diff.patch \
+        file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 "
 
 EXTRA_OECONF += "--enable-orc --with-plugins="
