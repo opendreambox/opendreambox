@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Enigma2 Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-PR = "r20"
+PR = "r21"
 
 inherit task
 
@@ -15,7 +15,6 @@ RDEPENDS_task-opendreambox-enigma2 = "\
   ${@base_contains('DREAMBOX_NIMS', 'slot', 'blindscan-utils', '', d)} \
   enigma2 \
   enigma2-defaultservices \
-  enigma2-drivers-meta \
   enigma2-meta \
   enigma2-plugin-extensions-genuinedreambox \
   enigma2-plugin-extensions-mediascanner \
