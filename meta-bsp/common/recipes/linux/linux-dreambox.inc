@@ -1,6 +1,6 @@
 require recipes/linux/linux.inc
 
-INC_PR = "r7"
+INC_PR = "r8"
 
 PACKAGES_DYNAMIC = "kernel-*"
 
