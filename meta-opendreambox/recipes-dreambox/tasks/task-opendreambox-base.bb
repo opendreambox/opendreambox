@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Base Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-PR = "r15"
+PR = "r16"
 
 inherit task
 
@@ -22,6 +22,7 @@ RDEPENDS_${PN} = " \
   tpmd \
   tuxbox-common \
   tzdata \
+  xfsprogs-mkfs \
 "
 
 RRECOMMENDS_${PN} = " \
