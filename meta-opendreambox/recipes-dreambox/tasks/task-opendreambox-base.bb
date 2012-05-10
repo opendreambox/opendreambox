@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Base Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-PR = "r18"
+PR = "r19"
 
 inherit task
 
@@ -29,23 +29,13 @@ RDEPENDS_${PN} = " \
 RRECOMMENDS_${PN} = " \
   autofs \
   avahi-daemon \
-  base-files-doc \
   dccamd \
   dreambox-compat \
   dropbear \
   e2fsprogs-e2fsck \
-  e2fsprogs-mke2fs \
-  gdbserver \
-  hddtemp \
-  hdparm \
   libpagecache \
   mc \
-  ppp \
   sambaserver \
-  sdparm \
-  smartmontools \
-  util-linux-blkid \
-  util-linux-sfdisk \
   vsftpd \
   zeroconf \
 "
