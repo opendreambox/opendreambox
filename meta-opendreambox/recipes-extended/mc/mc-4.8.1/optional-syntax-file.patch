@@ -1,0 +1,18 @@
+Upstream-Status: Inappropriate [Configuration]
+
+Don't show an error message if the syntax file can't
+be opened, because it's packaged separately.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+
+--- mc-4.8.1/src/editor/syntax.c.orig	2011-12-12 10:15:38.000000000 +0100
++++ mc-4.8.1/src/editor/syntax.c	2012-05-10 15:07:56.517768788 +0200
+@@ -1522,8 +1522,6 @@
+     if (r == -1)
+     {
+         edit_free_syntax_rules (edit);
+-        message (D_ERROR, _("Load syntax file"),
+-                 _("Cannot open file %s\n%s"), f, unix_error_string (errno));
+     }
+     else if (r != 0)
+     {

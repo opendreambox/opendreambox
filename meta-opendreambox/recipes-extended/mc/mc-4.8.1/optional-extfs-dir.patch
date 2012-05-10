@@ -1,0 +1,18 @@
+Upstream-Status: Inappropriate [Configuration]
+
+Don't show "Warning: cannot open /usr/libexec/mc/extfs.d directory",
+because it's packaged separately.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+
+--- mc-4.8.1/src/vfs/extfs/extfs.c.orig	2012-05-10 15:50:04.633833530 +0200
++++ mc-4.8.1/src/vfs/extfs/extfs.c	2012-05-10 15:50:20.349833289 +0200
+@@ -1558,8 +1558,6 @@
+      * appear on screen. */
+     if (dir == NULL)
+     {
+-        if (!silent)
+-            fprintf (stderr, _("Warning: cannot open %s directory\n"), dirname);
+         g_free (dirname);
+         return FALSE;
+     }

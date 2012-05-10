@@ -1,0 +1,17 @@
+Upstream-Status: Pending
+
+Fixes a text drawing issue if hints are unavailable.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+
+--- mc-4.8.1/src/filemanager/midnight.c.orig	2012-05-10 15:30:56.645804130 +0200
++++ mc-4.8.1/src/filemanager/midnight.c	2012-05-10 15:31:27.601804920 +0200
+@@ -1587,7 +1587,7 @@
+     {
+         char text[BUF_SMALL];
+ 
+-        g_snprintf (text, sizeof (text), _("GNU Midnight Commander %s\n"), VERSION);
++        g_snprintf (text, sizeof (text), _("GNU Midnight Commander %s"), VERSION);
+         set_hintbar (text);
+     }
+ }
