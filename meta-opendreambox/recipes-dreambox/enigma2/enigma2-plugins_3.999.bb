@@ -2,9 +2,7 @@ SUMMARY = "Additional plugins for Enigma2"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 DEPENDS = "enigma2 hdparm python-daap python-gdata python-mutagen python-pycrypto python-pyopenssl smartmontools streamripper"
-SRCREV = "c8660f2e5e32e339ac3373da88f0f8c8cb7087dc"
-
-SRC_URI += "file://cdinfo_depends.patch"
+SRCREV = "6742dcf6a4a55af1d6e149f644f4af185a4a5936"
 
 inherit autotools schwerkraft-git
 
