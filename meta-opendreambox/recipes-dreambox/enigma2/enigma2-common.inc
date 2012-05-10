@@ -4,7 +4,6 @@ LICENSE = "Proprietary"
 PACKAGES += "${PN}-meta"
 
 RDEPENDS_${PN} += " \
-        alsa-conf \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
         glibc-gconv-iso8859-15 \
