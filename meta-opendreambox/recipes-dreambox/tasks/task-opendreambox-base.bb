@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Base Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-PR = "r17"
+PR = "r18"
 
 inherit task
 
@@ -38,10 +38,8 @@ RRECOMMENDS_${PN} = " \
   gdbserver \
   hddtemp \
   hdparm \
-  joe \
   libpagecache \
   mc \
-  ncdu \
   ppp \
   sambaserver \
   sdparm \
