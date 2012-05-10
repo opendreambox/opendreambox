@@ -16,6 +16,7 @@ SUMMARY_enigma2-plugin-systemplugins-videomode = "Select custom video modes"
 SUMMARY_enigma2-plugin-systemplugins-wirelesslan = "Wireless network settings"
 
 RDEPENDS_enigma2-plugin-extensions-browser = " \
+        ca-certificates \
         python-email \
         python-sqlite3 \
         python-xml \

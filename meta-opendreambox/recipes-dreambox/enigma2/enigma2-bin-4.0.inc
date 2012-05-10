@@ -1,4 +1,5 @@
 DEPENDS = " \
+        ca-certificates \
         giflib \
         jpeg \
         libbluray \
