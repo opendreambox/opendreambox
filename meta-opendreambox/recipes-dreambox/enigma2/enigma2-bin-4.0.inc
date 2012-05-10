@@ -10,6 +10,6 @@ DEPENDS = " \
         python-coherence \
         qt4-embedded \
 "
-INC_PR = "r1"
+INC_PR = "r2"
 
 require enigma2-bin-common.inc

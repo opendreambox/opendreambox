@@ -5,7 +5,10 @@ PACKAGES += "${PN}-meta"
 
 RDEPENDS_${PN} += " \
         alsa-conf \
+        e2fsprogs-e2fsck \
+        e2fsprogs-mke2fs \
         glibc-gconv-iso8859-15 \
+        hdparm \
         python-codecs \
         python-core \
         python-crypt \
@@ -20,6 +23,9 @@ RDEPENDS_${PN} += " \
         python-twisted-web \
         python-xml \
         python-zopeinterface \
+        sdparm \
+        util-linux-blkid \
+        util-linux-sfdisk \
 "
 
 # Qt won't start without this fonts directory.

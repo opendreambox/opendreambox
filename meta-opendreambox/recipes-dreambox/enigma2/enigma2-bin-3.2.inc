@@ -1,5 +1,5 @@
 DEPENDS = "libsigc++-1.2"
-INC_PR = "r7"
+INC_PR = "r8"
 
 # Shlibs can't find them. See dreambox-compat.
 RDEPENDS_${PN} += "giflib jpeg libdvbsi++ libpython2"
