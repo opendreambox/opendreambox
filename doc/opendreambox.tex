@@ -261,7 +261,16 @@ THE SOFTWARE.
 \section{Known Issues}
 
   \begin{itemize}
-    \item Building on eCryptfs fails, because it doesn't support sufficiently long filenames (\href{https://bugs.launchpad.net/ecryptfs/+bug/344878}{eCryptfs bug \#344878}).
+    \item
+	\textbf{Problem:} Building on eCryptfs fails, because it doesn't support sufficiently long filenames (\href{https://bugs.launchpad.net/ecryptfs/+bug/344878}{eCryptfs bug \#344878}).
+	\textbf{Solution:} Choose a different filesystem.
+    \item \textbf{Problem:} When switching between machines after the gcc recipe was updated, gcc-cross-initial, gcc-cross-intermediate and gcc-cross may fail to build with the following error message:
+
+    \shell{configure: error: changes in the environment can compromise the build}
+    \shell{configure: error: run `make distclean' and/or `rm ./config.cache' and start over}
+
+    \textbf{Solution:} \shell{bitbake -ccleansstate gcc-cross-initial gcc-cross-intermediate gcc-cross}
+
   \end{itemize}
 
 \pagebreak

@@ -224,8 +224,19 @@ opendreambox
 
   4 Known Issues
 
-     * Building on eCryptfs fails, because it doesn't support sufficiently long
-       filenames (eCryptfs bug #344878).
+     * Problem: Building on eCryptfs fails, because it doesn't support
+       sufficiently long filenames (eCryptfs bug #344878). Solution: Choose a
+       different filesystem.
+     * Problem: When switching between machines after the gcc recipe was updated,
+       gcc-cross-initial, gcc-cross-intermediate and gcc-cross may fail to build
+       with the following error message:
+
+       configure: error: changes in the environment can compromise the build
+       configure: error: run `make distclean' and/or `rm ./config.cache' and start
+       over
+
+       Solution: bitbake -ccleansstate gcc-cross-initial gcc-cross-intermediate
+       gcc-cross
 
   5 Building OpenDreambox
 
