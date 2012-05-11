@@ -1449,6 +1449,13 @@ CONFIG_RAMFS=y
 # CONFIG_CONFIGFS_FS is not set
 
 #
+# Layered filesystems
+#
+CONFIG_UNION_FS=m
+# CONFIG_UNION_FS_XATTR is not set
+# CONFIG_UNION_FS_DEBUG is not set
+
+#
 # Miscellaneous filesystems
 #
 # CONFIG_ADFS_FS is not set
