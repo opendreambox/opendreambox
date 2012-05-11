@@ -7,7 +7,7 @@ DEPENDS = " \
   ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${WLAN_USB_MODULES_LEGACY}', '', d)} \
   virtual/kernel \
 "
-PR = "r13"
+PR = "r14"
 
 inherit task
 
@@ -16,11 +16,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 RDEPENDS_${PN} = " \
   wireless-tools \
   wpa-supplicant \
-  ${@base_contains('MACHINE_FEATURES', 'pci', '${WLAN_PCI_MODULES}', '${WLAN_USB_MODULES}', d)} \
-"
-
-RSUGGESTS_${PN} = " \
-  ${@base_contains('MACHINE_FEATURES', 'pci', '${WLAN_USB_MODULES}', '', d)} \
+  ${@base_contains('MACHINE_FEATURES', 'pci', '${WLAN_PCI_MODULES}', '', d)} \
+  ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${WLAN_USB_MODULES_LEGACY}', '${WLAN_USB_MODULES_KERNEL}', d)} \
 "
 
 WLAN_USB_MODULES_KERNEL = " \
@@ -39,7 +36,4 @@ WLAN_USB_MODULES_LEGACY = " \
 WLAN_PCI_MODULES = " \
   madwifi-ng-modules \
   madwifi-ng \
-"
-WLAN_USB_MODULES = " \
-  ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${WLAN_USB_MODULES_LEGACY}', '${WLAN_USB_MODULES_KERNEL}', d)} \
 "
