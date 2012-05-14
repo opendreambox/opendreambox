@@ -1,0 +1,57 @@
+From 7f3d0f0e58602e8d96988736d80ba28d31338ea2 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 14 May 2012 17:32:16 +0200
+Subject: [PATCH 9/9] udhcpc: calculate broadcast address if not given by
+ server
+
+* This is more efficient than doing it in the scripts
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ networking/udhcp/common.h |    2 +-
+ networking/udhcp/dhcpc.c  |   16 ++++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/networking/udhcp/common.h b/networking/udhcp/common.h
+index ad6991c..1517498 100644
+--- a/networking/udhcp/common.h
++++ b/networking/udhcp/common.h
+@@ -122,7 +122,7 @@ enum {
+ //#define DHCP_ROOT_PATH        0x11
+ //#define DHCP_IP_TTL           0x17
+ //#define DHCP_MTU              0x1a
+-//#define DHCP_BROADCAST        0x1c
++#define DHCP_BROADCAST          0x1c
+ //#define DHCP_ROUTES           0x21
+ //#define DHCP_NIS_DOMAIN       0x28
+ //#define DHCP_NIS_SERVER       0x29
+diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
+index 4d755e6..9fbd3b3 100644
+--- a/networking/udhcp/dhcpc.c
++++ b/networking/udhcp/dhcpc.c
+@@ -399,6 +399,22 @@ static char **fill_envp(struct dhcp_packet *packet)
+ 		}
+ 		i++;
+ 	}
++	/* Calculate the broadcast address, if it wasn't provided
++	 * by the server, but a subnet mask of /30 or lower was given.
++	 */
++	if (udhcp_get_option(packet, DHCP_BROADCAST) == NULL) {
++		temp = udhcp_get_option(packet, DHCP_SUBNET);
++		if (temp) {
++			uint32_t subnet;
++			move_from_unaligned32(subnet, temp);
++			if (ntohl(subnet) <= 0xfffffffc) {
++				uint32_t broadcast = packet->yiaddr | ~subnet;
++				*curr = xmalloc(sizeof("broadcast=255.255.255.255"));
++				sprint_nip(*curr, "broadcast=", (uint8_t *)&broadcast);
++				putenv(*curr++);
++			}
++		}
++	}
+ 	return envp;
+ }
+ 
+-- 
+1.7.9.5
+

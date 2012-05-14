@@ -1,7 +1,7 @@
 From 7ec30bf273cbdf5f0ae335684939a883182e493e Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 22:08:39 +0200
-Subject: [PATCH 5/6] ifupdown: improve compatibility with Debian
+Subject: [PATCH 5/9] ifupdown: improve compatibility with Debian
 
 Set environment variable 'PHASE'.
 Treat post-up and pre-down as aliases for up and down.

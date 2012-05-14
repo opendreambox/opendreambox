@@ -1,7 +1,7 @@
 From fecb0cbff5ca703f8fc00a8e0e93f1f2e3ae942b Mon Sep 17 00:00:00 2001
 From: Natanael Copa <natanael.copa@gmail.com>
 Date: Fri, 17 Feb 2012 19:36:26 +0000
-Subject: [PATCH 4/6] ifupdown: support metric for static default gw
+Subject: [PATCH 4/9] ifupdown: support metric for static default gw
 
 This is useful when you have multiple ISPs with failover. It allows
 setting the priority of the static gateway and makes it possible

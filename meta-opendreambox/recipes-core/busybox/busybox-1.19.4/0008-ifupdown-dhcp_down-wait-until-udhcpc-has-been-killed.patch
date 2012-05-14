@@ -1,0 +1,56 @@
+From 517f8da0345752d3cc5e2c99b8acd88c60355373 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 14 May 2012 16:20:36 +0200
+Subject: [PATCH 8/9] ifupdown: dhcp_down: wait until udhcpc has been killed
+
+* Otherwise there's a race condition between ifdown and udhcpc,
+  which executes deconfig scripts in /etc/udhcpc.d.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ networking/ifupdown.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/networking/ifupdown.c b/networking/ifupdown.c
+index 5c3dcec..35e5035 100644
+--- a/networking/ifupdown.c
++++ b/networking/ifupdown.c
+@@ -618,18 +618,29 @@ static int FAST_FUNC dhcp_down(struct interface_defn_t *ifd, execfn *exec)
+ static int FAST_FUNC dhcp_down(struct interface_defn_t *ifd, execfn *exec)
+ {
+ 	int result;
+-	result = execute(
+-		"test -f /var/run/udhcpc.%iface%.pid && "
+-		"kill `cat /var/run/udhcpc.%iface%.pid` 2>/dev/null",
+-		ifd, exec);
++	char *pidfile_name;
++	pid_t pid_from_pidfile;
++
++	pidfile_name = xasprintf(_PATH_VARRUN "udhcpc.%s.pid", ifd->iface);
++	pid_from_pidfile = read_pidfile(pidfile_name);
++	result = (pid_from_pidfile > 0);
+ 	/* Also bring the hardware interface down since
+ 	   killing the dhcp client alone doesn't do it.
+ 	   This enables consecutive ifup->ifdown->ifup */
+ 	/* Sleep a bit, otherwise static_down tries to bring down interface too soon,
+ 	   and it may come back up because udhcpc is still shutting down */
+-	usleep(100000);
++	if (result && kill(pid_from_pidfile, SIGTERM) == 0) {
++		unsigned int i;
++		for (i = 0; i < 100; i++) {
++			if (kill(pid_from_pidfile, 0) < 0) {
++				result++;
++				break;
++			}
++			usleep(100000);
++		}
++	}
+ 	result += static_down(ifd, exec);
+-	return ((result == 3) ? 3 : 0);
++	return ((result == 4) ? 4 : 0);
+ }
+ # else
+ static int FAST_FUNC dhcp_down(struct interface_defn_t *ifd UNUSED_PARAM,
+-- 
+1.7.9.5
+

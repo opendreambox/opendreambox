@@ -1,7 +1,7 @@
 From e5221a142e8ee4509734c17584f898a1f4ac86cc Mon Sep 17 00:00:00 2001
 From: Denys Vlasenko <vda.linux@googlemail.com>
 Date: Wed, 19 Oct 2011 02:37:08 +0200
-Subject: [PATCH 2/6] ifupdown: code shrink
+Subject: [PATCH 2/9] ifupdown: code shrink
 
 function                                             old     new   delta
 keywords_up_down                                       -      43     +43

@@ -1,0 +1,94 @@
+From 4119652f74ce6f8f370df3c80076792d509bc941 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 14 May 2012 16:15:50 +0200
+Subject: [PATCH 7/9] ifplugd: move read_pid to libbb/pidfile.c and rename it
+ to read_pidfile
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ include/libbb.h      |    2 ++
+ libbb/pidfile.c      |   14 ++++++++++++++
+ networking/ifplugd.c |   18 +-----------------
+ 3 files changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/include/libbb.h b/include/libbb.h
+index 63d0419..e9538e7 100644
+--- a/include/libbb.h
++++ b/include/libbb.h
+@@ -1031,10 +1031,12 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+ #if ENABLE_FEATURE_PIDFILE || defined(WANT_PIDFILE)
+ /* True only if we created pidfile which is *file*, not /dev/null etc */
+ extern smallint wrote_pidfile;
++pid_t read_pidfile(const char *path) FAST_FUNC;
+ void write_pidfile(const char *path) FAST_FUNC;
+ #define remove_pidfile(path) do { if (wrote_pidfile) unlink(path); } while (0)
+ #else
+ enum { wrote_pidfile = 0 };
++#define read_pidfile(path)   ((void)0)
+ #define write_pidfile(path)  ((void)0)
+ #define remove_pidfile(path) ((void)0)
+ #endif
+diff --git a/libbb/pidfile.c b/libbb/pidfile.c
+index a48dfc3..6734a2d 100644
+--- a/libbb/pidfile.c
++++ b/libbb/pidfile.c
+@@ -13,6 +13,20 @@
+ 
+ smallint wrote_pidfile;
+ 
++pid_t FAST_FUNC read_pidfile(const char *filename)
++{
++	int len;
++	char buf[128];
++
++	len = open_read_close(filename, buf, 127);
++	if (len > 0) {
++		buf[len] = '\0';
++		/* returns ULONG_MAX on error => -1 */
++		return bb_strtoul(buf, NULL, 10);
++	}
++	return 0;
++}
++
+ void FAST_FUNC write_pidfile(const char *path)
+ {
+ 	int pid_fd;
+diff --git a/networking/ifplugd.c b/networking/ifplugd.c
+index d8358cd..9a15576 100644
+--- a/networking/ifplugd.c
++++ b/networking/ifplugd.c
+@@ -510,22 +510,6 @@ static NOINLINE int check_existence_through_netlink(void)
+ 	return G.iface_exists;
+ }
+ 
+-#if ENABLE_FEATURE_PIDFILE
+-static NOINLINE pid_t read_pid(const char *filename)
+-{
+-	int len;
+-	char buf[128];
+-
+-	len = open_read_close(filename, buf, 127);
+-	if (len > 0) {
+-		buf[len] = '\0';
+-		/* returns ULONG_MAX on error => -1 */
+-		return bb_strtoul(buf, NULL, 10);
+-	}
+-	return 0;
+-}
+-#endif
+-
+ int ifplugd_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int ifplugd_main(int argc UNUSED_PARAM, char **argv)
+ {
+@@ -552,7 +536,7 @@ int ifplugd_main(int argc UNUSED_PARAM, char **argv)
+ 
+ #if ENABLE_FEATURE_PIDFILE
+ 	pidfile_name = xasprintf(_PATH_VARRUN"ifplugd.%s.pid", G.iface);
+-	pid_from_pidfile = read_pid(pidfile_name);
++	pid_from_pidfile = read_pidfile(pidfile_name);
+ 
+ 	if (opts & FLAG_KILL) {
+ 		if (pid_from_pidfile > 0)
+-- 
+1.7.9.5
+
