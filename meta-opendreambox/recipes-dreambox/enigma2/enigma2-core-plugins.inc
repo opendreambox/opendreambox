@@ -33,6 +33,12 @@ RDEPENDS_enigma2-plugin-extensions-cutlisteditor = " \
         aio-grab \
 "
 RDEPENDS_enigma2-plugin-extensions-dvdburn = " \
+        bdremux \
+        cdrkit \
+        dvdauthor \
+        dvd+rw-tools \
+        mjpegtools \
+        projectx \
         python-xml \
 "
 RDEPENDS_enigma2-plugin-systemplugins-commoninterfaceassignment = " \
