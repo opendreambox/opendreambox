@@ -11,8 +11,7 @@ inherit task
 #
 SUMMARY_task-opendreambox-enigma2 = "OpenDreambox: Enigma2 Dependencies"
 RDEPENDS_task-opendreambox-enigma2 = "\
-  ${@base_contains('DREAMBOX_NIMS', 'cxd1978', 'blindscan-cxd1978', '', d)} \
-  ${@base_contains('DREAMBOX_NIMS', 'slot', 'blindscan-utils', '', d)} \
+  blindscan-utils \
   enigma2 \
   enigma2-defaultservices \
   enigma2-meta \
