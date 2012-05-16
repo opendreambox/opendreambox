@@ -5,10 +5,12 @@ LICENSE = "GPL-2.0-with-OpenSSL-exception"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271"
 DEPENDS = "libcap openssl"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = " \
         https://security.appspot.com/downloads/${BP}.tar.gz \
+        file://vsftpd@.service \
+        file://vsftpd.socket \
         file://vsftpd.xinetd.in \
         file://01-builddefs.patch \
         file://02-config.patch \
@@ -26,7 +28,7 @@ SRC_URI[sha256sum] = "d87ee2987df8f03e1dbe294905f7907b2798deb89c67ca965f6e2f6087
 
 S = "${WORKDIR}/${BP}"
 
-inherit useradd xinetd
+inherit systemd useradd xinetd
 
 CFLAGS = "${TARGET_CFLAGS}"
 CFLAGS += "-DVSF_BUILD_SSL=1"
@@ -84,7 +86,12 @@ do_install() {
         install -d ${D}${mandir}/man5
         install -m 644 vsftpd.conf.5 ${D}${mandir}/man5/vsftpd.conf.5
         install -d ${D}${SECURE_CHROOT_DIR}
+        install -d ${D}${systemd_unitdir}/system
+        ln -sf /dev/null ${D}${systemd_unitdir}/system/vsftpd.service
 }
+
+SYSTEMD_PACKAGES = "${PN}-systemd"
+SYSTEMD_SERVICE_${PN}-systemd = "vsftpd.socket"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--home-dir ${SECURE_CHROOT_DIR} --no-create-home --system --shell /bin/false --user-group vsftpd"
