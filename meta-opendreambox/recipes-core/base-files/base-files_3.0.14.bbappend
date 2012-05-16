@@ -1,4 +1,4 @@
-PR .= "-dream3"
+PR .= "-dream4"
 
 do_install_append() {
         ln -s media/hdd ${D}/hdd
