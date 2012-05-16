@@ -8,12 +8,17 @@ DEPENDS = " \
 	strace \
 "
 
+TASK_CORE_BOOT ?= "task-core-boot"
+TASK_OPENDREAMBOX_BASE ?= "task-opendreambox-base"
+TASK_OPENDREAMBOX_DVBAPI ?= "task-opendreambox-dvbapi3"
+TASK_OPENDREAMBOX_ENIGMA ?= "task-opendreambox-enigma2"
+
 # packages to drag into the image
 IMAGE_INSTALL = " \
-	task-core-boot ${ROOTFS_PKGMANAGE} \
-	task-opendreambox-base \
-	task-opendreambox-dvbapi3 \
-	task-opendreambox-enigma2 \
+	${TASK_CORE_BOOT} ${ROOTFS_PKGMANAGE} \
+	${TASK_OPENDREAMBOX_BASE} \
+	${TASK_OPENDREAMBOX_DVBAPI} \
+	${TASK_OPENDREAMBOX_ENIGMA} \
 "
 
 # enable online package management
