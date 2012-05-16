@@ -1,6 +1,6 @@
-PR .= "-dream8"
+PR .= "-dream9"
 
-SRC_URI += "file://telnetd.xinetd.in \
+SRC_URI += "file://busybox-telnetd.xinetd.in \
             file://0001-ifupdown-support-post-up-pre-down-hooks.patch \
             file://0002-ifupdown-code-shrink.patch \
             file://0003-ifupdown-remove-interface-from-state_list-if-iface_u.patch \
@@ -20,3 +20,6 @@ do_install_append() {
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+
+XINETD_PACKAGES = "${PN}-xinetd"
+XINETD_SERVICE_${PN}-xinetd = "busybox-telnetd"
