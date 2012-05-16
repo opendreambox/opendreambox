@@ -1,5 +1,5 @@
 SUMMARY = "Dreamcrypt/Firecrypt Conditional Access Daemon"
-PR = "r5"
+PR = "r6"
 
 SRC_URI[mips32el.md5sum] = "87e5b67b83d329dc171045b99d44dd67"
 SRC_URI[mips32el.sha256sum] = "7da7d8748c40efb479029e40f49c2cc8c507be1caf5bad7e4e267281e38c48e6"
@@ -13,4 +13,4 @@ do_install() {
         install -m 0755 dccamd ${D}${bindir}
 }
 
-RDEPENDS_${PN} = "wdog"
+RDEPENDS_${PN} = "dreambox-compat wdog"
