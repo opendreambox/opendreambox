@@ -9,7 +9,7 @@ RDEPENDS_${PN} = " \
 RRECOMMENDS_${PN} = " \
         ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${ESSENTIAL_RRECOMMENDS_LEGACY}', '${ESSENTIAL_RRECOMMENDS}', d)} \
 "
-PR = "r4"
+PR = "r5"
 
 inherit task
 
@@ -44,7 +44,6 @@ ESSENTIAL_RRECOMMENDS = " \
 "
 ESSENTIAL_RRECOMMENDS_LEGACY = " \
         kernel-module-cifs \
-        kernel-module-ext2 \
         kernel-module-nls-cp850 \
         kernel-module-nls-iso8859-15 \
         kernel-module-nls-utf8 \
