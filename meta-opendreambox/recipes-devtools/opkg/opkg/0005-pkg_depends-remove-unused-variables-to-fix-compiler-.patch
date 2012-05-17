@@ -1,0 +1,48 @@
+From 8e4ed0da89d5b86c6ffb3c2cc19cfc87ef290c1f Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Thu, 17 May 2012 01:14:23 +0200
+Subject: [PATCH 5/8] pkg_depends: remove unused variables to fix compiler
+ warnings
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ libopkg/pkg_depends.c |    5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index a61e80e..68a81f9 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -269,13 +269,10 @@ is_pkg_a_replaces(pkg_t *pkg_scout,pkg_t *pkg)
+ {
+     int i ;
+     int replaces_count = pkg->replaces_count;
+-    abstract_pkg_t **replaces;
+ 
+     if (pkg->replaces_count==0)    // No replaces, it's surely a conflict
+         return 0;
+ 
+-    replaces = pkg->replaces;
+-
+     for (i = 0; i < replaces_count; i++) {
+         if (strcmp(pkg_scout->name,pkg->replaces[i]->name)==0) {      // Found
+             opkg_msg(DEBUG2, "Seems I've found a replace %s %s\n",
+@@ -295,7 +292,6 @@ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg)
+     depend_t ** possible_satisfiers;
+     depend_t * possible_satisfier;
+     int i, j, k;
+-    int count;
+     abstract_pkg_t * ab_pkg;
+     pkg_t **pkg_scouts;
+     pkg_t *pkg_scout;
+@@ -315,7 +311,6 @@ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg)
+     }
+     installed_conflicts = pkg_vec_alloc();
+ 
+-    count = pkg->conflicts_count;
+ 
+ 
+ 
+-- 
+1.7.9.5
+

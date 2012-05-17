@@ -1,0 +1,34 @@
+From 9a5f9cd69e99a7a809e1774db67f7249da92422f Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Thu, 17 May 2012 01:15:15 +0200
+Subject: [PATCH 6/8] pkg_hash_fetch_conflicts: fix possible segfaults
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ libopkg/pkg_depends.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index 68a81f9..6ff75f1 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -322,10 +322,14 @@ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg)
+ 	/* foreach possible satisfier */
+ 	for(j = 0; j < conflicts->possibility_count; j++){
+             possible_satisfier = possible_satisfiers[j];
+-            if (!possible_satisfier)
++            if (!possible_satisfier) {
+                 opkg_msg(ERROR, "Internal error: possible_satisfier=NULL\n");
+-            if (!possible_satisfier->pkg)
++                continue;
++            }
++            if (!possible_satisfier->pkg) {
+                 opkg_msg(ERROR, "Internal error: possible_satisfier->pkg=NULL\n");
++                continue;
++            }
+ 	    test_vec = possible_satisfier->pkg->pkgs;
+ 	    if (test_vec) {
+                 /* pkg_vec found, it is an actual package conflict
+-- 
+1.7.9.5
+

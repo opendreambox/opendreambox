@@ -1,0 +1,49 @@
+From 6abda2e5096dfa74f382e0187293a37a02e7f8bb Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Thu, 17 May 2012 01:18:42 +0200
+Subject: [PATCH 8/8] pkg_hash_fetch_conflicts: take into account conflicts of
+ installed packages
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ libopkg/pkg_depends.c |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index 1999b64..f237733 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -337,6 +337,22 @@ static void __pkg_hash_fetch_conflicts(pkg_t * pkg, pkg_vec_t * installed_confli
+     }
+ }
+ 
++static void __pkg_hash_fetch_conflictees(pkg_t *pkg, pkg_vec_t *installed_conflicts)
++{
++    int i;
++
++    pkg_vec_t *available_pkgs = pkg_vec_alloc();
++    pkg_hash_fetch_all_installed(available_pkgs);
++
++    for (i = 0; i < available_pkgs->len; i++) {
++        pkg_t *cpkg = available_pkgs->pkgs[i];
++        if (pkg_conflicts(cpkg, pkg) && !is_pkg_in_pkg_vec(installed_conflicts, cpkg))
++            pkg_vec_insert(installed_conflicts, cpkg);
++    }
++
++    pkg_vec_free(available_pkgs);
++}
++
+ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg)
+ {
+     pkg_vec_t * installed_conflicts;
+@@ -354,6 +370,7 @@ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg)
+     installed_conflicts = pkg_vec_alloc();
+ 
+     __pkg_hash_fetch_conflicts(pkg, installed_conflicts);
++    __pkg_hash_fetch_conflictees(pkg, installed_conflicts);
+ 
+     if (installed_conflicts->len)
+ 	    return installed_conflicts;
+-- 
+1.7.9.5
+
