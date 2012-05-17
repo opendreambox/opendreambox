@@ -1,7 +1,7 @@
 From 8c00c6be3723a0dcf05a10b5aba8c1c3b1fe4cf7 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 16 May 2012 23:29:04 +0200
-Subject: [PATCH 2/8] Don't mark Conflicts as Depends
+Subject: [PATCH 2/9] Don't mark Conflicts as Depends
 
 - Fixes 'whatconflicts' sub-command.
 
