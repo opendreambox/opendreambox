@@ -2,6 +2,7 @@ SUMMARY = "Additional plugins for Enigma2"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 DEPENDS = " \
+        dbttcd \
         dvdbackup \
         enigma2 \
         hdparm \
@@ -15,7 +16,7 @@ DEPENDS = " \
         smartmontools \
         streamripper \
 "
-SRCREV = "ebc83a66ac240033368d3e81f45a502323f6067f"
+SRCREV = "c64295745064d001f08e519ada66b12b274786e9"
 
 inherit autotools schwerkraft-git
 
