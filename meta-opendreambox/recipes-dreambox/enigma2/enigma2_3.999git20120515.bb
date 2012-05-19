@@ -1,4 +1,6 @@
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
+
+SRC_URI = "file://hotfix_for_pts_plugin.patch"
 
 SRC_URI[mips32el.md5sum] = "724eb378cb92a7c31c000d8dde477c65"
 SRC_URI[mips32el.sha256sum] = "a577a8338ebd426451e87715670c77539efaf68ef64e9f34a77b6718f63b36c3"
