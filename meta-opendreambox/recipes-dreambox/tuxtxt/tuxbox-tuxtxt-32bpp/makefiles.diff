@@ -518,7 +518,7 @@ diff -Naur tuxtxt_org/acinclude.m4 tuxtxt/acinclude.m4
 diff -Naur tuxtxt_org/configure.ac tuxtxt/configure.ac
 --- tuxtxt_org/configure.ac	1970-01-01 01:00:00.000000000 +0100
 +++ tuxtxt/configure.ac	2006-12-28 12:08:58.000000000 +0100
-@@ -0,0 +1,17 @@
+@@ -0,0 +1,18 @@
 +AC_INIT(tuxbox-tuxtxt-32bpp,1.96)
 +AM_INIT_AUTOMAKE(tuxbox-tuxtxt-32bpp,1.96)
 +
@@ -529,6 +529,7 @@ diff -Naur tuxtxt_org/configure.ac tuxtxt/configure.ac
 +
 +# Checks for programs.
 +AC_PROG_CC
++AM_PATH_PYTHON
 +
 +TUXBOX_APPS_LIB_CONFIG(FREETYPE,freetype-config)
 +TUXBOX_APPS_LIB_PKGCONFIG(TUXTXT,tuxbox-tuxtxt)
@@ -542,6 +543,6 @@ diff -Naur tuxtxt_32bpp/python/Makefile.am tuxtxt/python/Makefile.am
 @@ -0,0 +1,5 @@
 +installdir = $(LIBDIR)/enigma2/python/Plugins/Extensions/Tuxtxt
 +
-+install_DATA = \
++install_PYTHON = \
 +	plugin.py \
 +	__init__.py

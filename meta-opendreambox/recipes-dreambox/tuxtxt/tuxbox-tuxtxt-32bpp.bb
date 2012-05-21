@@ -5,7 +5,7 @@ DEPENDS = "freetype tuxbox-libtuxtxt"
 RDEPENDS_${PN} = "enigma2"
 SRCDATE = "20090130"
 PV = "0.0+cvs${SRCDATE}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "cvs://anoncvs@cvs.tuxbox.org/cvs/tuxbox;module=apps/tuxbox/plugins/tuxtxt;method=ext \
         file://makefiles.diff \
