@@ -1,0 +1,33 @@
+From 719cc4ab765c008bd7e4f2d085692657c33d171e Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 21 May 2012 14:05:37 +0200
+Subject: [PATCH 10/10] opkg_remove: auto-delete .pyo files
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ libopkg/opkg_remove.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/libopkg/opkg_remove.c b/libopkg/opkg_remove.c
+index 5f4219b..4320dc3 100644
+--- a/libopkg/opkg_remove.c
++++ b/libopkg/opkg_remove.c
+@@ -375,8 +375,15 @@ remove_data_files_and_list(pkg_t *pkg)
+ 	  }
+ 
+ 	  if (!conf->noaction) {
++		size_t l = strlen(file_name);
+ 	  	opkg_msg(INFO, "Deleting %s.\n", file_name);
+ 	       unlink(file_name);
++		if (l >= 3 && !strcmp(&file_name[l - 3], ".py")) {
++			char pyo_file_name[l + 2];
++			strcpy(pyo_file_name, file_name);
++			strcat(pyo_file_name, "o");
++			unlink(pyo_file_name);
++		}
+ 	  } else
+ 	  	opkg_msg(INFO, "Not deleting %s. (noaction)\n",
+ 				file_name);
+-- 
+1.7.9.5
+

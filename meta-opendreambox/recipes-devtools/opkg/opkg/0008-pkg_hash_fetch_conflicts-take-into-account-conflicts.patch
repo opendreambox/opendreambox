@@ -1,8 +1,8 @@
 From 53de52b533ee30676d051ee941cfc0a517e9190e Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:18:42 +0200
-Subject: [PATCH 8/9] pkg_hash_fetch_conflicts: take into account conflicts of
- installed packages
+Subject: [PATCH 08/10] pkg_hash_fetch_conflicts: take into account conflicts
+ of installed packages
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---

@@ -4,7 +4,7 @@ From 319d02609992273e887242ed9788db68d3310b6c Mon Sep 17 00:00:00 2001
 From: "pixdamix@gmail.com"
  <pixdamix@gmail.com@e8e0d7a0-c8d9-11dd-a880-a1081c7ac358>
 Date: Thu, 19 Jan 2012 13:52:06 +0000
-Subject: [PATCH 1/9] Fixed opkg losing auto_installed flag on upgrading
+Subject: [PATCH 01/10] Fixed opkg losing auto_installed flag on upgrading
 
 Thanks-to: Christian Hitz <christian.hitz@aizo.com>
 

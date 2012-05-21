@@ -1,8 +1,8 @@
 From 70d10c10288da23755055c881bea01b61a2d4df7 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 22:57:35 +0200
-Subject: [PATCH 9/9] Revert "Add Recommended packages to the depended_upon_by
- field."
+Subject: [PATCH 09/10] Revert "Add Recommended packages to the
+ depended_upon_by field."
 
 This reverts commit ac2222f7d6514fb403ce0848f6812a22a48f75c7.
 ---
