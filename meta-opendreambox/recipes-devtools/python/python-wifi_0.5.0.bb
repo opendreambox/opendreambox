@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=56;endline=57;md5=31ebd3ff22b6f3c016
                     file://examples/iwconfig.py;beginline=1;endline=20;md5=60fd41501905b3e20e9065995edfc0cf \
                     file://pythonwifi/iwlibs.py;beginline=1;endline=22;md5=679475d61cc083a24158bb8b473f0c6f"
 RDEPENDS_${PN} = "python-ctypes python-datetime"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://download.berlios.de/pythonwifi/${P}.tar.bz2"
 SRC_URI[md5sum] = "8fe7fd0a4edce1f9bedaff4acb7fd500"

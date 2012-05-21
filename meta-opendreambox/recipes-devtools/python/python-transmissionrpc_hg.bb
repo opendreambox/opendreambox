@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=725cfd8eb1ec903074184b7edf9379c9"
 SRCREV = "4fe71eb818d0"
 PV = "0.7+hg${SRCREV}"
 PRIORITY = "optional"
+PR = "r1"
 
 SRC_URI = "hg://bitbucket.org/blueluna;proto=http;module=transmissionrpc;rev=${SRCREV}"
 

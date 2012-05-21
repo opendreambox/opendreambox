@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "PSF"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d54e175a4083eea51ac31acaff818df5"
 PRIORITY = "optional"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "http://pypi.python.org/packages/source/f/flickrapi/flickrapi-${PV}.zip"
 SRC_URI[md5sum] = "90dca08a45968b18da0894887f3e59b3"
