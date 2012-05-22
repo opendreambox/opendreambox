@@ -8,6 +8,8 @@ DEPENDS = " \
 	strace \
 "
 
+BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
+
 TASK_CORE_BOOT ?= "task-core-boot"
 TASK_OPENDREAMBOX_BASE ?= "task-opendreambox-base"
 TASK_OPENDREAMBOX_DVBAPI ?= "task-opendreambox-dvbapi3"
