@@ -1,0 +1,27 @@
+#!/bin/sh
+
+test -x /usr/bin/dbttcd || exit 0
+test -x /usr/bin/wdog || exit 0
+
+case "$1" in
+  start)
+    echo -n "Starting dbttcd"
+    start-stop-daemon -q -p /var/run/dbttcd.pid -x /usr/bin/wdog -S -b -m -- -d dbttcd -f
+    echo "."
+    ;;
+  stop)
+    echo -n "Stopping dbttcd"
+    start-stop-daemon -q -p /var/run/dbttcd.pid -x /usr/bin/wdog -K
+    echo "."
+    ;;
+  restart|reload|force-reload)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/dbttcd {start|stop|restart|reload|force-reload}"
+    exit 1
+esac
+
+exit 0
