@@ -27,7 +27,6 @@ RDEPENDS_enigma2-plugin-extensions-browser = " \
         qt4-embedded-plugin-imageformat-jpeg \
         qt4-embedded-plugin-imageformat-svg \
         qt4-embedded-plugin-imageformat-tiff \
-        qt4-embedded-plugin-phonon-backend-gstreamer \
 "
 RDEPENDS_enigma2-plugin-extensions-cutlisteditor = " \
         aio-grab \
