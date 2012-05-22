@@ -1,0 +1,31 @@
+From 2d4f1412e483466c16835c4f376a9ddfe51d2014 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Wed, 23 May 2012 01:41:25 +0200
+Subject: [PATCH] WLAN: fixed not visible WLAN config entries (Hidden Network,
+ Networkname (SSID), Encrypt, Encryption Key) with some WLAN
+ Adapters
+
+---
+ lib/python/Plugins/SystemPlugins/WirelessLan/plugin.py |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/usr/lib/python/enigma2/Plugins/SystemPlugins/WirelessLan/plugin.py b/usr/lib/python/enigma2/Plugins/SystemPlugins/WirelessLan/plugin.py
+index fc42db1..21e0f0c 100644
+--- a/usr/lib/python/enigma2/Plugins/SystemPlugins/WirelessLan/plugin.py
++++ b/usr/lib/python/enigma2/Plugins/SystemPlugins/WirelessLan/plugin.py
+@@ -425,10 +425,8 @@ def WlanStatusScreenMain(session, iface):
+ def callFunction(iface):
+ 	iWlan.setInterface(iface)
+ 	i = iWlan.getWirelessInterfaces()
+-	if i:
+-		if iface in i or iNetwork.isWirelessInterface(iface):
+-			return WlanStatusScreenMain
+-		return None
++	if (i and iface in i) or iNetwork.isWirelessInterface(iface):
++		return WlanStatusScreenMain
+ 	return None
+ 
+ def configStrings(iface):
+-- 
+1.7.10
+
