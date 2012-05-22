@@ -1,8 +1,8 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.15"
+PR = "${INC_PR}.16"
 
 PATCHREV = "f938a40edaade30923c3b9203ff6a4f54c452f11"
-PATCHLEVEL = "17"
+PATCHLEVEL = "18"
 
 SRC_URI = " \
         ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -20,8 +20,8 @@ SRC_URI = " \
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "e478fefd2be776c05bc25ccc11be33a8"
-SRC_URI[kernel-patch.sha256sum] = "d6d676573335752f345fee3f61aa22af815b460e7ec0826ebe072db21d7fbde2"
+SRC_URI[kernel-patch.md5sum] = "b5b3a5e0374e6ab87a2cd6963268f3c9"
+SRC_URI[kernel-patch.sha256sum] = "ee113630361297bdf5ab44cd5b9eba72800d7a711915d7b779ba484d0a018085"
 SRC_URI[dmm-patch.md5sum] = "1410c4c94fe1d494f823806a9b0bb8e0"
 SRC_URI[dmm-patch.sha256sum] = "e8f92205cacab575aae1a2e1bc8571a7b1cc1fb454d16104f6f6585a9580f462"
 
