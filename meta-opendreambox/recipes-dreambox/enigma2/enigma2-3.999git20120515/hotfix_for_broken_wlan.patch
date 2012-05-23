@@ -9,10 +9,10 @@ Subject: [PATCH] WLAN: fixed not visible WLAN config entries (Hidden Network,
  lib/python/Plugins/SystemPlugins/WirelessLan/plugin.py |    6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/usr/lib/python/enigma2/Plugins/SystemPlugins/WirelessLan/plugin.py b/usr/lib/python/enigma2/Plugins/SystemPlugins/WirelessLan/plugin.py
+diff --git a/usr/lib/enigma2/python/Plugins/SystemPlugins/WirelessLan/plugin.py b/usr/lib/enigma2/python/Plugins/SystemPlugins/WirelessLan/plugin.py
 index fc42db1..21e0f0c 100644
---- a/usr/lib/python/enigma2/Plugins/SystemPlugins/WirelessLan/plugin.py
-+++ b/usr/lib/python/enigma2/Plugins/SystemPlugins/WirelessLan/plugin.py
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/WirelessLan/plugin.py
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/WirelessLan/plugin.py
 @@ -425,10 +425,8 @@ def WlanStatusScreenMain(session, iface):
  def callFunction(iface):
  	iWlan.setInterface(iface)
