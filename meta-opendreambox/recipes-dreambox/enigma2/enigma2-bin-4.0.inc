@@ -11,6 +11,8 @@ DEPENDS = " \
         python-coherence \
         qt4-embedded \
 "
-INC_PR = "r4"
+INC_PR = "r5"
+
+RDEPENDS_${PN} += "qnullscreen"
 
 require enigma2-bin-common.inc
