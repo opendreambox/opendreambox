@@ -1,4 +1,4 @@
-PR .= "-dream2"
+PR .= "-dream3"
 
 do_install_append() {
 	rm ${D}/${sysconfdir}/ppp/options
