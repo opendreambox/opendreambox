@@ -1,9 +1,10 @@
 DEPENDS := "${@oe_filter_out('^(mysql5|postgresql|sqlite)$', '${DEPENDS}', d)}"
-PR .= "-dream3"
+PR .= "-dream4"
 
 SRC_URI += "file://0001-Qt-build-NPAPI-without-X11.patch \
             file://0002-Qt-Add-HbbTv-MIME-types.patch \
-            file://0003-Qt-expose-WebKits-WebSecurityEnabled-setting.patch"
+            file://0003-Qt-expose-WebKits-WebSecurityEnabled-setting.patch \
+            file://0004-Qt-add-Q_GUI_EXPORT-to-QUpdateLaterEvent.patch"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
