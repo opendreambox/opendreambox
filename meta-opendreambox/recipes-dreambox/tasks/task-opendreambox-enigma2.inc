@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Enigma2 Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-INC_PR = "r23"
+INC_PR = "r24"
 
 inherit task
 
@@ -17,6 +17,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-extensions-mediascanner \
   ${@base_contains('DREAMBOX_FEATURES', 'ci', 'enigma2-plugin-systemplugins-commoninterfaceassignment', '', d)} \
   enigma2-plugin-systemplugins-frontprocessorupgrade \
+  ${@base_contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
   enigma2-plugin-systemplugins-hotplug \
   enigma2-plugin-systemplugins-networksetup \
   enigma2-plugin-systemplugins-networkwizard \
@@ -58,14 +59,15 @@ RDEPENDS_${PN} += " \
   gst-plugins-good-souphttpsrc \
   gst-plugins-good-udp \
   gst-plugins-good-wavparse \
+  ${@base_contains('DREAMBOX_FEATURES', 'asf', 'gst-plugins-ugly-asf', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gst-plugins-ugly-cdio', '', d)} \
   gst-plugins-ugly-dvdsub \
   gst-plugins-ugly-mad \
   gst-plugins-ugly-mpegaudioparse \
   gst-plugins-ugly-mpegstream \
   ${@base_contains('DREAMBOX_FEATURES', 'libpassthrough', 'libpassthrough', '', d)} \
-  tuxbox-tuxtxt-32bpp \
 "
+
 RDEPENDS_${PN}_append_dm8000 = " \
   enigma2-plugin-systemplugins-nfiflash \
 "
@@ -79,6 +81,7 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-extensions-graphmultiepg \
   enigma2-plugin-extensions-mediaplayer \
   enigma2-plugin-extensions-pictureplayer \
+  enigma2-plugin-extensions-teletext \
   enigma2-plugin-extensions-webbouqueteditor \
   enigma2-plugin-extensions-webinterface \
   enigma2-plugin-systemplugins-crashlogautosubmit \
