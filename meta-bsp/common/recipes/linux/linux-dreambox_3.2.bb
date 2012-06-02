@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.19"
+PR = "${INC_PR}.20"
 
 PATCHREV = "f938a40edaade30923c3b9203ff6a4f54c452f11"
 PATCHLEVEL = "18"
