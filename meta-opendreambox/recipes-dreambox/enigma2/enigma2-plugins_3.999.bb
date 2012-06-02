@@ -16,7 +16,7 @@ DEPENDS = " \
         smartmontools \
         streamripper \
 "
-SRCREV = "00afcaa1a4cfdc8bc0e99efbd2980eb212be47f0"
+SRCREV = "273c675563bdf4793b8a9361c1c12252c4cab9db"
 
 inherit autotools schwerkraft-git
 
