@@ -1,6 +1,6 @@
 require recipes/linux/linux.inc
 
-INC_PR = "r8"
+INC_PR = "r9"
 
 PACKAGES_DYNAMIC = "kernel-*"
 
@@ -16,15 +16,22 @@ USB_ROOT = "/dev/sdb2"
 USB_ROOT_dm8000 = "/dev/sdf2"
 
 do_install_append() {
-        gzip -9 ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+        # mark the kernel executable, so it gets stripped during do_package
+        chmod +x ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
         echo "/boot/bootlogo-${MACHINE}.elf.gz filename=/boot/bootlogo-${MACHINE}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${CMDLINE}" >> ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
         echo "/boot/bootlogo-${MACHINE}.elf.gz filename=/boot/bootlogo-${MACHINE}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${USB_CMDLINE}" >> ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
 }
 
-FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
+PACKAGES += "kernel-image-dbg"
 
+FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
+FILES_kernel-image-dbg = "/${KERNEL_IMAGEDEST}/.debug"
+
+python populate_packages_prepend() {
+	os.system(d.expand("gzip -9 ${PKGD}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"))
+}
 python __anonymous () {
         import bb, re
         kv = d.getVar('DREAMBOX_KERNEL_VERSION', True)
