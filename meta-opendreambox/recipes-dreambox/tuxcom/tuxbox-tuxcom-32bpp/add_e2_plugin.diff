@@ -49,7 +49,7 @@ diff -Naur tuxcom_cvs/python/plugin.py tuxcom/python/plugin.py
 +		eDBoxLCD.getInstance().lock()
 +		eRCInput.getInstance().lock()
 +		fbClass.getInstance().lock()
-+		if self.container.execute("/usr/plugins/tuxcom"):
++		if self.container.execute("/usr/bin/tuxcom"):
 +			self.finished(-1)
 +
 +	def finished(self,retval):
