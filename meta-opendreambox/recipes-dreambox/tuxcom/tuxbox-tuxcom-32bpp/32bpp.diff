@@ -1,6 +1,6 @@
-diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
---- tuxcom_cvs/tuxcom.c	2008-11-03 13:15:00.000000000 +0100
-+++ tuxcom/tuxcom.c	2006-06-29 23:44:21.000000000 +0200
+diff -Naur tuxcom.ori/tuxcom.c tuxcom/tuxcom.c
+--- tuxcom.ori/tuxcom.c	2009-01-06 00:12:19.000000000 +0100
++++ tuxcom/tuxcom.c	2009-01-05 21:10:35.000000000 +0100
 @@ -27,7 +27,7 @@
   * GetRCCode  (Code from Tuxmail)
   ******************************************************************************/
@@ -10,7 +10,17 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  int GetRCCode(int mode)
  {
-@@ -63,9 +63,9 @@
+@@ -36,7 +36,8 @@
+ 	struct input_event ev;
+ 	static __u16 rc_last_key = KEY_RESERVED;
+ 	static __u16 rc_last_code = KEY_RESERVED;
+-	if(read(rc, &ev, sizeof(ev)) == sizeof(ev))
++	if ((read(rc[0], &ev, sizeof(ev)) == sizeof(ev)) ||
++	    (rc[1] != -1 && read(rc[1], &ev, sizeof(ev)) == sizeof(ev)))
+ 	{
+ 		if(ev.value)
+ 		{
+@@ -63,9 +64,9 @@
  				case KEY_GREEN:		rccode = RC_GREEN;		break;
  				case KEY_YELLOW:	rccode = RC_YELLOW;		break;
  				case KEY_BLUE:		rccode = RC_BLUE;		break;
@@ -23,7 +33,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  				case KEY_POWER:		rccode = RC_STANDBY;	break;
  				default:
  					if( ev.code > 0x7F )
-@@ -118,176 +118,94 @@
+@@ -118,176 +119,94 @@
  		}
  	}
  
@@ -260,7 +270,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  /******************************************************************************
   * MyFaceRequester
-@@ -316,6 +234,8 @@
+@@ -316,6 +235,8 @@
  	FT_Vector kerning;
  	FT_Error error;
  
@@ -269,7 +279,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  	if (currentchar == '\r') // display \r in windows edited files
  	{
  		if(color != -1)
-@@ -331,19 +251,15 @@
+@@ -331,19 +252,15 @@
  	}
  	//load char
  
@@ -291,7 +301,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  		{
  			printf("TuxCom <FTC_SBitCache_Lookup for Char \"%c\" failed with Errorcode 0x%.2X>\n", (int)currentchar, error);
  			return 0;
-@@ -376,7 +292,7 @@
+@@ -376,7 +293,7 @@
  					{
  						if(pitch*8 + 7-bit >= sbit->width) break; /* render needed bits only */
  
@@ -300,7 +310,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  						x++;
  					}
-@@ -481,38 +397,36 @@
+@@ -481,38 +398,36 @@
  void RenderBox(int sx, int sy, int ex, int ey, int mode, int color)
  {
  	int loop;
@@ -359,7 +369,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  void SetLanguage()
  {
  	if (langselect == BTN_AUTO)
-@@ -540,7 +454,7 @@
+@@ -540,7 +455,7 @@
   * plugin_exec                                                                *
   ******************************************************************************/
  
@@ -368,19 +378,22 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  {
  	FT_Error error;
  
-@@ -552,9 +466,67 @@
+@@ -552,9 +467,69 @@
  	//get params
  
  
 -	fb = rc = sx = ex = sy = ey = -1;
-+	kb = fb = rc = sx = ex = sy = ey = -1;
-+
++	kb = fb = sx = ex = sy = ey = -1;
+ 
+-	for(; par; par = par->next)
 +	/* open Framebuffer */
 +	fb=open("/dev/fb0", O_RDWR);
 +
 +	/* open Remote Control */
-+	int cnt=0;
-+	while(1)
++	int cnt=0, rc_num=0;
++	rc[0]=rc[1]=-1;
++	
++	while(rc_num < 2)
 +	{
 +		struct stat s;
 +		char tmp[128];
@@ -388,20 +401,20 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
 +		if (stat(tmp, &s))
 +			break;
 +		/* open Remote Control */
-+		if ((rc=open(tmp, O_RDONLY)) == -1)
++		if ((rc[rc_num]=open(tmp, O_RDONLY | O_EXCL | O_NONBLOCK)) == -1)
 +		{
 +			perror("TuxCom <open remote control>");
 +			return 0;
 +		}
-+		if (ioctl(rc, EVIOCGNAME(128), tmp) < 0)
++		if (ioctl(rc[rc_num], EVIOCGNAME(128), tmp) < 0)
 +			perror("EVIOCGNAME failed");
-+		if (strstr(tmp, "remote control"))
-+			break;
-+		close(rc);
-+		rc=-1;
++		if (!strstr(tmp, "remote control"))
++			close(rc[rc_num]);
++		else
++			++rc_num;
 +		++cnt;
 +	}
-+	fcntl(rc, F_SETFL, fcntl(rc, F_GETFL) | O_EXCL | O_NONBLOCK);
++//	fcntl(rc, F_SETFL, fcntl(rc, F_GETFL) | O_EXCL | O_NONBLOCK);
 +
 +	/* open dream ir keyboard */
 +	cnt=0;
@@ -432,13 +445,12 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
 +	ex = 670;
 +	sy = 50;
 +	ey = 526;
- 
--	for(; par; par = par->next)
++
 +/*	for(; par; par = par->next)
  	{
  		if	(!strcmp(par->id, P_ID_FBUFFER)) fb = atoi(par->val);
  		else if	(!strcmp(par->id, P_ID_RCINPUT)) rc = atoi(par->val);
-@@ -563,9 +535,7 @@
+@@ -563,9 +538,7 @@
  		else if	(!strcmp(par->id, P_ID_OFF_Y))   sy = atoi(par->val);
  		else if	(!strcmp(par->id, P_ID_END_Y))   ey = atoi(par->val);
  	}
@@ -449,7 +461,39 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  	if(fb == -1 || rc == -1 || sx == -1 || ex == -1 || sy == -1 || ey == -1)
  	{
-@@ -643,17 +613,14 @@
+@@ -574,18 +547,27 @@
+ 	}
+ 	//init framebuffer
+ 
+-	if(ioctl(fb, FBIOGET_FSCREENINFO, &fix_screeninfo) == -1)
++
++	if(ioctl(fb, FBIOGET_VSCREENINFO, &var_screeninfo) == -1)
+ 	{
+-		printf("TuxCom <FBIOGET_FSCREENINFO failed>\n");
++		printf("TuxCom <FBIOGET_VSCREENINFO failed>\n");
+ 		return;
+ 	}
+ 
+-	if(ioctl(fb, FBIOGET_VSCREENINFO, &var_screeninfo) == -1)
++	if (var_screeninfo.xres != 720)
+ 	{
+-		printf("TuxCom <FBIOGET_VSCREENINFO failed>\n");
++	    printf("TuxCom <set Autosize\n");
++	    ex = var_screeninfo.xres - 50;
++	    ey = var_screeninfo.yres - 50;
++	}
++
++	if(ioctl(fb, FBIOGET_FSCREENINFO, &fix_screeninfo) == -1)
++	{
++		printf("TuxCom <FBIOGET_FSCREENINFO failed>\n");
+ 		return;
+ 	}
+ 
++
+ 	if(ioctl(fb, FBIOPUTCMAP, &colormap) == -1)
+ 	{
+ 		printf("TuxCom <FBIOPUTCMAP failed>\n");
+@@ -643,17 +625,14 @@
  
  	use_kerning = FT_HAS_KERNING(face);
  
@@ -465,16 +509,16 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  	//init backbuffer
  
 -	if(!(lbb = malloc(var_screeninfo.xres*var_screeninfo.yres)))
-+	if(!(lbb = malloc(fix_screeninfo.line_length*var_screeninfo.yres)))
++	if(!(lbb = malloc(3*fix_screeninfo.line_length*var_screeninfo.yres)))
  	{
  		printf("TuxCom <allocating of Backbuffer failed>\n");
  		FTC_Manager_Done(manager);
-@@ -661,11 +628,11 @@
+@@ -661,11 +640,11 @@
  		munmap(lfb, fix_screeninfo.smem_len);
  		return;
  	}
 -	memset(lbb, 0, var_screeninfo.xres*var_screeninfo.yres);
-+	memset(lbb, 0, fix_screeninfo.line_length*var_screeninfo.yres);
++	memset(lbb, 0, 3*fix_screeninfo.line_length*var_screeninfo.yres);
  	RenderBox(0,0,var_screeninfo.xres,var_screeninfo.yres,FILL,BLACK);
  
  	//open avs
@@ -483,7 +527,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  	{
  		printf("TuxCom <open AVS>");
  		return;
-@@ -678,7 +645,7 @@
+@@ -678,7 +657,7 @@
  		printf("TuxCom <open SAA>");
  		return;
  	}
@@ -492,7 +536,17 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  
  	//init data
-@@ -723,19 +690,15 @@
+@@ -687,8 +666,8 @@
+ 	curvisibility = 0;
+ 	singleview = 0;
+ 	textuppercase = 0;
+-	screenmode=0;
+ 	filesize_in_byte = BTN_NO; // show human readable filesize
++	screenmode=0;
+ 	langselect = BTN_AUTO; // automatic
+ 	autosave = BTN_ASK; // ask on exit
+ 
+@@ -725,22 +704,18 @@
  
  	SetLanguage();
  
@@ -507,6 +561,9 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
 +	memcpy(lfb, lbb, fix_screeninfo.line_length*var_screeninfo.yres);
  	printf("TuxCom init successful\n");
  
+ 	// lock keyboard-conversions, this is done by the plugin itself
+ 	fclose(fopen(KBLCKFILE,"w"));
+ 
 -#ifdef HAVE_DREAMBOX_HARDWARE
 - 	fcntl(rc, F_SETFL, O_NONBLOCK);
 -#else
@@ -516,7 +573,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  	int dosave = autosave;
  	int firstentry = 1;
-@@ -762,20 +725,11 @@
+@@ -767,20 +742,11 @@
  				if (strcmp(szP,szPass) != 0) break;
  				RenderFrame(LEFTFRAME);
  				RenderFrame(RIGHTFRAME);
@@ -538,7 +595,23 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  		switch(rccode)
  		{
  				case RC_HELP:
-@@ -1332,7 +1286,7 @@
+@@ -868,13 +834,13 @@
+ 							break;
+ 						}
+ 						else
+-						{							
++						{
+ 							char scriptfile[FILENAME_MAX];
+ 							char* expos = strrchr(pfe->name,'.');
+ 							if (expos && strlen(expos) > 0)
+ 							{
+ 								struct stat st;
+-								sprintf(scriptfile,"%s%s%s",CONFIGDIR, "/tuxcom/",expos+1);
++								sprintf(scriptfile,"%s%s%s","/etc/tuxbox/",expos+1);
+ 								if (lstat(scriptfile,&st) != -1)
+ 								{
+ 									char szCmd[4000];
+@@ -1361,7 +1327,7 @@
  			finfo[curframe].first     = finfo[curframe].selected - framerows+1;
  		RenderFrame(LEFTFRAME);
  		RenderFrame(RIGHTFRAME);
@@ -547,8 +620,8 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  	}while(rccode != RC_HOME);
  
-@@ -1348,12 +1302,14 @@
- 	munmap(lfb, fix_screeninfo.smem_len);
+@@ -1380,12 +1346,17 @@
+ 	unlink(KBLCKFILE);
  
  	//restore videoformat
 -	ioctl(avs, AVSIOSSCARTPIN8, &fnc_old);
@@ -563,12 +636,15 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
 +//	close(saa);
 +
 +// 	fcntl(rc, F_SETFL, O_NONBLOCK);
-+	close(rc);
++	if (rc[0] != -1)
++			close(rc[0]);
++	if (rc[1] != -1)
++			close(rc[1]);
 +	close(kb);
  
  	ClearEntries   (LEFTFRAME );
  	ClearEntries   (RIGHTFRAME);
-@@ -1361,9 +1317,6 @@
+@@ -1393,9 +1364,6 @@
  	ClearMarker    (RIGHTFRAME);
  	ClearZipEntries(LEFTFRAME );
  	ClearZipEntries(RIGHTFRAME);
@@ -578,7 +654,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  	return;
  }
  
-@@ -1415,7 +1368,7 @@
+@@ -1447,7 +1415,7 @@
  		RenderString(colorline[colortool[i]*NUM_LANG+language], (viewx/COLORBUTTONS) *i , viewy- FONT_OFFSET_BIG , viewx/COLORBUTTONS, CENTER, SMALL  , (i == 2 ? BLACK : WHITE));
  	}
  	if (refresh == YES)
@@ -587,7 +663,16 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  }
  
-@@ -1701,7 +1654,7 @@
+@@ -1458,7 +1426,7 @@
+ 
+ void RenderFrame(int frame)
+ {
+-	if (singleview && curframe != frame)
++         if (singleview && curframe != frame)
+ 		return;
+ 
+ 	int row = 0;
+@@ -1742,7 +1710,7 @@
  
  					RenderBox(viewx/2 + 2* BORDERSIZE               , viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT  , viewx/2 + 2* BORDERSIZE +BUTTONWIDTH   ,viewy-(viewy-he)/2- 2* BORDERSIZE  , GRID, (sel == 1 ? WHITE : GREEN));
  					RenderBox(viewx/2 + 2* BORDERSIZE             +1, viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT+1, viewx/2 + 2* BORDERSIZE +BUTTONWIDTH -1,viewy-(viewy-he)/2- 2* BORDERSIZE-1, GRID, (sel == 1 ? WHITE : GREEN));
@@ -596,7 +681,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  					break;
  				case 2:
  					RenderBox(viewx/2 - 4* BORDERSIZE - BUTTONWIDTH - BUTTONWIDTH/2  , viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT  , viewx/2 - 4* BORDERSIZE  - BUTTONWIDTH/2              ,viewy-(viewy-he)/2- 2* BORDERSIZE  , GRID, (sel == 0 ? WHITE : RED  ));
-@@ -1712,7 +1665,7 @@
+@@ -1753,7 +1721,7 @@
  
  					RenderBox(viewx/2 + 4* BORDERSIZE + BUTTONWIDTH/2                , viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT  , viewx/2 + 4* BORDERSIZE +BUTTONWIDTH + BUTTONWIDTH/2  ,viewy-(viewy-he)/2- 2* BORDERSIZE  , GRID, (sel == 2 ? BLACK : YELLOW ));
  					RenderBox(viewx/2 + 4* BORDERSIZE + BUTTONWIDTH/2              +1, viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT+1, viewx/2 + 4* BORDERSIZE +BUTTONWIDTH + BUTTONWIDTH/2-1,viewy-(viewy-he)/2- 2* BORDERSIZE-1, GRID, (sel == 2 ? BLACK : YELLOW ));
@@ -605,7 +690,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  					break;
  				case 4:
  					RenderBox(viewx/2 - 4* BORDERSIZE - BUTTONWIDTH - BUTTONWIDTH/2  , viewy-(viewy-he)/2 - 4*BORDERSIZE - 2*BUTTONHEIGHT  , viewx/2 - 4* BORDERSIZE  - BUTTONWIDTH/2              ,viewy-(viewy-he)/2- 4* BORDERSIZE - BUTTONHEIGHT  , GRID, (sel == 0 ? WHITE : RED    ));
-@@ -1729,7 +1682,7 @@
+@@ -1770,7 +1738,7 @@
  
  					RenderBox(viewx/2 + 2* BORDERSIZE                                , viewy-(viewy-he)/2 - 2*BORDERSIZE -   BUTTONHEIGHT  , viewx/2 + 4* BORDERSIZE +BUTTONWIDTH + BUTTONWIDTH/2  ,viewy-(viewy-he)/2- 2* BORDERSIZE                 , GRID, (sel == 4 ? WHITE : BLUE2  ));
  					RenderBox(viewx/2 + 2* BORDERSIZE                              +1, viewy-(viewy-he)/2 - 2*BORDERSIZE -   BUTTONHEIGHT+1, viewx/2 + 4* BORDERSIZE +BUTTONWIDTH + BUTTONWIDTH/2-1,viewy-(viewy-he)/2- 2* BORDERSIZE               -1, GRID, (sel == 4 ? WHITE : BLUE2  ));
@@ -614,7 +699,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  					break;
  			}
  			drawsel = 0;
-@@ -1812,7 +1765,7 @@
+@@ -1853,7 +1821,7 @@
  			RenderBox((viewx-BUTTONWIDTH)/2 , viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT, viewx - (viewx-BUTTONWIDTH)/2,viewy-(viewy-he)/2 - 2*BORDERSIZE , GRID, WHITE);
  			break;
  	}
@@ -623,7 +708,26 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  }
  
  /******************************************************************************
-@@ -1953,7 +1906,7 @@
+@@ -1882,15 +1850,9 @@
+ 	RenderBox((viewx-wi)/2 , (viewy-he) /2, viewx-(viewx-wi)/2, viewy-(viewy-he)/2, GRID, WHITE);
+ 	RenderString(pfe->name,(viewx-wi)/2+  2* BORDERSIZE , (viewy-he)/2 + 2*BORDERSIZE + FONTHEIGHT_BIG-FONT_OFFSET , wi, CENTER, BIG, WHITE);
+ 
+-	char sizeString[200];
+-	GetSizeString(sizeString,pfe->fentry.st_size,1);
+-	sprintf(sizeString,"%s byte(s)",sizeString);
+-
+-	RenderString(sizeString,(viewx-wi)/2+  2* BORDERSIZE , (viewy-he)/2 + 2*BORDERSIZE + 2*FONTHEIGHT_BIG-FONT_OFFSET , wi, CENTER, BIG, WHITE);
+-
+-	RenderString(info[INFO_ACCESSED*NUM_LANG+language],(viewx-wi)/2+ 3* BORDERSIZE , (viewy-he)/2 + 6*BORDERSIZE + (3)*FONTHEIGHT_BIG-FONT_OFFSET , wi, LEFT, BIG, WHITE);
+-	RenderString(info[INFO_MODIFIED*NUM_LANG+language],(viewx-wi)/2+ 3* BORDERSIZE , (viewy-he)/2 + 6*BORDERSIZE + (4)*FONTHEIGHT_BIG-FONT_OFFSET , wi, LEFT, BIG, WHITE);
+-	RenderString(info[INFO_CREATED *NUM_LANG+language],(viewx-wi)/2+ 3* BORDERSIZE , (viewy-he)/2 + 6*BORDERSIZE + (5)*FONTHEIGHT_BIG-FONT_OFFSET , wi, LEFT, BIG, WHITE);
++	RenderString(info[INFO_ACCESSED*NUM_LANG+language],(viewx-wi)/2+ 3* BORDERSIZE , (viewy-he)/2 + 6*BORDERSIZE + (2)*FONTHEIGHT_BIG-FONT_OFFSET , wi, LEFT, BIG, WHITE);
++	RenderString(info[INFO_MODIFIED*NUM_LANG+language],(viewx-wi)/2+ 3* BORDERSIZE , (viewy-he)/2 + 6*BORDERSIZE + (3)*FONTHEIGHT_BIG-FONT_OFFSET , wi, LEFT, BIG, WHITE);
++	RenderString(info[INFO_CREATED *NUM_LANG+language],(viewx-wi)/2+ 3* BORDERSIZE , (viewy-he)/2 + 6*BORDERSIZE + (4)*FONTHEIGHT_BIG-FONT_OFFSET , wi, LEFT, BIG, WHITE);
+ 	char tm[100];
+ 	strftime(tm,100,info[INFO_DATETIME *NUM_LANG+language],localtime(&pfe->fentry.st_atime));
+ 	RenderString(tm,viewx/2- 2* BORDERSIZE , (viewy-he)/2 + 6*BORDERSIZE + (3)*FONTHEIGHT_BIG-FONT_OFFSET , wi/2, RIGHT, BIG, WHITE);
+@@ -2000,7 +1962,7 @@
  			RenderBox(viewx/2 - 2* BORDERSIZE -BUTTONWIDTH+1, viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT+1, viewx/2 - 2* BORDERSIZE             -1,viewy-(viewy-he)/2- 2* BORDERSIZE-1, GRID, (sel == YES ? WHITE : RED  ));
  			RenderBox(viewx/2 + 2* BORDERSIZE               , viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT  , viewx/2 + 2* BORDERSIZE +BUTTONWIDTH  ,viewy-(viewy-he)/2- 2* BORDERSIZE  , GRID, (sel == NO ? WHITE : GREEN));
  			RenderBox(viewx/2 + 2* BORDERSIZE             +1, viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT+1, viewx/2 + 2* BORDERSIZE +BUTTONWIDTH-1,viewy-(viewy-he)/2- 2* BORDERSIZE-1, GRID, (sel == NO ? WHITE : GREEN));
@@ -632,7 +736,16 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  			drawsel = 0;
  		}
  
-@@ -2097,7 +2050,7 @@
+@@ -2041,7 +2003,7 @@
+ 				continue;
+ 			*p=0;
+ 			p++;
+-			p1=strchr(p,'\r'); // für Windows-Nutzer: '\r' überlesen
++			p1=strchr(p,'\r'); // fÃ¼r Windows-Nutzer: '\r' Ã¼berlesen
+ 			if (p1 != NULL) *p1 = 0x00;
+ 			if      ( !strcmp(line,"host") ) strcpy(entries[0], p);
+ 			else if ( !strcmp(line,"port") ) strcpy(entries[1], p);
+@@ -2144,7 +2106,7 @@
  			RenderBox(viewx/2 - 2* BORDERSIZE -BUTTONWIDTH+1, viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT+1, viewx/2 - 2* BORDERSIZE             -1,viewy-(viewy-he)/2- 2* BORDERSIZE-1, GRID, (sel == YES ? WHITE : RED  ));
  			RenderBox(viewx/2 + 2* BORDERSIZE               , viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT  , viewx/2 + 2* BORDERSIZE +BUTTONWIDTH  ,viewy-(viewy-he)/2- 2* BORDERSIZE  , GRID, (sel == NO ? WHITE : GREEN));
  			RenderBox(viewx/2 + 2* BORDERSIZE             +1, viewy-(viewy-he)/2 - 2*BORDERSIZE - BUTTONHEIGHT+1, viewx/2 + 2* BORDERSIZE +BUTTONWIDTH-1,viewy-(viewy-he)/2- 2* BORDERSIZE-1, GRID, (sel == NO ? WHITE : GREEN));
@@ -641,7 +754,20 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  			drawsel = 0;
  		}
  		if (end == YES)
-@@ -2156,7 +2109,7 @@
+@@ -2195,10 +2157,10 @@
+ 				sprintf(szEntry,mainmenu[i*NUM_LANG+language],mbox[filesize_in_byte*NUM_LANG+language]);
+ 				break;
+ 			case 5: // set language
+-				sprintf(szEntry,mainmenu[i*NUM_LANG+language],mbox[langselect      *NUM_LANG+language]);
++				sprintf(szEntry,mainmenu[i*NUM_LANG+language],mbox[langselect*NUM_LANG+language]);
+ 				break;
+ 			case 6: // save settings
+-				sprintf(szEntry,mainmenu[i*NUM_LANG+language],mbox[autosave        *NUM_LANG+language]);
++				sprintf(szEntry,mainmenu[i*NUM_LANG+language],mbox[autosave  *NUM_LANG+language]);
+ 				break;
+ 			default:
+ 				strcpy(szEntry,mainmenu[i*NUM_LANG+language]);
+@@ -2206,7 +2168,7 @@
  		}
  		RenderString(szEntry,(viewx-wi)/2+ BORDERSIZE , (viewy-he)/2 + BORDERSIZE + (i+1)*FONTHEIGHT_BIG-FONT_OFFSET , wi, CENTER, BIG, WHITE);
  	}
@@ -650,7 +776,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  	int drawsel = 0;
  	do{
  		GetRCCode(RC_NORMAL);
-@@ -2175,8 +2128,8 @@
+@@ -2225,8 +2187,8 @@
  								return;
  							case 2:
  								screenmode = 1-screenmode;
@@ -661,7 +787,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  								return;
  							case 3:
  								SetPassword();
-@@ -2275,7 +2228,7 @@
+@@ -2342,7 +2304,7 @@
  				}
  				RenderString(szEntry,(viewx-wi)/2+ BORDERSIZE , (viewy-he)/2 + BORDERSIZE + (i+1)*FONTHEIGHT_BIG-FONT_OFFSET , wi, CENTER, BIG, WHITE);
  			}
@@ -670,7 +796,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  			drawsel = 0;
  		}
  	}while(1);
-@@ -2372,7 +2325,7 @@
+@@ -2439,7 +2401,7 @@
  	colortool[3] = (pass == NO ? ACTION_INSTEXT  : ACTION_NOACTION);
  	RenderMenuLine(-1, EDIT);
  
@@ -679,7 +805,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  
  	do{
  		while (GetRCCode(RC_EDIT) == 0);
-@@ -2688,7 +2641,7 @@
+@@ -2755,7 +2717,7 @@
  			colortool[3] = ACTION_NOACTION;
  		}
  		RenderMenuLine(-1, EDIT);
@@ -688,7 +814,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  	}while(1);
  
  	rccode = -1;
-@@ -3741,7 +3694,7 @@
+@@ -3808,7 +3770,7 @@
  	            p = p1+1;
  			}
  			pStop = p;
@@ -697,7 +823,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  			while (GetRCCode(RC_NORMAL) == 0);
  			switch (rccode)
  			{
-@@ -4160,7 +4113,7 @@
+@@ -4227,7 +4189,7 @@
  			}
  			RenderBox(  viewx/6 +3*BORDERSIZE, BORDERSIZE+FONTHEIGHT_BIG  ,   viewx/6 + 4*BORDERSIZE, viewy-MENUSIZE             , FILL, WHITE);
  			RenderBox(  viewx/3 -2*BORDERSIZE, BORDERSIZE+FONTHEIGHT_BIG  ,   viewx/3 -   BORDERSIZE, viewy-MENUSIZE             , FILL, WHITE);
@@ -706,7 +832,16 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  			while (GetRCCode(RC_NORMAL) == 0);
  			switch (rccode)
  			{
-@@ -4666,7 +4619,7 @@
+@@ -4470,7 +4432,7 @@
+ 				continue;
+ 			*p=0;
+ 			p++;
+-			p1=strchr(p,'\r'); // für Windows-Nutzer: '\r' überlesen
++			p1=strchr(p,'\r'); // fÃ¼r Windows-Nutzer: '\r' Ã¼berlesen
+ 			if (p1 != NULL) *p1 = 0x00;
+ 			if      ( !strcmp(line,"host") ) strcpy(finfo[curframe].ftphost, p);
+ 			else if ( !strcmp(line,"port") ) finfo[curframe].ftpport = atoi(p);
+@@ -4733,7 +4695,7 @@
  
  		if (row > framerows - 2)
  		{
@@ -715,7 +850,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  			while (1)
  			{
  				GetRCCode(RC_NORMAL);
-@@ -4687,7 +4640,7 @@
+@@ -4754,7 +4716,7 @@
  	}
  	if (row>0)
  	{
@@ -724,7 +859,25 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  		while (1)
  		{
  			GetRCCode(RC_NORMAL);
-@@ -4773,10 +4726,10 @@
+@@ -4812,7 +4774,7 @@
+ 
+ 	if (filesize_in_byte == BTN_NO && !forcebytes)
+ 	{		
+-		if (size >= (unsigned long long)1024*1024*1024) // we use "real" GigaBytes ;)
++		if (size >= (unsigned long long )1024*1024*1024) // we use "real" GigaBytes ;)
+ 		{
+ 			sprintf(sizeString,"%.2f GB",((double)size)/(double)(1024*1024*1024));
+ 			return;
+@@ -4827,7 +4789,7 @@
+ 	{
+ 		sprintf(sizeString,".%03lu%s",(unsigned long)(tmp % (unsigned long long)1000), sztmp);
+ 		strcpy(sztmp,sizeString);
+-		tmp /= (unsigned long long)1000;
++		tmp /= (unsigned long long )1000;
+ 	}
+ 	sprintf(sizeString,"%lu%s",(unsigned long)tmp,sztmp);
+ 
+@@ -4852,10 +4814,10 @@
  	finfo[LEFTFRAME].sort = SORT_UP;
  	finfo[RIGHTFRAME].sort = SORT_UP;
  
@@ -737,7 +890,7 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  	}
  	else
  	{
-@@ -4890,10 +4843,10 @@
+@@ -4979,10 +4941,10 @@
  	FILE *fp;
  
  
@@ -750,9 +903,9 @@ diff -u tuxcom_cvs/tuxcom.c tuxcom/tuxcom.c
  	}
  	else
  	{
-diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
---- tuxcom_cvs/tuxcom.h	2008-11-03 13:15:00.000000000 +0100
-+++ tuxcom/tuxcom.h	2006-06-29 23:44:25.000000000 +0200
+diff -Naur tuxcom.ori/tuxcom.h tuxcom/tuxcom.h
+--- tuxcom.ori/tuxcom.h	2009-01-06 00:12:19.000000000 +0100
++++ tuxcom/tuxcom.h	2009-01-05 18:31:06.000000000 +0100
 @@ -22,7 +22,7 @@
  	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
  */
@@ -776,7 +929,7 @@ diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
  
  #include <netinet/in.h>
  #include <netdb.h>
-@@ -53,12 +53,10 @@
+@@ -53,16 +53,14 @@
  #include FT_CACHE_SMALL_BITMAPS_H
  
  
@@ -791,9 +944,25 @@ diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
  
  #define MENUROWS      10
  #define MENUITEMS     10
-@@ -80,64 +78,6 @@
- #define MSG_VERSION    "Tuxbox Commander Version 1.13\n"
- #define MSG_COPYRIGHT  "© dbluelle 2004-2005"
+-#define MENUSIZE       59
++#define MENUSIZE       63
+ #define MINBOX        380
+ #define BUTTONWIDTH   114
+ #define BUTTONHEIGHT  30
+@@ -72,72 +70,15 @@
+ #define RIGHTFRAME   1
+ 
+ #define DEFAULT_PATH "/"
+-#define charset " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#!$%&?*()@\\/=<>+-_,.;:"
++#define charset " aäbcdefghijklmnoöpqrstuüvwxyzAÄBCDEFGHIJKLMNOÖPQRSTUÜVWXYZ0123456789#!$%&?*()@\\/=<>+-_,.;:¤^°][}{'`µ|"
+ 
++#define _FILE_OFFSET_BITS 64
+ #define FILEBUFFER_SIZE (100 * 1024) // Edit files up to 100k
+ #define FTPBUFFER_SIZE  (200 * 1024) // FTP Download Buffer size
+ 
+-#define MSG_VERSION    "Tuxbox Commander Version 1.16"
++#define MSG_VERSION    "Tuxbox Commander E2 Ver. 1.16\n"
+ #define MSG_COPYRIGHT  "© dbluelle 2004-2007"
  
 -#ifdef HAVE_DREAMBOX_HARDWARE
 -
@@ -856,12 +1025,21 @@ diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
  // rc codes
  #define	RC_0			'0'
  #define	RC_1			'1'
-@@ -247,12 +187,13 @@
+@@ -225,7 +166,7 @@
+ int rcaltgrtable[] =
+ {
+    0x00, RC_ESC, 0x00, '²', '³', 0x00, 0x00, 0x00, '{', '[', ']', '}', '\\', 0x00, 0x00, 0x00,
+-   '@',  0x00, '€', 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, '~', RC_RET1, RC_STRG, 0x00, 0x00,
++   '@',  0x00, '¤', 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, '~', RC_RET1, RC_STRG, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, RC_LSHIFT, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00,  0x00, 'µ', 0x00, 0x00, 0x00, RC_RSHIFT, 0x00, RC_ALT, 0x20, RC_CAPSLOCK,RC_F1,RC_F2,RC_F3,RC_F4,RC_F5,
+    RC_F6,RC_F7,RC_F8,RC_F9,RC_F10,RC_NUM,RC_ROLLEN,0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+@@ -247,13 +188,13 @@
  #define KBC_PAGEDOWN	0x0C
  #define KBC_RETURN	0x0D
  
 -#endif
-+
+ #define KBLCKFILE "/tmp/keyboard.lck"										//! file to lock keyboard-conversion
  
  
  //freetype stuff
@@ -872,7 +1050,7 @@ diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
  // if font is not in usual place, we look here:
  #define FONT2 "/var/tuxbox/config/enigma/fonts/pakenham.ttf"
  
-@@ -265,11 +206,7 @@
+@@ -266,11 +207,7 @@
  FTC_Manager		manager;
  FTC_SBitCache		cache;
  FTC_SBit		sbit;
@@ -884,7 +1062,7 @@ diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
  FT_Face			face;
  FT_UInt			prev_glyphindex;
  FT_Bool			use_kerning;
-@@ -296,6 +233,14 @@
+@@ -297,6 +234,14 @@
  struct fb_fix_screeninfo fix_screeninfo;
  struct fb_var_screeninfo var_screeninfo;
  
@@ -899,7 +1077,7 @@ diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
  unsigned short rd[] = {0xFF<<8, 0x00<<8, 0x00<<8, 0x00<<8, 0xFF<<8, 0x00<<8, 0xE8<<8, 0xFF<<8, 0xb0<<8, 0x00<<8, 0x50<<8, 0x00<<8, 0x50<<8, 0x00<<8};
  unsigned short gn[] = {0xFF<<8, 0x00<<8, 0x00<<8, 0x80<<8, 0xC0<<8, 0xd0<<8, 0xE8<<8, 0x00<<8, 0xb0<<8, 0xff<<8, 0x50<<8, 0x00<<8, 0x50<<8, 0x40<<8};
  unsigned short bl[] = {0xFF<<8, 0x00<<8, 0x80<<8, 0xFF<<8, 0x00<<8, 0x00<<8, 0x00<<8, 0x00<<8, 0xb0<<8, 0x00<<8, 0x50<<8, 0x80<<8, 0x50<<8, 0xff<<8};
-@@ -306,9 +251,7 @@
+@@ -307,9 +252,7 @@
  int trans_map     [] = {BLUE1,BLUE_TRANSP,TRANSP};
  int trans_map_mark[] = {GRAY2,GRAY_TRANSP,GRAY_TRANSP};
  
@@ -909,7 +1087,16 @@ diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
  
  unsigned short rccode;
  char kbcode;
-@@ -338,8 +281,8 @@
+@@ -317,7 +260,7 @@
+ //some data
+ 
+ int avs, saa, fnc_old, saa_old, screenmode;
+-int rc, fb, kb;
++int rc[2], fb, kb;
+ int sx, ex, sy, ey;
+ int PosX, PosY, StartX, StartY, FrameWidth, NameWidth, SizeWidth;
+ int curframe, cursort, curvisibility, singleview;
+@@ -339,8 +282,8 @@
  char szPass[20];
  long commandsize;
  
@@ -919,4 +1106,31 @@ diff -u tuxcom_cvs/tuxcom.h tuxcom/tuxcom.h
 +//int saamodes[] = {SAA_WSS_43F, SAA_WSS_169F};
  
  FILE *conf;
- int language, langselect, autosave;
+ int language, langselect, autosave, filesize_in_byte;
+@@ -466,13 +409,13 @@
+ 
+ char *numberchars[] = {  "0#!$%&?*()@\\",
+                  		 "1/=<>+-_,.;:" ,
+-                 		 "abc2",
+-                 		 "def3",
++                 		 "aäbc2",
++                 		 "de¤f3",
+                  		 "ghi4",
+                  		 "jkl5",
+-                 		 "mno6",
++                 		 "mnoö6",
+                  		 "pqrs7",
+-                 		 "tuv8",
++                 		 "tuüv8",
+                  		 "wxyz9" };
+ 
+ char *info[]   = { "(select 'hidden' to copy in background)"               ,"('versteckt' wählen zum Kopieren im Hintergrund)"              ,"(Seleziona 'nascosto' per copiare in background)"              ,"(välj 'gömd' för att kopiera i bakgrunden)"        ,"(Seleccionar 'Escondido' para copiar em background)"  ,
+@@ -599,7 +542,7 @@
+                      "toggle 16:9 mode"                   , "16:9-Modus setzen"                         ,"Passa a modalità 16:9"                     ,"växla 16:9 läge"                     ,"Mudar para 16:9"                    ,
+                      "set password"                       , "Passwort setzen"                           ,"Imposta password"                          ,"sätt lösenord"                       ,"Por password"                       ,
+                      "show filesizes in byte <%s>"        , "Dateigrössen in Byte anzeigen <%s>"        ,"show filesizes in byte <%s>"               ,"show filesizes in byte <%s>"         ,"show filesizes in byte <%s>"        ,
+-                     "language/Sprache/Lingua/Språk: <%s>", "Sprache/language/Lingua/Språk: <%s>"       ,"Lingua/language/Sprache/Språk: <%s>"       ,"Lingua/language/Sprache/Språk: <%s>" ,"Lingua/language/Sprache/Språk: <%s>",
++                     "Language/Sprache/Lingua/Språk: <%s>", "Sprache/Language/Lingua/Språk: <%s>"       ,"Lingua/Language/Sprache/Språk: <%s>"       ,"Lingua/Language/Sprache/Språk: <%s>" ,"Lingua/Language/Sprache/Språk: <%s>",
+                      "save settings on exit: <%s>"        , "Einstellungen beim Beenden speichern: <%s>","Salvare le impostazioni in uscita: <%s>"   ,"spara inställningar vid avslut: <%s>","Gravar e sair: <%s>"                ,
+                      "save settings now"                  , "Einstellungen jetzt speichern"             ,"Salvare le impostazioni adesso"            ,"spara inställningar nu"              ,"Gravar configuracoes agora"         };
+ 

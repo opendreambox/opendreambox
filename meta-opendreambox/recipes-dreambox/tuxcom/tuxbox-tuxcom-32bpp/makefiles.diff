@@ -1,12 +1,13 @@
---- tuxcom_cvs/Makefile.am	2008-11-03 15:29:58.993914127 +0100
-+++ tuxcom/Makefile.am	2008-11-03 15:32:42.677915776 +0100
-@@ -1,22 +1,15 @@
+diff -Naur tuxcom.ori/Makefile.am tuxcom/Makefile.am
+--- tuxcom.ori/Makefile.am	2009-01-06 00:12:19.000000000 +0100
++++ tuxcom/Makefile.am	2008-12-28 18:33:12.000000000 +0100
+@@ -1,24 +1,15 @@
 +INCLUDES = -I$(top_srcdir)/include
  
 -AM_CPPFLAGS =  \
 -	@FREETYPE_CFLAGS@ \
 -	-I$(top_srcdir)/include
-+SUBDIRS = font
++SUBDIRS = font python
  
 -noinst_LTLIBRARIES = tuxcom.la
 +bin_PROGRAMS = tuxcom
@@ -28,11 +29,14 @@
 -install-exec-local:
 -	install -d $(DESTDIR)$(PLUGINDIR)
 -	install -d $(DESTDIR)$(CONFIGDIR)
+-	install -d $(DESTDIR)$(CONFIGDIR)/tuxcom
 -	$(LIBTOOL) --mode=install install tuxcom.la $(DESTDIR)$(PLUGINDIR) 
 -	install -m 0644 $(srcdir)/tuxcom.cfg $(DESTDIR)$(PLUGINDIR)
+-	install -m 0755 $(srcdir)/mp3 $(DESTDIR)$(CONFIGDIR)/tuxcom
 +installdir = $(CONFIGDIR)/tuxcom
---- tuxcom_cvs/acinclude.m4	1970-01-01 01:00:00.000000000 +0100
-+++ tuxcom/acinclude.m4	2006-03-04 02:45:15.000000000 +0100
+diff -Naur tuxcom.ori/acinclude.m4 tuxcom/acinclude.m4
+--- tuxcom.ori/acinclude.m4	1970-01-01 01:00:00.000000000 +0100
++++ tuxcom/acinclude.m4	2008-12-28 18:33:11.000000000 +0100
 @@ -0,0 +1,434 @@
 +AC_DEFUN(TUXBOX_APPS,[
 +AM_CONFIG_HEADER(config.h)
@@ -468,9 +472,10 @@
 +        python_site=`echo $python_path | sed "s/config/site-packages/"`
 +        AC_SUBST([PYTHON_SITE_PKG],[$python_site])
 +])
---- tuxcom_cvs/configure.ac	1970-01-01 01:00:00.000000000 +0100
-+++ tuxcom/configure.ac	2008-11-03 14:05:20.449916344 +0100
-@@ -0,0 +1,18 @@
+diff -Naur tuxcom.ori/configure.ac tuxcom/configure.ac
+--- tuxcom.ori/configure.ac	1970-01-01 01:00:00.000000000 +0100
++++ tuxcom/configure.ac	2008-12-28 18:33:12.000000000 +0100
+@@ -0,0 +1,19 @@
 +#                                               -*- Autoconf -*-
 +# Process this file with autoconf to produce a configure script.
 +
@@ -489,6 +494,7 @@
 +
 +AC_OUTPUT(Makefile)
 +AC_OUTPUT(font/Makefile)
++AC_OUTPUT(python/Makefile)
 diff -Naur tuxcom_cvs/font/Makefile.am tuxcom/font/Makefile.am
 --- tuxcom_cvs/font/Makefile.am	1970-01-01 01:00:00.000000000 +0100
 +++ tuxcom/font/Makefile.am	2008-11-03 13:56:11.917916738 +0100

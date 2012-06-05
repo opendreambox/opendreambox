@@ -1,0 +1,11 @@
+diff -Naur tuxcom.ori/Makefile.am tuxcom/Makefile.am
+--- tuxcom.ori/Makefile.am	2009-01-06 00:29:24.000000000 +0100
++++ tuxcom/Makefile.am	2009-01-06 00:28:58.000000000 +0100
+@@ -10,6 +10,6 @@
+ 
+ install_DATA = tuxcom.cfg
+ 
+-AM_CFLAGS=$(CFLAGS) @FREETYPE_CFLAGS@
++AM_CFLAGS=$(CFLAGS) @FREETYPE_CFLAGS@ -D_FILE_OFFSET_BITS=64
+ 
+ installdir = $(CONFIGDIR)/tuxcom

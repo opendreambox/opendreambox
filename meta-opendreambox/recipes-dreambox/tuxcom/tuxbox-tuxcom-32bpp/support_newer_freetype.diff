@@ -1,6 +1,6 @@
-diff -auNr tuxcom/tuxcom.c tuxcom-freetype/tuxcom.c
---- tuxcom/tuxcom.c	2008-12-27 16:54:07.000000000 +0100
-+++ tuxcom-freetype/tuxcom.c	2008-12-27 16:59:35.000000000 +0100
+diff -Naur tuxcom/tuxcom.c tuxcom.freetype/tuxcom.c
+--- tuxcom/tuxcom.c	2009-01-06 01:21:26.000000000 +0100
++++ tuxcom.freetype/tuxcom.c	2009-01-07 13:21:16.000000000 +0100
 @@ -322,9 +322,15 @@
  
  		switch (size)
@@ -33,7 +33,7 @@ diff -auNr tuxcom/tuxcom.c tuxcom-freetype/tuxcom.c
  	 	}
  
  	//set alignment
-@@ -608,17 +620,26 @@
+@@ -617,17 +629,26 @@
  			return;
  		}
  		else
@@ -63,10 +63,10 @@ diff -auNr tuxcom/tuxcom.c tuxcom-freetype/tuxcom.c
  
  
  	//init backbuffer
-diff -auNr tuxcom/tuxcom.h tuxcom-freetype/tuxcom.h
---- tuxcom/tuxcom.h	2008-12-27 16:54:07.000000000 +0100
-+++ tuxcom-freetype/tuxcom.h	2008-12-27 16:55:23.000000000 +0100
-@@ -191,6 +191,9 @@
+diff -Naur tuxcom/tuxcom.h tuxcom.freetype/tuxcom.h
+--- tuxcom/tuxcom.h	2009-01-06 01:21:26.000000000 +0100
++++ tuxcom.freetype/tuxcom.h	2009-01-07 13:21:16.000000000 +0100
+@@ -192,6 +192,9 @@
  
  
  //freetype stuff

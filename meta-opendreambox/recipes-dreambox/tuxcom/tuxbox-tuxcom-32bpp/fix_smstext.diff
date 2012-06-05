@@ -1,0 +1,48 @@
+diff -Naur tuxcom/tuxcom.c tuxcom.smstxt/tuxcom.c
+--- tuxcom/tuxcom.c	2009-01-07 17:03:26.000000000 +0100
++++ tuxcom.smstxt/tuxcom.c	2009-01-09 19:17:00.000000000 +0100
+@@ -2611,11 +2611,11 @@
+ 							}
+ 						}
+ 						prev_key = rccode;
+-						pch = strchr(numberchars[rccode],tolower(szdst[pos]));
+-						if (pch == NULL) szdst[pos] = (textuppercase == 0 ? numberchars[rccode][0] : toupper(numberchars[rccode][0]));
++						pch = strchr(numberchars[rccode-48],tolower(szdst[pos]));
++						if (pch == NULL) szdst[pos] = (textuppercase == 0 ? numberchars[rccode-48][0] : toupper(numberchars[rccode-48][0]));
+ 						else
+ 						{
+-							if (pch == &(numberchars[rccode][strlen(numberchars[rccode])-1])) szdst[pos] = (textuppercase == 0 ? numberchars[rccode][0]: toupper(numberchars[rccode][0]));
++							if (pch == &(numberchars[rccode-48][strlen(numberchars[rccode-48])-1])) szdst[pos] = (textuppercase == 0 ? numberchars[rccode-48][0]: toupper(numberchars[rccode-48][0]));
+ 							else szdst[pos] = (textuppercase == 0 ? *((char*)pch+1) : toupper(*((char*)pch+1)));
+ 						}
+ 					}
+diff -Naur tuxcom/tuxcom.h tuxcom.smstxt/tuxcom.h
+--- tuxcom/tuxcom.h	2009-01-07 17:03:26.000000000 +0100
++++ tuxcom.smstxt/tuxcom.h	2009-01-09 19:17:00.000000000 +0100
+@@ -80,16 +80,16 @@
+ #define MSG_COPYRIGHT  "© dbluelle 2004-2007"
+ 
+ // rc codes
+-#define	RC_0			'0'
+-#define	RC_1			'1'
+-#define	RC_2			'2'
+-#define	RC_3			'3'
+-#define	RC_4			'4'
+-#define	RC_5			'5'
+-#define	RC_6			'6'
+-#define	RC_7			'7'
+-#define	RC_8			'8'
+-#define	RC_9			'9'
++#define	RC_0			0x30
++#define	RC_1			0x31
++#define	RC_2			0x32
++#define	RC_3			0x33
++#define	RC_4			0x34
++#define	RC_5			0x35
++#define	RC_6			0x36
++#define	RC_7			0x37
++#define	RC_8			0x38
++#define	RC_9			0x39
+ 
+ #define	RC_RIGHT	0x0191
+ #define	RC_LEFT		0x0192
