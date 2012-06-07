@@ -1,11 +1,11 @@
 From 591f65e8a6612623b9d8320a426b7f2ec2c13f0c Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 02:00:29 +0200
-Subject: [PATCH 4/6] page catching: add pagenumber
+Subject: [PATCH 4/7] page catching: add pagenumber
 
 ---
  src/search.c |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ 1 file changed, 4 insertions(+)
 
 diff --git a/src/search.c b/src/search.c
 index f9163eb..e240bca 100644
@@ -23,5 +23,5 @@ index f9163eb..e240bca 100644
  		vbi_char *acp = &pg->text[i * pg->columns];
  
 -- 
-1.7.5.4
+1.7.9.5
 

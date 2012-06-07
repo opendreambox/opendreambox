@@ -1,11 +1,11 @@
 From 5b9ce4488b748f057863c1d12bc70c085100cb2a Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 01:58:05 +0200
-Subject: [PATCH 3/6] fix no clock updates
+Subject: [PATCH 3/7] fix no clock updates
 
 ---
  src/packet.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/packet.c b/src/packet.c
 index e7bad0e..17b400f 100644
@@ -21,5 +21,5 @@ index e7bad0e..17b400f 100644
  
  		switch (r) {
 -- 
-1.7.5.4
+1.7.9.5
 

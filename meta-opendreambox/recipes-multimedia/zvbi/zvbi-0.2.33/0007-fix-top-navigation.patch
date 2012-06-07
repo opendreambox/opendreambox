@@ -1,0 +1,177 @@
+From c09d0f979c812fc7c5c20cc297e0764d674769d9 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 8 Jun 2012 01:02:07 +0200
+Subject: [PATCH 7/7] fix top navigation
+
+* patch by Roland Meier
+---
+ src/teletext.c |   94 +++++++++++++++++++++++++++-----------------------------
+ 1 file changed, 46 insertions(+), 48 deletions(-)
+
+diff --git a/src/teletext.c b/src/teletext.c
+index deeec6a..3360cbd 100644
+--- a/src/teletext.c
++++ b/src/teletext.c
+@@ -156,15 +156,21 @@ static void screen_color(vbi_page *pg, int flags, int color);
+ 
+ static vbi_bool
+ top_label(vbi_decoder *vbi, vbi_page *pg, struct vbi_font_descr *font,
+-	  int index, int pgno, int foreground, int ff)
++	  int index, int pgno, int foreground, int background)
+ {
+-	int column = index * 13 + 1;
++	int column = index * 10 + 1;
+ 	vbi_char *acp;
+ 	struct ttx_ait_title *ait;
+ 	int i, j;
+ 
+ 	acp = &pg->text[LAST_ROW + column];
+ 
++	for (i = 0; i < 10; i++) 
++	{
++		acp[i].foreground = foreground;
++		acp[i].background = background;
++	}
++	
+ 	for (i = 0; i < 8; i++)
+ 		if (PAGE_FUNCTION_AIT == vbi->cn->btt_link[i].function) {
+ 			cache_page *vtp;
+@@ -191,37 +197,25 @@ top_label(vbi_decoder *vbi, vbi_page *pg, struct vbi_font_descr *font,
+ 					pg->nav_link[index].pgno = pgno;
+ 					pg->nav_link[index].subno = VBI_ANY_SUBNO;
+ 
+-					for (i = 11; i >= 0; i--)
++					for (i = 9; i >= 0; i--)
+ 						if (ait->text[i] > 0x20)
+ 							break;
++					j = i; /* index of last char != " " */
+ 
+-					if (ff && (i <= (11 - ff))) {
+-						acp += (11 - ff - i) >> 1;
+-						column += (11 - ff - i) >> 1;
+-
+-						acp[i + 1].link = TRUE;
+-						pg->nav_index[column + i + 1] = index;
+-
+-						acp[i + 2].unicode = 0x003E;
+-						acp[i + 2].foreground = foreground;
+-						acp[i + 2].link = TRUE;
+-						pg->nav_index[column + i + 2] = index;
+-
+-						if (ff > 1) {
+-							acp[i + 3].unicode = 0x003E;
+-							acp[i + 3].foreground = foreground;
+-							acp[i + 3].link = TRUE;
+-							pg->nav_index[column + i + 3] = index;
+-						}
+-					} else {
+-						acp += (11 - i) >> 1;
+-						column += (11 - i) >> 1;
++					if (!i) 
++					{
++						i = 3; /* no text: display number */
+ 					}
+ 
++					/* center text */
++					acp += (9 - i) >> 1;
++					column += (9 - i) >> 1;
++
+ 					for (; i >= 0; i--) {
+ 						acp[i].unicode = vbi_teletext_unicode(font->G0, font->subset,
+-							(ait->text[i] < 0x20) ? 0x20 : ait->text[i]);
+-						acp[i].foreground = foreground;
++										      j ? ((ait->text[i] < 0x20) ? 0x20 : ait->text[i])
++										      : 0x30 + (pgno % 10));
++						pgno /= 10;
+ 						acp[i].link = TRUE;
+ 						pg->nav_index[column + i] = index;
+ 					}
+@@ -241,8 +235,8 @@ top_label(vbi_decoder *vbi, vbi_page *pg, struct vbi_font_descr *font,
+ }
+ 
+ static __inline__ vbi_pgno
+-add_modulo			(vbi_pgno		pgno,
+-				 int			incr)
++add_modulo(vbi_pgno		pgno,
++	   int			incr)
+ {
+ 	return ((pgno - 0x100 + incr) & 0x7FF) + 0x100;
+ }
+@@ -253,8 +247,7 @@ top_navigation_bar(vbi_decoder *vbi, vbi_page *pg,
+ {
+ 	struct ttx_page_stat *ps;
+ 	vbi_char ac;
+-	vbi_pgno pgno1;
+-	int i, got;
++	int i, idx=0;
+ 
+ 	ps = cache_network_page_stat (vbi->cn, vtp->pgno);
+ 	printv("PAGE MIP/BTT: %d\n", ps->page_type);
+@@ -272,35 +265,38 @@ top_navigation_bar(vbi_decoder *vbi, vbi_page *pg,
+ 	if (pg->page_opacity[1] != VBI_OPAQUE)
+ 		return;
+ 
+-	pgno1 = add_modulo (vtp->pgno, 1);
+-
+-	for (i = vtp->pgno; i != pgno1; i = add_modulo (i, -1)) {
++	for (i = add_modulo (vtp->pgno, -1); i != vtp->pgno; i = add_modulo (i, -1)) {
+ 		struct ttx_page_stat *ps;
+ 
+ 		ps = cache_network_page_stat (vbi->cn, i);
+-		if (ps->page_type == VBI_TOP_BLOCK ||
+-		    ps->page_type == VBI_TOP_GROUP) {
+-			top_label(vbi, pg, pg->font[0], 0, i, 32 + VBI_WHITE, 0);
++		if (ps->page_type == VBI_TOP_BLOCK) {
++			top_label(vbi, pg, pg->font[0], idx++, i, VBI_WHITE, VBI_RED);
+ 			break;
+ 		}
+ 	}
+ 
+-	for (i = pgno1, got = FALSE; i != vtp->pgno; i = add_modulo (i, 1)) {
++	for (i = add_modulo (vtp->pgno, 1); i != vtp->pgno; i = add_modulo (i, 1)) {
+ 		struct ttx_page_stat *ps;
+ 
+ 		ps = cache_network_page_stat (vbi->cn, i);
+ 		switch (ps->page_type) {
+-		case VBI_TOP_BLOCK:
+-			top_label(vbi, pg, pg->font[0], 2, i, 32 + VBI_YELLOW, 2);
+-			return;
+-
+-		case VBI_TOP_GROUP:
+-			if (!got) {
+-				top_label(vbi, pg, pg->font[0], 1, i, 32 + VBI_GREEN, 1);
+-				got = TRUE;
+-			}
+-
+-			break;
++			case VBI_TOP_BLOCK:
++				if (idx == 3)
++				{
++					top_label(vbi, pg, pg->font[0], idx, i, VBI_WHITE, VBI_BLUE);
++					return;
++				}
++				/* fallthrough */
++			case VBI_TOP_GROUP:
++				if (idx == 1)
++				{
++					top_label(vbi, pg, pg->font[0], idx++, i, VBI_BLACK, VBI_GREEN);
++				}
++				else if (idx == 2)
++				{
++					top_label(vbi, pg, pg->font[0], idx++, i, VBI_BLACK, VBI_YELLOW);
++				}
++				break;
+ 		}
+ 	}
+ }
+@@ -2876,5 +2872,7 @@ vbi_fetch_vt_page(vbi_decoder *vbi, vbi_page *pg,
+ Local variables:
+ c-set-style: K&R
+ c-basic-offset: 8
++tab-width: 8
++indent-tabs-mode: t
+ End:
+ */
+-- 
+1.7.9.5
+

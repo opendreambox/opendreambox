@@ -1,13 +1,13 @@
 From fd041fa0c3544ea6bf82dcce1a32ad5ba07acb59 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 01:51:58 +0200
-Subject: [PATCH 1/6] Fix linker errors due to implicit declaration of S_ISCHR
+Subject: [PATCH 1/7] Fix linker errors due to implicit declaration of S_ISCHR
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
  contrib/ntsc-cc.c |    1 +
  src/io-dvb.c      |    1 +
- 2 files changed, 2 insertions(+), 0 deletions(-)
+ 2 files changed, 2 insertions(+)
 
 diff --git a/contrib/ntsc-cc.c b/contrib/ntsc-cc.c
 index a89a5f9..3bf6680 100644
@@ -34,5 +34,5 @@ index bc5d634..4405b87 100644
  
  #ifndef HAVE_S64_U64
 -- 
-1.7.5.4
+1.7.9.5
 

@@ -1,11 +1,11 @@
 From a166d7d80a6e0ae740a36c38b65f49c739b035da Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 02:00:51 +0200
-Subject: [PATCH 5/6] page catching: search only current page
+Subject: [PATCH 5/7] page catching: search only current page
 
 ---
  src/search.c |   12 ++++++------
- 1 files changed, 6 insertions(+), 6 deletions(-)
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/src/search.c b/src/search.c
 index e240bca..300a74c 100644
@@ -66,5 +66,5 @@ index e240bca..300a74c 100644
  	highlight(s, vtp, s->haystack, ms, me);
  
 -- 
-1.7.5.4
+1.7.9.5
 

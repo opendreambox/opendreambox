@@ -1,11 +1,11 @@
 From d4eee9bbf0dd4cd78a22fd4352d6a6ba669ccf6e Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 02:01:29 +0200
-Subject: [PATCH 6/6] fix sky not working
+Subject: [PATCH 6/7] fix sky not working
 
 ---
  src/dvb_demux.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/dvb_demux.c b/src/dvb_demux.c
 index b670fc6..5edf3c8 100644
@@ -23,5 +23,5 @@ index b670fc6..5edf3c8 100644
  		break;
  	}
 -- 
-1.7.5.4
+1.7.9.5
 
