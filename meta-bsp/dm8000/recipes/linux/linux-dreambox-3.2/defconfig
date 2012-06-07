@@ -58,43 +58,10 @@ CONFIG_BRCMSTB=y
 # Broadcom STB options
 #
 CONFIG_BRCM_LEGACY=y
-# CONFIG_BCM3548B0 is not set
-# CONFIG_BCM35125A0 is not set
-# CONFIG_BCM35230C0 is not set
-# CONFIG_BCM35330A0 is not set
-# CONFIG_BCM3563C0 is not set
-# CONFIG_BCM7038C0 is not set
-# CONFIG_BCM7118C0 is not set
-# CONFIG_BCM7125C0 is not set
-# CONFIG_BCM7135A0 is not set
-# CONFIG_BCM7231A0 is not set
-# CONFIG_BCM7325B0 is not set
-# CONFIG_BCM7335B0 is not set
-# CONFIG_BCM7336A0 is not set
-# CONFIG_BCM7340B0 is not set
-# CONFIG_BCM7342B0 is not set
-# CONFIG_BCM7344A0 is not set
-# CONFIG_BCM7346A0 is not set
-# CONFIG_BCM7358A0 is not set
 CONFIG_BCM7400E0=y
 # CONFIG_BCM7401C0 is not set
-# CONFIG_BCM7403A0 is not set
 # CONFIG_BCM7405B0 is not set
 # CONFIG_BCM7405D0 is not set
-# CONFIG_BCM7408B0 is not set
-# CONFIG_BCM7420C0 is not set
-# CONFIG_BCM7422A0 is not set
-# CONFIG_BCM7425A0 is not set
-# CONFIG_BCM7440B0 is not set
-# CONFIG_BCM7468B0 is not set
-# CONFIG_BCM7550A0 is not set
-# CONFIG_BCM7550B0 is not set
-# CONFIG_BCM7552A0 is not set
-# CONFIG_BCM7601B0 is not set
-# CONFIG_BCM7630B0 is not set
-# CONFIG_BCM7631B0 is not set
-# CONFIG_BCM7635A0 is not set
-# CONFIG_BCM7640A0 is not set
 
 #
 # Memory map
@@ -897,7 +864,7 @@ CONFIG_MTD_CFI_UTIL=m
 CONFIG_MTD_MTDRAM=m
 CONFIG_MTDRAM_TOTAL_SIZE=4096
 CONFIG_MTDRAM_ERASE_SIZE=128
-# CONFIG_MTD_BLOCK2MTD is not set
+CONFIG_MTD_BLOCK2MTD=y
 
 #
 # Disk-On-Chip Device Drivers
