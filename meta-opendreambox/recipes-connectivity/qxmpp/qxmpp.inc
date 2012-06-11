@@ -3,7 +3,7 @@ HOMEPAGE = "https://code.google.com/p/qxmpp/"
 SECTION = "libs"
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://LICENSE.LGPL;md5=fbc093901857fcd118f065f900982c24"
-INC_PR = "r1"
+INC_PR = "r0"
 
 SRC_URI = "https://qxmpp.googlecode.com/files/qxmpp-${PV}.tar.gz"
 
@@ -11,7 +11,7 @@ S = "${WORKDIR}/qxmpp-${PV}"
 
 inherit lib_package pkgconfig
 
-EXTRA_QMAKEVARS_PRE += "PREFIX=${prefix} QXMPP_LIBRARY_TYPE=lib"
+EXTRA_QMAKEVARS_PRE += "PREFIX=${prefix}"
 
 do_compile() {
         oe_runmake sub-src-all-ordered

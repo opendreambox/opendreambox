@@ -1,7 +1,7 @@
-PV = "0.3.93"
+PV = "0.4.0"
 PR = "${INC_PR}.0"
 
-SRCREV = "0cf00a4fe8559271ff1fd92cf5a503f1701739e0"
+SRCREV = "1223d2541ef174556a0939e59efd65d05e1a3099"
 
 inherit qt4e
 
