@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Enigma2 Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-INC_PR = "r24"
+INC_PR = "r25"
 
 inherit task
 
@@ -31,6 +31,7 @@ RDEPENDS_${PN} += " \
   enigma2-streamproxy \
   gst-plugin-dvbmediasink \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gst-plugins-bad-cdxaparse', '', d)} \
+  gst-plugins-bad-mms \
   gst-plugins-bad-mpegdemux \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gst-plugins-bad-vcdsrc', '', d)} \
   gst-plugins-base-alsa \
