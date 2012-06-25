@@ -1,7 +1,7 @@
 From 540dd3b5ab2e6276977d8460a6e02f1011f9329d Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 01:57:15 +0200
-Subject: [PATCH 2/7] fix missing lines on every page on pro7 sat1
+Subject: [PATCH 2/6] fix missing lines on every page on pro7 sat1
 
 ---
  src/dvb_demux.c |    4 ++--

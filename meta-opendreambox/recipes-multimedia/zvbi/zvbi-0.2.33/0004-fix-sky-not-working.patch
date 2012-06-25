@@ -1,7 +1,7 @@
-From d4eee9bbf0dd4cd78a22fd4352d6a6ba669ccf6e Mon Sep 17 00:00:00 2001
+From 2b4f7a3596a1bb305306328129255b4452243172 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 02:01:29 +0200
-Subject: [PATCH 6/7] fix sky not working
+Subject: [PATCH 4/6] fix sky not working
 
 ---
  src/dvb_demux.c |    4 ++--

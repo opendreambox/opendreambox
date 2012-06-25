@@ -1,7 +1,7 @@
 From 5b9ce4488b748f057863c1d12bc70c085100cb2a Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 01:58:05 +0200
-Subject: [PATCH 3/7] fix no clock updates
+Subject: [PATCH 3/6] fix no clock updates
 
 ---
  src/packet.c |    2 +-
