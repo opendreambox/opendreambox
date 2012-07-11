@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.26"
+PR = "${INC_PR}.27"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "22"
@@ -19,6 +19,9 @@ SRC_URI = " \
         file://load-average-calculation-fix.patch \
         file://jffs2-compression-fixes.patch \
         file://git.linux-mips.org-sync.patch \
+        file://brcmstb-smp.c-optimized-code-a-bit-add-a-kern-warnin.patch \
+        file://kernel-sched_fair.c-dont-call-smp_send_reschedule-fo.patch \
+        file://disable-unused-emac1-support.patch \
         file://defconfig \
 "
 
