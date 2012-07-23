@@ -2,7 +2,7 @@ SUMMARY = "open source C++ wrapper library for SQLite"
 HOMEPAGE = "http://sqlitewrapper.kompex-online.com/"
 LICENSE = "LGPLv3+"
 LIC_FILES_CHKSUM = "file://src/KompexSQLiteDatabase.cpp;endline=17;md5=0f7c12fa150857cbf034e1a7c8abd5fc"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "http://sqlitewrapper.kompex-online.com/counter/download.php?dl=KompexSQLiteWrapper-Source_${PV}.tar.gz \
            file://add_automake.patch \

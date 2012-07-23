@@ -1,0 +1,11 @@
+diff -Naur org/inc/KompexSQLiteException.h patched/inc/KompexSQLiteException.h
+--- org/inc/KompexSQLiteException.h	2012-03-23 23:36:30.000000000 +0100
++++ patched/inc/KompexSQLiteException.h	2012-07-19 14:40:27.301651913 +0200
+@@ -71,5 +71,6 @@
+ #endif // KompexSQLiteException_H
+ 
+ #ifndef KOMPEX_EXCEPT
+-#define KOMPEX_EXCEPT(errorString) throw SQLiteException(__FILE__, __LINE__, errorString)
++#include <stdio.h>
++#define KOMPEX_EXCEPT(errorString) do { fprintf(stderr, "sqlite3 error at %s:%d:%s - %s\n", __FILE__, __LINE__, __func__, std::string(errorString).c_str()); fflush(stderr); } while(0)
+ #endif
