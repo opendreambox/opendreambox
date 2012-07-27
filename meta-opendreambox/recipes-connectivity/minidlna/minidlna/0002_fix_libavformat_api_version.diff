@@ -1,0 +1,16 @@
+Index: metadata.c
+===================================================================
+RCS file: /cvsroot/minidlna/minidlna/metadata.c,v
+retrieving revision 1.98
+diff -u -r1.98 metadata.c
+--- a/metadata.c	10 Jul 2012 21:12:10 -0000	1.98
++++ b/metadata.c	27 Jul 2012 11:55:58 -0000
+@@ -152,7 +152,7 @@
+ static inline void
+ lav_close(AVFormatContext *ctx)
+ {
+-#if LIBAVFORMAT_VERSION_INT >= ((53<<16)+(2<<8)+0)
++#if LIBAVFORMAT_VERSION_INT >= ((53<<16)+(17<<8)+0)
+ 	avformat_close_input(&ctx);
+ #else
+ 	av_close_input_file(ctx);
