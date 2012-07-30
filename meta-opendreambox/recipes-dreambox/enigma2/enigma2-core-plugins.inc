@@ -1,6 +1,7 @@
 SUMMARY_enigma2-plugin-extensions-browser = "Browse the web"
 SUMMARY_enigma2-plugin-extensions-cutlisteditor = "Cut movies"
 SUMMARY_enigma2-plugin-extensions-graphmultiepg = "Graphical program guide"
+SUMMARY_engima2-plugin-extensions-hbbtv = "HbbTV functionality for your Dreambox (beta)"
 SUMMARY_enigma2-plugin-extensions-modem = "Connect to the internet by modem"
 SUMMARY_enigma2-plugin-extensions-pictureplayer = "Show photos"
 SUMMARY_enigma2-plugin-systemplugins-cleanupwizard = "Detect low flash memory"
@@ -39,6 +40,10 @@ RDEPENDS_enigma2-plugin-extensions-dvdburn = " \
         mjpegtools \
         projectx \
         python-xml \
+"
+RDEPENDS_enigma2-plugin-extensions-hbbtv = " \
+        enigma2-plugin-extensions-browser \
+        enigma2-hbbtv-plugin\
 "
 RDEPENDS_enigma2-plugin-systemplugins-commoninterfaceassignment = " \
         python-xml \
