@@ -1,0 +1,34 @@
+--- sispmctl-3.1/configure.in.orig	2012-07-31 15:14:56.940130593 +0200
++++ sispmctl-3.1/configure.in	2012-07-31 15:16:43.020133308 +0200
+@@ -26,28 +26,9 @@
+ 
+ # Checks for libraries.
+ dnl check for libusb-config
+-AC_PATH_PROG(HAVELIBUSB, libusb-config, $PATH)
+-
+-if test -e "$HAVELIBUSB"; then
+-   dnl   LIBUSB_CFLAGS=`$HAVELIBUSB --cflags`
+-   LIBUSB_LIBS=`$HAVELIBUSB --libs`
+-   CFLAGS="$CFLAGS $LIBUSB_CFLAGS"
+-   LIBS="$LIBS $LIBUSB_LIBS"
+-else
+-   AC_MSG_ERROR([*** libusb-config not found. You need a working libusb installation. Version >=0.1.7])
+-fi
+-
+-dnl check for version of libusb
+-AC_MSG_CHECKING([if libusb version is >= 0.1.9])
+-libusb_version_needed="1009"
+-libusb_version=`$HAVELIBUSB --version | sed -e "s/libusb //" | awk 'BEGIN { FS = "."; } { printf "%d", ($''1 * 1000 + $''2) * 1000 + $''3;}'`
+-
+-if test $libusb_version -lt $libusb_version_needed; then
+-   AC_MSG_RESULT(no)
+-   AC_MSG_ERROR([*** libusb is too old ($libusb_version). You need a libusb installation newer or equal to 0.1.9.])
+-else
+-   AC_MSG_RESULT(yes)
+-fi
++PKG_CHECK_MODULES(LIBUSB, libusb)
++CFLAGS="$CFLAGS $LIBUSB_CFLAGS"
++LIBS="$LIBS $LIBUSB_LIBS"
+ 
+ # Checks for header files.
+ AC_HEADER_STDC
