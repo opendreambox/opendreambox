@@ -1,4 +1,4 @@
-PR .= "-dream2"
+PR .= "-dream3"
 
 SRC_URI += " \
 	file://01samba-kill \
@@ -29,3 +29,14 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/network/if-up.d
 	install -m 0755 ${WORKDIR}/01samba-start ${D}${sysconfdir}/network/if-up.d
 }
+
+EXTRA_OECONF += " \
+	samba_cv_LINUX_LFS_SUPPORT=yes \
+	samba_cv_HAVE_OFF64_T=yes \
+	samba_cv_have_longlong=yes \
+	samba_cv_HAVE_UNSIGNED_CHAR=yes \
+	samba_cv_HAVE_GETTIMEOFDAY_TZ=yes \
+	samba_cv_HAVE_C99_VSNPRINTF=yes \
+	samba_cv_HAVE_BROKEN_READDIR=no \
+	samba_cv_HAVE_IFACE_IFCONF=yes \
+"
