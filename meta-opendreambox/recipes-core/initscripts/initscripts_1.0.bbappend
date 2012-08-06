@@ -1,4 +1,4 @@
-PR .= "-dream4"
+PR .= "-dream5"
 
 SRC_URI += "file://mountrun.sh"
 
@@ -9,7 +9,8 @@ do_install_append() {
         ln -s ../init.d/mountrun.sh ${D}${sysconfdir}/rcS.d/S02mountrun.sh
 
         # rename umountnfs script because it should run before network is disabled
-        mv ${D}${sysconfdir}/rc0.d/S31umountnfs.sh ${D}${sysconfdir}/rc0.d/K31umountnfs.sh
+        mv ${D}${sysconfdir}/rc0.d/S31umountnfs.sh ${D}${sysconfdir}/rc0.d/K31umountnfs.sh || /bin/true
+        mv ${D}${sysconfdir}/rc6.d/S31umountnfs.sh ${D}${sysconfdir}/rc6.d/K31umountnfs.sh || /bin/true
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
