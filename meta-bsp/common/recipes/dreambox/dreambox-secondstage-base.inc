@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 DEPENDS += "dreambox-buildimage-native"
 PROVIDES = "virtual/bootloader"
 PRIORITY = "required"
-INC_PR = "r10"
+INC_PR = "r11"
 
 do_compile() {
         ${DREAMBOX_BUILDIMAGE} \
@@ -22,7 +22,7 @@ PACKAGES = "${PN} ${PN}-bin"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "mtd-utils"
+RDEPENDS_${PN} = "mtd-utils-nandwrite mtd-utils-flash-erase"
 
 FILES_${PN} = "${datadir}/${PN}/secondstage-${MACHINE}.nand"
 FILES_${PN}-bin = "${datadir}/${PN}/secondstage-${MACHINE}.bin"
