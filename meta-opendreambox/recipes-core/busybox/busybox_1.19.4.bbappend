@@ -1,4 +1,4 @@
-PR .= "-dream10"
+PR .= "-dream11"
 
 SRC_URI += "file://busybox-telnetd.xinetd.in \
             file://busybox-telnetd@.service \
