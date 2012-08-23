@@ -1,4 +1,4 @@
-PR .= "-dream1"
+PR .= "-dream2"
 
 SRC_URI += " \
 	file://init \

@@ -26,7 +26,7 @@ export ACTION=add
 
 echo "Starting udev"
 
-if [ ! -e "/lib/modules/$(uname -r)"/modules.dep ] ; then
+if [ ! -e "/lib/modules/$(uname -r)"/modules.dep -o $(egrep -c 'extra/bcm74' /lib/modules/$(uname -r)/modules.dep) -lt 1 ] ; then
 	mkdir -p /lib/modules/$(uname -r)
 	depmod -ae
 fi
