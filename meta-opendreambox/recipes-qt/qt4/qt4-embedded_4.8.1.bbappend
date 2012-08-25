@@ -22,3 +22,11 @@ QT_DECORATION_FLAGS = "-plugin-decoration-default -plugin-decoration-styled -plu
 QT_GFX_DRIVER_FLAGS = "-plugin-gfx-directfb -plugin-gfx-linuxfb -no-gfx-multiscreen -no-gfx-qvfb -no-gfx-transformed -no-gfx-vnc"
 QT_KBD_DRIVER_FLAGS = "-plugin-kbd-linuxinput -no-kbd-tty -no-kbd-qvfb"
 QT_MOUSE_DRIVER_FLAGS = "-qt-mouse-linuxinput -plugin-mouse-linuxtp -plugin-mouse-pc -no-mouse-qvfb -plugin-mouse-tslib"
+
+SQUASHFS_IMG_PACKAGES = "${PN}-core-sqsh-img:${PN}-webkit-sqsh-img"
+SQUASHFS_IMG_REPLACES = "libqt-embeddedcore4 libqt-embeddedgui4 libqt-embeddednetwork4:libqt-embeddedwebkit4 \
+	libqt-embeddedsvg4 qt4-embedded-fonts-ttf-dejavu qt4-embedded-fonts-ttf-vera qt4-embedded-plugin-imageformat-gif \
+	qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-svg \
+	qt4-embedded-plugin-imageformat-tiff"
+SQUASHFS_IMG_BLOCKSIZES = "262144:524288"
+inherit squashfs-img
