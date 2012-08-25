@@ -40,3 +40,12 @@ EXTRA_OECONF += " \
 	samba_cv_HAVE_BROKEN_READDIR=no \
 	samba_cv_HAVE_IFACE_IFCONF=yes \
 "
+
+pkg_prerm_sambaserver() {
+	killall -9 smbd nmbd || /bin/true
+}
+
+SQUASHFS_IMG_PACKAGES = "sambaserver-sqsh-img"
+SQUASHFS_IMG_REPLACES = "sambaserver"
+
+inherit squashfs-img
