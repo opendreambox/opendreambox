@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Enigma2 Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-INC_PR = "r27"
+INC_PR = "r28"
 
 inherit task
 
@@ -77,7 +77,7 @@ RRECOMMENDS_${PN} += " \
   aio-grab \
   ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-hbbtv-plugin', d)} \
   enigma2-plugin-extensions-audiosync \
-  ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-plugin-extensions-browser', d)} \
+  ${@base_conditional('MACHINE', 'dm800', '', 'enigma2-plugin-extensions-browser', d)} \
   enigma2-plugin-extensions-cutlisteditor \
   enigma2-plugin-extensions-graphmultiepg \
   ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-plugin-extensions-hbbtv', d)} \
