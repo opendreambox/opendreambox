@@ -1,0 +1,46 @@
+From 5adbe895b0a5a615e4ad607a6f930581eac6eecb Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Sun, 26 Aug 2012 10:20:46 +0200
+Subject: [PATCH] dreambox_nand.c: our driver needs to wait for "ready" this
+ hopefully fixes sporadically read ECC errors on dm8000
+
+---
+ drivers/mtd/nand/dreambox_nand.c |   14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/mtd/nand/dreambox_nand.c b/drivers/mtd/nand/dreambox_nand.c
+index e291e94..8f2cd33 100644
+--- a/drivers/mtd/nand/dreambox_nand.c
++++ b/drivers/mtd/nand/dreambox_nand.c
+@@ -89,18 +89,8 @@ static void dreambox_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
+ 	    (!(ctrl & NAND_NCE)))
+ 		writeb(0, (void __iomem *)0xBF030003);
+ 
+-	if (cmd == NAND_CMD_NONE) {
+-#ifdef CONFIG_SMP
+-		struct nand_chip *chip = mtd->priv;
+-		unsigned int i;
+-		for (i = 0; i < chip->chip_delay; i++) {
+-			if (chip->dev_ready(mtd))
+-				break;
+-			udelay(1);
+-		}
+-#endif
++	if (cmd == NAND_CMD_NONE)
+ 		return;
+-	}
+ 
+ 	if (ctrl & NAND_CLE)
+ 		addr = 0xBF030000;
+@@ -253,6 +243,8 @@ static int __init dreambox_nand_init(void)
+ 		goto err_kfree;
+ 	}
+ 
++	this->options &= ~NAND_NO_READRDY;
++
+ 	/* Register the partitions */
+ 	ret = mtd_device_register(dreambox_mtd, partition_info,
+ 				 ARRAY_SIZE(partition_info));
+-- 
+1.7.10.4
+

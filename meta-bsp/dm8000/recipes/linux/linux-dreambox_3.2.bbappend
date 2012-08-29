@@ -1,3 +1,3 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
-PR .= "-bsp1"
+PR .= "-bsp0"

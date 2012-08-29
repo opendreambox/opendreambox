@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.30"
+PR = "${INC_PR}.31"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "28"
@@ -21,6 +21,8 @@ SRC_URI = " \
         file://brcmstb-smp.c-optimized-code-a-bit-add-a-kern-warnin.patch \
         file://kernel-sched_fair.c-dont-call-smp_send_reschedule-fo.patch \
         file://disable-unused-emac1-support.patch \
+        file://dm8000-nand-driver-fix.patch \
+        file://brcmnand-fixed-possible-race-condition.patch \
         file://defconfig \
 "
 
