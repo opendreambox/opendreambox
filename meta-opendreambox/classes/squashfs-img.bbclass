@@ -72,7 +72,7 @@ python emit_pkgdata_prepend() {
 				bb.fatal('no replaces for %s' %package)
 
 			replaces = package_replaces[idx].split(' ')
-			replaces = [ repl.strip('\t ') for repl in replaces ]
+			replaces = [ repl.strip('\t ') for repl in replaces if repl.strip('\t ') ]
 
 			blocksize = ''
 			if num_blocksizes > idx:
@@ -104,17 +104,18 @@ python emit_pkgdata_prepend() {
 				for path in files_pathes:
 					if path.startswith('/etc'):
 						continue
-					realpath = repldir+path
-					if os.path.isdir(realpath):
-						files = []
-						for root, dirs, names in os.walk(realpath):
-							files += [ root+'/'+name for name in names ]
-					else:
-						if os.path.islink(realpath):
-							continue
-						files = glob.glob(realpath)
-					files = [ (f, l) for f in files if not os.path.islink(f) and (not filesre or filesre.search(f) is not None) ]
-					squashfs_files += files
+					realp = repldir+path
+					for realpath in glob.glob(realp):
+						if os.path.isdir(realpath):
+							files = []
+							for root, dirs, names in os.walk(realpath):
+								files += [ root+'/'+name for name in names ]
+						else:
+							if os.path.islink(realpath):
+								continue
+							files = glob.glob(realpath)
+						files = [ (f, l) for f in files if not os.path.islink(f) and (not filesre or filesre.search(f) is not None) ]
+						squashfs_files += files
 
 			if not squashfs_files:
 				bb.fatal("no squashfs files ... maybe regex wrong?!?")
