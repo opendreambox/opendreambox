@@ -22,7 +22,7 @@ SRC_URI = " \
         file://kernel-sched_fair.c-dont-call-smp_send_reschedule-fo.patch \
         file://disable-unused-emac1-support.patch \
         file://brcmnand-fixed-possible-race-condition.patch \
-        file://0001-MTD-fixed-nand_wait_ready-2-jiffies.patch \
+        file://0001-nand_base.c-2ms-for-nand_wait_ready-is-not-enough.patch \
         file://0002-MTD-dreambox_nand-cleanup-speedup-implement-select_c.patch \
         file://defconfig \
 "
