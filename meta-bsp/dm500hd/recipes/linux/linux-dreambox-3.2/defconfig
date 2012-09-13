@@ -2113,7 +2113,7 @@ CONFIG_USB_MOUSE=m
 #
 # CONFIG_HID_A4TECH is not set
 # CONFIG_HID_ACRUX is not set
-# CONFIG_HID_APPLE is not set
+CONFIG_HID_APPLE=m
 # CONFIG_HID_BELKIN is not set
 # CONFIG_HID_CHERRY is not set
 # CONFIG_HID_CHICONY is not set
