@@ -1,4 +1,4 @@
-PR .= "-dream4"
+PR .= "-dream5"
 
 SRC_URI += "file://0001-Fixed-opkg-losing-auto_installed-flag-on-upgrading.patch \
             file://0002-Don-t-mark-Conflicts-as-Depends.patch \
@@ -9,6 +9,7 @@ SRC_URI += "file://0001-Fixed-opkg-losing-auto_installed-flag-on-upgrading.patch
             file://0007-pkg_hash_fetch_conflicts-move-iteration-over-conflic.patch \
             file://0008-pkg_hash_fetch_conflicts-take-into-account-conflicts.patch \
             file://0009-Revert-Add-Recommended-packages-to-the-depended_upon.patch \
-            file://0010-opkg_remove-auto-delete-.pyo-files.patch"
+            file://0010-opkg_remove-auto-delete-.pyo-files.patch \
+            file://unarchive-fixed-uname-gname-cache.patch"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
