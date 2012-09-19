@@ -1,6 +1,6 @@
 require recipes-connectivity/openssl/openssl.inc
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
@@ -26,12 +26,17 @@ SRC_URI += "file://debian/ca.patch \
 
 SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch \
-            file://parallel-make-fix.patch"
+            file://parallel-make-fix.patch \
+            file://find.pl"
 
 SRC_URI[md5sum] = "ee17e9bc805c8cc7d0afac3b0ef78eda"
 SRC_URI[sha256sum] = "7ce0c7f2c451070b4497ea7ca6f23eba6cef1a56db2e86e433f65926a7bc7497"
 
 EXTRA_OECONF += "no-idea no-mdc2 no-rc5"
+
+do_configure_prepend() {
+        cp ${WORKDIR}/find.pl ${S}/util/find.pl
+}
 
 BBCLASSEXTEND = "native nativesdk"
 
