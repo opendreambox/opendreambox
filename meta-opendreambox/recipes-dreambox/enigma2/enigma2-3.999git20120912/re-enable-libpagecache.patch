@@ -1,0 +1,16 @@
+diff --git a/usr/bin/enigma2.sh b/usr/bin/enigma2.sh
+index 31fa431..e958427 100755
+--- a/usr/bin/enigma2.sh
++++ b/usr/bin/enigma2.sh
+@@ -19,6 +19,11 @@ fi
+ 
+ LIBS="$LIBS /usr/lib/libopen.so"
+ 
++#check for dreambox specific pagecache helper lib
++if [ -e /usr/lib/libpagecache.so ]; then
++	LIBS="$LIBS /usr/lib/libpagecache.so"
++fi
++
+ #check for dreambox specific passthrough helper lib
+ if [ -e /usr/lib/libpassthrough.so ]; then
+ 	LIBS="$LIBS /usr/lib/libpassthrough.so"
