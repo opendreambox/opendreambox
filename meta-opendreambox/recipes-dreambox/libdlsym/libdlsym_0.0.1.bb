@@ -1,7 +1,7 @@
 SUMMARY = "Helper library to link against preloadable libraries"
 SECTION = "base"
 LICENSE = "CLOSED"
-SRCREV = "b02e22e2624b1d020cf18317c2d66a55f6b06159"
-PR = "r1"
+SRCREV = "235cb0926c37b25f4509f9e5ab89431d4c46a6c3"
+PR = "r0"
 
 inherit autotools opendreambox-git lib_package pkgconfig
