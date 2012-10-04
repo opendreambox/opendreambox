@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.35"
+PR = "${INC_PR}.36"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "30"
@@ -24,6 +24,7 @@ SRC_URI = " \
         file://brcmnand-fixed-possible-race-condition.patch \
         file://0001-nand_base.c-2ms-for-nand_wait_ready-is-not-enough.patch \
         file://0002-MTD-dreambox_nand-cleanup-speedup-implement-select_c.patch \
+        file://revert-mips-module-loader-stuff.patch \
         file://defconfig \
 "
 
