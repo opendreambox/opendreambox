@@ -21,8 +21,7 @@ RDEPENDS_enigma2-plugin-extensions-browser = " \
         python-email \
         python-sqlite3 \
         python-xml \
-        qt4-embedded-fonts-ttf-dejavu \
-        qt4-embedded-fonts-ttf-vera \
+        ubuntu-font-family \
         qt4-embedded-plugin-imageformat-gif \
         qt4-embedded-plugin-imageformat-ico \
         qt4-embedded-plugin-imageformat-jpeg \

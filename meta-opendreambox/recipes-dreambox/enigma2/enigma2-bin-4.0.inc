@@ -10,8 +10,9 @@ DEPENDS = " \
         python \
         python-coherence \
         qt4-embedded \
+        ubuntu-font-family \
 "
-INC_PR = "r7"
+INC_PR = "r8"
 
 RDEPENDS_${PN} += " \
         libaio \
