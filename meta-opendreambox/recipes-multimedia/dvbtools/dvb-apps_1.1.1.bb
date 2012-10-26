@@ -6,7 +6,7 @@ SRC_URI = "http://linuxtv.org/downloads/linuxtv-dvb-apps-${PV}.tar.bz2 \
            file://update-to-trunk.diff \
            file://update-to-tip.diff"
 
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/linuxtv-dvb-apps-${PV}"
 
@@ -68,6 +68,7 @@ FILES_dvb-zap-data = "${docdir}/dvb-apps/szap"
 
 do_configure() {
 	sed -i -e s:/usr/include:${STAGING_INCDIR}:g util/av7110_loadkeys/generate-keynames.sh 
+	sed -i -e '/\<video\>/d' test/Makefile
 }
 
 do_install() {
@@ -81,7 +82,6 @@ do_install() {
     # Install tests
     install -m 0755 ${S}/test/setvoltage      ${D}${bindir}/test_setvoltage
     install -m 0755 ${S}/test/set22k          ${D}${bindir}/test_set22k
-    install -m 0755 ${S}/test/video           ${D}${bindir}/test_video
     install -m 0755 ${S}/test/sendburst       ${D}${bindir}/test_sendburst
     install -m 0755 ${S}/test/diseqc          ${D}${bindir}/test_diseqc
     install -m 0755 ${S}/test/test_sections   ${D}${bindir}/
