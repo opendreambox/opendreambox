@@ -1,0 +1,72 @@
+From 9543862a0ffdd413f9600c4e2f815523ddb3ec93 Mon Sep 17 00:00:00 2001
+From: Stephan Reichholf <reichi@opendreambox.org>
+Date: Wed, 21 Nov 2012 15:16:50 +0100
+Subject: [PATCH] QtWebkit: Expose "keypress" event and correct keycode for
+ all key-presses (HbbTV Specifaction requirement)
+
+---
+ src/3rdparty/webkit/Source/WebCore/dom/KeyboardEvent.cpp          |    2 ++
+ src/3rdparty/webkit/Source/WebCore/page/EventHandler.cpp          |    5 +----
+ .../webkit/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp |    3 ---
+ 3 files changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/src/3rdparty/webkit/Source/WebCore/dom/KeyboardEvent.cpp b/src/3rdparty/webkit/Source/WebCore/dom/KeyboardEvent.cpp
+index b6ab1b6..22e1156 100644
+--- a/src/3rdparty/webkit/Source/WebCore/dom/KeyboardEvent.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/dom/KeyboardEvent.cpp
+@@ -136,6 +136,8 @@ int KeyboardEvent::charCode() const
+     if (!m_keyEvent || (type() != eventNames().keypressEvent && !backwardCompatibilityMode))
+         return 0;
+     String text = m_keyEvent->text();
++    if(text.isEmpty())
++	return m_keyEvent->windowsVirtualKeyCode();
+     return static_cast<int>(text.characterStartingAt(0));
+ }
+ 
+diff --git a/src/3rdparty/webkit/Source/WebCore/page/EventHandler.cpp b/src/3rdparty/webkit/Source/WebCore/page/EventHandler.cpp
+index e26607a..4627226 100644
+--- a/src/3rdparty/webkit/Source/WebCore/page/EventHandler.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/page/EventHandler.cpp
+@@ -2464,7 +2464,7 @@ bool EventHandler::keyEvent(const PlatformKeyboardEvent& initialKeyEvent)
+         matchedAnAccessKey = handleAccessKey(initialKeyEvent);
+ 
+     // FIXME: it would be fair to let an input method handle KeyUp events before DOM dispatch.
+-    if (initialKeyEvent.type() == PlatformKeyboardEvent::KeyUp || initialKeyEvent.type() == PlatformKeyboardEvent::Char)
++    if (initialKeyEvent.type() == PlatformKeyboardEvent::KeyUp)
+         return !node->dispatchKeyEvent(initialKeyEvent);
+ 
+     bool backwardCompatibilityMode = needsKeyboardEventDisambiguationQuirks();
+@@ -2518,8 +2518,6 @@ bool EventHandler::keyEvent(const PlatformKeyboardEvent& initialKeyEvent)
+ 
+     PlatformKeyboardEvent keyPressEvent = initialKeyEvent;
+     keyPressEvent.disambiguateKeyDownEvent(PlatformKeyboardEvent::Char, backwardCompatibilityMode);
+-    if (keyPressEvent.text().isEmpty())
+-        return keydownResult;
+     RefPtr<KeyboardEvent> keypress = KeyboardEvent::create(keyPressEvent, m_frame->document()->defaultView());
+     keypress->setTarget(node);
+     if (keydownResult)
+@@ -2528,7 +2526,6 @@ bool EventHandler::keyEvent(const PlatformKeyboardEvent& initialKeyEvent)
+     keypress->keypressCommands() = keydown->keypressCommands();
+ #endif
+     node->dispatchEvent(keypress, ec);
+-
+     return keydownResult || keypress->defaultPrevented() || keypress->defaultHandled();
+ }
+ 
+diff --git a/src/3rdparty/webkit/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp b/src/3rdparty/webkit/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp
+index 15b9a4a..9c3551a 100644
+--- a/src/3rdparty/webkit/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp
+@@ -629,9 +629,6 @@ void PlatformKeyboardEvent::disambiguateKeyDownEvent(Type type, bool)
+         */
+         if (m_text.isEmpty() && m_windowsVirtualKeyCode && isVirtualKeyCodeRepresentingCharacter(m_windowsVirtualKeyCode))
+             m_text.append(UChar(m_windowsVirtualKeyCode));
+-
+-        m_keyIdentifier = String();
+-        m_windowsVirtualKeyCode = 0;
+     }
+ }
+ 
+-- 
+1.7.10.4
+
