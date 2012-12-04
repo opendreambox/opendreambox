@@ -1,5 +1,5 @@
 DEPENDS := "${@oe_filter_out('^(mysql5|postgresql|sqlite)$', '${DEPENDS}', d)}"
-PR .= "-dream6"
+PR .= "-dream7"
 
 SRC_URI += "file://0001-Qt-remove-x11-from-npapi-while-keeping-some-basic-fu.patch \
             file://0002-Qt-Add-HbbTv-MIME-types.patch \
@@ -25,7 +25,7 @@ QT_MOUSE_DRIVER_FLAGS = "-qt-mouse-linuxinput -plugin-mouse-linuxtp -plugin-mous
 
 SQUASHFS_IMG_PACKAGES = "${PN}-core-sqsh-img:${PN}-webkit-sqsh-img"
 SQUASHFS_IMG_REPLACES = "libqt-embeddedcore4 libqt-embeddedgui4 libqt-embeddednetwork4:libqt-embeddedwebkit4 \
-	libqt-embeddedsvg4 qt4-embedded-fonts-ttf-dejavu qt4-embedded-fonts-ttf-vera qt4-embedded-plugin-imageformat-gif \
+	libqt-embeddedsvg4 qt4-embedded-plugin-imageformat-gif \
 	qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-svg \
 	qt4-embedded-plugin-imageformat-tiff"
 SQUASHFS_IMG_BLOCKSIZES = "262144:524288"
