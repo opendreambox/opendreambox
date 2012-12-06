@@ -1,0 +1,58 @@
+diff -Naur libaio-0.3.109.org/src/syscall-mips.h libaio-0.3.109/src/syscall-mips.h
+--- libaio-0.3.109.org/src/syscall-mips.h	2012-12-04 19:55:54.000000000 +0100
++++ libaio-0.3.109/src/syscall-mips.h	2012-12-04 20:27:23.357576599 +0100
+@@ -98,9 +98,7 @@
+ 	: "$2", "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$24", \
+ 	  "memory"); \
+ 	\
+-	if (__a3 == 0) \
+-		return (type) __v0; \
+-	return (type) -1; \
++	return (type) __v0; \
+ }
+ 
+ #define io_syscall3(type,fname,sname,atype,a,btype,b,ctype,c) \
+@@ -123,9 +121,7 @@
+ 	: "$2", "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$24", \
+ 	  "memory"); \
+ 	\
+-	if (__a3 == 0) \
+-		return (type) __v0; \
+-	return (type) -1; \
++	return (type) __v0; \
+ }
+ 
+ #define io_syscall4(type,fname,sname,atype,a,btype,b,ctype,c,dtype,d) \
+@@ -148,9 +144,7 @@
+ 	: "$2", "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$24", \
+ 	  "memory"); \
+ 	\
+-	if (__a3 == 0) \
+-		return (type) __v0; \
+-	return (type) -1; \
++	return (type) __v0; \
+ }
+ 
+ #if (_MIPS_SIM == _MIPS_SIM_ABI32)
+@@ -184,9 +178,7 @@
+ 	: "$2", "$8", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$24", \
+ 	  "memory"); \
+ 	\
+-	if (__a3 == 0) \
+-		return (type) __v0; \
+-	return (type) -1; \
++	return (type) __v0; \
+ }
+ 
+ #endif /* (_MIPS_SIM == _MIPS_SIM_ABI32) */
+@@ -214,9 +206,7 @@
+ 	: "$2", "$9", "$10", "$11", "$12", "$13", "$14", "$15", "$24", \
+ 	  "memory"); \
+ 	\
+-	if (__a3 == 0) \
+-		return (type) __v0; \
+-	return (type) -1; \
++	return (type) __v0; \
+ }
+ 
+ #endif /* (_MIPS_SIM == _MIPS_SIM_NABI32) || (_MIPS_SIM == _MIPS_SIM_ABI64) */
