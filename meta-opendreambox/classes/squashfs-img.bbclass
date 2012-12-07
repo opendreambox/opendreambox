@@ -154,8 +154,9 @@ python emit_pkgdata_prepend() {
 
 			d.setVar('RDEPENDS_'+package, 'dreambox-squashfs-support')
 			d.setVar('FILES_'+package, '/')
+			d.setVar('pkg_preinst_'+package, 'if [ -z "$D" ]; then if mountpoint -q /media/squashfs-images/'+package+'; then umount /media/squashfs-images/'+package+' && losetup -d `losetup | grep '+package+' | cut -d: -f1` || touch /var/tmp/.umount_'+package+'_needed; else touch /var/tmp/.umount_'+package+'_needed; fi; fi')
 			d.setVar('pkg_postinst_'+package, 'if [ -z "$D" ]; then if ! mountpoint -q /media/squashfs-images/'+package+'; then mount -t squashfs -o ro,loop /squashfs-images/'+package+' /media/squashfs-images/'+package+' || touch /var/tmp/.mount_'+package+'_needed; else touch /var/tmp/.mount_'+package+'_needed; fi; fi')
-			d.setVar('pkg_prerm_'+package, 'if [ -z "$D" ]; then if mountpoint -q /media/squashfs-images/'+package+'; then umount /media/squashfs-images/'+package+' && losetup -d `losetup | grep '+package+' | cut -d: -f1` || touch /var/tmp/.umount_'+package+'_needed; else touch /var/tmp/.umount_'+package+'_needed; fi; fi')
+			d.setVar('pkg_postrm_'+package, 'if [ -z "$D" ]; then if mountpoint -q /media/squashfs-images/'+package+'; then umount /media/squashfs-images/'+package+' && losetup -d `losetup | grep '+package+' | cut -d: -f1` || touch /var/tmp/.umount_'+package+'_needed; else touch /var/tmp/.umount_'+package+'_needed; fi; fi')
 			packages.append(package)
 
 			idx += 1
