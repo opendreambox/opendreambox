@@ -16,17 +16,19 @@ SUMMARY_enigma2-plugin-systemplugins-upnp = "UPnP tools based on python-coherenc
 SUMMARY_enigma2-plugin-systemplugins-videomode = "Select custom video modes"
 SUMMARY_enigma2-plugin-systemplugins-wirelesslan = "Wireless network settings"
 
+QT_IMAGEFORMATS ?= "qt4-embedded-plugin-imageformat-gif \
+                    qt4-embedded-plugin-imageformat-ico \
+                    qt4-embedded-plugin-imageformat-jpeg \
+                    qt4-embedded-plugin-imageformat-svg \
+                    qt4-embedded-plugin-imageformat-tiff"
+
 RDEPENDS_enigma2-plugin-extensions-browser = " \
         ca-certificates \
         python-email \
         python-sqlite3 \
         python-xml \
         ubuntu-font-family \
-        qt4-embedded-plugin-imageformat-gif \
-        qt4-embedded-plugin-imageformat-ico \
-        qt4-embedded-plugin-imageformat-jpeg \
-        qt4-embedded-plugin-imageformat-svg \
-        qt4-embedded-plugin-imageformat-tiff \
+        ${QT_IMAGEFORMATS} \
 "
 RDEPENDS_enigma2-plugin-extensions-cutlisteditor = " \
         aio-grab \
