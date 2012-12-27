@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Enigma2 Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-INC_PR = "r30"
+INC_PR = "r31"
 
 inherit task
 
@@ -50,6 +50,7 @@ RDEPENDS_${PN} += " \
   gst-plugins-good-autodetect \
   ${@base_contains('DREAMBOX_FEATURES', 'xvid', 'gst-plugins-good-avi', '', d)} \
   gst-plugins-good-flac \
+  gst-plugins-good-flv \
   gst-plugins-good-icydemux \
   gst-plugins-good-id3demux \
   gst-plugins-good-isomp4 \
