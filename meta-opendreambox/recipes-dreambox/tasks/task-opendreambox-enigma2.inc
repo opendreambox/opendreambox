@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Enigma2 Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-INC_PR = "r29"
+INC_PR = "r30"
 
 inherit task
 
@@ -67,6 +67,7 @@ RDEPENDS_${PN} += " \
   gst-plugins-ugly-mpegaudioparse \
   gst-plugins-ugly-mpegstream \
   ${@base_contains('DREAMBOX_FEATURES', 'libpassthrough', 'libpassthrough', '', d)} \
+  ${@base_contains('DREAMBOX_FEATURES', 'opkgfb', 'opkgfb', '', d)} \
 "
 
 RDEPENDS_${PN}_append_dm8000 = " \
