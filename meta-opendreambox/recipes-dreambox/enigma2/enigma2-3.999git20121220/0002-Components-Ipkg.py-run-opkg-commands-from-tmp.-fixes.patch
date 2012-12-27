@@ -1,0 +1,26 @@
+From f0ec88053b42245dba931f650881acfc4d7013c0 Mon Sep 17 00:00:00 2001
+From: Mladen Horvat <acid-burn@opendreambox.org>
+Date: Fri, 21 Dec 2012 10:53:48 +0100
+Subject: [PATCH 2/5] Components/Ipkg.py: - run opkg commands from /tmp. fixes
+ #981
+
+---
+ usr/lib/enigma2/python/Components/Ipkg.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Components/Ipkg.py b/usr/lib/enigma2/python/Components/Ipkg.py
+index 488d55e..913c0c1 100644
+--- a/usr/lib/enigma2/python/Components/Ipkg.py
++++ b/usr/lib/enigma2/python/Components/Ipkg.py
+@@ -74,7 +74,7 @@ class IpkgComponent:
+ 		print "executing", self.ipkg, cmd
+ 		self.cmd.appClosed.append(self.cmdFinished)
+ 		self.cmd.dataAvail.append(self.cmdData)
+-		if self.cmd.execute(self.ipkg + " " + cmd):
++		if self.cmd.execute("cd /tmp && " + self.ipkg + " " + cmd):
+ 			self.cmdFinished(-1)
+ 
+ 	def startCmd(self, cmd, args = None):
+-- 
+1.7.10.4
+
