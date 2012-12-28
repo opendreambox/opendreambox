@@ -13,7 +13,7 @@ GIT_PV = ""
 
 SRCREV = "967fc61715fa854dacaa200069437fe57d4d8390"
 
-EXTRA_OECONF = "--enable-orc --disable-esd"
+EXTRA_OECONF = "--enable-orc --disable-esd --disable-aasink"
 
 inherit autotools pkgconfig gettext git-project
 
