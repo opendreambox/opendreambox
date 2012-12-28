@@ -12,7 +12,7 @@ DEPENDS += "gstreamer"
 
 SRCREV = "95c384136a1dfc22ad656c13b547c4077566d80b"
 
-PR = "r0"
+PR = "r1"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project
@@ -22,6 +22,8 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
 SRC_URI += " \
 	file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 	file://disable-vorbis-encoder.patch \
+	file://gst-plugins-base-tremor.patch \
+	file://configure.ac-fix-subparse-plugin.patch \
 "
 
 do_common_update() {
