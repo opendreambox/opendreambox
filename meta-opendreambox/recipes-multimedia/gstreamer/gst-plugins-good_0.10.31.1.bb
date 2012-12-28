@@ -22,10 +22,7 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
 SRC_URI += " \
 	file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 	file://0001-accept-substream-syncwords-DTS-HD.patch \
-"
-
-SRC_URI_dm800 += " \
-	file://v4l-compile-fix-old-kernel.patch \
+	${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
 "
 
 do_common_update() {
