@@ -12,9 +12,10 @@ DEPENDS = " \
         qt4-embedded \
         ubuntu-font-family \
 "
-INC_PR = "r8"
+INC_PR = "r9"
 
 RDEPENDS_${PN} += " \
+        libpagecache \
         libaio \
         python-ctypes \
         qnullscreen \

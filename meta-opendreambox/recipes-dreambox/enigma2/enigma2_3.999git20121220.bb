@@ -1,4 +1,4 @@
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.0"
 
 SRC_URI = " \
 	file://0001-enigma2.sh.in-add-enigma2-exit-codes-to-run-external.patch \
@@ -6,6 +6,7 @@ SRC_URI = " \
 	file://0003-SoftwareManager-add-support-for-opkgfb.patch \
 	file://0004-fixed-possible-bsod-on-timeshift-start-when-timeshif.patch \
 	file://0005-fixed-crash-when-try-to-set-a-timer-without-running-.patch \
+	file://0006-tools-enigma2.sh.in-drop-caches-once-after-e2-start-.patch \
 "
 
 SRC_URI[mips32el.md5sum] = "5cb82c4f93b5036d010e0643f57aeec1"
