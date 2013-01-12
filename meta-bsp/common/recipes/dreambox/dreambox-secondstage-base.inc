@@ -22,14 +22,14 @@ PACKAGES = "${PN} ${PN}-bin"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "mtd-utils-nandwrite mtd-utils-flash-erase"
+RDEPENDS_${PN} = "mtd-utils-nandwrite mtd-utils-mtd-debug"
 
 FILES_${PN} = "${datadir}/${PN}/secondstage-${MACHINE}.nand"
 FILES_${PN}-bin = "${datadir}/${PN}/secondstage-${MACHINE}.bin"
 
 pkg_postinst_${PN}() {
 if [ -z "$D" ]; then
-        flash_erase /dev/mtd1 0 $((${DREAMBOX_PART0_SIZE} / ${DREAMBOX_ERASE_BLOCK_SIZE}))
+        mtd_debug erase /dev/mtd1 0 `mtd_debug info /dev/mtd1 | grep '^mtd\.size' | awk '{print $3}'`
         nandwrite -m -n -o /dev/mtd1 ${datadir}/${PN}/secondstage-${MACHINE}.nand
         sync
 fi
