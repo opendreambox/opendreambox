@@ -35,9 +35,9 @@ opendreambox_rootfs_postprocess() {
     # generate /etc/image-version
     IMAGE_DATE=`date +%Y%m%d%H%M`
     # 0: Release, 1: Experimental
-    IMAGE_TYPE="1"
+    IMAGE_TYPE="0"
     # e.g. 400 for release 4.0.0, if IMAGE_TYPE=0
-    IMAGE_VERSION="000"
+    IMAGE_VERSION="400"
     echo "version=${IMAGE_TYPE}${IMAGE_VERSION}${IMAGE_DATE}" > ${IMAGE_ROOTFS}/etc/image-version
 }
 
