@@ -1,0 +1,595 @@
+From 07555e542b1a088190de2f4f11a8ac1e9f2853d2 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Sun, 13 Jan 2013 19:43:33 +0100
+Subject: [PATCH] merge some changes from stblinux-2.6.37 broadcom patch
+
+---
+ arch/mips/brcmstb/memory.c              |   55 ++++++++++------
+ arch/mips/brcmstb/prom.c                |    1 +
+ arch/mips/brcmstb/time.c                |    9 ++-
+ arch/mips/include/asm/brcmstb/brcmapi.h |    6 +-
+ arch/mips/include/asm/brcmstb/brcmstb.h |    1 +
+ arch/mips/include/asm/page.h            |    2 +
+ arch/mips/kernel/genex.S                |   11 ++++
+ arch/mips/kernel/setup.c                |   18 ++++-
+ arch/mips/mm/c-brcmstb.c                |  110 ++++++++++++++++---------------
+ arch/mips/mm/dma-default.c              |    7 --
+ arch/mips/mm/init.c                     |    3 +
+ arch/mips/mm/tlb-r4k.c                  |    4 --
+ arch/mips/oprofile/common.c             |    2 +-
+ arch/mips/pci/pci.c                     |    3 +-
+ mm/Kconfig                              |    2 +-
+ net/core/dev.c                          |    4 +-
+ 16 files changed, 142 insertions(+), 96 deletions(-)
+
+diff --git a/arch/mips/brcmstb/memory.c b/arch/mips/brcmstb/memory.c
+index fc58ad6..845bca4 100644
+--- a/arch/mips/brcmstb/memory.c
++++ b/arch/mips/brcmstb/memory.c
+@@ -66,8 +66,6 @@ static unsigned int bmem_disabled;
+  * MEMC1 handling
+  ***********************************************************************/
+ 
+-#if defined(CONFIG_BRCM_HAS_1GB_MEMC1)
+-
+ static int __init brcm_memc1_bmem(void)
+ {
+ 	struct bmem_region *r = NULL;
+@@ -76,19 +74,18 @@ static int __init brcm_memc1_bmem(void)
+ 			brcm_dram1_size_mb > brcm_dram1_linux_mb &&
+ 			n_bmem_regions < MAX_BMEM_REGIONS) {
+ 		r = &bmem_regions[n_bmem_regions++];
+-		r->addr = MEMC1_START + (brcm_dram1_linux_mb << 20);
++		r->addr = brcm_dram1_start + (brcm_dram1_linux_mb << 20);
+ 		r->size = (brcm_dram1_size_mb - brcm_dram1_linux_mb) << 20;
+ 		r->valid = 1;
+-		printk(KERN_INFO "memc1: adding %lu MB RESERVED region at "
+-			"%lu MB\n", r->size >> 20, r->addr >> 20);
++		printk(KERN_INFO "bmem: adding extra %lu MB RESERVED region at "
++			"%lu MB (0x%08lx@0x%08lx)\n", r->size >> 20,
++			r->addr >> 20, r->size, r->addr);
+ 	}
+ 	return 0;
+ }
+ 
+ core_initcall(brcm_memc1_bmem);
+ 
+-#endif /* defined(CONFIG_BRCM_HAS_1GB_MEMC1) */
+-
+ /***********************************************************************
+  * BMEM (reserved A/V buffer memory) support
+  ***********************************************************************/
+@@ -434,6 +431,26 @@ static struct tlb_entry __maybe_unused uppermem_mappings[] = {
+ },
+ };
+ 
++/*
++ * This function is used instead of add_wired_entry(), because it does not
++ * have any external dependencies and is not marked __init
++ */
++static inline void __cpuinit brcm_add_wired_entry(unsigned long entrylo0,
++	unsigned long entrylo1, unsigned long entryhi, unsigned long pagemask)
++{
++	int i = read_c0_wired();
++
++	write_c0_entrylo0(entrylo0);
++	write_c0_entrylo1(entrylo1);
++	write_c0_entryhi(entryhi);
++	write_c0_pagemask(pagemask);
++	write_c0_index(i);
++	write_c0_wired(i + 1);
++	mtc0_tlbw_hazard();
++	tlb_write_indexed();
++	tlbw_use_hazard();
++}
++
+ extern void tlb_init(void);
+ extern void build_tlb_refill_handler(void);
+ 
+@@ -446,8 +463,9 @@ void __cpuinit brcm_tlb_init(void)
+ 
+ 		tlb_init();
+ 		for (i = 0; i < ARRAY_SIZE(uppermem_mappings); i++, e++)
+-			add_wired_entry(e->entrylo0, e->entrylo1, e->entryhi,
+-				e->pagemask);
++			brcm_add_wired_entry(e->entrylo0, e->entrylo1,
++				e->entryhi, e->pagemask);
++		write_c0_pagemask(PM_DEFAULT_MASK);
+ 	} else {
+ 		/* bypass tlb_init() / probe_tlb() for secondary CPU */
+ 		cpu_data[smp_processor_id()].tlbsize = cpu_data[0].tlbsize;
+@@ -466,7 +484,7 @@ void __cpuinit brcm_tlb_init(void)
+  * important structures to be allocated out of upper memory so
+  * this happens early on.
+  */
+-asmlinkage __cpuinit void brcm_upper_tlb_setup(void)
++asmlinkage void brcm_upper_tlb_setup(void)
+ {
+ #ifdef CONFIG_BRCM_UPPER_MEMORY
+ 	int i, tlbsz;
+@@ -486,18 +504,13 @@ asmlinkage __cpuinit void brcm_upper_tlb_setup(void)
+ 		tlbw_use_hazard();
+ 	}
+ 
++	write_c0_wired(0);
++	mtc0_tlbw_hazard();
++
+ 	for (i = 0; i < ARRAY_SIZE(uppermem_mappings); i++) {
+ 		struct tlb_entry *e = &uppermem_mappings[i];
+-
+-		write_c0_entrylo0(e->entrylo0);
+-		write_c0_entrylo1(e->entrylo1);
+-		write_c0_entryhi(e->entryhi);
+-		write_c0_pagemask(e->pagemask);
+-		write_c0_index(i);
+-		write_c0_wired(i + 1);
+-		mtc0_tlbw_hazard();
+-		tlb_write_indexed();
+-		tlbw_use_hazard();
++		brcm_add_wired_entry(e->entrylo0, e->entrylo1, e->entryhi,
++			e->pagemask);
+ 	}
+ 
+ 	write_c0_pagemask(PM_DEFAULT_MASK);
+@@ -736,7 +749,7 @@ void __iomem *plat_ioremap(phys_t offset, unsigned long size,
+ 
+ 	/* !XKS01, XKS01: uncached access to EBI/registers @ PA 1000_0000 */
+ 	if (offset >= 0x10000000 &&
+-	    (offset + size) <= 0x1fffffff &&
++	    (offset + size) <= 0x20000000 &&
+ 	    flags == _CACHE_UNCACHED)
+ 		return (void *)(KSEG1 + offset);
+ 
+diff --git a/arch/mips/brcmstb/prom.c b/arch/mips/brcmstb/prom.c
+index 9b1ea89..4482372 100644
+--- a/arch/mips/brcmstb/prom.c
++++ b/arch/mips/brcmstb/prom.c
+@@ -50,6 +50,7 @@
+ unsigned long brcm_dram0_size_mb;
+ unsigned long brcm_dram1_size_mb;
+ unsigned long brcm_dram1_linux_mb;
++unsigned long brcm_dram1_start = MEMC1_START;
+ 
+ static u8 brcm_primary_macaddr[6] = { 0x00, 0x00, 0xde, 0xad, 0xbe, 0xef };
+ 
+diff --git a/arch/mips/brcmstb/time.c b/arch/mips/brcmstb/time.c
+index e4c5ac5..89c22af 100644
+--- a/arch/mips/brcmstb/time.c
++++ b/arch/mips/brcmstb/time.c
+@@ -96,9 +96,12 @@ void wktmr_read(struct wktmr_time *t)
+ {
+ 	uint32_t tmp;
+ 
+-	t->sec = BDEV_RD(BCHP_WKTMR_COUNTER);
+-	tmp = BDEV_RD(BCHP_WKTMR_PRESCALER_VAL);
+-	t->pre = unlikely(tmp > WKTMR_FREQ) ? 0 : (WKTMR_FREQ - tmp);
++	do {
++		t->sec = BDEV_RD(BCHP_WKTMR_COUNTER);
++		tmp = BDEV_RD(BCHP_WKTMR_PRESCALER_VAL);
++	} while (tmp >= WKTMR_FREQ);
++
++	t->pre = WKTMR_FREQ - tmp;
+ }
+ 
+ unsigned long wktmr_elapsed(struct wktmr_time *t)
+diff --git a/arch/mips/include/asm/brcmstb/brcmapi.h b/arch/mips/include/asm/brcmstb/brcmapi.h
+index 7fb3b79..0a0719a 100644
+--- a/arch/mips/include/asm/brcmstb/brcmapi.h
++++ b/arch/mips/include/asm/brcmstb/brcmapi.h
+@@ -26,7 +26,7 @@
+ #include <linux/device.h>
+ #include <linux/types.h>
+ #include <linux/cache.h>
+-#include <linux/slab_def.h>
++#include <linux/slab.h>
+ #include <linux/mm_types.h>
+ #include <linux/scatterlist.h>
+ 
+@@ -41,7 +41,7 @@
+  ***********************************************************************/
+ 
+ #define BRCM_RX_NUM_HOOKS	2
+-#define BRCM_RX_HOOK_NETACCEL	0 
++#define BRCM_RX_HOOK_NETACCEL	0
+ #define BRCM_RX_HOOK_EROUTER	1
+ 
+ void __init brcm_free_bootmem(unsigned long addr, unsigned long size);
+@@ -129,7 +129,7 @@ int brcm_pm_unregister_cb(char *name);
+ struct brcm_wakeup_ops {
+ 	int	(*enable)(void *ref);
+ 	int	(*disable)(void *ref);
+-	int	(*poll)(void *ref);	/* returns 1 if a wakeup event has happened */
++	int	(*poll)(void *ref); /* returns 1 if a wakeup event occurred */
+ };
+ 
+ int brcm_pm_wakeup_register(struct brcm_wakeup_ops *ops, void* ref, char* name);
+diff --git a/arch/mips/include/asm/brcmstb/brcmstb.h b/arch/mips/include/asm/brcmstb/brcmstb.h
+index c4e99c1..4175a43 100644
+--- a/arch/mips/include/asm/brcmstb/brcmstb.h
++++ b/arch/mips/include/asm/brcmstb/brcmstb.h
+@@ -1309,6 +1309,7 @@ asmlinkage void brcm_pm_irq(void);
+ extern unsigned long brcm_dram0_size_mb;
+ extern unsigned long brcm_dram1_size_mb;
+ extern unsigned long brcm_dram1_linux_mb;
++extern unsigned long brcm_dram1_start;
+ 
+ extern struct plat_smp_ops brcmstb_smp_ops;
+ 
+diff --git a/arch/mips/include/asm/page.h b/arch/mips/include/asm/page.h
+index 5249e61..3f24fcd 100644
+--- a/arch/mips/include/asm/page.h
++++ b/arch/mips/include/asm/page.h
+@@ -248,6 +248,8 @@ typedef struct { unsigned long pgprot; } pgprot_t;
+ 
+ /* uncached kseg1 does not exist in this configuration */
+ 
++#define CAC_ADDR(addr)		({ BUG(); NULL; })
++
+ #else
+ #define UNCAC_ADDR(addr)	((addr) - PAGE_OFFSET + UNCAC_BASE + 	\
+ 								PHYS_OFFSET)
+diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+index e521e6b..23f1715 100644
+--- a/arch/mips/kernel/genex.S
++++ b/arch/mips/kernel/genex.S
+@@ -195,6 +195,17 @@ NESTED(handle_int, PT_SIZE, sp)
+ 1:
+ 	.set pop
+ #endif
++#if defined(CONFIG_BMIPS3300) || defined(CONFIG_BMIPS4380)
++/* CRBMIPS438X-166: data bus errors may use the special IRQ vector */
++	mfc0	k1, CP0_CAUSE
++	andi	k1, 0x7c
++	beqz	k1, 1f
++
++	PTR_L	k0, exception_handlers(k1)
++	jr	k0
++1:
++#endif
++
+ 	SAVE_ALL
+ 	CLI
+ 	TRACE_IRQS_OFF
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index df8e84d..ddebdc18 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -413,7 +413,6 @@ static void __init bootmem_init(void)
+ #else
+ 		free_bootmem(PFN_PHYS(start), size << PAGE_SHIFT);
+ #endif
+-		memory_present(0, start, end);
+ 	}
+ 
+ 	/*
+@@ -425,6 +424,23 @@ static void __init bootmem_init(void)
+ 	 * Reserve initrd memory if needed.
+ 	 */
+ 	finalize_initrd();
++
++	/*
++	 * Call memory_present() on all valid ranges, for SPARSEMEM.
++	 * This must be done after setting up bootmem, since memory_present()
++	 * may allocate bootmem.
++	 */
++	for (i = 0; i < boot_mem_map.nr_map; i++) {
++		unsigned long start, end;
++
++		if (boot_mem_map.map[i].type != BOOT_MEM_RAM)
++			continue;
++
++		start = PFN_UP(boot_mem_map.map[i].addr);
++		end   = PFN_DOWN(boot_mem_map.map[i].addr
++				    + boot_mem_map.map[i].size);
++		memory_present(0, start, end);
++	}
+ }
+ 
+ #endif	/* CONFIG_SGI_IP27 */
+diff --git a/arch/mips/mm/c-brcmstb.c b/arch/mips/mm/c-brcmstb.c
+index b174b5a..7d1613c 100644
+--- a/arch/mips/mm/c-brcmstb.c
++++ b/arch/mips/mm/c-brcmstb.c
+@@ -19,6 +19,7 @@
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+ #include <linux/mm.h>
++#include <linux/pfn.h>
+ #include <linux/bitops.h>
+ #include <linux/module.h>
+ #include <linux/seq_file.h>
+@@ -50,7 +51,7 @@
+ 
+ #if !defined(CONFIG_BMIPS5000)
+ #include "c-r4k.c"
+-#else /* ! defined(CONFIG_BMIPS5000) */
++#else /* !defined(CONFIG_BMIPS5000) */
+ 
+ static unsigned long icache_size __read_mostly;
+ static unsigned long dcache_size __read_mostly;
+@@ -283,7 +284,7 @@ void __cpuinit r4k_cache_init(void)
+ 	coherency_setup();
+ }
+ 
+-#endif /* ! defined(CONFIG_BMIPS5000) */
++#endif /* !defined(CONFIG_BMIPS5000) */
+ 
+ /*
+  * Fine-grained cacheflush() syscall for usermode Nexus
+@@ -291,7 +292,7 @@ void __cpuinit r4k_cache_init(void)
+ int brcm_cacheflush(unsigned long addr, unsigned long bytes,
+ 	unsigned int cache)
+ {
+-#if ! defined(CONFIG_BRCM_SCM_L2) && ! defined(CONFIG_BRCM_ZSCM_L2)
++#if !defined(CONFIG_BRCM_SCM_L2) && !defined(CONFIG_BRCM_ZSCM_L2)
+ 	/* partial RAC invalidate is not supported */
+ 	if (cache == RACACHE) {
+ 		brcm_inv_prefetch(0, 0);
+@@ -327,7 +328,7 @@ int brcm_cacheflush(unsigned long addr, unsigned long bytes,
+ 				return -EFAULT;
+ 			}
+ 
+-#if ! defined(CONFIG_BRCM_ZSCM_L2)
++#if !defined(CONFIG_BRCM_ZSCM_L2)
+ 			r4k_blast_dcache_page(pg);
+ #endif
+ 			r4k_blast_scache_page(pg);
+@@ -342,6 +343,7 @@ int brcm_cacheflush(unsigned long addr, unsigned long bytes,
+ 	__sync();
+ 	return 0;
+ }
++EXPORT_SYMBOL(brcm_cacheflush);
+ 
+ /*
+  * Flush RAC or prefetch lines after DMA from device
+@@ -358,11 +360,12 @@ void brcm_inv_prefetch(unsigned long addr, unsigned long size)
+ 	local_irq_save(flags);
+ 	if (BDEV_RD(BCHP_RAC_MODE) & 0x10) {
+ 		BDEV_WR(BCHP_RAC_COMMAND, 0x01);
+-		while(BDEV_RD(BCHP_RAC_VALID_FWD_STATUS) & 0xffff) { }
++		while (BDEV_RD(BCHP_RAC_VALID_FWD_STATUS) & 0xffff)
++			;
+ 		BDEV_WR(BCHP_RAC_COMMAND, 0x00);
+ 	}
+ 	local_irq_restore(flags);
+-#elif (defined(CONFIG_BRCM_SCM_L2) || defined(CONFIG_BRCM_ZSCM_L2))
++#elif defined(CONFIG_BRCM_SCM_L2) || defined(CONFIG_BRCM_ZSCM_L2)
+ 	unsigned int linesz = cpu_scache_line_size();
+ 	unsigned long addr0 = addr, addr1;
+ 
+@@ -393,67 +396,70 @@ EXPORT_SYMBOL(brcm_inv_prefetch);
+ /*
+  * Hooks for extra RAC/prefetch flush after DMA
+  */
+-void plat_unmap_dma_mem(struct device *dev, dma_addr_t dma_addr,
+-	size_t size, int dir)
+-{
+-	/* extra RAC flush after DMA */
+-
+-	unsigned long va = (unsigned long)
+-		phys_to_virt(plat_dma_addr_to_phys(dev, dma_addr));
+-
+-	if(dir == DMA_FROM_DEVICE || dir == DMA_BIDIRECTIONAL)
+-		brcm_inv_prefetch(va, size);
+-}
+-
+-void brcm_sync_for_cpu(struct device *dev, dma_addr_t dma_handle, size_t size,
+-	enum dma_data_direction dir)
+-{
+-	if (dir == DMA_TO_DEVICE)
+-		return;
+-	brcm_inv_prefetch((unsigned long)phys_to_virt(
+-		plat_dma_addr_to_phys(dev, dma_handle)), size);
+-}
+-
+-void brcm_sync_for_cpu_sg(struct scatterlist *sg, enum dma_data_direction dir)
++static inline void __brcm_sync(struct page *page,
++	unsigned long offset, size_t size, enum dma_data_direction direction)
+ {
+-	void *addr;
+-	struct page *page = sg_page(sg);
+-	unsigned long offset = sg->offset;
+-	size_t left = sg->length;
++	size_t left = size;
+ 
+-	if (dir == DMA_TO_DEVICE)
+-		return;
+-	if (likely(!PageHighMem(page))) {
+-		addr = page_address(page) + sg->offset;
+-		brcm_inv_prefetch((unsigned long)addr, sg->length);
++	if (direction == DMA_TO_DEVICE)
+ 		return;
+-	}
+ 
+-	/* use temporary mappings to handle HIGHMEM pages */
+ 	do {
+ 		size_t len = left;
+-		unsigned long flags;
+ 
+-		if (offset + len > PAGE_SIZE) {
+-			if (offset >= PAGE_SIZE) {
+-				page += offset >> PAGE_SHIFT;
+-				offset &= ~PAGE_MASK;
+-			}
+-			len = PAGE_SIZE - offset;
+-		}
++		if (PageHighMem(page)) {
++			void *addr;
+ 
+-		local_irq_save(flags);
+-		addr = kmap_atomic(page, KM_SYNC_DCACHE);
+-		brcm_inv_prefetch((unsigned long)addr + offset, len);
+-		kunmap_atomic(addr, KM_SYNC_DCACHE);
+-		local_irq_restore(flags);
++			if (offset + len > PAGE_SIZE) {
++				if (offset >= PAGE_SIZE) {
++					page += offset >> PAGE_SHIFT;
++					offset &= ~PAGE_MASK;
++				}
++				len = PAGE_SIZE - offset;
++			}
+ 
++			addr = kmap_atomic(page);
++			brcm_inv_prefetch((unsigned long)addr + offset, len);
++			kunmap_atomic(addr);
++		} else
++			brcm_inv_prefetch((unsigned long)page_address(page) +
++				offset, size);
+ 		offset = 0;
+ 		page++;
+ 		left -= len;
+ 	} while (left);
+ }
+ 
++void plat_unmap_dma_mem(struct device *dev, dma_addr_t dma_addr,
++	size_t size, int dir)
++{
++	unsigned long pa = plat_dma_addr_to_phys(dev, dma_addr);
++	__brcm_sync(pfn_to_page(PFN_DOWN(pa)), pa & ~PAGE_MASK, size, dir);
++}
++
++static void brcm_dma_sync_single_for_cpu(struct device *dev,
++	dma_addr_t dma_handle, size_t size, enum dma_data_direction dir)
++{
++	unsigned long pa = plat_dma_addr_to_phys(dev, dma_handle);
++	__brcm_sync(pfn_to_page(PFN_DOWN(pa)), pa & ~PAGE_MASK, size, dir);
++}
++
++static void brcm_dma_sync_sg_for_cpu(struct device *dev,
++	struct scatterlist *sg, int nelems, enum dma_data_direction direction)
++{
++	int i;
++	for (i = 0; i < nelems; i++, sg++)
++		__brcm_sync(sg_page(sg), sg->offset, sg->length, direction);
++}
++
++static int __init brcm_setup_dma_ops(void)
++{
++	mips_dma_map_ops->sync_single_for_cpu = brcm_dma_sync_single_for_cpu;
++	mips_dma_map_ops->sync_sg_for_cpu = brcm_dma_sync_sg_for_cpu;
++	return 0;
++}
++core_initcall(brcm_setup_dma_ops);
++
+ /*
+  * Provide cache details for PI/Nexus
+  */
+diff --git a/arch/mips/mm/dma-default.c b/arch/mips/mm/dma-default.c
+index d5ff398..5ad1035 100644
+--- a/arch/mips/mm/dma-default.c
++++ b/arch/mips/mm/dma-default.c
+@@ -279,10 +279,6 @@ static void mips_dma_sync_single_for_cpu(struct device *dev,
+ 	if (cpu_is_noncoherent_r10000(dev))
+ 		__dma_sync(dma_addr_to_page(dev, dma_handle),
+ 			   dma_handle & ~PAGE_MASK, size, direction);
+-
+-#ifdef CONFIG_BRCMSTB
+-	brcm_sync_for_cpu(dev, dma_handle, size, direction);
+-#endif
+ }
+ 
+ static void mips_dma_sync_single_for_device(struct device *dev,
+@@ -304,9 +300,6 @@ static void mips_dma_sync_sg_for_cpu(struct device *dev,
+ 		if (cpu_is_noncoherent_r10000(dev))
+ 			__dma_sync(sg_page(sg), sg->offset, sg->length,
+ 				   direction);
+-#ifdef CONFIG_BRCMSTB
+-		brcm_sync_for_cpu_sg(sg, direction);
+-#endif
+ 	}
+ }
+ 
+diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
+index 3b8bfd6..41c3119 100644
+--- a/arch/mips/mm/init.c
++++ b/arch/mips/mm/init.c
+@@ -390,6 +390,9 @@ void __init mem_init(void)
+ 	for (tmp = highstart_pfn; tmp < highend_pfn; tmp++) {
+ 		struct page *page = pfn_to_page(tmp);
+ 
++		if (!pfn_valid(tmp))
++			continue;
++
+ 		if (!page_is_ram(tmp)) {
+ 			SetPageReserved(page);
+ 			continue;
+diff --git a/arch/mips/mm/tlb-r4k.c b/arch/mips/mm/tlb-r4k.c
+index 5ae6a35..c1ffd3f 100644
+--- a/arch/mips/mm/tlb-r4k.c
++++ b/arch/mips/mm/tlb-r4k.c
+@@ -21,10 +21,6 @@
+ #include <asm/system.h>
+ #include <asm/tlbmisc.h>
+ 
+-#ifdef CONFIG_BRCMSTB
+-#include <asm/brcmstb/brcmstb.h>
+-#endif
+-
+ extern void build_tlb_refill_handler(void);
+ 
+ /*
+diff --git a/arch/mips/oprofile/common.c b/arch/mips/oprofile/common.c
+index 0344c99..e17213c 100644
+--- a/arch/mips/oprofile/common.c
++++ b/arch/mips/oprofile/common.c
+@@ -19,7 +19,7 @@ extern struct op_mips_model op_model_mipsxx_ops __weak;
+ extern struct op_mips_model op_model_rm9000_ops __weak;
+ extern struct op_mips_model op_model_loongson2_ops __weak;
+ #ifdef CONFIG_BRCMSTB
+-extern struct op_mips_model op_model_bmips_ops __weak;
++extern struct op_mips_model op_model_bmips_ops __attribute__((weak));
+ #endif
+ 
+ static struct op_mips_model *model;
+diff --git a/arch/mips/pci/pci.c b/arch/mips/pci/pci.c
+index d2c91e3..83de295 100644
+--- a/arch/mips/pci/pci.c
++++ b/arch/mips/pci/pci.c
+@@ -163,7 +163,8 @@ static int __init pcibios_init(void)
+ 	for (hose = hose_head; hose; hose = hose->next)
+ 		pcibios_scanbus(hose);
+ 
+-	pci_fixup_irqs(pci_common_swizzle, pcibios_map_irq);
++	pci_fixup_irqs(pci_common_swizzle,
++		       (int (*)(struct pci_dev *, u8, u8))pcibios_map_irq);
+ 
+ 	pci_initialized = 1;
+ 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index f1d3a7f..011b110 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -228,7 +228,7 @@ config MMU_NOTIFIER
+ 
+ config KSM
+ 	bool "Enable KSM for page merging"
+-	depends on MMU && !BRCMSTB
++	depends on MMU
+ 	help
+ 	  Enable Kernel Samepage Merging: KSM periodically scans those areas
+ 	  of an application's address space that an app has advised may be
+diff --git a/net/core/dev.c b/net/core/dev.c
+index f8c948c..8f493c9 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3237,8 +3237,6 @@ static int __netif_receive_skb(struct sk_buff *skb)
+ 	if (!netdev_tstamp_prequeue)
+ 		net_timestamp_check(skb);
+ 
+-	trace_netif_receive_skb(skb);
+-
+ #ifdef CONFIG_BRCMSTB
+ 	if (brcm_netif_rx_hook[BRCM_RX_HOOK_NETACCEL] &&
+ 			brcm_netif_rx_hook[BRCM_RX_HOOK_NETACCEL](skb) != 0)
+@@ -3249,6 +3247,8 @@ static int __netif_receive_skb(struct sk_buff *skb)
+ 		return NET_RX_DROP;
+ #endif
+ 
++	trace_netif_receive_skb(skb);
++
+ 	/* if we've gotten here through NAPI, check netpoll */
+ 	if (netpoll_receive_skb(skb))
+ 		return NET_RX_DROP;
+-- 
+1.7.10.4
+

@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.37"
+PR = "${INC_PR}.38"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "31"
@@ -26,6 +26,7 @@ SRC_URI = " \
         file://0002-MTD-dreambox_nand-cleanup-speedup-implement-select_c.patch \
         file://revert-mips-module-loader-stuff.patch \
         file://nand-driver-smp-fixes.patch \
+        file://0001-merge-some-changes-from-stblinux-2.6.37-broadcom-pat.patch \
         file://defconfig \
 "
 
