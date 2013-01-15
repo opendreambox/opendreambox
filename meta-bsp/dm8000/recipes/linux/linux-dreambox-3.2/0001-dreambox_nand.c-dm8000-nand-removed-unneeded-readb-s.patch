@@ -1,0 +1,34 @@
+From 3307c45cbb82dcfff5d9cc89d521920b2a7d4902 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Tue, 15 Jan 2013 16:03:58 +0100
+Subject: [PATCH 1/2] dreambox_nand.c: dm8000 nand removed unneeded readb's
+ (it seems its now allowed to read this register.. its
+ causes data bus errors with latest broadcom changes)
+
+---
+ drivers/mtd/nand/dreambox_nand.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/mtd/nand/dreambox_nand.c b/drivers/mtd/nand/dreambox_nand.c
+index f0adbdc..3aff2a9 100644
+--- a/drivers/mtd/nand/dreambox_nand.c
++++ b/drivers/mtd/nand/dreambox_nand.c
+@@ -89,7 +89,6 @@ static void dreambox_nand_select_chip(struct mtd_info *mtd, int chipnr)
+ 		PRINTK(KERN_DEBUG "select chip\n");
+ 		writeb(0xEE, (void __iomem *)0xBF030003);
+ 	}
+-	readb((void __iomem *)0xBF030003);
+ }
+ 
+ /*
+@@ -119,7 +118,6 @@ static void dreambox_nand_cmd_ctrl(struct mtd_info *mtd, int cmd,
+ 		ctrl & 0x80 ? "CHANGE" : "");
+ 
+ 	writeb(cmd, (void __iomem *)addr);
+-	readb((void __iomem *)addr);
+ }
+ 
+ static uint8_t dreambox_nand_read_byte(struct mtd_info *mtd)
+-- 
+1.7.10.4
+
