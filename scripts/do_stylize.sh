@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2010-2012 Dream Multimedia GmbH, Germany
+# Copyright (c) 2010-2013 Dream Multimedia GmbH, Germany
 #                         http://www.dream-multimedia-tv.de/
 # Authors:
 #   Andreas Oberritter <obi@opendreambox.org>
@@ -24,6 +24,11 @@
 # THE SOFTWARE.
 #
 
+cleanup()
+{
+	[ -z "$TEMP" ] || rm -f "$TEMP"
+}
+
 DEST=$1
 
 if [ -z "$DEST" ]; then
@@ -31,10 +36,12 @@ if [ -z "$DEST" ]; then
 	exit 1
 fi
 
-TEMP=`tempfile` || {
+TEMP=`mktemp` || {
 	echo "Fatal: Could not create temporary file."
 	exit 1
 }
+
+trap cleanup EXIT
 
 GIT_ROOT=`git rev-parse --show-cdup 2>/dev/null` || {
 	echo "Fatal: You must run this script from a Git checkout."
@@ -58,7 +65,6 @@ $OE_STYLIZE $DEST >> $TEMP
 
 diff -u $DEST $TEMP
 if [ $? -eq 0 ]; then
-	rm $TEMP
 	exit 0
 fi
 
@@ -66,7 +72,6 @@ echo -n "Apply this patch? [Y/n] "
 read ANSWER
 
 if [ ! -z "$ANSWER" -a "$ANSWER" != "Y" -a "$ANSWER" != "y" ]; then
-	rm $TEMP
 	echo "Aborted."
 	exit 1
 fi
