@@ -1,7 +1,7 @@
 From 517f8da0345752d3cc5e2c99b8acd88c60355373 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 16:20:36 +0200
-Subject: [PATCH 8/9] ifupdown: dhcp_down: wait until udhcpc has been killed
+Subject: [PATCH 08/10] ifupdown: dhcp_down: wait until udhcpc has been killed
 
 * Otherwise there's a race condition between ifdown and udhcpc,
   which executes deconfig scripts in /etc/udhcpc.d.
@@ -52,5 +52,5 @@ index 5c3dcec..35e5035 100644
  # else
  static int FAST_FUNC dhcp_down(struct interface_defn_t *ifd UNUSED_PARAM,
 -- 
-1.7.9.5
+1.7.10.4
 

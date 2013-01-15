@@ -1,7 +1,7 @@
 From b58a1a06ca695aed6a4f6e5039e2de0e5a3df111 Mon Sep 17 00:00:00 2001
 From: Peter Korsgaard <jacmet@sunsite.dk>
 Date: Wed, 19 Oct 2011 02:35:54 +0200
-Subject: [PATCH 1/9] ifupdown: support post-up / pre-down hooks
+Subject: [PATCH 01/10] ifupdown: support post-up / pre-down hooks
 
 function                                             old     new   delta
 set_environ                                          330     371     +41
@@ -56,5 +56,5 @@ index 3820330..abc6b58 100644
  	if (!iface->method->down(iface, doit)) return 0;
  	if (!execute_all(iface, "post-down")) return 0;
 -- 
-1.7.9.5
+1.7.10.4
 

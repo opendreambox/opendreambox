@@ -1,7 +1,7 @@
 From 7f3d0f0e58602e8d96988736d80ba28d31338ea2 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 17:32:16 +0200
-Subject: [PATCH 9/9] udhcpc: calculate broadcast address if not given by
+Subject: [PATCH 09/10] udhcpc: calculate broadcast address if not given by
  server
 
 * This is more efficient than doing it in the scripts
@@ -53,5 +53,5 @@ index 4d755e6..9fbd3b3 100644
  }
  
 -- 
-1.7.9.5
+1.7.10.4
 

@@ -1,0 +1,34 @@
+From 2b4773b6ae48fee56c60fb4a1835672cbca78aee Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Tue, 15 Jan 2013 17:33:53 +0100
+Subject: [PATCH 10/10] udhcpc: obtain hostname from OS by default
+
+* Doesn't require the 'hostname' option in /etc/network/interfaces,
+  and thus makes udhcpc behave like other clients.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ networking/udhcp/dhcpc.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
+index 9fbd3b3..ec9f25d 100644
+--- a/networking/udhcp/dhcpc.c
++++ b/networking/udhcp/dhcpc.c
+@@ -1117,6 +1117,13 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+ 		);
+ 	if (opt & (OPT_h|OPT_H))
+ 		client_config.hostname = alloc_dhcp_option(DHCP_HOST_NAME, str_h, 0);
++	else {
++		char hostname[256];	/* SUSv2: hostnames are <= 255 bytes */
++		if (gethostname(hostname, sizeof(hostname)) == 0) {
++			hostname[sizeof(hostname) - 1] = '\0';
++			client_config.hostname = alloc_dhcp_option(DHCP_HOST_NAME, hostname, 0);
++		}
++	}
+ 	if (opt & OPT_F) {
+ 		/* FQDN option format: [0x51][len][flags][0][0]<fqdn> */
+ 		client_config.fqdn = alloc_dhcp_option(DHCP_FQDN, str_F, 3);
+-- 
+1.7.10.4
+
