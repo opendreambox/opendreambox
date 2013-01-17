@@ -1,4 +1,6 @@
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
+
+SRC_URI += "file://0001-tools-enigma2.sh.in-set-the-linux-OOM-score-for-the-.patch"
 
 SRC_URI[mips32el.md5sum] = "3b56b6cb0c57c85e70bb7b3020195a73"
 SRC_URI[mips32el.sha256sum] = "6b218df6ec6c0fe6ae8bbe8ebc48764de1faced70bedac1af0a308bee5f4da53"
