@@ -1,0 +1,44 @@
+From eddc23aeaa843163c07b9c8748bcac2f460b5621 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 6 Feb 2013 22:23:52 +0100
+Subject: [PATCH 2/2] Fix compile with kernel 2.6.18
+
+include/mlme_osdep.h:37:53: error: unknown type name 'bool'
+include/osdep_service.h:323:28: fatal error: net/cfg80211.h: No such file or directory
+---
+ include/autoconf.h      |    3 +++
+ include/osdep_service.h |    3 +++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/include/autoconf.h b/include/autoconf.h
+index 6589e10..8c04b5c 100755
+--- a/include/autoconf.h
++++ b/include/autoconf.h
+@@ -33,7 +33,10 @@
+ #undef  CONFIG_RTL8716
+ 
+ 
++#include <linux/version.h>
++#if (LINUX_VERSION_CODE > KERNEL_VERSION(2,6,21))
+ #define CONFIG_IOCTL_CFG80211	1
++#endif
+ 
+ #ifdef CONFIG_IOCTL_CFG80211
+ #define CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER
+diff --git a/include/osdep_service.h b/include/osdep_service.h
+index 7f5fad7..29760e2 100755
+--- a/include/osdep_service.h
++++ b/include/osdep_service.h
+@@ -87,6 +87,9 @@
+ 	typedef void timer_hdl_return;
+ 	typedef void* timer_hdl_context;
+ 	typedef struct work_struct _workitem;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,19))
++	typedef _Bool bool;
++#endif
+ 	
+ 
+ static __inline _list *get_next(_list	*list)
+-- 
+1.7.10.4
+
