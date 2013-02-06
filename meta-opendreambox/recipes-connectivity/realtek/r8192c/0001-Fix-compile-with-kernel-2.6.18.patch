@@ -1,0 +1,27 @@
+From 59c1526c65436175002466fa54901a9a0ea36140 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 6 Feb 2013 22:45:07 +0100
+Subject: [PATCH] Fix compile with kernel 2.6.18
+
+include/rtw_mlme.h:594:50: error: unknown type name 'bool'
+---
+ include/osdep_service.h |    3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/osdep_service.h b/include/osdep_service.h
+index 2802187..efc6e33 100644
+--- a/include/osdep_service.h
++++ b/include/osdep_service.h
+@@ -143,6 +143,9 @@
+ 	typedef void timer_hdl_return;
+ 	typedef void* timer_hdl_context;
+ 	typedef struct work_struct _workitem;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,19))
++	typedef _Bool bool;
++#endif
+ 
+ #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,24))
+ 	#define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+-- 
+1.7.10.4
+
