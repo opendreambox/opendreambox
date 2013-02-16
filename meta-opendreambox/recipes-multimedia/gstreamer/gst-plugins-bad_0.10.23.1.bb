@@ -10,10 +10,10 @@ DEPENDS += "libmusicbrainz tremor curl libmms"
 DEPENDS += "gst-plugins-base"
 CONFLICTS = "librsvg"
 
-PR = "r0"
+PR = "r1"
 GIT_PV = ""
 
-SRCREV = "852d247947a21d472d7766f51148b5ea7b12ef12"
+SRCREV = "544be970edfacc10ae95cd3b6d9a2236edaa625e"
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \
                  --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264"

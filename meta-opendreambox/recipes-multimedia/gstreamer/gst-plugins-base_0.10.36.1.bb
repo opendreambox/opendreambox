@@ -10,9 +10,9 @@ DEPENDS += "${@base_contains('DISTRO_FEATURES', 'x11', 'virtual/libx11 libxv', '
 DEPENDS += "alsa-lib freetype liboil libogg libvorbis libtheora avahi util-linux tremor orc orc-native"
 DEPENDS += "gstreamer"
 
-SRCREV = "95c384136a1dfc22ad656c13b547c4077566d80b"
+SRCREV = "28bc46e1d15e29ea32f84551b5fb47564bb75eb0"
 
-PR = "r1"
+PR = "r2"
 GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project
