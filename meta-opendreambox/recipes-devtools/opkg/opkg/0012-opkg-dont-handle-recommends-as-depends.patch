@@ -1,0 +1,15 @@
+diff -Naur trunk.orig/libopkg/pkg_depends.c trunk/libopkg/pkg_depends.c
+--- trunk.orig/libopkg/pkg_depends.c	2013-02-17 16:47:33.000000000 +0100
++++ trunk/libopkg/pkg_depends.c	2013-02-17 16:07:11.000000000 +0100
+@@ -236,6 +236,11 @@
+ 			 /* just mention it politely */
+ 			 opkg_msg(NOTICE, "package %s suggests installing %s\n",
+ 				pkg->name, satisfier_entry_pkg->name);
++		    }
++		    else if (compound_depend->type == RECOMMEND) {
++			 /* just mention it politely */
++			 opkg_msg(NOTICE, "package %s recommend installing %s\n",
++				pkg->name, satisfier_entry_pkg->name);
+ 		    } else {
+ 			 char ** newstuff = NULL;
+ 
