@@ -1,6 +1,6 @@
 require recipes/linux/linux.inc
 
-INC_PR = "r9"
+INC_PR = "r10"
 
 PACKAGES_DYNAMIC = "kernel-*"
 
@@ -47,7 +47,12 @@ pkg_prerm_kernel-image() {
         if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then mount -o remount,rw /${KERNEL_IMAGEDEST}; fi
 }
 pkg_postinst_kernel-image() {
-        if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then mount -o remount,ro /${KERNEL_IMAGEDEST}; fi
+        if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then
+                if grep -q '\<root=/dev/mtdblock3\>' /proc/cmdline && grep -q '\<root=ubi0:rootfs\>' /boot/autoexec.bat; then
+                        sed -ie 's!${CMDLINE_UBI}!${CMDLINE_JFFS2}!' /boot/autoexec.bat;
+                fi
+                mount -o remount,ro /${KERNEL_IMAGEDEST};
+        fi
 }
 pkg_postrm_kernel-image() {
         if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then mount -o remount,ro /${KERNEL_IMAGEDEST}; fi
@@ -59,7 +64,9 @@ pkg_postinst_kernel () {
 pkg_postrm_kernel () {
 }
 
-CMDLINE = "root=/dev/mtdblock3 rootfstype=jffs2 rw ${CMDLINE_CONSOLE}"
+CMDLINE_JFFS2 = "root=/dev/mtdblock3 rootfstype=jffs2 rw ${CMDLINE_CONSOLE}"
+CMDLINE_UBI = "ubi.mtd=root root=ubi0:rootfs rootfstype=ubifs rw ${CMDLINE_CONSOLE}"
+CMDLINE = "${@base_contains('IMAGE_FSTYPES', 'ubi.nfi', '${CMDLINE_UBI}', '${CMDLINE_JFFS2}', d)}"
 USB_CMDLINE = "root=${USB_ROOT} rootdelay=10 rw ${CMDLINE_CONSOLE}"
 
 LOCALVERSION = "-${MACHINE}"

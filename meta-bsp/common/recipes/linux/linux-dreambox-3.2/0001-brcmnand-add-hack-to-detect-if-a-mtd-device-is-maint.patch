@@ -1,0 +1,149 @@
+From 521662406c180707999dbaf434f097176c0ef855 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Fri, 1 Mar 2013 20:33:40 +0100
+Subject: [PATCH] brcmnand: add hack to detect if a mtd device is maintained
+ by UBI to correctly handle bad blocks when UBI is used, add
+ missing mtd->writebufsize init
+
+---
+ drivers/mtd/brcmnand/brcmnand_base.c |   55 ++++++++++++++++++++--------------
+ drivers/mtd/mtdchar.c                |    2 +-
+ drivers/mtd/ubi/build.c              |    5 ++++
+ 3 files changed, 38 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index 642a885..00a9ed5 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -4173,15 +4173,18 @@ if (gdebug > 3) {printk("%s: oob=\n", __FUNCTION__); print_oobbuf(oobarea, 16);}
+ 		else { // Need BBT
+ //printk("80 block mark bad\n");
+ #ifdef CONFIG_MTD_BRCMNAND_MARK_BADBLOCKS
+-			printk(KERN_WARNING "%s: Marking bad block @%08x\n", __FUNCTION__, (unsigned int) offset);
+-			ret = chip->block_markbad(mtd, offset);
+-			ret = -EINVAL;
+-#else
+-			printk(KERN_WARNING "%s: Flash Status Error @%0llx\n", __FUNCTION__,  offset);
+-			// SWLINUX-1495: Let UBI do it on returning -EIO
+-			//ret = chip->block_markbad(mtd, offset);
+-			ret = -EIO;
++			if (!(mtd->flags & (1<<31))) { // MTD device NOT maintained by UBI ?
++				printk(KERN_WARNING "%s: Marking bad block @%08x\n", __FUNCTION__, (unsigned int) offset);
++				ret = chip->block_markbad(mtd, offset);
++				ret = -EINVAL;
++			} else
+ #endif
++			{
++				printk(KERN_WARNING "%s: Flash Status Error @%0llx\n", __FUNCTION__,  offset);
++				// SWLINUX-1495: Let UBI do it on returning -EIO
++				//ret = chip->block_markbad(mtd, offset);
++				ret = -EIO;
++			}
+ 			goto out;
+ 		}
+ 	}
+@@ -4549,18 +4552,22 @@ printk("****** Workaround, using OP_PROGRAM_PAGE instead of OP_PROGRAM_SPARE_ARE
+ 	}
+ 	if (needBBT){
+ 		int ret;
+-#ifdef CONFIG_MTD_BRCMNAND_MARK_BADBLOCKS
+-		printk(KERN_WARNING "%s: Marking bad block @%08x\n", __FUNCTION__, (unsigned int) offset);
+-		ret = chip->block_markbad(mtd, offset);
+-		return -EINVAL;
+-#else		
+-		printk(KERN_WARNING "%s: Flash Status Error @%0llx\n", __FUNCTION__,  offset);
+ 
+-		// SWLINUX-1495: Let UBI do it on returning -EIO
+-		//ret = chip->block_markbad(mtd, offset);
+-		ret = -EIO;
+-		return (ret);
++#ifdef CONFIG_MTD_BRCMNAND_MARK_BADBLOCKS
++		if (!(mtd->flags & (1<<31))) { // MTD device NOT maintained by UBI ?
++			printk(KERN_WARNING "%s: Marking bad block @%08x\n", __FUNCTION__, (unsigned int) offset);
++			ret = chip->block_markbad(mtd, offset);
++			return -EINVAL;
++		} else
+ #endif
++		{
++			printk(KERN_WARNING "%s: Flash Status Error @%0llx\n", __FUNCTION__,  offset);
++
++			// SWLINUX-1495: Let UBI do it on returning -EIO
++			//ret = chip->block_markbad(mtd, offset);
++			ret = -EIO;
++			return (ret);
++		}
+ 	}
+ 
+ 	return -ETIMEDOUT;
+@@ -5665,7 +5672,9 @@ printk("-->%s, offset=%0llx, len=%08x\n", __FUNCTION__, from, len);}
+ 	brcmnand_release_device(mtd);
+ 
+ #ifdef CONFIG_MTD_BRCMNAND_CORRECTABLE_ERR_HANDLING
+-	if (unlikely(ret == -EUCLEAN && !atomic_read(&inrefresh))) {
++	if (mtd->flags & (1<<31))
++		;
++	else if (unlikely(ret == -EUCLEAN && !atomic_read(&inrefresh))) {
+ 		atomic_inc(&inrefresh);
+ 		if(brcmnand_refresh_blk(mtd, from) == 0) { 
+ 			ret = 0; 
+@@ -7303,7 +7312,9 @@ static int brcmnand_erase(struct mtd_info *mtd, struct erase_info *instr)
+ 		mtd_erase_callback(instr);
+ 
+ #ifdef CONFIG_MTD_BRCMNAND_CORRECTABLE_ERR_HANDLING
+-		if (chip->cet) {
++		if (mtd->flags & (1<<31))
++			;
++		else if (chip->cet) {
+ 			if (chip->cet->flags != BRCMNAND_CET_DISABLED && 
+ 					chip->cet->flags != BRCMNAND_CET_LAZY && allowbbt != 1) {
+ 				len = instr->state == MTD_ERASE_DONE ? instr->len : instr->fail_addr - instr->addr;
+@@ -10918,9 +10929,7 @@ PRINTK("300 CS=%d, chip->ctrl->CS[%d]=%d\n", cs, chip->csi, chip->ctrl->CS[chip-
+ 	
+ 	mtd->owner = THIS_MODULE;
+ 
+-
+-
+-
++	mtd->writebufsize = mtd->writesize;  // make UBI happy
+ 
+ 	
+ 
+diff --git a/drivers/mtd/mtdchar.c b/drivers/mtd/mtdchar.c
+index eef4abf..9143ad5 100644
+--- a/drivers/mtd/mtdchar.c
++++ b/drivers/mtd/mtdchar.c
+@@ -669,7 +669,7 @@ static int mtd_ioctl(struct file *file, u_int cmd, u_long arg)
+ 	case MEMGETINFO:
+ 		memset(&info, 0, sizeof(info));
+ 		info.type	= mtd->type;
+-		info.flags	= mtd->flags;
++		info.flags	= mtd->flags & ~(1<<31);
+ 		info.size	= mtd->size;
+ 		info.erasesize	= mtd->erasesize;
+ 		info.writesize	= mtd->writesize;
+diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+index 12c0892..4f9ef05 100644
+--- a/drivers/mtd/ubi/build.c
++++ b/drivers/mtd/ubi/build.c
+@@ -1019,6 +1019,9 @@ int ubi_attach_mtd_dev(struct mtd_info *mtd, int ubi_num, int vid_hdr_offset)
+ 
+ 	ubi_devices[ubi_num] = ubi;
+ 	ubi_notify_all(ubi, UBI_VOLUME_ADDED, NULL);
++
++	mtd->flags |= (1<<31); // DMM hack.. used in brcmand to detect mtd partitions used by UBI
++
+ 	return ubi_num;
+ 
+ out_debugfs:
+@@ -1099,6 +1102,8 @@ int ubi_detach_mtd_dev(int ubi_num, int anyway)
+ 	 */
+ 	get_device(&ubi->dev);
+ 
++	ubi->mtd->flags &= ~(1<<31); // DMM hack.. used in brcmand to detect mtd partitions used by UBI
++
+ 	ubi_debugfs_exit_dev(ubi);
+ 	uif_close(ubi);
+ 	ubi_wl_close(ubi);
+-- 
+1.7.10.4
+

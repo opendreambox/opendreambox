@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.39"
+PR = "${INC_PR}.40"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "31"
@@ -27,6 +27,9 @@ SRC_URI = " \
         file://revert-mips-module-loader-stuff.patch \
         file://nand-driver-smp-fixes.patch \
         file://0001-merge-some-changes-from-stblinux-2.6.37-broadcom-pat.patch \
+        file://0001-brcmnand-add-hack-to-detect-if-a-mtd-device-is-maint.patch \
+        file://0002-Dreambox-add-new-flash-map-for-1GB-based-dreamboxes-.patch \
+        file://0001-dreambox-rename-mtd-partitions.patch \
         file://0001-NFS-limit-max-rwsize-to-8k-from-client-side.patch \
         file://defconfig \
 "
