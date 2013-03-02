@@ -58,6 +58,15 @@ index ff1c219..53d24e9 100644
  
  static struct mtd_partition fixed_partition_map[] = {
  	{ .name = "complete",		.offset = 0,			.size = 1024 * 1024 * 1024,	},
+@@ -781,7 +781,7 @@
+  */
+ int __init board_get_partition_map(struct mtd_partition **p)
+ {
+-#if defined(CONFIG_DREAMBOX_DM7020HD)
++#if defined(CONFIG_DREAMBOX_DM7020HD)  || defined(CONFIG_DREAMBOX_DM800SE_V2) || defined(CONFIG_DREAMBOX_DM500HD_V2)
+ 	if (legacy_flash_map) {
+ 		*p = fixed_partition_map_legacy;
+ 		return ARRAY_SIZE(fixed_partition_map_legacy);
 diff --git a/arch/mips/brcmstb/prom.c b/arch/mips/brcmstb/prom.c
 index 1eac57d..9b1ea89 100644
 --- a/arch/mips/brcmstb/prom.c
@@ -135,4 +144,3 @@ index 2d2024d..5ff270d 100644
  		baud = 1000000;
 -- 
 1.7.10.4
-
