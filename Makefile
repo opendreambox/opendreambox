@@ -29,12 +29,21 @@
 -include conf/make.conf
 
 # Target platform:
-# dm500hd, dm800, dm800se, dm7020hd, dm8000
+# dm800, dm8000, dm500hd, dm800se, dm7020hd, dm7020hdv2
 #
 # This only sets the default value. All platforms now use a shared build
 # directory. Run "MACHINE=dm800se bitbake dreambox-image" to build an image
 # for the dm800se, if it is not the default.
 MACHINE ?= dm7020hd
+
+USER_MACHINE := $(MACHINE)
+
+ifeq ($(MACHINE),dm7020hdv2)
+MACHINE := dm7020hd
+MAKE_IMAGE_BB ?= dreambox-image-dm7020hdv2
+endif
+
+MAKE_IMAGE_BB ?= dreambox-image
 
 # Adjust according to the number CPU cores to use for parallel build.
 # Default: Number of processors in /proc/cpuinfo, if present, or 1.
@@ -99,14 +108,14 @@ help:
 	@echo
 	@echo "  * Select a new target machine:"
 	@echo "      $$ echo MACHINE=dm800se >> conf/make.conf"
-	@echo "    [Valid values: dm500hd, dm800, dm800se, dm7020hd, dm8000]"
+	@echo "    [Valid values: dm800, dm8000, dm500hd, dm800se, dm7020hd, dm7020hdv2]"
 	@echo
 	@echo "  * Build a firmware image for the selected target machine:"
 	@echo "      $$ $(MAKE) image"
 	@echo
 	@echo "  * Build a firmware image for a different target machine:"
 	@echo "      $$ $(MAKE) image MACHINE=dm800se"
-	@echo "    [Valid values: dm500hd, dm800, dm800se, dm7020hd, dm8000]"
+	@echo "    [Valid values: dm800, dm8000, dm500hd, dm800se, dm7020hd, dm7020hdv2]"
 	@echo
 	@echo "  * Download all source files at once:"
 	@echo "      $$ $(MAKE) download"
@@ -115,10 +124,10 @@ help:
 	@echo "      $$ source bitbake.env"
 	@echo "      $$ cd build/$(MACHINE)"
 	@echo "      $$ bitbake <target>"
-	@echo "    [Replace <target> with a recipe name, e.g. dreambox-image or enigma2]"
+	@echo "    [Replace <target> with a recipe name, e.g. $(MAKE_IMAGE_BB) or enigma2]"
 	@echo
 	@echo "Your current settings:"
-	@echo "  MACHINE = $(MACHINE)"
+	@echo "  MACHINE = $(USER_MACHINE)"
 	@echo
 	@echo "  BB_NUMBER_THREADS = $(BB_NUMBER_THREADS)"
 	@echo "  PARALLEL_MAKE = $(PARALLEL_MAKE)"
@@ -163,12 +172,12 @@ doc:
 	@$(MAKE) $(MFLAGS) -C doc
 
 image: init
-	@echo '[*] Building image for $(MACHINE)'
-	@. $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake dreambox-image
+	@echo '[*] Building image for $(USER_MACHINE)'
+	@. $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake $(MAKE_IMAGE_BB)
 
 download: init
 	@echo '[*] Downloading sources'
-	@. $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake -cfetchall -k dreambox-image
+	@. $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake -cfetchall -k $(MAKE_IMAGE_BB)
 
 update:
 	@echo '[*] Updating Git repositories...'
