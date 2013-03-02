@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.38"
+PR = "${INC_PR}.39"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "31"
@@ -27,6 +27,7 @@ SRC_URI = " \
         file://revert-mips-module-loader-stuff.patch \
         file://nand-driver-smp-fixes.patch \
         file://0001-merge-some-changes-from-stblinux-2.6.37-broadcom-pat.patch \
+        file://0001-NFS-limit-max-rwsize-to-8k-from-client-side.patch \
         file://defconfig \
 "
 
