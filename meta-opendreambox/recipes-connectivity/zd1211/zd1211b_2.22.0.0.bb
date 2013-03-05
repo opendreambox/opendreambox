@@ -3,11 +3,11 @@ HOMEPAGE = "http://zd1211.ath.cx/"
 SECTION = "kernel/modules"
 LICENSE = "MPL-1.1 | GPLv2"
 LIC_FILES_CHKSUM = "file://src/zd1211.c;endline=31;md5=76cb7cb1283c3b6e20de40280a74f87f"
-RDEPENDS = "wireless-tools"
+RDEPENDS_${PN} = "wireless-tools"
 
 inherit module
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = " \
         http://www.reactivated.net/software/zd1211-vendor/releases/ZD1211LnxDrv_2_22_0_0.tar.gz \
