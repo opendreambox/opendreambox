@@ -1,8 +1,8 @@
-From 4119652f74ce6f8f370df3c80076792d509bc941 Mon Sep 17 00:00:00 2001
+From b95db096037bde89a2ab0017e0d76ef51b43ade1 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 16:15:50 +0200
-Subject: [PATCH 07/11] ifplugd: move read_pid to libbb/pidfile.c and rename
- it to read_pidfile
+Subject: [PATCH 2/5] ifplugd: move read_pid to libbb/pidfile.c and rename it
+ to read_pidfile
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
@@ -12,10 +12,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  3 files changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/include/libbb.h b/include/libbb.h
-index 63d0419..e9538e7 100644
+index 2cc1466..5f71145 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -1031,10 +1031,12 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+@@ -1042,10 +1042,12 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
  #if ENABLE_FEATURE_PIDFILE || defined(WANT_PIDFILE)
  /* True only if we created pidfile which is *file*, not /dev/null etc */
  extern smallint wrote_pidfile;
