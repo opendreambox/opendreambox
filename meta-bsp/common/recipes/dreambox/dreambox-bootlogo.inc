@@ -2,7 +2,7 @@ SUMMARY = "Bootlogo support"
 SECTION = "base"
 LICENSE = "CLOSED"
 PRIORITY = "required"
-INC_PR = "r11"
+INC_PR = "r12"
 
 inherit opendreambox-precompiled-binary opendreambox-sysvinit
 
@@ -25,16 +25,29 @@ RDEPENDS_${PN} = "${PN}-data"
 FILES_${PN} = "/boot/bootlogo-${MACHINE}.elf.gz"
 FILES_${PN}-data = "/boot/bootlogo-${MACHINE}.jpg ${datadir} ${sysconfdir}"
 
-pkg_preinst() {
+pkg_preinst_${PN}() {
         if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,rw /boot; fi
 }
-pkg_prerm() {
+pkg_prerm_${PN}() {
         if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,rw /boot; fi
 }
-pkg_postinst() {
+pkg_postinst_${PN}() {
         if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,ro /boot; fi
 }
-pkg_postrm() {
+pkg_postrm_${PN}() {
+        if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,ro /boot; fi
+}
+
+pkg_preinst_${PN}-data() {
+        if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,rw /boot; fi
+}
+pkg_prerm_${PN}-data() {
+        if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,rw /boot; fi
+}
+pkg_postinst_${PN}-data() {
+        if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,ro /boot; fi
+}
+pkg_postrm_${PN}-data() {
         if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,ro /boot; fi
 }
 
