@@ -1,5 +1,5 @@
 DEPENDS += "openssl"
-PR .= "-dream2"
+PR .= "-dream0"
 
 SRC_URI += " \
         file://action_wpa.sh \
