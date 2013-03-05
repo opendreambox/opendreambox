@@ -3,10 +3,10 @@ SECTION = "devel/python"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 SRCNAME = "mutagen"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "python"
-RDEPENDS = "python-shell"
+RDEPENDS_${PN} = "python-shell"
 
 SRC_URI = "http://mutagen.googlecode.com/files/mutagen-${PV}.tar.gz \
 	file://patch.diff \
