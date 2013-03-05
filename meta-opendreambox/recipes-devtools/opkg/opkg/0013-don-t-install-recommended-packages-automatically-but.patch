@@ -1,0 +1,29 @@
+From 1733cd6c1cb4ccd26730e2150ae4133487c3342b Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Tue, 5 Mar 2013 22:25:44 +0100
+Subject: [PATCH 13/13] don't install recommended packages automatically, but
+ print a message
+
+---
+ libopkg/pkg_depends.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index 2422fb5..e4bac38 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -236,6 +236,11 @@ pkg_hash_fetch_unsatisfied_dependencies(pkg_t * pkg, pkg_vec_t *unsatisfied,
+ 			 /* just mention it politely */
+ 			 opkg_msg(NOTICE, "package %s suggests installing %s\n",
+ 				pkg->name, satisfier_entry_pkg->name);
++		    }
++		    else if (compound_depend->type == RECOMMEND) {
++			 /* just mention it politely */
++			 opkg_msg(NOTICE, "package %s recommend installing %s\n",
++				pkg->name, satisfier_entry_pkg->name);
+ 		    } else {
+ 			 char ** newstuff = NULL;
+ 
+-- 
+1.7.10.4
+

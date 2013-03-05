@@ -1,7 +1,7 @@
-From 53de52b533ee30676d051ee941cfc0a517e9190e Mon Sep 17 00:00:00 2001
+From 2018bb32dc5095b9ef0ea037a1d57b1f2d7bea29 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:18:42 +0200
-Subject: [PATCH 08/10] pkg_hash_fetch_conflicts: take into account conflicts
+Subject: [PATCH 07/13] pkg_hash_fetch_conflicts: take into account conflicts
  of installed packages
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
@@ -10,10 +10,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 17 insertions(+)
 
 diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
-index 1999b64..f237733 100644
+index 3190b16..2422fb5 100644
 --- a/libopkg/pkg_depends.c
 +++ b/libopkg/pkg_depends.c
-@@ -337,6 +337,22 @@ static void __pkg_hash_fetch_conflicts(pkg_t * pkg, pkg_vec_t * installed_confli
+@@ -418,6 +418,22 @@ static void __pkg_hash_fetch_conflicts(pkg_t * pkg, pkg_vec_t * installed_confli
      }
  }
  
@@ -36,7 +36,7 @@ index 1999b64..f237733 100644
  pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg)
  {
      pkg_vec_t * installed_conflicts;
-@@ -354,6 +370,7 @@ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg)
+@@ -435,6 +451,7 @@ pkg_vec_t * pkg_hash_fetch_conflicts(pkg_t * pkg)
      installed_conflicts = pkg_vec_alloc();
  
      __pkg_hash_fetch_conflicts(pkg, installed_conflicts);
@@ -45,5 +45,5 @@ index 1999b64..f237733 100644
      if (installed_conflicts->len)
  	    return installed_conflicts;
 -- 
-1.7.9.5
+1.7.10.4
 

@@ -1,7 +1,18 @@
-diff -Naur trunk.org/libbb/unarchive.c trunk/libbb/unarchive.c
---- trunk.org/libbb/unarchive.c	2012-08-30 13:45:44.000000000 +0200
-+++ trunk/libbb/unarchive.c	2012-09-13 11:50:57.822754393 +0200
-@@ -446,12 +446,12 @@
+From 269832e35c1c5572f6c7af4406b247d7c4677056 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Tue, 5 Mar 2013 22:20:20 +0100
+Subject: [PATCH 11/13] fixed broken uname gname cache (this significantly
+ speeds up)
+
+---
+ libbb/unarchive.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/libbb/unarchive.c b/libbb/unarchive.c
+index d583767..89447d4 100644
+--- a/libbb/unarchive.c
++++ b/libbb/unarchive.c
+@@ -446,12 +446,12 @@ static bool update_unamecache(char *uname) {
  	struct passwd *passwd;
  	if (!uname)
  		return FALSE;
@@ -16,7 +27,7 @@ diff -Naur trunk.org/libbb/unarchive.c trunk/libbb/unarchive.c
  		return TRUE;
  	}
  	return FALSE;
-@@ -464,12 +464,12 @@
+@@ -464,12 +464,12 @@ static bool update_gnamecache(char *gname) {
  	struct group *group;
  	if (!gname)
  		return FALSE;
@@ -31,3 +42,6 @@ diff -Naur trunk.org/libbb/unarchive.c trunk/libbb/unarchive.c
  		return TRUE;
  	}
  	return FALSE;
+-- 
+1.7.10.4
+

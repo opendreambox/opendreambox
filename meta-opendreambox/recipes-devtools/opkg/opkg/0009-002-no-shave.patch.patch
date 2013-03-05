@@ -1,0 +1,54 @@
+From 03221b7e0d34aa24bd5aba72ae3d2616b3c748a9 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 16 May 2012 21:17:15 +0200
+Subject: [PATCH 09/13] 002-no-shave.patch
+
+---
+ Makefile.am  |    2 --
+ configure.ac |    6 ------
+ 2 files changed, 8 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 1c6226f..5d8f64a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,5 +1,3 @@
+-ACLOCAL_AMFLAGS = -I shave
+-
+ SUBDIRS = libbb libopkg src tests utils man
+ 
+ 
+diff --git a/configure.ac b/configure.ac
+index ac5a035..996bf6a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -4,7 +4,6 @@ AC_CONFIG_SRCDIR([libopkg/pkg.c])
+ 
+ AC_CONFIG_AUX_DIR([conf])
+ AC_CONFIG_MACRO_DIR([m4])
+-AC_CONFIG_MACRO_DIR([shave])
+ 
+ AM_INIT_AUTOMAKE
+ AM_CONFIG_HEADER(libopkg/config.h)
+@@ -277,9 +276,6 @@ AC_SUBST(opkgetcdir)
+ AC_SUBST(opkglockfile)
+ AC_SUBST([CLEAN_DATE])
+ 
+-# Setup output beautifier.
+-SHAVE_INIT([shave], [enable])
+-
+ AC_OUTPUT(
+     Makefile
+     libopkg/Makefile
+@@ -289,8 +285,6 @@ AC_OUTPUT(
+     utils/Makefile
+     utils/update-alternatives
+     libopkg.pc
+-    shave/shave
+-    shave/shave-libtool
+     man/Makefile
+     man/opkg-cl.1
+     man/opkg-key.1
+-- 
+1.7.10.4
+

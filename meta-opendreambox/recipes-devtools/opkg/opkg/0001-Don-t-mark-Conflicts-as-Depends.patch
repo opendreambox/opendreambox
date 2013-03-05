@@ -1,7 +1,7 @@
-From 8c00c6be3723a0dcf05a10b5aba8c1c3b1fe4cf7 Mon Sep 17 00:00:00 2001
+From 5e26ea10e7e30718a1da373323d0007bfa7b1937 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 16 May 2012 23:29:04 +0200
-Subject: [PATCH 02/10] Don't mark Conflicts as Depends
+Subject: [PATCH 01/13] Don't mark Conflicts as Depends
 
 - Fixes 'whatconflicts' sub-command.
 
@@ -11,10 +11,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
-index 1e14d1f..a61e80e 100644
+index a4df7de..4664d4e 100644
 --- a/libopkg/pkg_depends.c
 +++ b/libopkg/pkg_depends.c
-@@ -609,8 +609,8 @@ void buildConflicts(pkg_t * pkg)
+@@ -691,8 +691,8 @@ void buildConflicts(pkg_t * pkg)
  
      conflicts = pkg->conflicts = xcalloc(pkg->conflicts_count, sizeof(compound_depend_t));
      for (i = 0; i < pkg->conflicts_count; i++) {
@@ -25,5 +25,5 @@ index 1e14d1f..a61e80e 100644
  	 conflicts++;
      }
 -- 
-1.7.9.5
+1.7.10.4
 
