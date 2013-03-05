@@ -7,4 +7,4 @@ RDEPENDS_${PN} = " \
         sysvinit \
         udev"
 
-require task-core-boot.inc
+require packagegroup-core-boot.inc

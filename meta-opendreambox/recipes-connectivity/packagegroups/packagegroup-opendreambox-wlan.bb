@@ -10,7 +10,7 @@ DEPENDS = " \
 "
 PR = "r15"
 
-inherit task
+inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

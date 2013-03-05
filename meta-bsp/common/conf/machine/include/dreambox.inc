@@ -5,7 +5,7 @@ EXTRA_IMAGEDEPENDS += "dreambox-secondstage"
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "dreambox-dvb-modules"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "task-opendreambox-essential"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "packagegroup-opendreambox-essential"
 MACHINE_FEATURES += "alsa kernel26 wifi"
 
 PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage"

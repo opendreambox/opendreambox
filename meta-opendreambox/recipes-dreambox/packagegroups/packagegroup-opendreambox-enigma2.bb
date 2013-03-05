@@ -4,4 +4,4 @@ RDEPENDS_${PN} = " \
   enigma2-streamproxy-xinetd \
 "
 
-require task-opendreambox-enigma2.inc
+require packagegroup-opendreambox-enigma2.inc

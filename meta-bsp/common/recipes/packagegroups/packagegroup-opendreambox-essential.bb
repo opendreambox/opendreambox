@@ -11,7 +11,7 @@ RRECOMMENDS_${PN} = " \
 "
 PR = "r5"
 
-inherit task
+inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

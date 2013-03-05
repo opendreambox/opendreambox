@@ -5,4 +5,4 @@ RDEPENDS_${PN} = " \
   vsftpd-xinetd \
 "
 
-require task-opendreambox-base.inc
+require packagegroup-opendreambox-base.inc

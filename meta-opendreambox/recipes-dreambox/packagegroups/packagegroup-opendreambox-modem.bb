@@ -4,10 +4,10 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
 PR = "r2"
 
-inherit task
+inherit packagegroup
 
 #
-# task-opendreambox-modem
+# packagegroup-opendreambox-modem
 #
 SUMMARY_${PN} = "OpenDreambox: Modem support"
 DEPENDS = "enigma2"

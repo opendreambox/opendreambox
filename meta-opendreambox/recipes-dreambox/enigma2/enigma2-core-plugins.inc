@@ -46,7 +46,7 @@ RDEPENDS_enigma2-plugin-extensions-dvdburn = " \
         gst-plugins-bad-mpegtsmux \
 "
 RDEPENDS_enigma2-plugin-extensions-dvdplayer = " \
-        task-opendreambox-dvdplayer \
+        packagegroup-opendreambox-dvdplayer \
 "
 RDEPENDS_enigma2-plugin-extensions-hbbtv = " \
         enigma2-plugin-extensions-browser \

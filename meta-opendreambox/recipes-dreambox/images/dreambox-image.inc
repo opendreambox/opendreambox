@@ -10,10 +10,10 @@ DEPENDS = " \
 
 BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
 
-TASK_CORE_BOOT ?= "task-core-boot"
-TASK_OPENDREAMBOX_BASE ?= "task-opendreambox-base"
-TASK_OPENDREAMBOX_DVBAPI ?= "task-opendreambox-dvbapi3"
-TASK_OPENDREAMBOX_ENIGMA ?= "task-opendreambox-enigma2"
+TASK_CORE_BOOT ?= "packagegroup-core-boot"
+TASK_OPENDREAMBOX_BASE ?= "packagegroup-opendreambox-base"
+TASK_OPENDREAMBOX_DVBAPI ?= "packagegroup-opendreambox-dvbapi3"
+TASK_OPENDREAMBOX_ENIGMA ?= "packagegroup-opendreambox-enigma2"
 
 # packages to drag into the image
 IMAGE_INSTALL = " \
