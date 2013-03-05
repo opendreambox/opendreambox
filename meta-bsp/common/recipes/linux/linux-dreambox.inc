@@ -30,14 +30,14 @@ FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
 FILES_kernel-image-dbg = "/${KERNEL_IMAGEDEST}/.debug"
 
 python populate_packages_prepend() {
-	os.system(d.expand("gzip -9 ${PKGD}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"))
+    os.system(d.expand("gzip -9 ${PKGD}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"))
 }
 python __anonymous () {
-        import bb, re
-        kv = d.getVar('DREAMBOX_KERNEL_VERSION', True)
-        pv = d.getVar('PV', True)
-        if kv != pv:
-                raise bb.parse.SkipPackage("incompatible with kernel version %s" % kv)
+    import bb, re
+    kv = d.getVar('DREAMBOX_KERNEL_VERSION', True)
+    pv = d.getVar('PV', True)
+    if kv != pv:
+        raise bb.parse.SkipPackage("incompatible with kernel version %s" % kv)
 }
 
 pkg_preinst_kernel-image() {
