@@ -16,7 +16,7 @@ RDEPENDS_${PN} += " \
         base-passwd \
         busybox \
         ${@base_contains('MACHINE_FEATURES', 'keyboard', 'keymaps', '', d)} \
-        netbase \
+        init-ifupdown \
         update-alternatives-cworth \
         ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
