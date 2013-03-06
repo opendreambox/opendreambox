@@ -8,7 +8,7 @@ PV = "0.7+hg${SRCREV}"
 PRIORITY = "optional"
 PR = "r1"
 
-SRC_URI = "hg://bitbucket.org/blueluna;proto=http;module=transmissionrpc;rev=${SRCREV}"
+SRC_URI = "hg://bitbucket.org/blueluna;protocol=http;module=transmissionrpc;rev=${SRCREV}"
 
 S = "${WORKDIR}/transmissionrpc"
 
