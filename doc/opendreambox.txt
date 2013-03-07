@@ -111,7 +111,7 @@ opendreambox
    To initially download the source into the current directory, issue the
    following command:
 
-   git clone git://git.opendreambox.org/git/opendreambox.git
+   git clone -b denzil git://git.opendreambox.org/git/opendreambox.git
 
    The Git repository can be viewed online at:
 
