@@ -20,14 +20,12 @@ SRCREV = "93ecd8e1f658d92b9ddc0064a3dc3b76735328f0"
 
 SRC_URI += "file://print.mak"
 
-inherit autotools schwerkraft-git
+inherit autotools schwerkraft-git pythonnative
 
-EXTRA_OECONF = " \
-        BUILD_SYS=${BUILD_SYS} \
-        HOST_SYS=${HOST_SYS} \
-        STAGING_INCDIR=${STAGING_INCDIR} \
-        STAGING_LIBDIR=${STAGING_LIBDIR} \
-"
+export BUILD_SYS
+export HOST_SYS
+export STAGING_INCDIR
+export STAGING_LIBDIR
 
 do_install_append() {
         # create lists of files installed outside of "${libdir}/enigma2/python/Plugins" or "${datadir}/meta"
