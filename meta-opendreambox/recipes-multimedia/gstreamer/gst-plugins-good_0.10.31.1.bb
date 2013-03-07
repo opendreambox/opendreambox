@@ -22,6 +22,7 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
 SRC_URI += " \
 	file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 	file://0001-accept-substream-syncwords-DTS-HD.patch \
+	file://soup-deprecated-soup_message_headers-_get-_get_one.patch \
 	${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
 	file://mp4-parse-fix-typo.patch \
 "
@@ -62,5 +63,7 @@ do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
 	rm ${S}/m4/lib-link.m4 || true
 }
+
+FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.31"
 
 require mips-only.inc
