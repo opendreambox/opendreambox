@@ -28,6 +28,9 @@ PACKAGES = "${PN}"
 
 RDEPENDS_${PN} += "dreambox-secondstage kernel-${DM_LOCALVERSION}"
 
+FILES_${PN} = "${sysconfdir}/modules-load.d/${PN}.conf \
+               /lib/modules/${DM_LOCALVERSION}/extra/LICENSE"
+
 python __anonymous () {
         import bb, re
         kv = d.getVar('DREAMBOX_KERNEL_VERSION', True)
