@@ -16,21 +16,39 @@ USB_ROOT = "/dev/sdb2"
 USB_ROOT_dm8000 = "/dev/sdf2"
 
 do_install_append() {
-        # mark the kernel executable, so it gets stripped during do_package
-        chmod +x ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+        if [ "${KERNEL_IMAGETYPE}" = "vmlinux" ]; then
+                # We want a stripped kernel that gets gzipped and booted from and
+                # an unstripped version for debugging, which will get into the
+                # kernel-vmlinux package. When booting vmlinux directly, work on a copy.
+                if [ "${KERNEL_IMAGEDEST}" = "boot" ]; then
+                        install -m644 ${D}/boot/vmlinux-${KERNEL_VERSION} ${D}/boot/vmlinux.nostrip
+                fi
+                # Mark the kernel as executable, so it gets stripped during do_package.
+                chmod +x ${D}/${KERNEL_IMAGEDEST}/vmlinux-${KERNEL_VERSION}
+        fi
         echo "/boot/bootlogo-${MACHINE}.elf.gz filename=/boot/bootlogo-${MACHINE}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${CMDLINE}" >> ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
         echo "/boot/bootlogo-${MACHINE}.elf.gz filename=/boot/bootlogo-${MACHINE}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${USB_CMDLINE}" >> ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
 }
 
-PACKAGES += "kernel-image-dbg"
+PACKAGES += "kernel-image-dbg kernel-image-usb"
 
-FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
+FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec.bat"
 FILES_kernel-image-dbg = "/${KERNEL_IMAGEDEST}/.debug"
+FILES_kernel-image-usb = "/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat"
+FILES_kernel-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}"
 
 python populate_packages_prepend() {
-    os.system(d.expand("gzip -9 ${PKGD}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"))
+    import shutil
+    imagetype = d.getVar('KERNEL_IMAGETYPE', True)
+    if imagetype == "vmlinux":
+        pkgd = d.getVar('PKGD', True)
+        imagedest = d.getVar('KERNEL_IMAGEDEST', True)
+        version = d.getVar('KERNEL_VERSION', True)
+        os.system("gzip -9 %s/%s/vmlinux-%s" % (pkgd, imagedest, version))
+        if imagedest == "boot":
+            shutil.move("%s/boot/vmlinux.nostrip" % pkgd, "%s/boot/vmlinux-%s" % (pkgd, version))
 }
 python __anonymous () {
     import bb, re
