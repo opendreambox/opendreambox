@@ -34,6 +34,7 @@ do_install_append() {
 }
 
 FILES_${PN} += "${datadir}/fonts ${datadir}/keymaps ${libdir}/fonts ${libdir}/libopen.so"
+FILES_${PN}-dev = "${includedir} ${libdir}/*.la ${libdir}/pkgconfig"
 FILES_${PN}-meta = "${datadir}/meta"
 
 require enigma2-core-plugins.inc
