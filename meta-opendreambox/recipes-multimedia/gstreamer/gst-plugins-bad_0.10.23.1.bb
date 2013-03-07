@@ -16,7 +16,8 @@ GIT_PV = ""
 SRCREV = "cef47d85294a0dca38631f938b81a3f0dd6891bd"
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \
-                 --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264"
+                 --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264 \
+                 --disable-fatal-warnings"
 
 ARM_INSTRUCTION_SET = "arm"
 
@@ -70,5 +71,7 @@ do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
 	rm ${S}/m4/lib-link.m4 || true
 }
+
+FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.23"
 
 require mips-only.inc
