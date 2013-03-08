@@ -8,10 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
 DEPENDS += "gst-plugins-base"
 
-PR = "r1"
+PR = "r2"
 GIT_PV = ""
 
-SRCREV = "0adf1252f4c61e45182b9669b42b704353560cf1"
+SRCREV = "87d7a0f91065b89f3d3c8f0b23b5274b2e9b4d3e"
 
 EXTRA_OECONF = "--enable-orc --disable-esd --disable-aalib --disable-shout2 --disable-libcaca --disable-hal"
 
