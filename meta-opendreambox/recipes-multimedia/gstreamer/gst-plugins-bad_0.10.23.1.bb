@@ -10,10 +10,10 @@ DEPENDS += "libmusicbrainz tremor curl libmms"
 DEPENDS += "gst-plugins-base"
 CONFLICTS = "librsvg"
 
-PR = "r1"
+PR = "r2"
 GIT_PV = ""
 
-SRCREV = "544be970edfacc10ae95cd3b6d9a2236edaa625e"
+SRCREV = "8990f8baafa2074bbf382a62863df31188517f05"
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \
                  --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264"
@@ -25,6 +25,7 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
 SRC_URI += " \
         file://0003-mpegpsdemux_speedup.diff.patch \
         file://0004-mpegdemux-compile-fixes.patch \
+        file://0005-hlsdemux-locking-fixes.patch \
         file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 "
 
