@@ -5,7 +5,7 @@ LICENSE = "GPL-2.0-with-OpenSSL-exception"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271"
 DEPENDS = "libcap openssl"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = " \
         https://security.appspot.com/downloads/${BP}.tar.gz \
@@ -98,6 +98,3 @@ SYSTEMD_SERVICE_${PN} = "vsftpd.socket"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--home-dir ${SECURE_CHROOT_DIR} --no-create-home --system --shell /bin/false --user-group vsftpd"
-
-XINETD_PACKAGES = "${PN}-xinetd"
-XINETD_SERVICE_${PN}-xinetd = "vsftpd"
