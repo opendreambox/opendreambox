@@ -1,7 +1,6 @@
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 RDEPENDS_${PN} = " \
-        busybox-xinetd \
         initscripts \
         modutils-initscripts \
         sysvinit \
