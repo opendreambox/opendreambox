@@ -86,12 +86,15 @@ do_install() {
         install -d ${D}${mandir}/man5
         install -m 644 vsftpd.conf.5 ${D}${mandir}/man5/vsftpd.conf.5
         install -d ${D}${SECURE_CHROOT_DIR}
-        install -d ${D}${systemd_unitdir}/system
-        ln -sf /dev/null ${D}${systemd_unitdir}/system/vsftpd.service
+        if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+                install -d ${D}${systemd_unitdir}/system
+                ln -sf /dev/null ${D}${systemd_unitdir}/system/vsftpd.service
+                install -m644 ${WORKDIR}/vsftpd@.service ${D}${systemd_unitdir}/system
+                install -m644 ${WORKDIR}/vsftpd.socket ${D}${systemd_unitdir}/system
+        fi
 }
 
-SYSTEMD_PACKAGES = "${PN}-systemd"
-SYSTEMD_SERVICE_${PN}-systemd = "vsftpd.socket"
+SYSTEMD_SERVICE_${PN} = "vsftpd.socket"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = "--home-dir ${SECURE_CHROOT_DIR} --no-create-home --system --shell /bin/false --user-group vsftpd"
