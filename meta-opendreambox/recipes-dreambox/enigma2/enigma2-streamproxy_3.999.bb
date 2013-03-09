@@ -13,12 +13,15 @@ SCHWERKRAFT_PROJECT = "streamproxy"
 inherit autotools schwerkraft-git systemd xinetd
 
 do_install_append() {
-        install -d ${D}${systemd_unitdir}/system
-        ln -sf /dev/null ${D}${systemd_unitdir}/system/streamproxy.service
+        if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+                install -d ${D}${systemd_unitdir}/system
+                ln -sf /dev/null ${D}${systemd_unitdir}/system/streamproxy.service
+                install -m644 ${WORKDIR}/streamproxy@.service ${D}${systemd_unitdir}/system
+                install -m644 ${WORKDIR}/streamproxy.socket ${D}${systemd_unitdir}/system
+        fi
 }
 
-SYSTEMD_PACKAGES = "${PN}-systemd"
-SYSTEMD_SERVICE_${PN}-systemd = "streamproxy.socket"
+SYSTEMD_SERVICE_${PN} = "streamproxy.socket"
 
 XINETD_PACKAGES = "${PN}-xinetd"
 XINETD_SERVICE_${PN}-xinetd = "streamproxy"
