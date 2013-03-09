@@ -26,6 +26,4 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 SYSTEMD_PACKAGES += "${PN}"
 SYSTEMD_SERVICE_${PN} = "busybox-telnetd.socket"
-
-XINETD_PACKAGES = "${PN}-xinetd"
-XINETD_SERVICE_${PN}-xinetd = "busybox-telnetd"
+XINETD_SERVICE_${PN} = "busybox-telnetd"
