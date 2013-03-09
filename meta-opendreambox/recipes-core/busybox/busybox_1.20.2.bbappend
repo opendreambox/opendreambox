@@ -14,14 +14,18 @@ do_install_append() {
         if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then
                 install -d ${D}${sysconfdir}/cron/crontabs
         fi
-        install -d ${D}${systemd_unitdir}/system
-        ln -sf /dev/null ${D}${systemd_unitdir}/system/busybox-telnetd.service
+        if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+                install -d ${D}${systemd_unitdir}/system
+                ln -sf /dev/null ${D}${systemd_unitdir}/system/busybox-telnetd.service
+                install -m644 ${WORKDIR}/busybox-telnetd@.service ${D}${systemd_unitdir}/system
+                install -m644 ${WORKDIR}/busybox-telnetd.socket ${D}${systemd_unitdir}/system
+        fi
 }
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
-SYSTEMD_PACKAGES += "${PN}-systemd"
-SYSTEMD_SERVICE_${PN}-systemd = "busybox-telnetd.socket"
+SYSTEMD_PACKAGES += "${PN}"
+SYSTEMD_SERVICE_${PN} = "busybox-telnetd.socket"
 
 XINETD_PACKAGES = "${PN}-xinetd"
 XINETD_SERVICE_${PN}-xinetd = "busybox-telnetd"
