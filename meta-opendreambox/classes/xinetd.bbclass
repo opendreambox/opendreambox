@@ -1,98 +1,98 @@
-#
-# xinetd.bbclass
-#
+# The list of packages that should have xinetd configurations added.  For
+# each entry, optionally have a XINETD_SERVICE_[package] that lists the service
+# names in this package.  If this variable isn't set, [package] is used.
+XINETD_PACKAGES ?= "${PN}"
 
-DEPENDS += "xinetd"
-
-XINETD_PACKAGES ??= "${PN}-xinetd"
+# This class will be included in any recipe that supports xinetd,
+# even if the xinetd DISTRO_FEATURE isn't enabled. As such don't
+# make any changes directly but check the DISTRO_FEATURES first.
+python __anonymous() {
+    if "xinetd" in d.getVar("DISTRO_FEATURES", True).split():
+        d.appendVar("DEPENDS", " xinetd")
+}
 
 do_install_append() {
-	install -d ${D}${sysconfdir}/xinetd.d
-	for srcfile in ${WORKDIR}/*.xinetd.in; do
-		dstfile=`basename $srcfile .xinetd.in`
-		sed -e 's,@BINDIR@,${bindir},' \
-		    -e 's,@SBINDIR@,${sbindir},' \
-		    $srcfile > ${D}${sysconfdir}/xinetd.d/$dstfile
-		chmod 644 ${D}${sysconfdir}/xinetd.d/$dstfile
-	done
+	if ${@base_contains('DISTRO_FEATURES', 'xinetd', 'true', 'false', d)}; then
+		install -d ${D}${sysconfdir}/xinetd.d
+		for srcfile in ${WORKDIR}/*.xinetd.in; do
+			dstfile=`basename $srcfile .xinetd.in`
+			sed -e 's,@BINDIR@,${bindir},' \
+			    -e 's,@SBINDIR@,${sbindir},' \
+			    $srcfile > ${D}${sysconfdir}/xinetd.d/$dstfile
+			chmod 644 ${D}${sysconfdir}/xinetd.d/$dstfile
+		done
+	fi
 }
 
 xinetd_reload() {
 [ -z "$D" ] && PID=`pidof xinetd` && kill -HUP $PID || true
 }
 
-def xinetd_after_parse(d):
-    def xinetd_create_package(pkg):
+python xinetd_populate_packages() {
+    if "xinetd" not in d.getVar("DISTRO_FEATURES", True).split():
+        return
+
+    if d.getVar("SYSTEMD_BBCLASS_ENABLED", True):
+        bb.note("disabling xinetd.bbclass for %s due to systemd being enabled" % pkg)
+        return
+
+    def package_get_var(pkg, var):
+        val = (d.getVar('%s_%s' % (var, pkg), True) or "").strip()
+        if val == "":
+            val = (d.getVar(var, True) or "").strip()
+        return val
+
+    def package_append_script(pkg, script_type, shell_function):
+        script = package_get_var(pkg, 'pkg_%s' % script_type) or '#!/bin/sh\n'
+        if not script.endswith('\n'):
+            script += '\n'
+        script += d.getVar(shell_function, True)
+        if not script.endswith('\n'):
+            script += '\n'
+        d.setVar('pkg_%s_%s' % (script_type, pkg), script)
+
+    def xinetd_check_package(pkg):
         packages = d.getVar('PACKAGES', True).split()
         if not pkg in packages:
-            packages.insert(0, pkg)
-            d.setVar('PACKAGES', ' '.join(packages))
-
-    bpn = d.getVar('BPN', 1)
-    if bpn + "-native" != d.getVar('PN', 1) and \
-       bpn + "-cross" != d.getVar('PN', 1) and \
-       bpn + "-nativesdk" != d.getVar('PN', 1):
-        for pkg in d.getVar('XINETD_PACKAGES', True).split():
-            xinetd_create_package(pkg)
-
-python __anonymous() {
-    xinetd_after_parse(d)
-}
-
-python populate_packages_prepend () {
-    def xinetd_generate_package_scripts(pkg):
-        bb.note('adding xinetd postinst and postrm scripts to %s' % pkg)
-
-        postinst = d.getVar('pkg_postinst_%s' % pkg, True) or d.getVar('pkg_postinst', True)
-        if not postinst:
-            postinst = '#!/bin/sh\n'
-        postinst += d.getVar('xinetd_reload', True)
-        d.setVar('pkg_postinst_%s' % pkg, postinst)
-
-        postrm = d.getVar('pkg_postrm_%s' % pkg, True) or d.getVar('pkg_postrm', True)
-        if not postrm:
-            postrm = '#!/bin/sh\n'
-        postrm += d.getVar('xinetd_reload', True)
-        d.setVar('pkg_postrm_%s' % pkg, postrm)
+            bb.error('%s does not appear in package list, please add it' % pkg)
 
     def xinetd_add_rdepends(pkg):
         bb.note("adding xinetd dependency to %s" % pkg)
 
         rdepends = (d.getVar('RDEPENDS_%s' % pkg, True) or "").split()
-        if pkg.endswith('-xinetd'):
-            basepkg = pkg[:-len('-xinetd')]
-            if not basepkg in rdepends:
-                rdepends.append(basepkg)
         if not 'xinetd' in rdepends:
             rdepends.append('xinetd')
         d.setVar('RDEPENDS_%s' % pkg, ' '.join(rdepends))
 
-    def xinetd_add_rconflicts(pkg):
-        bb.note("adding xinetd conflicts to %s" % pkg)
+    def xinetd_generate_package_scripts(pkg):
+        bb.note('adding xinetd postinst and postrm scripts to %s' % pkg)
+        package_append_script(pkg, 'postinst', 'xinetd_reload')
+        package_append_script(pkg, 'postrm', 'xinetd_reload')
 
-        if pkg.endswith('-xinetd'):
-            rconflicts = (d.getVar('RCONFLICTS_%s' % pkg, True) or "").split()
-            conflictpkg = pkg[:-len('-xinetd')] + '-systemd'
-            if not conflictpkg in rconflicts:
-                rconflicts.append(conflictpkg)
-            d.setVar('RCONFLICTS_%s' % pkg, ' '.join(rconflicts))
+    def xinetd_append_file(pkg, file_append):
+        if os.path.exists(oe.path.join(d.getVar("D", True), file_append)):
+            var_name = 'FILES_%s' % pkg
+            files = (d.getVar(var_name, False) or "").split()
+            if file_append not in files:
+                files.append(file_append)
+                d.setVar(var_name, ' '.join(files))
+
+    def xinetd_check_services():
+        path = oe.path.join(d.getVar('sysconfdir', True), 'xinetd.d')
+        for pkg in d.getVar('XINETD_PACKAGES', True).split():
+            services = package_get_var(pkg, 'XINETD_SERVICE').split()
+            if len(services) == 0:
+                services.append(pkg)
+            for service in services:
+                xinetd_append_file(pkg, oe.path.join(path, service))
 
     # run all modifications once when creating package
-    xinetd_dir = '%s/xinetd.d' % d.getVar('sysconfdir', True)
-    if os.path.exists('${D}' + xinetd_dir):
+    if os.path.exists(d.getVar("D", True)):
         for pkg in d.getVar('XINETD_PACKAGES', True).split():
-            services = d.getVar('XINETD_SERVICE_%s' % pkg, True) or d.getVar('XINETD_SERVICE', True) or ""
-            if services:
-                xinetd_generate_package_scripts(pkg)
-                xinetd_add_rdepends(pkg)
-                xinetd_add_rconflicts(pkg)
-
-            for service in services.split():
-                file_append = '%s/%s' % (xinetd_dir, service)
-                if os.path.exists('${D}' + file_append):
-                    var_name = 'FILES_%s' % pkg
-                    files = (d.getVar(var_name, False) or "").split()
-                    if file_append not in files:
-                        files.append(file_append)
-                        d.setVar(var_name, ' '.join(files))
+            xinetd_check_package(pkg)
+            xinetd_generate_package_scripts(pkg)
+            xinetd_add_rdepends(pkg)
+        xinetd_check_services()
 }
+
+PACKAGESPLITFUNCS_prepend = "xinetd_populate_packages "
