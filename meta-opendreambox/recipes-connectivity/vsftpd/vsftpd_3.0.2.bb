@@ -5,7 +5,7 @@ LICENSE = "GPL-2.0-with-OpenSSL-exception"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271"
 DEPENDS = "libcap openssl"
 DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = " \
         https://security.appspot.com/downloads/${BP}.tar.gz \
@@ -22,6 +22,7 @@ SRC_URI = " \
         file://08-manpage.patch \
         file://09-s390.patch \
         file://10-remote-dos.patch \
+        file://0001-sysdeputil-allow-login-with-empty-passwords-in-etc-p.patch \
 "
 SRC_URI[md5sum] = "8b00c749719089401315bd3c44dddbb2"
 SRC_URI[sha256sum] = "be46f0e2c5528fe021fafc8dab1ecfea0c1f183063a06977f8537fcd0b195e56"
