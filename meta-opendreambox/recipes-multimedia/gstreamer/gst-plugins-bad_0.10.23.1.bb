@@ -71,6 +71,8 @@ do_configure_prepend() {
 	rm ${S}/m4/lib-link.m4 || true
 }
 
+PACKAGES_DYNAMIC += "^libgst(basecamerabinsrc|basevideo|codecparsers|photography|signalprocessor)-${LIBV}.*"
+
 FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.23"
 
 require mips-only.inc
