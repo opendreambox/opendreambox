@@ -1,9 +1,21 @@
 LICENSE = "CLOSED"
+PRECOMPILED_URI ?= "http://dreamboxupdate.com/download/${DISTRO}/${DISTRO_VERSION}/${@precompiledPath(d)};name=${PACKAGE_ARCH}"
 
-SRC_URI += "http://dreamboxupdate.com/download/${DISTRO}/${DISTRO_VERSION}/${PN}/${PN}_${PV}_${PACKAGE_ARCH}.tar.bz2;name=${PACKAGE_ARCH}"
+SRC_URI += "${PRECOMPILED_URI}"
 
 S = "${WORKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
 
 PACKAGES = "${PN}"
+
+def precompiledPath(d):
+    pn = d.getVar('PN', True)
+    pv = d.getVar('PV', True)
+    package_arch = d.getVar('PACKAGE_ARCH', True)
+    md5sum = d.getVarFlag('SRC_URI', '%s.md5sum' % package_arch)
+    return '%s/%s/%s/%s/%s_%s_%s.tar.xz' % (pn, pv, package_arch, md5sum, pn, pv, package_arch)
+
+do_install() {
+    cp -r * ${D}
+}
 
 INHIBIT_PACKAGE_STRIP = "1"
