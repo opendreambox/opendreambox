@@ -1,4 +1,4 @@
-PR .= "-dream3"
+PRINC := "${@int(PRINC) + 1}"
 
 SRC_URI += "file://dropbear.xinetd.in"
 
