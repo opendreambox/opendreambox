@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.40"
+PR = "${INC_PR}.41"
 
 PATCHREV = "b299a6a132d842b074b289b2568eece452d0663c"
 PATCHLEVEL = "31"
@@ -31,6 +31,10 @@ SRC_URI = " \
         file://0002-Dreambox-add-new-flash-map-for-1GB-based-dreamboxes-.patch \
         file://0001-dreambox-rename-mtd-partitions.patch \
         file://0001-NFS-limit-max-rwsize-to-8k-from-client-side.patch \
+        file://0001-add-XZ-compression-support-to-UBIFS.patch \
+        file://0002-block2mtd-add-possibility-to-change-the-writesize.patch \
+        file://0003-block2mtd-add-possibility-to-remove-block2mtd-device.patch \
+        file://ubi-ro-mount-fix.patch \
         file://defconfig \
 "
 
