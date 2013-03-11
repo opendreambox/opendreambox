@@ -11,7 +11,6 @@ DEPENDS += "gst-plugins-base"
 CONFLICTS = "librsvg"
 
 PR = "r5"
-GIT_PV = ""
 
 SRCREV = "cef47d85294a0dca38631f938b81a3f0dd6891bd"
 

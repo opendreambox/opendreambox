@@ -9,7 +9,6 @@ DEPENDS += "gst-plugins-base libid3tag libmad mpeg2dec liba52 lame libcdio openc
 EXTRA_OECONF += "--enable-orc"
 
 PR = "r3"
-GIT_PV = ""
 
 SRCREV = "9afc696e5fa9fb980e02df5637f022796763216f"
 

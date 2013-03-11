@@ -10,7 +10,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=55ca817ccb7d5b5b66355690e9abc605 \
 DEPENDS = "glib-2.0 libxml2 bison-native flex-native"
 
 PR = "r5"
-GIT_PV = ""
 
 SRCREV = "1bcabb9a23afb25dcd059bd827aa35b8ee7e5043"
 

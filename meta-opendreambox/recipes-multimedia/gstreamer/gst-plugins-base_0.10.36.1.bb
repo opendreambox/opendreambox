@@ -13,7 +13,6 @@ DEPENDS += "gstreamer"
 SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
 
 PR = "r4"
-GIT_PV = ""
 
 inherit autotools pkgconfig gettext git-project
 
