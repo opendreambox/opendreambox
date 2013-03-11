@@ -62,4 +62,6 @@ do_configure_prepend() {
 	rm ${S}/m4/lib-link.m4 || true
 }
 
+FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.36.1"
+
 require mips-only.inc
