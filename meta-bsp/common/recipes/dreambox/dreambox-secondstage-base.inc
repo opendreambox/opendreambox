@@ -3,7 +3,7 @@ SECTION = "base"
 LICENSE = "CLOSED"
 PROVIDES = "virtual/bootloader"
 PRIORITY = "required"
-INC_PR = "r11"
+INC_PR = "r12"
 
 do_install() {
         install -d ${D}${datadir}/${PN}
@@ -19,7 +19,7 @@ RDEPENDS_${PN} = "mtd-utils-nandwrite mtd-utils-mtd-debug dreambox-buildimage"
 FILES_${PN} = "${datadir}/${PN}/secondstage-${MACHINE}.bin"
 
 pkg_postinst_${PN}() {
-if [ -z "$D" ]; then
+if [ -z "$D" ] && grep -q '\<${MACHINE}\>' /proc/stb/info/model; then
 	buildimage --arch=${MACHINE} --flash-size=${DREAMBOX_FLASH_SIZE} --raw ${EXTRA_BUILDCMD} \
 		--erase-block-size=`mtd_debug info /dev/mtd1 | grep '^mtd\.erasesize' | awk '{print $3}'` \
 		--sector-size=`mtd_debug info /dev/mtd1 | grep '^mtd\.writesize' | awk '{print $3}'` \
