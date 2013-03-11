@@ -4,6 +4,9 @@ LICENSE = "CLOSED"
 PRIORITY = "required"
 INC_PR = "r12"
 
+# Use precompiled binaries from the previous opendreambox release.
+PRECOMPILED_URI = "http://dreamboxupdate.com/download/${DISTRO}/2.0.0/${PN}/${PN}_${PV}_${PACKAGE_ARCH}.tar.bz2;name=${PACKAGE_ARCH}"
+
 inherit opendreambox-precompiled-binary opendreambox-sysvinit
 
 do_install() {
