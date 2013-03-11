@@ -62,6 +62,8 @@ do_configure_prepend() {
 	rm ${S}/m4/lib-link.m4 || true
 }
 
+PACKAGES_DYNAMIC += "^libgst(app|audio|cdda|fft|interfaces|netbuffer|pbutils|riff|rtp|rtsp|sdp|tag|video)-${LIBV}.*"
+
 FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.36.1"
 
 require mips-only.inc
