@@ -7,7 +7,6 @@ PACKAGES += "${PN}-meta"
 RDEPENDS_${PN} += " \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
-        glibc-gconv-iso8859-15 \
         hdparm \
         python-codecs \
         python-core \
@@ -26,6 +25,9 @@ RDEPENDS_${PN} += " \
         sdparm \
         util-linux-blkid \
         util-linux-sfdisk \
+"
+RDEPENDS_${PN}_append_libc-glibc = " \
+        glibc-gconv-iso8859-15 \
 "
 
 # Qt won't start without this fonts directory.
