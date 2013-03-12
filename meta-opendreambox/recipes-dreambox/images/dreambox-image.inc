@@ -29,6 +29,9 @@ IMAGE_FEATURES += "package-management"
 # we don't want any locales, at least not in the common way.
 IMAGE_LINGUAS = ""
 
+# we dont like to call ldconfig on image build...
+LDCONFIGDEPEND = ""
+
 inherit image
 
 opendreambox_rootfs_postprocess() {
