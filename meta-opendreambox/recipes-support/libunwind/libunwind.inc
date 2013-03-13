@@ -4,7 +4,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2d80c8ed4062b8339b715f90fa68cc9f"
 INC_PR = "r3"
 
-SRC_URI += "http://download.savannah.nongnu.org/releases/${BPN}/${BPN}-${PV}.tar.gz;name=archive"
+SRC_URI += "http://download.savannah.nongnu.org/releases/${BPN}/${BPN}-${PV}.tar.gz"
 
 S = "${WORKDIR}/${PN}-${PV}"
 
