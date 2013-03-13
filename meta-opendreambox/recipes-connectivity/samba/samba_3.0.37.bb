@@ -9,8 +9,6 @@ SRC_URI += "file://configure.patch \
             file://0001-s3-schannel-client-Push-the-domain-and-netbios-name-.patch \
             file://samba-3.0-CVE-2012-0870.patch \
             file://samba-3.0.37-CVE-2012-1182.patch"
-SRC_URI_append_linux-uclibc        = "file://uclibc-strlcpy-strlcat.patch"
-SRC_URI_append_linux-uclibceabi = "file://uclibc-strlcpy-strlcat.patch"
 
 EXTRA_OECONF += "\
 	SMB_BUILD_CC_NEGATIVE_ENUM_VALUES=yes \
