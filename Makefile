@@ -240,6 +240,7 @@ conf/opendreambox.conf: $(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH)
 	@echo 'DISTRO = "opendreambox"' >> $@
 	@echo 'EXTRA_IMAGE_FEATURES = "debug-tweaks"' >> $@
 	@echo 'USER_CLASSES = "buildstats"' >> $@
+	@echo 'PATCHRESOLVE = "noop"' >> $@
 
 LOCAL_CONF_HASH := $(call hash, \
 	'LOCAL_CONF_VERSION = "0"' \
