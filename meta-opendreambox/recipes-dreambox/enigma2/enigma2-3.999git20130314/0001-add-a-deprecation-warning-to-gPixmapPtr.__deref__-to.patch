@@ -1,0 +1,30 @@
+From 522dda144cea3a3e4c9aa40bcb8bdfccac028993 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Fri, 15 Mar 2013 00:08:30 +0100
+Subject: [PATCH 1/2] add a deprecation warning to gPixmapPtr.__deref__() to
+ fix crashes since gPixmap* support is removed
+
+---
+ mytest.py |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/usr/lib/enigma2/python/mytest.py b/usr/lib/enigma2/python/mytest.py
+index 2578e36..39d544d 100644
+--- a/usr/lib/enigma2/python/mytest.py
++++ b/usr/lib/enigma2/python/mytest.py
+@@ -5,6 +5,12 @@ enigma.eTimer = eBaseImpl.eTimer
+ enigma.eSocketNotifier = eBaseImpl.eSocketNotifier
+ enigma.eConsoleAppContainer = eConsoleImpl.eConsoleAppContainer
+ 
++def gPixmapPtr_deref(self):
++	print "gPixmapPtr.__deref__() is deprecated and no more needed.... please remove it"
++	return self
++
++enigma.gPixmapPtr.__deref__ = gPixmapPtr_deref
++
+ from Tools.Profile import profile, profile_final
+ 
+ profile("PYTHON_START")
+-- 
+1.7.10.4
+
