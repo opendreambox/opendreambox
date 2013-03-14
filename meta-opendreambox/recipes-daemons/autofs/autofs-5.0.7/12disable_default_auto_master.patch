@@ -1,0 +1,27 @@
+Upstream-Status: Inappropriate [configuration, from other distro Debian ]
+
+## 12disable_default_auto_master.dpatch by  <hesso@pool.math.tu-berlin.de>
+##
+## DP: Disable upstream's default of activating /mnt and /net.
+## DP: In previous versions this was done as a security measure
+## DP: (because the hosts map was processed without nosuid and nodev).
+
+
+--- a/samples/auto.master
++++ b/samples/auto.master
+@@ -4,13 +4,13 @@
+ # key [ -mount-options-separated-by-comma ] location
+ # For details of the format look at autofs(5).
+ #
+-/misc	/etc/auto.misc
++#/misc	/etc/auto.misc
+ #
+ # NOTE: mounts done from a hosts map will be mounted with the
+ #	"nosuid" and "nodev" options unless the "suid" and "dev"
+ #	options are explicitly given.
+ #
+-/net	-hosts
++#/net	-hosts
+ #
+ # Include /etc/auto.master.d/*.autofs
+ #

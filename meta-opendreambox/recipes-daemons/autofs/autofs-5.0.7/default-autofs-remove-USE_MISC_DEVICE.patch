@@ -1,0 +1,23 @@
+Upstream-Status: Inappropriate [configuration, from other distro Debian ]
+
+Last-Update: 2012-06-01
+Author: Michael Tokarev <mjt@tls.msk.ru>
+Forwarded: no
+Subject: remove references to (now unused) USE_MISC_DEVICE from autofs.conf.default
+
+This will also make the last portion of the file saner, since USE_MISC_DEVICE
+there is inside description of another variable.
+
+--- a/samples/autofs.conf.default.in.orig
++++ b/samples/autofs.conf.default.in
+@@ -127,10 +127,5 @@
+ #
+ # General global options
+ #
+-# If the kernel supports using the autofs miscellanous device
+-# and you wish to use it you must set this configuration option
+-# to "yes" otherwise it will not be used.
+-USE_MISC_DEVICE="yes"
+-#
+ #OPTIONS=""
+ #
