@@ -68,7 +68,7 @@ if [ $? -eq 0 ]; then
 	exit 0
 fi
 
-echo -n "Apply this patch? [Y/n] "
+printf "Apply this patch? [Y/n] "
 read ANSWER
 
 if [ ! -z "$ANSWER" -a "$ANSWER" != "Y" -a "$ANSWER" != "y" ]; then
