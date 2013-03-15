@@ -10,17 +10,13 @@ DEPENDS = " \
 
 BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
 
-TASK_CORE_BOOT ?= "packagegroup-core-boot"
-TASK_OPENDREAMBOX_BASE ?= "packagegroup-opendreambox-base"
-TASK_OPENDREAMBOX_DVBAPI ?= "packagegroup-opendreambox-dvbapi3"
-TASK_OPENDREAMBOX_ENIGMA ?= "packagegroup-opendreambox-enigma2"
-
 # packages to drag into the image
 IMAGE_INSTALL = " \
-	${TASK_CORE_BOOT} ${ROOTFS_PKGMANAGE} \
-	${TASK_OPENDREAMBOX_BASE} \
-	${TASK_OPENDREAMBOX_DVBAPI} \
-	${TASK_OPENDREAMBOX_ENIGMA} \
+    packagegroup-boot-${DISTRO_FEATURES_INITMAN} \
+    packagegroup-opendreambox-base \
+    packagegroup-opendreambox-dvbapi3 \
+    packagegroup-opendreambox-enigma2 \
+    ${ROOTFS_PKGMANAGE} \
 "
 
 # enable online package management
