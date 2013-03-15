@@ -7,6 +7,7 @@ PACKAGES += "${PN}-meta"
 RDEPENDS_${PN} += " \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
+        enigma2-autofs \
         hdparm \
         python-codecs \
         python-core \
