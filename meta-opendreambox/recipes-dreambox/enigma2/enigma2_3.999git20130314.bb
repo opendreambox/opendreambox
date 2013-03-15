@@ -1,4 +1,4 @@
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 SRC_URI[mips32el.md5sum] = "1322ab666aaa3fe8dcdc4d84e936c75f" 
 SRC_URI[mips32el.sha256sum] = "6726ff61bf4d80f582652c80003c19da02d34acdddb891b3bd1168d4d3dcf9fd"
@@ -10,5 +10,5 @@ require enigma2-bin-4.0.inc
 SRC_URI += " \
 	file://0001-add-a-deprecation-warning-to-gPixmapPtr.__deref__-to.patch \
 	file://0002-dont-use-deprecated-gPixmapPtr.__deref__.patch \
+	file://0003-mytest.py-since-we-have-removed-ePixmap-setPixmap-gP.patch \
 "
-
