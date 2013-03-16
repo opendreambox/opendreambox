@@ -1,7 +1,7 @@
 From b95db096037bde89a2ab0017e0d76ef51b43ade1 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 16:15:50 +0200
-Subject: [PATCH 2/5] ifplugd: move read_pid to libbb/pidfile.c and rename it
+Subject: [PATCH 1/8] ifplugd: move read_pid to libbb/pidfile.c and rename it
  to read_pidfile
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>

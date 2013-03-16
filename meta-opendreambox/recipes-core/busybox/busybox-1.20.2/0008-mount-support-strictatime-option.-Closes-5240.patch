@@ -1,0 +1,55 @@
+From 0acdf6c69d9452066b7284593705904eacbc6c12 Mon Sep 17 00:00:00 2001
+From: Denys Vlasenko <vda.linux@googlemail.com>
+Date: Tue, 26 Jun 2012 16:09:00 +0200
+Subject: [PATCH 8/8] mount: support strictatime option. Closes 5240
+
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ util-linux/mount.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/util-linux/mount.c b/util-linux/mount.c
+index b6c94d7..525fdcc 100644
+--- a/util-linux/mount.c
++++ b/util-linux/mount.c
+@@ -113,6 +113,12 @@
+ #ifndef MS_RELATIME
+ # define MS_RELATIME    (1 << 21)
+ #endif
++#ifndef MS_STRICTATIME
++# define MS_STRICTATIME (1 << 24)
++#endif
++
++/* Any ~MS_FOO value has this bit set: */
++#define BB_MS_INVERTED_VALUE (1u << 31)
+ 
+ #include "libbb.h"
+ #if ENABLE_FEATURE_MOUNT_LABEL
+@@ -240,6 +246,7 @@ static const int32_t mount_options[] = {
+ 		/* "nomand"      */ ~MS_MANDLOCK,
+ 		/* "relatime"    */ MS_RELATIME,
+ 		/* "norelatime"  */ ~MS_RELATIME,
++		/* "strictatime" */ MS_STRICTATIME,
+ 		/* "loud"        */ ~MS_SILENT,
+ 		/* "rbind"       */ MS_BIND|MS_RECURSIVE,
+ 
+@@ -297,6 +304,7 @@ static const char mount_option_str[] =
+ 		"nomand\0"
+ 		"relatime\0"
+ 		"norelatime\0"
++		"strictatime\0"
+ 		"loud\0"
+ 		"rbind\0"
+ 
+@@ -473,7 +481,7 @@ static unsigned long parse_mount_options(char *options, char **unrecognized)
+ 			 && (options[opt_len] == '\0' || options[opt_len] == '=')
+ 			) {
+ 				unsigned long fl = mount_options[i];
+-				if ((long)fl < 0)
++				if (fl & BB_MS_INVERTED_VALUE)
+ 					flags &= fl;
+ 				else
+ 					flags |= fl;
+-- 
+1.7.10.4
+
