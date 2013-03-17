@@ -10,7 +10,6 @@ RDEPENDS_${PN} += " \
   distro-feed-configs \
   dropbear \
   killall \
-  openresolv \
   opkg \
   parted \
   procps \

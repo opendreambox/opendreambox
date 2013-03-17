@@ -15,13 +15,16 @@ RDEPENDS_${PN} += " \
         base-files \
         base-passwd \
         busybox \
+        connman \
         ${@base_contains('MACHINE_FEATURES', 'keyboard', 'keymaps', '', d)} \
-        init-ifupdown \
         udev \
         update-alternatives-cworth \
         ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
-RRECOMMENDS_${PN} += "${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}"
+RRECOMMENDS_${PN} += " \
+        connman-client \
+        ${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS} \
+"
 
 RPROVIDES_${PN} += "packagegroup-boot"
 RCONFLICTS_${PN} += "packagegroup-boot"
