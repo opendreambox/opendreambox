@@ -62,7 +62,7 @@ TMPDIR = $(CURDIR)/tmp
 DEPDIR = $(CURDIR)/.deps
 
 BBLAYERS ?= \
-	$(CURDIR)/meta-bsp/$(MACHINE) \
+	$(wildcard $(CURDIR)/meta-bsp/$(MACHINE)) \
 	$(CURDIR)/meta-bsp/common \
 	$(CURDIR)/meta-opendreambox \
 	$(CURDIR)/meta-openembedded/meta-oe \
