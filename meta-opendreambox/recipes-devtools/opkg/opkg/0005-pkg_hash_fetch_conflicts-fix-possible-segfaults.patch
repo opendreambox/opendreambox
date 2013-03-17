@@ -1,7 +1,7 @@
 From c59ee6e5507af9ab60a79057f1c3d6ef0d2c4b80 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:15:15 +0200
-Subject: [PATCH 05/13] pkg_hash_fetch_conflicts: fix possible segfaults
+Subject: [PATCH 05/15] pkg_hash_fetch_conflicts: fix possible segfaults
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---

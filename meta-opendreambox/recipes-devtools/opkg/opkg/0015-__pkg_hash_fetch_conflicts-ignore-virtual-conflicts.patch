@@ -1,0 +1,51 @@
+From dc508ba9733cd0dbdf0e4375afa5788694b986c8 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Sun, 17 Mar 2013 22:52:07 +0100
+Subject: [PATCH 15/15] __pkg_hash_fetch_conflicts: ignore virtual conflicts
+
+* If a package a both provides and conflicts the same package b,
+  then it's a virtual package. Ignore it!
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ libopkg/pkg_depends.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index cbb77ce..162da0f 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -363,7 +363,21 @@ static int is_pkg_a_replaces(const pkg_t *pkg_scout, const pkg_t *pkg)
+     }
+ 
+     return 0;
++}
+ 
++static int is_pkg_a_provides(const pkg_t *pkg_scout, const pkg_t *pkg)
++{
++    int i ;
++
++    for (i = 0; i < pkg->provides_count; i++) {
++        if (strcmp(pkg_scout->name,pkg->provides[i]->name)==0) {      // Found
++            opkg_msg(DEBUG2, "Seems I've found a provide %s %s\n",
++			pkg_scout->name, pkg->provides[i]->name);
++            return 1;
++        }
++    }
++
++    return 0;
+ }
+ 
+ static void __pkg_hash_fetch_conflicts(pkg_t * pkg, pkg_vec_t * installed_conflicts)
+@@ -407,7 +421,7 @@ static void __pkg_hash_fetch_conflicts(pkg_t * pkg, pkg_vec_t * installed_confli
+                         continue;
+                     }
+ 		    if ((pkg_scout->state_status == SS_INSTALLED || pkg_scout->state_want == SW_INSTALL) &&
+-		       version_constraints_satisfied(possible_satisfier, pkg_scout) && !is_pkg_a_replaces(pkg_scout,pkg)){
++		       version_constraints_satisfied(possible_satisfier, pkg_scout) && !is_pkg_a_replaces(pkg_scout,pkg) && !is_pkg_a_provides(pkg_scout,pkg)){
+  	 	        if (!is_pkg_in_pkg_vec(installed_conflicts, pkg_scout)){
+ 			    pkg_vec_insert(installed_conflicts, pkg_scout);
+ 			}
+-- 
+1.7.10.4
+

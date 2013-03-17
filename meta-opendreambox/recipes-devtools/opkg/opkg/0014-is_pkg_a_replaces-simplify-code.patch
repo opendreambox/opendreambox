@@ -1,0 +1,43 @@
+From 9a54fedf39f1a52cadf1dc17ad9bc0e887e2746b Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Sun, 17 Mar 2013 22:51:13 +0100
+Subject: [PATCH 14/15] is_pkg_a_replaces(): simplify code
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ libopkg/pkg_depends.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index e4bac38..cbb77ce 100644
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -350,22 +350,18 @@ pkg_hash_fetch_satisfied_dependencies(pkg_t * pkg)
+   really conflicts
+   returns 0 if conflicts <> replaces or 1 if conflicts == replaces
+ */
+-static int
+-is_pkg_a_replaces(pkg_t *pkg_scout,pkg_t *pkg)
++static int is_pkg_a_replaces(const pkg_t *pkg_scout, const pkg_t *pkg)
+ {
+     int i ;
+-    int replaces_count = pkg->replaces_count;
+ 
+-    if (pkg->replaces_count==0)    // No replaces, it's surely a conflict
+-        return 0;
+-
+-    for (i = 0; i < replaces_count; i++) {
++    for (i = 0; i < pkg->replaces_count; i++) {
+         if (strcmp(pkg_scout->name,pkg->replaces[i]->name)==0) {      // Found
+             opkg_msg(DEBUG2, "Seems I've found a replace %s %s\n",
+ 			pkg_scout->name, pkg->replaces[i]->name);
+             return 1;
+         }
+     }
++
+     return 0;
+ 
+ }
+-- 
+1.7.10.4
+

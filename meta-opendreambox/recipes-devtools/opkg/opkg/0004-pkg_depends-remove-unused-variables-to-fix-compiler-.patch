@@ -1,7 +1,7 @@
 From 27beecdcc9f4e00df4da4287ca1ed37ae51c1b5c Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:14:23 +0200
-Subject: [PATCH 04/13] pkg_depends: remove unused variables to fix compiler
+Subject: [PATCH 04/15] pkg_depends: remove unused variables to fix compiler
  warnings
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>

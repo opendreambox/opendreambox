@@ -1,7 +1,7 @@
 From a248b31d5f34ef9b4684621036ab6fae519f03a4 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 16 May 2012 21:20:27 +0200
-Subject: [PATCH 10/13] use AM_SILENT_RULES
+Subject: [PATCH 10/15] use AM_SILENT_RULES
 
 ---
  configure.ac |    1 +

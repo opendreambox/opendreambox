@@ -1,4 +1,4 @@
-PR .= "-dream0"
+PRINC := "${@int(PRINC) + 1}"
 
 SRC_URI += "file://0001-Don-t-mark-Conflicts-as-Depends.patch \
             file://0002-Statically-link-libopkg-and-libbb.patch \
@@ -11,7 +11,9 @@ SRC_URI += "file://0001-Don-t-mark-Conflicts-as-Depends.patch \
             file://0009-002-no-shave.patch.patch \
             file://0010-use-AM_SILENT_RULES.patch \
             file://0011-fixed-broken-uname-gname-cache-this-significantly-sp.patch \
-            file://0012-Keep-auto-installed-recommends-when-moved-from-depen.patch"
+            file://0012-Keep-auto-installed-recommends-when-moved-from-depen.patch \
+            file://0014-is_pkg_a_replaces-simplify-code.patch \
+            file://0015-__pkg_hash_fetch_conflicts-ignore-virtual-conflicts.patch"
 
 SRC_URI_append_class-target = " \
             file://0013-don-t-install-recommended-packages-automatically-but.patch"

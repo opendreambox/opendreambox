@@ -1,7 +1,7 @@
 From 5bca7c7e72b35c154baa7f68d419af88009dd512 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:32:43 +0200
-Subject: [PATCH 03/13] Makefile.am: remove -g and -O compiler flags
+Subject: [PATCH 03/15] Makefile.am: remove -g and -O compiler flags
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---

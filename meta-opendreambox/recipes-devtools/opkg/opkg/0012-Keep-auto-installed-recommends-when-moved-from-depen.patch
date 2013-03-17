@@ -1,7 +1,7 @@
 From 56509326bf1748db2aa28175cab2d72bacc735a6 Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Tue, 5 Mar 2013 22:23:21 +0100
-Subject: [PATCH 12/13] Keep auto-installed recommends when moved from depends
+Subject: [PATCH 12/15] Keep auto-installed recommends when moved from depends
  to recommends
 
 ---

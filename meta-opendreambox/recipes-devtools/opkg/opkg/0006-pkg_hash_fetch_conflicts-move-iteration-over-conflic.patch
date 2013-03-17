@@ -1,7 +1,7 @@
 From e6e32aab4321099110b6e258b8795ca3ee096c2f Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:17:52 +0200
-Subject: [PATCH 06/13] pkg_hash_fetch_conflicts: move iteration over
+Subject: [PATCH 06/15] pkg_hash_fetch_conflicts: move iteration over
  conflicts to subroutine
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>

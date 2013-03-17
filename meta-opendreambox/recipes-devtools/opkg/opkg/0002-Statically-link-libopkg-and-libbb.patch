@@ -1,7 +1,7 @@
 From 06e9c02bc2db0eb56d31d558fe3495734698784b Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:23:43 +0200
-Subject: [PATCH 02/13] Statically link libopkg and libbb
+Subject: [PATCH 02/15] Statically link libopkg and libbb
 
 * Based on https://dev.openwrt.org/browser/trunk/package/opkg/patches/007-force_static.patch
 

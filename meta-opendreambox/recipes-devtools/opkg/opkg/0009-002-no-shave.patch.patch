@@ -1,7 +1,7 @@
 From 03221b7e0d34aa24bd5aba72ae3d2616b3c748a9 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 16 May 2012 21:17:15 +0200
-Subject: [PATCH 09/13] 002-no-shave.patch
+Subject: [PATCH 09/15] 002-no-shave.patch
 
 ---
  Makefile.am  |    2 --
