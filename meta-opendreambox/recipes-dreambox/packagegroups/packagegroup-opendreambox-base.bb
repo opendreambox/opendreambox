@@ -8,7 +8,6 @@ inherit packagegroup
 
 RDEPENDS_${PN} += " \
   distro-feed-configs \
-  dreambox-bootlogo \
   dropbear \
   killall \
   openresolv \

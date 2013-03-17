@@ -1,14 +1,10 @@
 # dreambox.inc
 
-EXTRA_IMAGEDEPENDS += "dreambox-secondstage"
-
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "dreambox-dvb-modules"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "packagegroup-opendreambox-essential"
 MACHINE_FEATURES += "alsa kernel26 wifi"
 
-PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage"
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
 
 PREFERRED_VERSION_linux-dreambox = "${DREAMBOX_KERNEL_VERSION}"
