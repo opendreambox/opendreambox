@@ -6,13 +6,18 @@ XINETD_PACKAGES ?= "${PN}"
 # This class will be included in any recipe that supports xinetd,
 # even if the xinetd DISTRO_FEATURE isn't enabled. As such don't
 # make any changes directly but check the DISTRO_FEATURES first.
+
+def xinetd_enabled(d):
+    distro_features = d.getVar('DISTRO_FEATURES', True).split()
+    return 'xinetd' in distro_features and 'sysvinit' in distro_features
+
 python __anonymous() {
-    if "xinetd" in d.getVar("DISTRO_FEATURES", True).split():
+    if xinetd_enabled(d):
         d.appendVar("DEPENDS", " xinetd")
 }
 
 do_install_append() {
-	if ${@base_contains('DISTRO_FEATURES', 'xinetd', 'true', 'false', d)}; then
+	if ${@['false', 'true'][xinetd_enabled(d)]}; then
 		install -d ${D}${sysconfdir}/xinetd.d
 		for srcfile in ${WORKDIR}/*.xinetd.in; do
 			dstfile=`basename $srcfile .xinetd.in`
@@ -29,11 +34,7 @@ xinetd_reload() {
 }
 
 python xinetd_populate_packages() {
-    if "xinetd" not in d.getVar("DISTRO_FEATURES", True).split():
-        return
-
-    if d.getVar("SYSTEMD_BBCLASS_ENABLED", True):
-        bb.note("disabling xinetd.bbclass for %s due to systemd being enabled" % pkg)
+    if not xinetd_enabled(d):
         return
 
     def package_get_var(pkg, var):
