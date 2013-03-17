@@ -56,6 +56,7 @@ XSUM ?= md5sum
 BUILD_DIR = $(CURDIR)/build
 TOPDIR = $(BUILD_DIR)/$(MACHINE)
 DL_DIR = $(CURDIR)/sources
+PERSISTENT_DIR = $(CURDIR)/persist-cache
 SSTATE_DIR = $(CURDIR)/sstate-cache
 TMPDIR = $(CURDIR)/tmp
 DEPDIR = $(CURDIR)/.deps
@@ -165,6 +166,8 @@ distclean: clean
 	@$(RM) -r $(TMPDIR)
 	@echo '[*] Deleting sstate directory'
 	@$(RM) -r $(SSTATE_DIR)
+	@echo '[*] Deleting persistent directory'
+	@$(RM) -r $(PERSISTENT_DIR)
 	@echo '[*] Deleting build directory'
 	@$(RM) -r $(BUILD_DIR)
 	@echo '[*] Deleting git submodules'
@@ -221,6 +224,7 @@ OPENDREAMBOX_CONF_HASH := $(call hash, \
 	'BB_NUMBER_THREADS = "$(BB_NUMBER_THREADS)"' \
 	'PARALLEL_MAKE = "$(PARALLEL_MAKE)"' \
 	'DL_DIR = "$(DL_DIR)"' \
+	'PERSISTENT_DIR = "$(PERSISTENT_DIR)"' \
 	'SSTATE_DIR = "$(SSTATE_DIR)"' \
 	'TMPDIR = "$(TMPDIR)"' \
 	)
@@ -232,6 +236,7 @@ conf/opendreambox.conf: $(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH)
 	@echo 'BB_NUMBER_THREADS = "$(BB_NUMBER_THREADS)"' >> $@
 	@echo 'PARALLEL_MAKE = "$(PARALLEL_MAKE)"' >> $@
 	@echo 'DL_DIR = "$(DL_DIR)"' >> $@
+	@echo 'PERSISTENT_DIR = "$(PERSISTENT_DIR)"' >> $@
 	@echo 'SSTATE_DIR = "$(SSTATE_DIR)"' >> $@
 	@echo 'TMPDIR = "$(TMPDIR)"' >> $@
 	@echo 'BB_GENERATE_MIRROR_TARBALLS = "0"' >> $@
