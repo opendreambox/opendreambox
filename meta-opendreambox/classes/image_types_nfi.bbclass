@@ -104,3 +104,11 @@ IMAGE_DEPENDS_sum.jffs2.nfi = "${IMAGE_DEPENDS_sum.jffs2} dreambox-buildimage-na
 IMAGE_DEPENDS_ubi.nfi = "${IMAGE_DEPENDS_ubi} ${IMAGE_DEPENDS_ubifs} dreambox-buildimage-native"
 
 IMAGE_TYPES += "jffs2.nfi sum.jffs2.nfi ubi.nfi"
+
+runimagecmd_append() {
+    if [ -n "${IMAGE_LINK_NAME}" ]; then
+        if [ -e ${IMAGE_NAME}.nfi ]; then
+            ln -s ${IMAGE_NAME}.nfi ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.nfi
+        fi
+    fi
+}
