@@ -4,8 +4,9 @@
 !/meta-bsp/
 !/meta-opendreambox/
 !/meta-openembedded/
+/persist-cache/
 /sources/
 /sstate-cache/
-/tmp/
+/tmp*/
 /bitbake.env
 *.swp
