@@ -1,4 +1,4 @@
-PR .= "-dream0"
+PRINC := "${@int(PRINC) + 1}"
 
 DEFAULT_TIMEZONE = "CET"
 
