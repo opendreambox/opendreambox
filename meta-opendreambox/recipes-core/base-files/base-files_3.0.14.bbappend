@@ -18,7 +18,7 @@ if [ -z "$D" ]; then
 	       printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> /etc/fstab
 	fi
 	if grep -q '/dev/ubi0_1' /proc/mounts && ! grep -q '\s\+/data\s\+' /etc/fstab; then
-	        printf '/dev/ubi0_1\t/data\t\tubifs\trw\t\t\t\t0 0\n' >> /etc/fstab
+	        printf '/dev/ubi0_1\t/data\t\tubifs\trw,nofail\t\t\t\t0 0\n' >> /etc/fstab
 	fi
 fi
 }
