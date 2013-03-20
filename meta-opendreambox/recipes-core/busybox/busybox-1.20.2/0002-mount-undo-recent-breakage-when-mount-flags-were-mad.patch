@@ -1,7 +1,7 @@
-From 97f3b955b9af2c4023ff014d42c2d5b87e6c4795 Mon Sep 17 00:00:00 2001
+From 4d91be6d2d8c19404d33464f5354e34c6437f4ef Mon Sep 17 00:00:00 2001
 From: Denys Vlasenko <vda.linux@googlemail.com>
 Date: Fri, 22 Jun 2012 15:06:27 +0200
-Subject: [PATCH 6/8] mount: undo recent breakage when mount flags were made
+Subject: [PATCH 2/9] mount: undo recent breakage when mount flags were made
  unsigned
 
 Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>

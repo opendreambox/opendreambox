@@ -1,7 +1,7 @@
-From f811fca1f55401d9ea803f2f2c98c99768316800 Mon Sep 17 00:00:00 2001
+From e78ff901f44dbd73d86a9e603702b573fcb5b4e1 Mon Sep 17 00:00:00 2001
 From: Denys Vlasenko <vda.linux@googlemail.com>
 Date: Fri, 22 Jun 2012 15:17:18 +0200
-Subject: [PATCH 7/8] mount: do not pass "comment=ANYTHING" option to kernel.
+Subject: [PATCH 3/9] mount: do not pass "comment=ANYTHING" option to kernel.
  Closes 5240
 
 Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>

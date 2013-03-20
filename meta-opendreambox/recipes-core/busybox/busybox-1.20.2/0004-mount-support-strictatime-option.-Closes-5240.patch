@@ -1,7 +1,7 @@
-From 0acdf6c69d9452066b7284593705904eacbc6c12 Mon Sep 17 00:00:00 2001
+From 6c1e6c93dc2c2236fba550789c2da9f53994115a Mon Sep 17 00:00:00 2001
 From: Denys Vlasenko <vda.linux@googlemail.com>
 Date: Tue, 26 Jun 2012 16:09:00 +0200
-Subject: [PATCH 8/8] mount: support strictatime option. Closes 5240
+Subject: [PATCH 4/9] mount: support strictatime option. Closes 5240
 
 Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
 ---

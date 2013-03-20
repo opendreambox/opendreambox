@@ -1,0 +1,36 @@
+From cc5552ccdec4fc6648051683a1c2f89abb72a6c0 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 20 Mar 2013 14:59:20 +0100
+Subject: [PATCH 9/9] mount: don't pass option "nofail" to the kernel
+
+Fixes:
+| ubifs_parse_options: unrecognized mount option "nofail" or missing value
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ util-linux/mount.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/util-linux/mount.c b/util-linux/mount.c
+index 525fdcc..e05d0cd 100644
+--- a/util-linux/mount.c
++++ b/util-linux/mount.c
+@@ -219,6 +219,7 @@ static const int32_t mount_options[] = {
+ 		/* "defaults" */ 0,
+ 		/* "quiet" 0 - do not filter out, vfat wants to see it */
+ 		/* "noauto" */ MOUNT_NOAUTO,
++		/* "nofail" */ 0,
+ 		/* "sw"     */ MOUNT_SWAP,
+ 		/* "swap"   */ MOUNT_SWAP,
+ 		IF_DESKTOP(/* "user"  */ MOUNT_USERS,)
+@@ -278,6 +279,7 @@ static const char mount_option_str[] =
+ 		"defaults\0"
+ 		// "quiet\0" - do not filter out, vfat wants to see it
+ 		"noauto\0"
++		"nofail\0"
+ 		"sw\0"
+ 		"swap\0"
+ 		IF_DESKTOP("user\0")
+-- 
+1.7.10.4
+
