@@ -17,6 +17,7 @@ RDEPENDS_${PN} += " \
         busybox \
         connman \
         ${@base_contains('MACHINE_FEATURES', 'keyboard', 'keymaps', '', d)} \
+        netbase \
         udev \
         update-alternatives-cworth \
         ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
