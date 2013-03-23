@@ -1,7 +1,7 @@
-From 6a82797c26ac3b0ff61a781001de83262ce1a1a9 Mon Sep 17 00:00:00 2001
+From 82103f3c7d6b881f446e76622f4edb2af02835ca Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Mon, 11 Mar 2013 16:22:55 +0100
-Subject: [PATCH 2/3] block2mtd: add possibility to change the writesize
+Subject: [PATCH 4/7] block2mtd: add possibility to change the writesize
 
 ---
  drivers/mtd/devices/block2mtd.c |   28 ++++++++++++++++++----------

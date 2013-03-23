@@ -1,7 +1,7 @@
-From 8e370014f2f6f1ebb2d88e9bca1d446019e01b21 Mon Sep 17 00:00:00 2001
+From 37ae0a7544b0a8073a40b0336bc44799d97a61fb Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Tue, 12 Mar 2013 10:44:02 +0100
-Subject: [PATCH 1/4] add crypto api xz support
+Subject: [PATCH 2/7] add crypto api xz support
 
 ---
  crypto/Kconfig  |    7 ++++

@@ -1,7 +1,7 @@
-From fe788e3487cb03435e13bacc2af9c095ca329c2d Mon Sep 17 00:00:00 2001
+From 6bb93105ac9909c6341636cb81f39f691ff4ef3c Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Mon, 11 Mar 2013 16:25:45 +0100
-Subject: [PATCH 3/3] block2mtd: add possibility to remove block2mtd devices
+Subject: [PATCH 5/7] block2mtd: add possibility to remove block2mtd devices
  when block2mtd is compiled in kernel
 
 ---
