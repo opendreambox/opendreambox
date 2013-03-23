@@ -1,5 +1,5 @@
 SRCREV = "30414"
-PR = "${INC_PR}.5"
+PR = "${INC_PR}.6"
 
 # versions of OpenWrt backfire (10.03)
 HAL_VERSION = "20090508"
@@ -17,8 +17,10 @@ SRC_URI += " \
         file://ath-rate-ctlname.patch;apply=no \
         file://set-affinity-hint.patch;apply=no \
         file://workaround-high-interrupt-latency.patch;apply=no \
+        file://dm8000-nand-error-hack.patch;apply=no \
         file://madwifi-smp-affinity \
         "
+
 SRC_URI[md5sum] = "2c7352cbbdac995de8c3bce5b80db5f2"
 SRC_URI[sha256sum] = "0599c75b95ba63bdc554cb8124192e62c75fbeb71b9e8a5a7bc351c8e0666758"
 SRC_URI[hal.md5sum] = "4ab7ae8bdb96c0be388c98bf8f92d5ca"
@@ -42,6 +44,10 @@ do_postpatch() {
         patch -p1 -i ${WORKDIR}/ath-rate-ctlname.patch
         patch -p1 -i ${WORKDIR}/set-affinity-hint.patch
         patch -p1 -i ${WORKDIR}/workaround-high-interrupt-latency.patch
+}
+
+do_postpatch_append_dm8000() {
+        patch -p1 -i ${WORKDIR}/dm8000-nand-error-hack.patch
 }
 
 do_install_append() {
