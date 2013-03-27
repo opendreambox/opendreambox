@@ -1,4 +1,4 @@
-PR .= "-dream5"
+PR .= "-dream6"
 
 SRC_URI += "file://mountrun.sh"
 
