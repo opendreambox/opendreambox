@@ -4,8 +4,8 @@ LICENSE = "MIT | LGPLv2.1"
 LIC_FILES_CHKSUM = "file://src/gstdvbaudiosink.c;beginline=1;endline=45;md5=023ebb8eaef9b8cce8591a9d96638392 \
                     file://src/gstdvbvideosink.c;beginline=1;endline=44;md5=b597d3f0a4e3b49db42d2b5140bd7004"
 DEPENDS = "gstreamer gst-plugins-base"
-SRCREV = "c870a546eec7b84acb689775b23cf8f5b0489479"
-PR = "r9"
+SRCREV = "2e00fb0daf158f8e7db2c55aa5d2ec64c18998e9"
+PR = "r10"
 
 SCHWERKRAFT_PROJECT = "dvbmediasink"
 
