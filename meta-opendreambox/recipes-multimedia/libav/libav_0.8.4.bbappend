@@ -1,4 +1,5 @@
 LICENSE = "LGPLv2.1+"
-PR .= "-dream0"
+DEPENDS := "${@oe_filter_out('^(libvpx|x264)$', '${DEPENDS}', d)}"
+PRINC := "${@int(PRINC) + 1}"
 
-EXTRA_OECONF += "--disable-gpl --disable-libx264 --disable-nonfree --disable-version3 --disable-x11grab"
+EXTRA_OECONF += "--disable-gpl --disable-libvpx --disable-libx264 --disable-nonfree --disable-version3 --disable-x11grab"
