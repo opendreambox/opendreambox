@@ -58,7 +58,7 @@ TOPDIR = $(BUILD_DIR)/$(MACHINE)
 DL_DIR = $(CURDIR)/sources
 PERSISTENT_DIR = $(CURDIR)/persist-cache
 SSTATE_DIR = $(CURDIR)/sstate-cache
-TMPDIR = $(CURDIR)/tmp
+TMPDIR = $(TOPDIR)/tmp
 DEPDIR = $(CURDIR)/.deps
 
 BBLAYERS ?= \
@@ -226,7 +226,6 @@ OPENDREAMBOX_CONF_HASH := $(call hash, \
 	'DL_DIR = "$(DL_DIR)"' \
 	'PERSISTENT_DIR = "$(PERSISTENT_DIR)"' \
 	'SSTATE_DIR = "$(SSTATE_DIR)"' \
-	'TMPDIR = "$(TMPDIR)"' \
 	)
 
 conf/opendreambox.conf: $(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH)
@@ -238,7 +237,6 @@ conf/opendreambox.conf: $(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH)
 	@echo 'DL_DIR = "$(DL_DIR)"' >> $@
 	@echo 'PERSISTENT_DIR = "$(PERSISTENT_DIR)"' >> $@
 	@echo 'SSTATE_DIR = "$(SSTATE_DIR)"' >> $@
-	@echo 'TMPDIR = "$(TMPDIR)"' >> $@
 	@echo 'BB_GENERATE_MIRROR_TARBALLS = "0"' >> $@
 	@echo 'BBINCLUDELOGS = "yes"' >> $@
 	@echo 'CONF_VERSION = "1"' >> $@
@@ -253,6 +251,7 @@ LOCAL_CONF_HASH := $(call hash, \
 	'CURDIR = "$(CURDIR)"' \
 	'TOPDIR = "$(TOPDIR)"' \
 	'MACHINE = "$(MACHINE)"' \
+	'TMPDIR = "$(TMPDIR)"' \
 	)
 
 $(TOPDIR)/conf/local.conf: $(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH)
@@ -261,6 +260,7 @@ $(TOPDIR)/conf/local.conf: $(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH)
 	@echo '# Automatically generated file. Do not edit!' > $@
 	@echo 'TOPDIR = "$(TOPDIR)"' >> $@
 	@echo 'MACHINE = "$(MACHINE)"' >> $@
+	@echo 'TMPDIR = "$(TMPDIR)"' >> $@
 	@echo 'require $(CURDIR)/conf/opendreambox.conf' >> $@
 	@echo 'include $(DISTRO_INCLUDE_CONF)' >> $@
 	@echo 'include $(MACHINE_INCLUDE_CONF)' >> $@
