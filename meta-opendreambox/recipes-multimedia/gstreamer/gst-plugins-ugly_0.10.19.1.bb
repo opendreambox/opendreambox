@@ -58,5 +58,3 @@ do_configure_prepend() {
 }
 
 FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.19"
-
-require mips-only.inc

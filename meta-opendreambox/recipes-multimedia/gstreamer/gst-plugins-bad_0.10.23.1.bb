@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS += "libmusicbrainz tremor curl libmms faad2"
 DEPENDS += "gst-plugins-base"
-CONFLICTS = "librsvg"
 
 PR = "r5"
 
@@ -74,5 +73,3 @@ do_configure_prepend() {
 PACKAGES_DYNAMIC += "^libgst(basecamerabinsrc|basevideo|codecparsers|photography|signalprocessor)-${LIBV}.*"
 
 FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.23"
-
-require mips-only.inc
