@@ -1,0 +1,24 @@
+From 7b77f6b637137eeb745c1550a1f89c522dda003f Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@saftware.de>
+Date: Wed, 27 Mar 2013 23:18:57 +0100
+Subject: [PATCH] autofs-5.0.7 - fix dependencies for rpcgen
+
+From http://www.spinics.net/lists/autofs/msg00377.html
+
+Signed-off-by: Andreas Oberritter <obi@saftware.de>
+---
+ lib/Makefile |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/Makefile b/lib/Makefile
+index 5418009..bff4e1d 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -75,3 +75,4 @@ install: all
+ clean:
+ 	rm -f $(LIB) $(RPCS) $(OBJS) $(YACCSRC) *.output *~
+ 
++$(OBJS): $(RPCS)
+-- 
+1.7.10.4
+

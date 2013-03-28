@@ -1,6 +1,7 @@
 PRINC := "${@int(PRINC) + 1}"
 
 SRC_URI += "file://autofs-5.0.7-link-autofs.a-into-executable-only.patch \
+            file://autofs-5.0.7-fix-dependencies-for-rpcgen.patch \
             file://11default_automaster_location.patch \
             file://12disable_default_auto_master.patch \
             file://default-autofs-remove-USE_MISC_DEVICE.patch \
