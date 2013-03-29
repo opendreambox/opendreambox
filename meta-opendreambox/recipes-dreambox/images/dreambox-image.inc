@@ -10,9 +10,11 @@ DEPENDS = " \
 
 BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
 
+VIRTUAL-RUNTIME_init_manager ?= "sysvinit"
+
 # packages to drag into the image
 IMAGE_INSTALL = " \
-    packagegroup-boot-${DISTRO_FEATURES_INITMAN} \
+    packagegroup-boot-${VIRTUAL-RUNTIME_init_manager} \
     packagegroup-opendreambox-base \
     packagegroup-opendreambox-dvbapi3 \
     packagegroup-opendreambox-enigma2 \
