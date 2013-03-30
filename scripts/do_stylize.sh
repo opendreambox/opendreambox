@@ -43,20 +43,16 @@ TEMP=`mktemp` || {
 
 trap cleanup EXIT
 
-GIT_ROOT=`git rev-parse --show-cdup 2>/dev/null` || {
-	echo "Fatal: You must run this script from a Git checkout."
-	exit 1
-}
+DIR=$PWD
+while [ "$DIR" != "/" ]; do
+	if [ -e $DIR/meta-openembedded/contrib/oe-stylize.py ]; then
+		OE_STYLIZE="$DIR/meta-openembedded/contrib/oe-stylize.py"
+		break
+	fi
+	DIR=`dirname $DIR`
+done
 
-if [ -z "$GIT_ROOT" ]; then
-	GIT_ROOT="."
-fi
-
-if [ -f $GIT_ROOT/meta-openembedded/contrib/oe-stylize.py ]; then
-	OE_STYLIZE="$GIT_ROOT/meta-openembedded/contrib/oe-stylize.py"
-elif [ -f $GIT_ROOT/../meta-openembedded/contrib/oe-stylize.py ]; then
-	OE_STYLIZE="$GIT_ROOT/../meta-openembedded/contrib/oe-stylize.py"
-else
+if [ -z "$OE_STYLIZE" ]; then
 	echo "Fatal: oe-stylize.py not found."
 	exit 1
 fi
