@@ -1,4 +1,5 @@
 /build/
+/.cross-compile-*.env
 /.deps/
 /meta-*/
 !/meta-bsp/

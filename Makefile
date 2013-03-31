@@ -61,6 +61,8 @@ SSTATE_DIR = $(CURDIR)/sstate-cache
 TMPDIR = $(TOPDIR)/tmp
 DEPDIR = $(CURDIR)/.deps
 
+BITBAKE = . $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake
+
 BBLAYERS ?= \
 	$(wildcard $(CURDIR)/meta-bsp/$(MACHINE)) \
 	$(CURDIR)/meta-bsp/common \
@@ -70,17 +72,21 @@ BBLAYERS ?= \
 	$(CURDIR)/meta-openembedded/meta-networking \
 	$(CURDIR)/openembedded-core/meta
 
-CONFFILES = \
+CONFFILES_AUTO = \
 	bitbake.env \
 	conf/opendreambox.conf \
 	$(TOPDIR)/conf/bblayers.conf \
 	$(TOPDIR)/conf/local.conf
 
+CONFFILES_MANUAL = \
+	.cross-compile-$(MACHINE).env
+
 CONFDEPS = \
 	$(DEPDIR)/.bitbake.env.$(BITBAKE_ENV_HASH) \
 	$(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH) \
 	$(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CONF_HASH) \
-	$(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH)
+	$(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH) \
+	$(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH)
 
 GIT ?= git
 GIT_REMOTE := $(shell $(GIT) remote)
@@ -95,7 +101,7 @@ all: init usage
 $(BBLAYERS):
 	[ -d $@ ] || $(MAKE) $(MFLAGS) update
 
-init: $(BBLAYERS) $(CONFFILES)
+init: $(BBLAYERS) $(CONFFILES_AUTO)
 
 help:
 	@echo "Your options:"
@@ -154,7 +160,7 @@ usage:
 
 clean:
 	@echo '[*] Deleting generated configuration files'
-	@$(RM) $(CONFFILES) $(CONFDEPS)
+	@$(RM) $(CONFFILES_AUTO) $(CONFFILES_MANUAL) $(CONFDEPS)
 	@$(MAKE) $(MFLAGS) -C doc clean
 
 distclean: clean
@@ -182,11 +188,11 @@ doc:
 
 image: init
 	@echo '[*] Building image for $(USER_MACHINE)'
-	@. $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake $(MAKE_IMAGE_BB)
+	@$(BITBAKE) $(MAKE_IMAGE_BB)
 
 download: init
 	@echo '[*] Downloading sources'
-	@. $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake -cfetchall -k $(MAKE_IMAGE_BB)
+	@$(BITBAKE) -cfetchall -k $(MAKE_IMAGE_BB)
 
 update:
 	@echo '[*] Updating Git repositories...'
@@ -280,6 +286,27 @@ $(TOPDIR)/conf/bblayers.conf: $(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CON
 	@echo 'BBLAYERS = "$(BBLAYERS)"' >> $@
 	@echo 'include $(DISTRO_INCLUDE_CONF)' >> $@
 	@echo 'include $(MACHINE_INCLUDE_CONF)' >> $@
+
+CROSS_COMPILE_ENV_VARS = \
+	ABIEXTENSION LIBCEXTENSION \
+	PARALLEL_MAKE \
+	TMPDIR TOPDIR \
+	TUNE_ARCH TUNE_ASARGS TUNE_CCARGS TUNE_LDARGS TUNE_PKGARCH
+
+CROSS_COMPILE_ENV_HASH := $(call hash, \
+	'CROSS_COMPILE_ENV_VERSION = "0"' \
+	'CURDIR = "$(CURDIR)"' \
+	'PARALLEL_MAKE = "$(PARALLEL_MAKE)"' \
+	'TMPDIR = "$(TMPDIR)"' \
+	'TOPDIR = "$(TOPDIR)"' \
+	'CROSS_COMPILE_VARS = "$(CROSS_COMPILE_ENV_VARS)"' \
+	)
+
+.cross-compile-$(MACHINE).env: $(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH)
+	@test -d $(TOPDIR) || (echo 'The directory "$(TOPDIR)" does not exist. Is "$(MACHINE)" a valid machine? Try running "make MACHINE=$(MACHINE)" first.' && exit 1)
+	@echo '[*] Generating $@'
+	@echo '# Automatically generated file. Do not edit!' > $@
+	($(BITBAKE) -e | grep $(foreach var,$(CROSS_COMPILE_ENV_VARS),-e ^$(var)=)) >> $@ || ($(RM) $@ && exit 1)
 
 $(CONFDEPS):
 	@test -d $(@D) || mkdir -p $(@D)
