@@ -287,19 +287,23 @@ $(TOPDIR)/conf/bblayers.conf: $(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CON
 	@echo 'include $(DISTRO_INCLUDE_CONF)' >> $@
 	@echo 'include $(MACHINE_INCLUDE_CONF)' >> $@
 
+CROSS_COMPILE_ENV_BLACKLIST = \
+	HOME LOGNAME PWD SHELL SSH_AGENT_PID SSH_AUTH_SOCK TERM USER
+
 CROSS_COMPILE_ENV_HASH := $(call hash, \
 	'CROSS_COMPILE_ENV_VERSION = "0"' \
 	'CURDIR = "$(CURDIR)"' \
 	'PARALLEL_MAKE = "$(PARALLEL_MAKE)"' \
 	'TMPDIR = "$(TMPDIR)"' \
 	'TOPDIR = "$(TOPDIR)"' \
+	'CROSS_COMPILE_ENV_BLACKLIST = "$(CROSS_COMPILE_ENV_BLACKLIST)"' \
 	)
 
 .cross-compile-$(MACHINE).env: $(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH)
 	@test -d $(TOPDIR) || (echo 'The directory "$(TOPDIR)" does not exist. Is "$(MACHINE)" a valid machine? Try running "make MACHINE=$(MACHINE)" first.' && exit 1)
 	@echo '[*] Generating $@'
 	@echo '# Automatically generated file. Do not edit!' > $@
-	@($(BITBAKE) -e | grep '^\(export\s\)\?[a-zA-Z0-9_]\+=".*"$$' | sed -e 's,^export\s,,') >> $@ || ($(RM) $@ && exit 1)
+	@($(BITBAKE) -e | grep '^\(export\s\)\?[a-zA-Z0-9_]\+=".*"$$' | sed -e 's,^export\s,,' | grep -v $(foreach v,$(CROSS_COMPILE_ENV_BLACKLIST),-e ^$(v)=) | sed -e 's,^,local ,' | sort) >> $@ || ($(RM) $@ && exit 1)
 
 $(CONFDEPS):
 	@test -d $(@D) || mkdir -p $(@D)
