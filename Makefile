@@ -88,6 +88,17 @@ CONFDEPS = \
 	$(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH) \
 	$(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH)
 
+CONFFILES_BITBAKE = \
+	$(TOPDIR)/conf/bblayers.conf \
+	$(TOPDIR)/conf/local.conf \
+	conf/opendreambox.conf \
+	openembedded-core/meta/conf/bitbake.conf \
+	$(wildcard \
+		conf/bblayers-ext.conf \
+		conf/bblayers-$(MACHINE)-ext.conf \
+		conf/local-ext.conf \
+		conf/local-$(MACHINE)-ext.conf)
+
 GIT ?= git
 GIT_REMOTE := $(shell $(GIT) remote)
 GIT_USER_NAME := $(shell $(GIT) config user.name)
@@ -299,7 +310,7 @@ CROSS_COMPILE_ENV_HASH := $(call hash, \
 	'CROSS_COMPILE_ENV_BLACKLIST = "$(CROSS_COMPILE_ENV_BLACKLIST)"' \
 	)
 
-.cross-compile-$(MACHINE).env: $(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH)
+.cross-compile-$(MACHINE).env: $(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH) $(CONFFILES_BITBAKE)
 	@test -d $(TOPDIR) || (echo 'The directory "$(TOPDIR)" does not exist. Is "$(MACHINE)" a valid machine? Try running "make MACHINE=$(MACHINE)" first.' && exit 1)
 	@echo '[*] Generating $@'
 	@echo '# Automatically generated file. Do not edit!' > $@
