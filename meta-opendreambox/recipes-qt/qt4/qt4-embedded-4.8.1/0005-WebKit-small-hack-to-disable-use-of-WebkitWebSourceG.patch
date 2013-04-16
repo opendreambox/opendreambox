@@ -1,0 +1,26 @@
+From 1bdeb829a288f550c82f1e9ae4a5a44ea3c5a039 Mon Sep 17 00:00:00 2001
+From: Stephan Reichholf <reichi@opendreambox.org>
+Date: Tue, 16 Apr 2013 14:03:26 +0200
+Subject: [PATCH] WebKit: small hack to disable use of
+ WebkitWebSourceGStreamer for http/https
+
+---
+ .../WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/3rdparty/webkit/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp b/src/3rdparty/webkit/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp
+index e48998f..2e0199c 100644
+--- a/src/3rdparty/webkit/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp
++++ b/src/3rdparty/webkit/Source/WebCore/platform/graphics/gstreamer/WebKitWebSourceGStreamer.cpp
+@@ -544,7 +544,7 @@ static GstURIType webKitWebSrcUriGetType(void)
+ 
+ static gchar** webKitWebSrcGetProtocols(void)
+ {
+-    static gchar* protocols[] = {(gchar*) "http", (gchar*) "https", 0 };
++    static gchar* protocols[] = {(gchar*) "webkit+http", (gchar*) "webkit+https", 0 };
+ 
+     return protocols;
+ }
+-- 
+1.7.10.4
+
