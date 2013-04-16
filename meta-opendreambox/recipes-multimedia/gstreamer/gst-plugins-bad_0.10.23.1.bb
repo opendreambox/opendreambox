@@ -19,6 +19,8 @@ EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disab
 
 ARM_INSTRUCTION_SET = "arm"
 
+CPPFLAGS += "${@base_contains('DISTRO_FEATURES', 'x11', '', '-DMESA_EGL_NO_X11_HEADERS', d)}"
+
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
 
 SRC_URI += " \
