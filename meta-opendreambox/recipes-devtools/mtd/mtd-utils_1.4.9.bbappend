@@ -1,8 +1,11 @@
-PR .= "-dream3"
+PR .= "-dream4"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
-SRC_URI += "${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', 'file://disable-ubi.patch', '', d)}"
+DISABLE_UBI_PATCH = "${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', 'file://disable-ubi.patch', '', d)}"
+DISABLE_UBI_PATCH_virtclass-native = ""
+
+SRC_URI += "${DISABLE_UBI_PATCH}"
 
 PACKAGES_DYNAMIC = "mtd-utils-*"
 
