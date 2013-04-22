@@ -1,5 +1,6 @@
---- ./plugins/elements/gstmultiqueue.c-original	2013-01-08 14:40:09.002563354 +0100
-+++ ./plugins/elements/gstmultiqueue.c	2013-01-08 14:39:45.578850244 +0100
+diff -Naur git.org/plugins/elements/gstmultiqueue.c git/plugins/elements/gstmultiqueue.c
+--- git.org/plugins/elements/gstmultiqueue.c	2013-04-22 23:33:43.840120880 +0200
++++ git/plugins/elements/gstmultiqueue.c	2013-04-22 23:37:47.728118492 +0200
 @@ -161,6 +161,7 @@
    GstDataQueueSize max_size, extra_size;
    GstClockTime cur_time;
@@ -30,14 +31,8 @@
    } else {
      percent = 0;
      if (sq->max_size.time > 0) {
-@@ -1606,15 +1615,26 @@
-   GstSingleQueue *sq = gst_pad_get_element_private (pad);
-   GstPad *otherpad;
-   GstCaps *result;
--
-+  GstStructure* str;
-+  const gchar *g_type;
-+
+@@ -1609,11 +1618,24 @@
+ 
    otherpad = (pad == sq->srcpad) ? sq->sinkpad : sq->srcpad;
  
 -  GST_LOG_OBJECT (otherpad, "Getting caps from the peer of this pad");
@@ -45,22 +40,25 @@
    result = gst_pad_peer_get_caps (otherpad);
    if (result == NULL)
      result = gst_caps_new_any ();
- 
-+  str = gst_caps_get_structure(result, 0);
-+  g_type = str ? gst_structure_get_name(str) : (const gchar*)"unknown";
-+
-+  GST_LOG_OBJECT (otherpad, "Got caps from the peer of this pad: %s", g_type);
-+
-+  if ( !g_strcmp0(g_type, "video/x-dvd-subpicture") || !g_strcmp0(g_type, "text/x-pango-markup") || !g_strcmp0(g_type, "text/plain") || !g_strcmp0(g_type, "subpicture/x-pgs") )
++  else
 +  {
-+    GST_INFO_OBJECT (otherpad, "subtitle stream discovered --> set is_sparse to true");
-+    sq->is_sparse = TRUE;
-+  }
++    GstStructure* str;
++    const gchar *g_type;
++    str = gst_caps_get_structure(result, 0);
++    g_type = str ? gst_structure_get_name(str) : (const gchar*)"unknown";
 +
++    GST_LOG_OBJECT (otherpad, "Got caps from the peer of this pad: %s", g_type);
++
++    if ( !g_strcmp0(g_type, "video/x-dvd-subpicture") || !g_strcmp0(g_type, "text/x-pango-markup") || !g_strcmp0(g_type, "text/plain") || !g_strcmp0(g_type, "subpicture/x-pgs") )
++    {
++      GST_INFO_OBJECT (otherpad, "subtitle stream discovered --> set is_sparse to true");
++      sq->is_sparse = TRUE;
++    }
++  }
+ 
    return result;
  }
- 
-@@ -1841,7 +1861,7 @@
+@@ -1841,7 +1863,7 @@
  
      GST_LOG_OBJECT (mq, "Checking Queue %d", oq->id);
  
@@ -69,7 +67,7 @@
        GST_LOG_OBJECT (mq, "Queue %d is empty", oq->id);
        if (IS_FILLED (sq, visible, size.visible)) {
          sq->max_size.visible = size.visible + 1;
-@@ -1868,7 +1888,7 @@
+@@ -1868,7 +1890,7 @@
       *    we are checking here.
       */
      if (sq->is_eos || IS_FILLED (sq, bytes, ssize.bytes) ||
@@ -78,7 +76,7 @@
        GST_LOG_OBJECT (mq, "Queue %d is filled", oq->id);
        filled = TRUE;
      }
-@@ -1911,7 +1931,7 @@
+@@ -1911,7 +1933,7 @@
          gst_data_queue_limits_changed (oq->queue);
        }
      }
@@ -87,7 +85,7 @@
        empty = FALSE;
    }
    GST_MULTI_QUEUE_MUTEX_UNLOCK (mq);
-@@ -2011,6 +2031,7 @@
+@@ -2011,6 +2033,7 @@
        (GstDataQueueFullCallback) single_queue_overrun_cb,
        (GstDataQueueEmptyCallback) single_queue_underrun_cb, sq);
    sq->is_eos = FALSE;
