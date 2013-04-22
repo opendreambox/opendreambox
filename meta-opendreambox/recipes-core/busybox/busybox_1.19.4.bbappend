@@ -1,4 +1,4 @@
-PR .= "-dream12"
+PR .= "-dream13"
 
 SRC_URI += "file://busybox-telnetd.xinetd.in \
             file://busybox-telnetd@.service \
@@ -12,7 +12,8 @@ SRC_URI += "file://busybox-telnetd.xinetd.in \
             file://0007-ifplugd-move-read_pid-to-libbb-pidfile.c-and-rename-.patch \
             file://0008-ifupdown-dhcp_down-wait-until-udhcpc-has-been-killed.patch \
             file://0009-udhcpc-calculate-broadcast-address-if-not-given-by-s.patch \
-            file://0010-udhcpc-obtain-hostname-from-OS-by-default.patch"
+            file://0010-udhcpc-obtain-hostname-from-OS-by-default.patch \
+            file://0011-mount-don-t-pass-option-auto-to-kernel.patch"
 
 inherit systemd xinetd
 

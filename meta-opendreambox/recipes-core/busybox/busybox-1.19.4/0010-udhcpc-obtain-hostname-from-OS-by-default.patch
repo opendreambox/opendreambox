@@ -1,7 +1,7 @@
 From 2b4773b6ae48fee56c60fb4a1835672cbca78aee Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Tue, 15 Jan 2013 17:33:53 +0100
-Subject: [PATCH 10/10] udhcpc: obtain hostname from OS by default
+Subject: [PATCH 10/11] udhcpc: obtain hostname from OS by default
 
 * Doesn't require the 'hostname' option in /etc/network/interfaces,
   and thus makes udhcpc behave like other clients.

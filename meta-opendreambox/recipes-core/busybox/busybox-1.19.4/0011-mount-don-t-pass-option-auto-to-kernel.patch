@@ -1,0 +1,38 @@
+From 7c462943dd3c283314e68e945d544dfbaaa4cb25 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 22 Apr 2013 10:40:36 +0200
+Subject: [PATCH 11/11] mount: don't pass option "auto" to kernel
+
+Fixes the following error if "auto" is set in fs options:
+| EXT3-fs (sda1): error: unrecognized mount option "auto" or missing value
+| EXT4-fs (sda1): Unrecognized mount option "auto" or missing value
+| XFS (sda1): unknown mount option [auto].
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ util-linux/mount.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/util-linux/mount.c b/util-linux/mount.c
+index 05e532c..670935d 100644
+--- a/util-linux/mount.c
++++ b/util-linux/mount.c
+@@ -212,6 +212,7 @@ static const int32_t mount_options[] = {
+ 	IF_FEATURE_MOUNT_FSTAB(
+ 		/* "defaults" */ 0,
+ 		/* "quiet" 0 - do not filter out, vfat wants to see it */
++		/* "auto" */ 0,
+ 		/* "noauto" */ MOUNT_NOAUTO,
+ 		/* "sw"     */ MOUNT_SWAP,
+ 		/* "swap"   */ MOUNT_SWAP,
+@@ -269,6 +270,7 @@ static const char mount_option_str[] =
+ 	IF_FEATURE_MOUNT_FSTAB(
+ 		"defaults\0"
+ 		// "quiet\0" - do not filter out, vfat wants to see it
++		"auto\0"
+ 		"noauto\0"
+ 		"sw\0"
+ 		"swap\0"
+-- 
+1.7.10.4
+

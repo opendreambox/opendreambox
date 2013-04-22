@@ -1,7 +1,7 @@
 From c011ab2fb52c2ee03aa9544b0d242683ee4362e1 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Fri, 27 Apr 2012 01:40:25 +0200
-Subject: [PATCH 06/10] get_linux_version_code: don't fail on 3.0-foo
+Subject: [PATCH 06/11] get_linux_version_code: don't fail on 3.0-foo
 
 Fixes segmentation fault in mount (nfs):
 

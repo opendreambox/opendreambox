@@ -1,7 +1,7 @@
 From a7b406ba64b7a4d9c9610726cb72568fc9848f5d Mon Sep 17 00:00:00 2001
 From: Lauri Hintsala <lauri.hintsala@bluegiga.com>
 Date: Wed, 14 Dec 2011 16:49:58 +0200
-Subject: [PATCH 03/10] ifupdown: remove interface from state_list if iface_up
+Subject: [PATCH 03/11] ifupdown: remove interface from state_list if iface_up
  fails
 
 Fix the issue where interface is set to the configured state even if
