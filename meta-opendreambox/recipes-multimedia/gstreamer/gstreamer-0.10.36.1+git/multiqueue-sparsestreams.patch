@@ -49,7 +49,7 @@ diff -Naur git.org/plugins/elements/gstmultiqueue.c git/plugins/elements/gstmult
 +
 +    GST_LOG_OBJECT (otherpad, "Got caps from the peer of this pad: %s", g_type);
 +
-+    if ( !g_strcmp0(g_type, "video/x-dvd-subpicture") || !g_strcmp0(g_type, "text/x-pango-markup") || !g_strcmp0(g_type, "text/plain") || !g_strcmp0(g_type, "subpicture/x-pgs") )
++    if ( !g_strcmp0(g_type, "video/x-dvd-subpicture") || !g_strcmp0(g_type, "text/x-pango-markup") || !g_strcmp0(g_type, "text/plain") || !g_strcmp0(g_type, "subpicture/x-pgs") || !g_strcmp0(g_type, "subpicture/x-ass") )
 +    {
 +      GST_INFO_OBJECT (otherpad, "subtitle stream discovered --> set is_sparse to true");
 +      sq->is_sparse = TRUE;
