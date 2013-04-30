@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Enigma2 Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-INC_PR = "r31"
+INC_PR = "r32"
 
 inherit task
 
@@ -98,4 +98,5 @@ RRECOMMENDS_${PN} += " \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'task-opendreambox-dvdplayer', '', d)} \
   ${@base_contains('MACHINE_FEATURES', 'modem', 'task-opendreambox-modem', '', d)} \
   ${@base_contains('MACHINE_FEATURES', 'wifi', 'task-opendreambox-wlan', '', d)} \
+  glib-networking \
 "
