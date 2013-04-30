@@ -8,10 +8,10 @@ DEPENDS += "gst-plugins-base libid3tag libmad mpeg2dec liba52 lame libcdio openc
 
 EXTRA_OECONF += "--enable-orc"
 
-PR = "r1"
+PR = "r3"
 GIT_PV = ""
 
-SRCREV = "40dc5f64f6f21a723cb5f92c0902559c3bfb08a0"
+SRCREV = "9afc696e5fa9fb980e02df5637f022796763216f"
 
 inherit autotools pkgconfig gettext git-project
 
