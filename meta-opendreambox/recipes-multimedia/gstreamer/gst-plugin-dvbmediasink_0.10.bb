@@ -5,7 +5,6 @@ LIC_FILES_CHKSUM = "file://src/gstdvbaudiosink.c;beginline=1;endline=45;md5=023e
                     file://src/gstdvbvideosink.c;beginline=1;endline=44;md5=b597d3f0a4e3b49db42d2b5140bd7004"
 DEPENDS = "gstreamer gst-plugins-base"
 SRCREV = "7671ff6f07a70151ef183e0f501097de5cf7f1b3"
-PR = "r18"
 
 SCHWERKRAFT_PROJECT = "dvbmediasink"
 

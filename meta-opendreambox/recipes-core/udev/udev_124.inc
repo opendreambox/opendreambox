@@ -15,8 +15,6 @@ SRC_URI = "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-${PV}.tar.gz \
            file://init \
 	   file://udev-compat-wrapper-patch"
 
-INC_PR = "r30"
-
 inherit update-rc.d autotools pkgconfig
 
 PARALLEL_MAKE = ""

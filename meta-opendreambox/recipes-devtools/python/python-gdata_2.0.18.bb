@@ -5,7 +5,6 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://README.txt;beginline=1;endline=13;md5=7a713fc5eed20ac1904c2efe0b816a33"
 RDEPENDS_${PN} = "python-elementtree"
 RDEPENDS_${PN}-tests = "${PN}"
-PR = "r0"
 
 SRC_URI = "http://gdata-python-client.googlecode.com/files/gdata-${PV}.tar.gz;name=archive"
 SRC_URI[archive.md5sum] = "13b6e6dd8f9e3e9a8e005e05a8329408"

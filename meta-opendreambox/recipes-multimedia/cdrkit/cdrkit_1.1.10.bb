@@ -3,7 +3,6 @@ HOMEPAGE = "http://www.cdrkit.org"
 DEPENDS = "libcap bzip2"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b30d3b2750b668133fc17b401e1b98f8"
-PR = "r1"
 
 SRC_URI = " \
 	http://cdrkit.org/releases/${P}.tar.gz;name=archive \

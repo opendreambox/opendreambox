@@ -4,7 +4,6 @@ SECTION = "libs"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6e29c688d912da12b66b73e32b03d812"
 DEPENDS = "libcdio"
-PR = "r2"
 
 SRC_URI = "http://downloads.sourceforge.net/${PN}/${P}.tar.bz2"
 SRC_URI[md5sum] = "8bb4a6f542197e8e9648ae597cd6bc8a"

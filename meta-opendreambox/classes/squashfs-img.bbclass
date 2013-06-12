@@ -4,13 +4,10 @@ SQUASHFS_IMG_BLOCKSIZES ?= ""
 SQUASHFS_IMG_FILESREGEX ?= ""
 SQUASHFS_IMG_COMPRESSOR ?= ""
 SQUASHFS_IMG_SUPPORT_ENABLED ?= "${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, 1, 0, d)}"
-SQUASHFS_IMG_PR_INC ?= "-sqsh0"
 
 DEPENDS += '${@base_contains('SQUASHFS_IMG_SUPPORT_ENABLED', '1', 'squashfs-tools-native dreambox-squashfs-support', '', d)}'
 
 PACKAGE_ARCH := "${@base_contains('SQUASHFS_IMG_SUPPORT_ENABLED', '1', '${MACHINE_ARCH}', '${PACKAGE_ARCH}', d)}"
-
-PR .= "${@base_contains('SQUASHFS_IMG_SUPPORT_ENABLED', '1', '${SQUASHFS_IMG_PR_INC}', '', d)}"
 
 python emit_pkgdata_prepend() {
     import os, subprocess, glob, re, shutil

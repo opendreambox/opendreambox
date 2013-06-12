@@ -9,8 +9,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 DEPENDS += "libmusicbrainz tremor curl libmms faad2"
 DEPENDS += "gst-plugins-base"
 
-PR = "r5"
-
 SRCREV = "cef47d85294a0dca38631f938b81a3f0dd6891bd"
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \

@@ -1,5 +1,3 @@
-PR .= "-dream4"
-
 SRC_URI += " \
         file://67_init_hddown.dpatch \
         file://92_sata-hddown.dpatch \

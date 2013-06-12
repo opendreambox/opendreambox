@@ -1,5 +1,3 @@
-PR .= "-dream2"
-
 SRC_URI += " \
 	file://init \
 "

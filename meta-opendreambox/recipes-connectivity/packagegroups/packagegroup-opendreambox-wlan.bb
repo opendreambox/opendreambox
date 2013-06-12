@@ -8,7 +8,6 @@ DEPENDS = " \
   r8192c \
   virtual/kernel \
 "
-PR = "r15"
 
 inherit packagegroup
 

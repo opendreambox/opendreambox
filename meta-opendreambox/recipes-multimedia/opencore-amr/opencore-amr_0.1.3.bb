@@ -2,7 +2,6 @@ SUMMARY = "Adaptive Multi Rate speech codecs"
 SECTION = "libs/multimedia"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=dd2c2486aca02190153cf399e508c7e7"
-PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.gz"
 SRC_URI[md5sum] = "09d2c5dfb43a9f6e9fec8b1ae678e725"

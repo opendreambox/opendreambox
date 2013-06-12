@@ -1,5 +1,3 @@
-PR .= "-dream0"
-
 SRC_URI += "file://optional-extfs-dir.patch \
             file://optional-hints.patch \
             file://optional-sfs-ini.patch \

@@ -4,7 +4,6 @@ SECTION = "kernel"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=b0e5b5cb9edb5794f96103f3598518ac"
 SRCREV = "500397585d53a08f83d1798c0e871c91667a2be3"
-PR = "r1"
 
 SRC_URI = "git://github.com/chunkeey/carl9170fw.git;protocol=git \
            file://carl9170-1.fw"

@@ -13,7 +13,6 @@ SRC_URI[md5sum] = "cf49a8676c21c50faf1b42b528049471"
 SRC_URI[sha256sum] = "e5561c9714583fd052ea9e0b10331609a719b3878f9d2593e4c57eab0ba0effd"
 
 S = "${WORKDIR}/Twisted-${PV}"
-PR = "r2"
 
 inherit setuptools
 

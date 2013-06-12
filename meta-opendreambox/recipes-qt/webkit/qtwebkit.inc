@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM = "file://Source/JavaScriptCore/COPYING.LIB;md5=d0c6d6397a5d842
                     file://Source/WebCore/LICENSE-LGPL-2.1;md5=a778a33ef338abbaf8b8a7c36b6eec80 \
                     file://Source/WebKit/LICENSE;md5=4646f90082c40bcf298c285f8bab0b12"
 DEPENDS += "fontconfig sqlite3"
-INC_PR = "r1"
 
 inherit lib_package pkgconfig
 

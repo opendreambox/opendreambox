@@ -1,7 +1,6 @@
 SUMMARY = "dbox2/dreambox compatible header files"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://dbox/avs_core.h;beginline=1;endline=21;md5=b2ab401756a0768647ae13acb2e325ab"
-PR = "r1"
 
 SRC_URI = "http://sources.dreamboxupdate.com/snapshots/include2.tar.gz"
 SRC_URI[md5sum] = "9d236095a88d7ce9f3bf0503ee5237d6"

@@ -1,5 +1,3 @@
-PR = "${INC_PR}.0"
-
 SRC_URI = "file://small_hdd_bugfix.patch \
            file://fix_madwifi.patch \
            file://enigma2_de.mo"

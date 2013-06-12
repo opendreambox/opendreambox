@@ -5,7 +5,6 @@ DEPENDS = "freetype"
 RDEPENDS_${PN} = "enigma2"
 SRCDATE = "20070410"
 PV = "1.16+cvs${SRCDATE}"
-PR = "r0"
 
 SRC_URI = "cvs://anoncvs@cvs.tuxbox.org/cvs/tuxbox;module=apps/tuxbox/plugins/tuxcom;method=ext \
         file://makefiles.diff \

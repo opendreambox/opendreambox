@@ -1,5 +1,3 @@
-PR .= "-dream2"
-
 PACKAGES =+ "${PN}-rt2800usb ${PN}-rt73usb"
 
 LICENSE_${PN}-rt2800usb = "Firmware:LICENCE.ralink-firmware.txt"

@@ -6,8 +6,6 @@ LIC_FILES_CHKSUM = "file://rtmp_main.c;endline=25;md5=10585d272398025e832fa07933
 
 inherit module
 
-PR = "r6"
-
 SRC_URI = "http://www.ralinktech.com.tw/data/drivers/2008_0506_RT73_Linux_STA_Drv1.1.0.1.tar.bz2 \
            file://make.patch \
            file://changeiface.patch"

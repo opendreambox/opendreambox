@@ -1,5 +1,4 @@
 DEPENDS += "libcdio opencore-amr"
-PR .= "-dream4"
 
 SRC_URI += "file://dvdsubdec-addproperty-singlebuffer.patch \
             file://fix-opencore-amr-1.patch \

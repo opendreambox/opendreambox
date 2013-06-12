@@ -7,8 +7,6 @@ RDEPENDS_${PN} = "wireless-tools"
 
 inherit module
 
-PR = "r4"
-
 SRC_URI = " \
         http://www.reactivated.net/software/zd1211-vendor/releases/ZD1211LnxDrv_2_22_0_0.tar.gz \
         file://cross_compile.patch \

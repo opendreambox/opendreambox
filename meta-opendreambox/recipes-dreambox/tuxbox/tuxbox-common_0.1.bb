@@ -1,7 +1,6 @@
 SUMMARY = "Tuxbox common files"
 LICENSE = "CLOSED"
 SRCREV = "2c88742ab048d5aa91b454a564c74917d7085c65"
-PR = "r2"
 
 inherit opendreambox-git
 

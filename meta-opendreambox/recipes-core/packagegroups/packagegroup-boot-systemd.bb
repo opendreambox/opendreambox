@@ -1,5 +1,3 @@
-PR = "${INC_PR}.0"
-
 RDEPENDS_${PN} = " \
         systemd \
         systemd-compat-units"

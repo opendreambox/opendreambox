@@ -3,7 +3,6 @@ HOMEPAGE = "http://joe-editor.sourceforge.net/"
 SECTION = "console/utils"
 LICENSE = "GPL-1.0"
 LIC_FILES_CHKSUM = "file://COPYING;md5=da10ed7cf8038981c580e11c1d3e8fb6"
-PR = "r2"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/joe-editor/joe-${PV}.tar.gz"
 SRC_URI[md5sum] = "66de1b073e869ba12abbfcde3885c577"

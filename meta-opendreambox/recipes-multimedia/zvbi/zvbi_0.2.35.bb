@@ -5,7 +5,6 @@ LICENSE_libzvbi = "LGPLv2+"
 LICENSE_libzvbi-chains = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://README;endline=31;md5=8e5fdf6998713f2beb4790827baad7e9"
 DEPENDS = "libpng"
-PR = "r0"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/zapping/zvbi/${BP}.tar.bz2 \
            file://0001-Fix-linker-errors-due-to-implicit-declaration-of-S_I.patch \

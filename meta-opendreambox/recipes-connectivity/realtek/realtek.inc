@@ -1,7 +1,6 @@
 SUMMARY = "Driver for Realtek USB wireless devices"
 HOMEPAGE = "http://www.realtek.com/"
 LICENSE = "GPLv2"
-PR = "r5"
 
 SRC_URI += "http://dreamboxupdate.com/download/sources/${RTL_BASENAME}.tar.gz"
 

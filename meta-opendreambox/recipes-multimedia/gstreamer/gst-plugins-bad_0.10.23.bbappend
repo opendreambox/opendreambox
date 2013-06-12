@@ -1,5 +1,4 @@
 DEPENDS += "libmms"
-PR .= "-dream4"
 
 SRC_URI += " \
         file://0001-mpegtsdemux-fix-bd-streamtype-detection.diff.patch \

@@ -12,8 +12,6 @@ DEPENDS += "gstreamer"
 
 SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
 
-PR = "r4"
-
 inherit autotools pkgconfig gettext git-project
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"

@@ -5,7 +5,6 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5a159dd66aeb92b678404daa0fedfa04"
 DEPENDS = "bison-native"
 SRCREV = "d1c413ff94fd9a6365d29b0b65a4558c3190e769"
-PR = "r1"
 
 SRC_URI = "git://github.com/troglobit/mrouted.git"
 

@@ -1,7 +1,5 @@
 require blindscan-utils.inc
 
-PR = "${INC_PR}.0"
-
 SRC_URI[mips32el-nf.md5sum] = "143cb7253132af1ecd3aafa3679c6109"
 SRC_URI[mips32el-nf.sha256sum] = "53d2760e3aa19eab6e19edabe8b9dd840c693ca30c43495904241e52fd40ea32"
 SRC_URI[mips32el.md5sum] = "1dd11bc63e8a638f240689e9a00969e4"

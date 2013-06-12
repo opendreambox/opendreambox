@@ -1,7 +1,5 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
-PR = "r2"
-
 SRC_URI += " \
         file://mips-add-missing-headers.patch \
         file://mips-fix-ptrace-header.patch \

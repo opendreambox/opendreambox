@@ -5,8 +5,6 @@ RPROVIDES_${PN} = "hotplug"
 
 require udev_124.inc
 
-PR = "${INC_PR}.5"
-
 LD = "${CC}"
 
 SRC_URI += "file://noasmlinkage.patch \

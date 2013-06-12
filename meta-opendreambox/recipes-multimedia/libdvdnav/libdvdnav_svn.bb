@@ -5,7 +5,6 @@ LIC_FILES_CHKSUM = "file://README;beginline=42;endline=43;md5=3f2e6972567beedaa9
                     file://src/dvdnav.c;beginline=1;endline=19;md5=8270661e7e05a78e14714e0fb3048b12"
 DEPENDS = "libdvdread"
 PV = "4.2.0+svnr${SRCPV}"
-PR = "r1"
 
 SRC_URI = "svn://svn.mplayerhq.hu/dvdnav/trunk;module=${PN} \
            file://0001-dvdnavmini.pc-link-against-libdvdnavmini.patch"
