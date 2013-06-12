@@ -1,5 +1,3 @@
-PRINC := "${@int(PRINC) + 1}"
-
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 SRC_URI_append_class-target = "${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', ' file://disable-ubi.patch', '', d)}"

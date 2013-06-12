@@ -1,5 +1,3 @@
-PRINC := "${@int(PRINC) + 1}"
-
 inherit systemd
 
 do_install_append() {

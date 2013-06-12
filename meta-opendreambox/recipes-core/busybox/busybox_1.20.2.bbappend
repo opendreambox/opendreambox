@@ -1,5 +1,3 @@
-PRINC := "${@int(PRINC) + 1}"
-
 SRC_URI += "file://busybox-telnetd.xinetd.in \
             file://busybox-telnetd@.service \
             file://busybox-telnetd.socket \

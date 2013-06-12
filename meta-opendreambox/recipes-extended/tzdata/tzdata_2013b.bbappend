@@ -1,5 +1,3 @@
-PRINC := "${@int(PRINC) + 1}"
-
 DEFAULT_TIMEZONE = "CET"
 
 FILES_${PN} = "                                          \

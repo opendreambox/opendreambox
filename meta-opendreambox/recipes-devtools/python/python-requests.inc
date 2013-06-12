@@ -2,7 +2,6 @@ DESCRIPTION = "Requests: HTTP for Humans"
 HOMEPAGE = "http://docs.python-requests.org/en/latest/"
 SECTION = "devel/python"
 LICENSE = "Apache-2.0"
-PR = "r0"
 
 SRC_URI = "git://github.com/kennethreitz/requests;protocol=git"
 

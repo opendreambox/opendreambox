@@ -1,5 +1,3 @@
-PRINC := "${@int(PRINC) + 1}"
-
 SRC_URI += "file://dropbear.xinetd.in \
             file://dropbearkey.service \
             file://dropbear@.service \

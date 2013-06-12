@@ -1,5 +1,3 @@
-PRINC := "${@int(PRINC) + 1}"
-
 SRC_URI += "file://0001-Don-t-mark-Conflicts-as-Depends.patch \
             file://0002-Statically-link-libopkg-and-libbb.patch \
             file://0003-Makefile.am-remove-g-and-O-compiler-flags.patch \
