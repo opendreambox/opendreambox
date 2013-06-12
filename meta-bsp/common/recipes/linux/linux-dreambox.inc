@@ -1,7 +1,5 @@
 require recipes/linux/linux.inc
 
-INC_PR = "r12"
-
 PACKAGES_DYNAMIC = "kernel-*"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels

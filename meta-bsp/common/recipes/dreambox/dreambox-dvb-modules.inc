@@ -3,7 +3,6 @@ SECTION = "base"
 LICENSE = "CLOSED"
 DEPENDS += "virtual/kernel"
 PRIORITY = "required"
-INC_PR = "r7"
 
 # Use precompiled binaries from the previous opendreambox release.
 DREAMBOX_DVB_MODULES_MIRROR ?= "http://dreamboxupdate.com/download/${DISTRO}/2.0.0/${PN}"

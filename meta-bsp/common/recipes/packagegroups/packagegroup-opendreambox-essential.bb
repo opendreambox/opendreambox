@@ -9,7 +9,6 @@ RDEPENDS_${PN} = " \
 RRECOMMENDS_${PN} = " \
         ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${ESSENTIAL_RRECOMMENDS_LEGACY}', '${ESSENTIAL_RRECOMMENDS}', d)} \
 "
-PR = "r5"
 
 inherit packagegroup
 

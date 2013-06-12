@@ -1,5 +1,3 @@
-PR = "${INC_PR}.11"
-
 PATCHREV = "ac6cc9511a5f70eaa584c63fc5c3de33cae1d0e7"
 
 SRC_URI = " \

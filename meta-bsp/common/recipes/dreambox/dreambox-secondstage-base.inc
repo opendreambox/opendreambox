@@ -3,7 +3,6 @@ SECTION = "base"
 LICENSE = "CLOSED"
 PROVIDES = "virtual/bootloader"
 PRIORITY = "required"
-INC_PR = "r12"
 
 do_install() {
         install -d ${D}${datadir}/${PN}
