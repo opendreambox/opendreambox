@@ -27,6 +27,11 @@ export HOST_SYS
 export STAGING_INCDIR
 export STAGING_LIBDIR
 
+do_configure_prepend() {
+        # temporary hack, until epgcache.h gets fixed.
+        sed -e 's,eitsave,,' -i ${S}/permanenttimeshift/src/Makefile.am
+}
+
 do_install_append() {
         # create lists of files installed outside of "${libdir}/enigma2/python/Plugins" or "${datadir}/meta"
         rm -rf ${INSTALL_ROOTDIR}
