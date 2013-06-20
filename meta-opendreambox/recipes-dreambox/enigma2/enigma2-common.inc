@@ -1,6 +1,6 @@
 SUMMARY = "Framebuffer-based digital media application"
 LICENSE = "Proprietary"
-DEPENDS += "cdrkit dvdauthor dvd+rw-tools mjpegtools projectx python-imaging packagegroup-opendreambox-cdplayer packagegroup-opendreambox-dvdplayer"
+DEPENDS += "cdrkit dvdauthor dvd+rw-tools mjpegtools python-imaging packagegroup-opendreambox-cdplayer packagegroup-opendreambox-dvdplayer"
 
 PACKAGES += "${PN}-meta"
 

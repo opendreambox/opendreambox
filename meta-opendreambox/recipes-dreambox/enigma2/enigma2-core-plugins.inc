@@ -41,7 +41,6 @@ RDEPENDS_enigma2-plugin-extensions-dvdburn = " \
         dvdauthor \
         dvd+rw-tools \
         mjpegtools \
-        projectx \
         python-xml \
         python-imaging \
         gst-plugins-bad-videoparsersbad \
