@@ -6,7 +6,7 @@ SRC_URI += "file://0001-Qt-remove-x11-from-npapi-while-keeping-some-basic-fu.pat
             file://0004-QtWebkit-Expose-keypress-event-and-correct-keycode-f.patch \
             file://0005-WebKit-small-hack-to-disable-use-of-WebkitWebSourceG.patch"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/qt4-${PV}:"
 
 QT_CONFIG_FLAGS += "-nomake demos -nomake docs -nomake examples"
 QT_SQL_DRIVER_FLAGS = "-no-sql-ibase -no-sql-mysql -no-sql-odbc -no-sql-psql -no-sql-sqlite2 -plugin-sql-sqlite -system-sqlite"
