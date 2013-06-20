@@ -1,5 +1,3 @@
-DEPENDS := "${@oe_filter_out('^(mysql5|postgresql|sqlite)$', '${DEPENDS}', d)}"
-
 SRC_URI += "file://0001-Qt-remove-x11-from-npapi-while-keeping-some-basic-fu.patch \
             file://0002-Qt-Add-HbbTv-MIME-types.patch \
             file://0003-Qt-expose-WebKits-WebSecurityEnabled-setting.patch \
