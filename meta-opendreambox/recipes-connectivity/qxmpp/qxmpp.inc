@@ -10,7 +10,7 @@ S = "${WORKDIR}/qxmpp-${PV}"
 
 inherit lib_package pkgconfig
 
-EXTRA_QMAKEVARS_PRE += "PREFIX=${prefix}"
+EXTRA_QMAKEVARS_PRE += "PREFIX=${prefix} QXMPP_LIBRARY_NAME=${PN}"
 
 do_compile() {
         oe_runmake sub-src-all-ordered
