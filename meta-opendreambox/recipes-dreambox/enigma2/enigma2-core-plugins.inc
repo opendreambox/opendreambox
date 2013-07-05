@@ -16,11 +16,12 @@ SUMMARY_enigma2-plugin-systemplugins-upnp = "UPnP tools based on python-coherenc
 SUMMARY_enigma2-plugin-systemplugins-videomode = "Select custom video modes"
 SUMMARY_enigma2-plugin-systemplugins-wirelesslan = "Wireless network settings"
 
-QT_IMAGEFORMATS ?= "qt4-embedded-plugin-imageformat-gif \
-                    qt4-embedded-plugin-imageformat-ico \
-                    qt4-embedded-plugin-imageformat-jpeg \
-                    qt4-embedded-plugin-imageformat-svg \
-                    qt4-embedded-plugin-imageformat-tiff"
+QT_BASE_NAME ?= "${@base_contains('DISTRO_FEATURES', 'x11', 'qt4', 'qt4-embedded', d)}"
+QT_IMAGEFORMATS ?= "${QT_BASE_NAME}-plugin-imageformat-gif \
+                    ${QT_BASE_NAME}-plugin-imageformat-ico \
+                    ${QT_BASE_NAME}-plugin-imageformat-jpeg \
+                    ${QT_BASE_NAME}-plugin-imageformat-svg \
+                    ${QT_BASE_NAME}-plugin-imageformat-tiff"
 
 RDEPENDS_enigma2-plugin-extensions-browser = " \
         ca-certificates \
