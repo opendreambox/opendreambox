@@ -1,11 +1,11 @@
-From 269832e35c1c5572f6c7af4406b247d7c4677056 Mon Sep 17 00:00:00 2001
+From 1ae2d56bb0514c1f41b05ca67bee352f3de6f6da Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Tue, 5 Mar 2013 22:20:20 +0100
-Subject: [PATCH 11/15] fixed broken uname gname cache (this significantly
+Subject: [PATCH 11/16] fixed broken uname gname cache (this significantly
  speeds up)
 
 ---
- libbb/unarchive.c |    8 ++++----
+ libbb/unarchive.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/libbb/unarchive.c b/libbb/unarchive.c
@@ -43,5 +43,5 @@ index d583767..89447d4 100644
  	}
  	return FALSE;
 -- 
-1.7.10.4
+1.8.1.2
 

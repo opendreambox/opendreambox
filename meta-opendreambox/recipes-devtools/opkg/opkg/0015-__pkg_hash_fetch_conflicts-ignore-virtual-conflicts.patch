@@ -1,18 +1,18 @@
-From dc508ba9733cd0dbdf0e4375afa5788694b986c8 Mon Sep 17 00:00:00 2001
+From d2eb250899e33df1aa9cfb2a08c373d522241f0f Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 17 Mar 2013 22:52:07 +0100
-Subject: [PATCH 15/15] __pkg_hash_fetch_conflicts: ignore virtual conflicts
+Subject: [PATCH 15/16] __pkg_hash_fetch_conflicts: ignore virtual conflicts
 
 * If a package a both provides and conflicts the same package b,
   then it's a virtual package. Ignore it!
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- libopkg/pkg_depends.c |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ libopkg/pkg_depends.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
 diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
-index cbb77ce..162da0f 100644
+index cbb77ce..413f74d 100644
 --- a/libopkg/pkg_depends.c
 +++ b/libopkg/pkg_depends.c
 @@ -363,7 +363,21 @@ static int is_pkg_a_replaces(const pkg_t *pkg_scout, const pkg_t *pkg)
@@ -46,6 +46,15 @@ index cbb77ce..162da0f 100644
   	 	        if (!is_pkg_in_pkg_vec(installed_conflicts, pkg_scout)){
  			    pkg_vec_insert(installed_conflicts, pkg_scout);
  			}
+@@ -428,7 +442,7 @@ static void __pkg_hash_fetch_conflictees(pkg_t *pkg, pkg_vec_t *installed_confli
+ 
+     for (i = 0; i < available_pkgs->len; i++) {
+         pkg_t *cpkg = available_pkgs->pkgs[i];
+-        if (pkg_conflicts(cpkg, pkg) && !is_pkg_in_pkg_vec(installed_conflicts, cpkg))
++        if (pkg_conflicts(cpkg, pkg) && !is_pkg_a_provides(cpkg, pkg) && !is_pkg_in_pkg_vec(installed_conflicts, cpkg))
+             pkg_vec_insert(installed_conflicts, cpkg);
+     }
+ 
 -- 
-1.7.10.4
+1.8.1.2
 

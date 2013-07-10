@@ -1,12 +1,12 @@
-From e6e32aab4321099110b6e258b8795ca3ee096c2f Mon Sep 17 00:00:00 2001
+From 3a39dbe7b3f5cdf3d4878f2552fa4ac686b370fd Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:17:52 +0200
-Subject: [PATCH 06/15] pkg_hash_fetch_conflicts: move iteration over
- conflicts to subroutine
+Subject: [PATCH 06/16] pkg_hash_fetch_conflicts: move iteration over conflicts
+ to subroutine
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- libopkg/pkg_depends.c |   46 ++++++++++++++++++++++++----------------------
+ libopkg/pkg_depends.c | 46 ++++++++++++++++++++++++----------------------
  1 file changed, 24 insertions(+), 22 deletions(-)
 
 diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
@@ -90,5 +90,5 @@ index cd9d2c8..3190b16 100644
  
  int version_constraints_satisfied(depend_t * depends, pkg_t * pkg)
 -- 
-1.7.10.4
+1.8.1.2
 

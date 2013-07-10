@@ -1,11 +1,11 @@
-From 9a54fedf39f1a52cadf1dc17ad9bc0e887e2746b Mon Sep 17 00:00:00 2001
+From 86db2ad1bab09d8a846516e612b41bf318275a22 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 17 Mar 2013 22:51:13 +0100
-Subject: [PATCH 14/15] is_pkg_a_replaces(): simplify code
+Subject: [PATCH 14/16] is_pkg_a_replaces(): simplify code
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- libopkg/pkg_depends.c |   10 +++-------
+ libopkg/pkg_depends.c | 10 +++-------
  1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
@@ -39,5 +39,5 @@ index e4bac38..cbb77ce 100644
  
  }
 -- 
-1.7.10.4
+1.8.1.2
 

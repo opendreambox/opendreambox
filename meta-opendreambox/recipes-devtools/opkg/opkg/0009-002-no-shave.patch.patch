@@ -1,15 +1,15 @@
-From 03221b7e0d34aa24bd5aba72ae3d2616b3c748a9 Mon Sep 17 00:00:00 2001
+From 333a51a0d4aecc03d5b4cf66ac5bb3b77d44ed4b Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 16 May 2012 21:17:15 +0200
-Subject: [PATCH 09/15] 002-no-shave.patch
+Subject: [PATCH 09/16] 002-no-shave.patch
 
 ---
- Makefile.am  |    2 --
- configure.ac |    6 ------
+ Makefile.am  | 2 --
+ configure.ac | 6 ------
  2 files changed, 8 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 1c6226f..5d8f64a 100644
+index 874c93a..552e307 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -1,5 +1,3 @@
@@ -50,5 +50,5 @@ index ac5a035..996bf6a 100644
      man/opkg-cl.1
      man/opkg-key.1
 -- 
-1.7.10.4
+1.8.1.2
 

@@ -1,12 +1,12 @@
-From 27beecdcc9f4e00df4da4287ca1ed37ae51c1b5c Mon Sep 17 00:00:00 2001
+From 4e46e3ba7950acc9391a3b4e63bd3e34933facc7 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:14:23 +0200
-Subject: [PATCH 04/15] pkg_depends: remove unused variables to fix compiler
+Subject: [PATCH 04/16] pkg_depends: remove unused variables to fix compiler
  warnings
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- libopkg/pkg_depends.c |    5 -----
+ libopkg/pkg_depends.c | 5 -----
  1 file changed, 5 deletions(-)
 
 diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
@@ -44,5 +44,5 @@ index 4664d4e..8291c68 100644
  
  
 -- 
-1.7.10.4
+1.8.1.2
 

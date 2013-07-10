@@ -1,18 +1,32 @@
-From 06e9c02bc2db0eb56d31d558fe3495734698784b Mon Sep 17 00:00:00 2001
+From ba41faae80f4b65d234e4123bc33dd0d89c12856 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:23:43 +0200
-Subject: [PATCH 02/15] Statically link libopkg and libbb
+Subject: [PATCH 02/16] Statically link libopkg and libbb
 
 * Based on https://dev.openwrt.org/browser/trunk/package/opkg/patches/007-force_static.patch
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- libbb/Makefile.am   |    8 ++++----
- libopkg/Makefile.am |   14 +++-----------
- src/Makefile.am     |    4 ++--
- tests/Makefile.am   |    6 +++---
- 4 files changed, 12 insertions(+), 20 deletions(-)
+ Makefile.am         |  2 --
+ libbb/Makefile.am   |  8 ++++----
+ libopkg/Makefile.am | 18 +++++-------------
+ src/Makefile.am     |  4 ++--
+ tests/Makefile.am   |  6 +++---
+ 5 files changed, 14 insertions(+), 24 deletions(-)
 
+diff --git a/Makefile.am b/Makefile.am
+index 26f2d99..ddc11bb 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -11,8 +11,6 @@ ALL_CFLAGS=-g -O -Wall -DHOST_CPU_STR=\"@host_cpu@\" -DBUILD_CPU=@build_cpu@ -DL
+ PATHFINDER_CFLAGS = @PATHFINDER_CFLAGS@
+ PATHFINDER_LIBS   = @PATHFINDER_LIBS@
+ 
+-pkgconfigdir = $(libdir)/pkgconfig
+-pkgconfig_DATA = libopkg.pc
+ 
+ 
+ 
 diff --git a/libbb/Makefile.am b/libbb/Makefile.am
 index 1cc82df..337d94f 100644
 --- a/libbb/Makefile.am
@@ -38,10 +52,20 @@ index 1cc82df..337d94f 100644
 +libbb_a_CFLAGS = $(ALL_CFLAGS)
 +#libbb_a_LDFLAGS = -static
 diff --git a/libopkg/Makefile.am b/libopkg/Makefile.am
-index 043c5c4..5882595 100644
+index 043c5c4..be6c916 100644
 --- a/libopkg/Makefile.am
 +++ b/libopkg/Makefile.am
-@@ -38,18 +38,10 @@ if HAVE_SHA256
+@@ -1,8 +1,7 @@
+ 
+ AM_CFLAGS=-Wall -DHOST_CPU_STR=\"@host_cpu@\" -DBUILD_CPU=@build_cpu@ -DLIBDIR=\"@libdir@\" -DOPKGLIBDIR=\"@opkglibdir@\" -DOPKGETCDIR=\"@opkgetcdir@\" -DOPKGLOCKFILE=\"@opkglockfile@\" -DDATADIR=\"@datadir@\" -I$(top_srcdir) $(BIGENDIAN_CFLAGS) $(CURL_CFLAGS) $(GPGME_CFLAGS) $(PATHFINDER_CFLAGS)
+ 
+-libopkg_includedir=$(includedir)/libopkg
+-libopkg_include_HEADERS= *.h
++opkg_libcore_headers = *.h $(srcdir)/*.h
+ 
+ 
+ opkg_libcore_sources = \
+@@ -38,18 +37,11 @@ if HAVE_SHA256
  opkg_util_sources += sha256.c sha256.h
  endif
  
@@ -49,6 +73,7 @@ index 043c5c4..5882595 100644
 -libopkg_la_SOURCES = \
 +noinst_LIBRARIES = libopkg.a
 +libopkg_a_SOURCES = \
++	$(opkg_libcore_headers) \
  	$(opkg_libcore_sources) \
  	$(opkg_cmd_sources) $(opkg_db_sources) \
  	$(opkg_util_sources) $(opkg_list_sources)
@@ -103,5 +128,5 @@ index 1a6f565..132c792 100644
  libopkg_test_LDFLAGS = -static
  
 -- 
-1.7.10.4
+1.8.1.2
 
