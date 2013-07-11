@@ -6,64 +6,41 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://COPYING.LIB;md5=55ca817ccb7d5b5b66355690e9abc605 \
                     file://gst/tta/crc32.h;beginline=12;endline=29;md5=71a904d99ce7ae0c1cf129891b98145c"
 
-DEPENDS += "libmusicbrainz tremor curl libmms faad2"
+DEPENDS += "faad2"
 DEPENDS += "gst-plugins-base"
-
 SRCREV = "cef47d85294a0dca38631f938b81a3f0dd6891bd"
-
-EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \
-                 --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264 \
-                 --disable-fatal-warnings"
-
-ARM_INSTRUCTION_SET = "arm"
 
 CPPFLAGS += "${@base_contains('DISTRO_FEATURES', 'x11', '', '-DMESA_EGL_NO_X11_HEADERS', d)}"
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
+           file://0003-mpegpsdemux_speedup.diff.patch \
+           file://0004-mpegdemux-compile-fixes.patch \
+           file://0005-hlsdemux-locking-fixes.patch \
+           file://0006-hlsdemux-backport.patch \
+           file://0007-revert-rtmp-change.patch \
+           file://0008-faad-lower-rank.patch \
+           file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch"
 
-SRC_URI += " \
-        file://0003-mpegpsdemux_speedup.diff.patch \
-        file://0004-mpegdemux-compile-fixes.patch \
-        file://0005-hlsdemux-locking-fixes.patch \
-        file://0006-hlsdemux-backport.patch \
-        file://0007-revert-rtmp-change.patch \
-        file://0008-faad-lower-rank.patch \
-        file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
-"
+inherit gettext
 
-inherit autotools pkgconfig gettext git-project
+EXTRA_OECONF += "--disable-experimental \
+                 --disable-sdl --disable-cdaudio --disable-directfb \
+                 --disable-vdpau --disable-apexsink"
+EXTRA_OECONF += "--disable-examples --disable-mpeg2enc --disable-mplex \
+                 --disable-uvch264 --disable-fatal-warnings"
 
-do_common_update() {
-	cd ${S}
-	# Make sure we have common
-	if test ! -f common/gst-autogen.sh;
-	then
-	  echo "+ Setting up common submodule"
-	  git submodule init
-	fi
-	git submodule update
+PACKAGECONFIG ??= "bzip curl \
+                   ${@base_contains('DISTRO_FEATURES', 'x11', 'rsvg', '', d)}"
 
-	# source helper functions
-	if test ! -f common/gst-autogen.sh;
-	then
-	  echo There is something wrong with your source tree.
-	  echo You are missing common/gst-autogen.sh
-	  exit 1
-	fi
-	. common/gst-autogen.sh
-	# install pre-commit hook for doing clean commits
-	if test ! \( -x .git/hooks/pre-commit -a -L .git/hooks/pre-commit \);
-	then
-	    rm -f .git/hooks/pre-commit
-	    ln -s ../../common/hooks/pre-commit.hook .git/hooks/pre-commit
-	fi
+PACKAGECONFIG[bzip] = "--enable-bz2,--disable-bz2,bzip2"
+PACKAGECONFIG[curl] = "--enable-curl,--disable-curl,curl"
+PACKAGECONFIG[rsvg] = "--enable-rsvg,--disable-rsvg,librsvg,"
+PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc orc-native"
+PACKAGECONFIG[neon] = "--enable-neon,--disable-neon,neon"
+PACKAGECONFIG[libmms] = "--enable-libmms,--disable-libmms,libmms"
+PACKAGECONFIG[musicbrainz] = "--enable-musicbrainz,--disable-musicbrainz,libmusicbrainz"
 
-	# GNU gettext automake support doesn't get along with git.
-	# https://bugzilla.gnome.org/show_bug.cgi?id=661128
-	autopoint || touch config.rpath
-	touch -t 200001010000 po/gst-plugins-base-0.10.pot
-}
-addtask common_update after do_unpack before do_patch
+ARM_INSTRUCTION_SET = "arm"
 
 do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
@@ -73,3 +50,5 @@ do_configure_prepend() {
 PACKAGES_DYNAMIC += "^libgst(basecamerabinsrc|basevideo|codecparsers|photography|signalprocessor)-${LIBV}.*"
 
 FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.23"
+
+require gst-plugins-git.inc

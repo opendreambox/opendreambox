@@ -5,55 +5,31 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
                     file://common/coverage/coverage-report.pl;beginline=2;endline=17;md5=622921ffad8cb18ab906c56052788a3f \
                     file://gst/replaygain/rganalysis.c;beginline=1;endline=23;md5=b60ebefd5b2f5a8e0cab6bfee391a5fe"
 
-DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
-DEPENDS += "gst-plugins-base"
+PACKAGECONFIG ??= "cairo flac jpeg libpng ${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} soup speex zlib"
+PACKAGECONFIG[cairo] = "--enable-cairo,--disable-cairo,cairo"
+PACKAGECONFIG[flac] = "--enable-flac,--disable-flac,flac"
+PACKAGECONFIG[jpeg] = "--enable-jpeg,--disable-jpeg,jpeg"
+PACKAGECONFIG[libpng] = "--enable-libpng,--disable-libpng,libpng"
+PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc orc-native"
+PACKAGECONFIG[pulseaudio] = "--enable-pulse,--disable-pulse,pulseaudio"
+PACKAGECONFIG[soup] = "--enable-soup,--disable-soup,libsoup-2.4"
+PACKAGECONFIG[speex] = "--enable-speex,--disable-speex,speex"
+PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 
+DEPENDS += "gst-plugins-base"
 SRCREV = "7768342230450559509e3e593b2ea33e81ea0ca4"
 
-EXTRA_OECONF = "--enable-orc --disable-esd --disable-aalib --disable-shout2 --disable-libcaca --disable-hal"
+inherit gettext
 
-inherit autotools pkgconfig gettext git-project
-
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN}"
-
-SRC_URI += " \
-	file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
-	file://0001-accept-substream-syncwords-DTS-HD.patch \
-	${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
-	file://mp4-parse-fix-typo.patch \
+SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
+           file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
+           file://0001-accept-substream-syncwords-DTS-HD.patch \
+           ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
+           file://mp4-parse-fix-typo.patch \
 "
 
-do_common_update() {
-	cd ${S}
-	# Make sure we have common
-	if test ! -f common/gst-autogen.sh;
-	then
-	  echo "+ Setting up common submodule"
-	  git submodule init
-	fi
-	git submodule update
-
-	# source helper functions
-	if test ! -f common/gst-autogen.sh;
-	then
-	  echo There is something wrong with your source tree.
-	  echo You are missing common/gst-autogen.sh
-	  exit 1
-	fi
-	. common/gst-autogen.sh
-	# install pre-commit hook for doing clean commits
-	if test ! \( -x .git/hooks/pre-commit -a -L .git/hooks/pre-commit \);
-	then
-	    rm -f .git/hooks/pre-commit
-	    ln -s ../../common/hooks/pre-commit.hook .git/hooks/pre-commit
-	fi
-
-	# GNU gettext automake support doesn't get along with git.
-	# https://bugzilla.gnome.org/show_bug.cgi?id=661128
-	autopoint || touch config.rpath
-	touch -t 200001010000 po/gst-plugins-base-0.10.pot
-}
-addtask common_update after do_unpack before do_patch
+EXTRA_OECONF += "--disable-aalib --disable-esd --disable-shout2 --disable-libcaca --disable-hal --without-check \
+                 --disable-examples --disable-taglib"
 
 do_configure_prepend() {
 	# This m4 file contains nastiness which conflicts with libtool 2.2.2
@@ -61,3 +37,5 @@ do_configure_prepend() {
 }
 
 FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.31"
+
+require gst-plugins-git.inc
