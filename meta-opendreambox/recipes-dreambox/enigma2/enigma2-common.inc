@@ -13,6 +13,7 @@ RDEPENDS_${PN} += " \
         python-core \
         python-crypt \
         python-fcntl \
+        python-imaging \
         python-lang \
         python-netclient \
         python-netserver \
