@@ -1,0 +1,35 @@
+From 0f63163632bdafa69c83347279e4e4dc4cc0cc2c Mon Sep 17 00:00:00 2001
+From: "Andreas Monzner" <andreas.monzner@dream-property.net>
+Date: Tue, 16 Jul 2013 01:07:09 +0200
+Subject: [PATCH] show picons and additional line in favourite mode only,
+ always show channelname in all services, satellites and providers mode
+
+---
+ lib/python/Components/ServiceList.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/ServiceList.py b/usr/lib/enigma2/python/Components/ServiceList.py
+index fdadd07..e48ebbf 100644
+--- a/usr/lib/enigma2/python/Components/ServiceList.py
++++ b/usr/lib/enigma2/python/Components/ServiceList.py
+@@ -171,14 +171,14 @@ class ServiceList(HTMLComponent, GUIComponent):
+ 		selected = args["selected"]
+ 		res = [ None ]
+ 		showListNumbers = config.usage.configselection_showlistnumbers.value
+-		showPicons = config.usage.configselection_showpicons.value
+-		showServiceName = config.usage.configselection_showservicename.value
++		showPicons = self.mode == self.MODE_FAVOURITES and config.usage.configselection_showpicons.value
++		showServiceName = self.mode == self.MODE_NORMAL or (self.mode == self.MODE_FAVOURITES and config.usage.configselection_showservicename.value)
+ 		showProgressbar = config.usage.show_event_progress_in_servicelist.value
+ 		progressbarPosition = config.usage.configselection_progressbarposition.value
+ 		servicenameWidth = config.usage.configselection_servicenamecolwidth.value
+ 		columnStyle = config.usage.configselection_columnstyle.value
+ 		additionalposition = config.usage.configselection_additionaltimedisplayposition.value
+-		bigPicons = config.usage.configselection_bigpicons.value
++		bigPicons = self.mode == self.MODE_FAVOURITES and config.usage.configselection_bigpicons.value
+ 		secondlineinfo = config.usage.configselection_secondlineinfo.value
+ 		# get service information
+ 		service_info = self.service_center.info(service)
+-- 
+1.8.3.1
+
