@@ -41,6 +41,7 @@ RDEPENDS_enigma2-plugin-extensions-dvdburn = " \
         mjpegtools \
         projectx \
         python-xml \
+        python-imaging \
 "
 RDEPENDS_enigma2-plugin-extensions-hbbtv = " \
         enigma2-plugin-extensions-browser \
