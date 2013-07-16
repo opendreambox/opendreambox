@@ -10,10 +10,10 @@ DEPENDS += "libmusicbrainz tremor curl libmms"
 DEPENDS += "gst-plugins-base"
 CONFLICTS = "librsvg"
 
-PR = "r3"
+PR = "r4"
 GIT_PV = ""
 
-SRCREV = "fb0d8700e71c4a6569ba023d16201087aec119fd"
+SRCREV = "cef47d85294a0dca38631f938b81a3f0dd6891bd"
 
 EXTRA_OECONF += "--disable-examples --disable-experimental --disable-sdl --disable-cdaudio --disable-directfb \
                  --disable-vdpau --disable-apexsink --enable-orc --disable-mpeg2enc --disable-mplex --disable-rsvg --disable-uvch264"
@@ -27,6 +27,7 @@ SRC_URI += " \
         file://0004-mpegdemux-compile-fixes.patch \
         file://0005-hlsdemux-locking-fixes.patch \
         file://0006-hlsdemux-backport.patch \
+        file://0007-revert-rtmp-change.patch \
         file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 "
 
