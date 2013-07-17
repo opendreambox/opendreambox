@@ -1,6 +1,6 @@
 SUMMARY = "Framebuffer-based digital media application"
 LICENSE = "Proprietary"
-DEPENDS += "cdrkit dvdauthor dvd+rw-tools mjpegtools projectx"
+DEPENDS += "cdrkit dvdauthor dvd+rw-tools mjpegtools projectx python-imaging"
 
 PACKAGES += "${PN}-meta"
 
@@ -13,7 +13,6 @@ RDEPENDS_${PN} += " \
         python-core \
         python-crypt \
         python-fcntl \
-        python-imaging \
         python-lang \
         python-netclient \
         python-netserver \
