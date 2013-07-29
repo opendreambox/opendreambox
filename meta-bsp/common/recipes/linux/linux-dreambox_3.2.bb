@@ -1,8 +1,8 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.44"
+PR = "${INC_PR}.45"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
-PATCHLEVEL = "44"
+PATCHLEVEL = "49"
 
 SRC_URI = " \
         ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -23,13 +23,14 @@ SRC_URI = " \
         file://0005-block2mtd-add-possibility-to-remove-block2mtd-device.patch \
         file://0006-mtd-block2mtd-fix-recursive-call-of-mtd_writev.patch \
         file://0007-mtd-block2mtd-throttle-writes-by-calling-balance_dir.patch \
+	file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
         file://defconfig \
 "
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "1f0449a3358ddb9c59fe9ddd6876f522"
-SRC_URI[kernel-patch.sha256sum] = "beaff55b35bfac550cf3dfae03c379e1dd7a2ef8a2bfa57b86848cb081731c56"
+SRC_URI[kernel-patch.md5sum] = "01e2b4ff657a667867cface490773a04"
+SRC_URI[kernel-patch.sha256sum] = "be68d25850dd735cfde06ff2e196a7764bb5423923030c728e2c23400a613b61"
 SRC_URI[dmm-patch.md5sum] = "d17d65e9978343d540e0b60767a82286"
 SRC_URI[dmm-patch.sha256sum] = "576356545de7f587d164d1cee2cb17b6c1ce3efbe2e01ff785c13ec2d544d220"
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
