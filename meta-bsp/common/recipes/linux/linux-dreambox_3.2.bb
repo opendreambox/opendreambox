@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.45"
+PR = "${INC_PR}.46"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
 PATCHLEVEL = "49"
@@ -23,7 +23,8 @@ SRC_URI = " \
         file://0005-block2mtd-add-possibility-to-remove-block2mtd-device.patch \
         file://0006-mtd-block2mtd-fix-recursive-call-of-mtd_writev.patch \
         file://0007-mtd-block2mtd-throttle-writes-by-calling-balance_dir.patch \
-	file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
+        file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
+        file://0009-fixed-partition-is-ubi-maintained-check.patch \
         file://defconfig \
 "
 
