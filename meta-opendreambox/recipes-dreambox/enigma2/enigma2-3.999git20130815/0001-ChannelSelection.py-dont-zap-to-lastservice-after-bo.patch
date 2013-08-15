@@ -1,0 +1,39 @@
+From b6883825e5fed85ae5240379f7c788184dbbec54 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 15 Aug 2013 18:25:46 +0200
+Subject: [PATCH] ChannelSelection.py: dont zap to lastservice after boot when
+ we booted up to idle mode (automatic timer wakeup)
+
+---
+ lib/python/Screens/ChannelSelection.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/ChannelSelection.py b/usr/lib/enigma2/python/Screens/ChannelSelection.py
+index d150779..b0a4456 100644
+--- a/usr/lib/enigma2/python/Screens/ChannelSelection.py
++++ b/usr/lib/enigma2/python/Screens/ChannelSelection.py
+@@ -28,6 +28,7 @@ from Screens.ServiceInfo import ServiceInfo
+ profile("ChannelSelection.py 4")
+ from Screens.PictureInPicture import PictureInPicture
+ from Screens.RdsDisplay import RassInteractive
++import Screens.Standby
+ from ServiceReference import ServiceReference
+ from Tools.BoundFunction import boundFunction
+ from os import remove
+@@ -1284,9 +1285,10 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
+ 				self.setModeRadio()
+ 		else:
+ 			self.setModeTv()
+-		lastservice=eServiceReference(self.lastservice.value)
+-		if lastservice.valid():
+-			self.zap()
++		if not Screens.Standby.inStandby:
++			lastservice=eServiceReference(self.lastservice.value)
++			if lastservice.valid():
++				self.zap()
+ 
+ 	def channelSelected(self):
+ 		ref = self.getCurrentSelection()
+-- 
+1.8.4.rc1
+
