@@ -1,4 +1,4 @@
-PR = "${INC_PR}.2"
+PR = "${INC_PR}.3"
 
 SRC_URI[mips32el.md5sum] = "5c6988712f1d77b11b44efb15f3ecf2c"
 SRC_URI[mips32el.sha256sum] = "1a1421d8cb391aafd2bf1d6c7af107d20201e2b562162e1342e708eecf780ff3"
@@ -13,6 +13,7 @@ SRC_URI += " \
 	file://0005-changed-behaviour-of-AddNotificationWithID-.-it-now-.patch \
 	file://0006-HdmiCec-dont-send-poweron-command-when-a-standby-req.patch \
 	file://0007-mytest.py-save-scheduled-wakeup-time-in-config.misc..patch \
+	file://0008-added-missing-check-to-detect-if-the-last-automatic-.patch \
 "
 
 require enigma2-bin-4.0.inc
