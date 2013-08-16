@@ -1,8 +1,8 @@
 From b6883825e5fed85ae5240379f7c788184dbbec54 Mon Sep 17 00:00:00 2001
 From: ghost <andreas.monzner@dream-property.net>
 Date: Thu, 15 Aug 2013 18:25:46 +0200
-Subject: [PATCH] ChannelSelection.py: dont zap to lastservice after boot when
- we booted up to idle mode (automatic timer wakeup)
+Subject: [PATCH 1/6] ChannelSelection.py: dont zap to lastservice after boot
+ when we booted up to idle mode (automatic timer wakeup)
 
 ---
  lib/python/Screens/ChannelSelection.py | 8 +++++---

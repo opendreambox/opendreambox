@@ -1,0 +1,33 @@
+From 17acc43f03ab4c41d079f8bc8e7026d439d01bf0 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 15 Aug 2013 23:03:02 +0200
+Subject: [PATCH 2/6] when e2 was bootet in idle mode no service was running
+ after leaving standby .. fixed this
+
+---
+ lib/python/Screens/ChannelSelection.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/ChannelSelection.py b/usr/lib/enigma2/python/Screens/ChannelSelection.py
+index b0a4456..9ddd8c7 100644
+--- a/usr/lib/enigma2/python/Screens/ChannelSelection.py
++++ b/usr/lib/enigma2/python/Screens/ChannelSelection.py
+@@ -1285,10 +1285,12 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
+ 				self.setModeRadio()
+ 		else:
+ 			self.setModeTv()
+-		if not Screens.Standby.inStandby:
+-			lastservice=eServiceReference(self.lastservice.value)
+-			if lastservice.valid():
++		lastservice=eServiceReference(self.lastservice.value)
++		if lastservice.valid():
++			if not Screens.Standby.inStandby:
+ 				self.zap()
++			else:
++				Screens.Standby.inStandby.onClose.append(self.zap)
+ 
+ 	def channelSelected(self):
+ 		ref = self.getCurrentSelection()
+-- 
+1.8.4.rc1
+

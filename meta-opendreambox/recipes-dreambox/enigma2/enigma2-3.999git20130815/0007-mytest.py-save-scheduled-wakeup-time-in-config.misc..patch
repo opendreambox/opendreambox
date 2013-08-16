@@ -1,0 +1,36 @@
+From d5aea2778d931bc8f0703b347292c4ce23aaded3 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Fri, 16 Aug 2013 13:11:06 +0200
+Subject: [PATCH 7/7] mytest.py: save scheduled wakeup time in
+ config.misc.prev_wakeup_time
+
+---
+ mytest.py | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/usr/lib/enigma2/python/mytest.py b/usr/lib/enigma2/python/mytest.py
+index fb09d48..9570240 100644
+--- a/usr/lib/enigma2/python/mytest.py
++++ b/usr/lib/enigma2/python/mytest.py
+@@ -130,6 +130,7 @@ config.misc.epgcache_timespan = ConfigSelection(default = "28", choices = [("7",
+ config.misc.epgcache_outdated_timespan = ConfigInteger(default = 0, limits=(0,96))
+ config.misc.record_io_buffer = ConfigInteger(default=192512*5)
+ config.misc.record_dmx_buffer = ConfigInteger(default=1024*1024)
++config.misc.prev_wakeup_time = ConfigInteger(default=0)
+ 
+ def setEPGCachePath(configElement):
+ 	eEPGCache.getInstance().setCacheFile(configElement.value)
+@@ -621,6 +622,10 @@ def runScreenTest():
+ 		print "set wakeup time to", strftime("%Y/%m/%d %H:%M", localtime(wptime))
+ 		setFPWakeuptime(wptime)
+ 		recordTimerWakeupAuto = startTime[1] == 0 and startTime[2]
++		config.misc.prev_wakeup_time.value = startTime[0]
++	else:
++		config.misc.prev_wakeup_time.value = 0
++	config.misc.prev_wakeup_time.save()
+ 	config.misc.isNextRecordTimerAfterEventActionAuto.value = recordTimerWakeupAuto
+ 	config.misc.isNextRecordTimerAfterEventActionAuto.save()
+ 
+-- 
+1.8.4.rc1
+
