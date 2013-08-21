@@ -42,6 +42,8 @@ RDEPENDS_enigma2-plugin-extensions-dvdburn = " \
         projectx \
         python-xml \
         python-imaging \
+        gst-plugins-bad-videoparsersbad \
+        gst-plugins-bad-mpegtsmux \
 "
 RDEPENDS_enigma2-plugin-extensions-hbbtv = " \
         enigma2-plugin-extensions-browser \
