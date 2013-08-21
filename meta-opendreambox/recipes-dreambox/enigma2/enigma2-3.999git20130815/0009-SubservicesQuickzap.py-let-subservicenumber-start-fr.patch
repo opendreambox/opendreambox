@@ -1,0 +1,42 @@
+From 5420d1bf3edeb9685bf592d7ef470f9e13425835 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Mon, 19 Aug 2013 14:53:32 +0200
+Subject: [PATCH 09/10] SubservicesQuickzap.py: let subservicenumber start from
+ 1 .. because 0 is used to zap between previous two services
+
+---
+ lib/python/Screens/SubservicesQuickzap.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/SubservicesQuickzap.py b/usr/lib/enigma2/python/Screens/SubservicesQuickzap.py
+index 63e1729..bf89bbe 100644
+--- a/usr/lib/enigma2/python/Screens/SubservicesQuickzap.py
++++ b/usr/lib/enigma2/python/Screens/SubservicesQuickzap.py
+@@ -100,7 +100,7 @@ class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu, \
+ 		if number == 0:
+ 			self.playSubservice(self.lastservice)
+ 		elif self.n is not None and number <= self.n - 1:
+-			self.playSubservice(number)
++			self.playSubservice(number-1)
+ 	
+ 	def showSelection(self):
+ 		self.updateSubservices()
+@@ -113,7 +113,7 @@ class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu, \
+ 				tlist.append((i.getName(), idx))
+ 				idx += 1
+ 
+-		keys = [ "", "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
++		keys = [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ] + [""] * n
+ 		self.session.openWithCallback(self.subserviceSelected, ChoiceBox, title=_("Please select a subservice..."), list = tlist, selection = self.currentlyPlayingSubservice, keys = keys)
+ 	
+ 	def subserviceSelected(self, service):
+@@ -140,5 +140,5 @@ class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu, \
+ 			self.session.nav.stopService()
+ 			self.session.nav.playService(newservice, False)
+ 			self.currentlyPlayingSubservice = number
+-			self.currentSubserviceNumberLabel.setText(str(number))
++			self.currentSubserviceNumberLabel.setText(str(number+1))
+ 			self.doShow()
+-- 
+1.8.4.rc1
+
