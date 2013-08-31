@@ -1,4 +1,4 @@
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 SRC_URI[mips32el.md5sum] = "18972731b7cf3a0e4fabead4731da4b9"
 SRC_URI[mips32el.sha256sum] = "e10203d679a6e20a6a6201c54ad76eaf3bb16942e11fcbc1bdbc1b7de402309e"
@@ -9,4 +9,6 @@ require enigma2-bin-4.0.inc
 
 SRC_URI += " \
 	file://0001-ServiceScan.py-fixed-crash-on-finished-service-scan.patch \
+	file://0001-added-missing-del-dict-entry-fixes-some-crashes-at-d.patch \
 "
+
