@@ -1,0 +1,44 @@
+From 82bad2d8d59c8c1461905c9bc6fc1153dfb5a3b3 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Sat, 31 Aug 2013 16:32:02 +0200
+Subject: [PATCH 2/2] ServiceScan.py: fixed crash on finished service scan
+
+---
+ usr/lib/enigma2/python/Components/ServiceScan.py | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/ServiceScan.py b/usr/lib/enigma2/python/Components/ServiceScan.py
+index dbc7b4b..ae5ee98 100644
+--- a/usr/lib/enigma2/python/Components/ServiceScan.py
++++ b/usr/lib/enigma2/python/Components/ServiceScan.py
+@@ -119,6 +119,7 @@ class ServiceScan:
+ 		self.network = network
+ 		self.run = 0
+ 		self.lcd_summary = lcd_summary
++		self.scan = None
+ 
+ 	def doRun(self):
+ 		self.scan = eComponentScan()
+@@ -151,12 +152,13 @@ class ServiceScan:
+ 		self.scanStatusChanged()
+ 	
+ 	def execEnd(self):
+-		self.scan.statusChanged.get().remove(self.scanStatusChanged)
+-		self.scan.newService.get().remove(self.newService)
+-		if not self.isDone():
+-			print "*** warning *** scan was not finished!"
+-		
+-		del self.scan
++		if self.scan:
++			self.scan.statusChanged.get().remove(self.scanStatusChanged)
++			self.scan.newService.get().remove(self.newService)
++			if not self.isDone():
++				print "*** warning *** scan was not finished!"
++
++			self.scan = None
+ 
+ 	def isDone(self):
+ 		return self.state == self.Done or self.state == self.Error
+-- 
+1.8.4.rc3
+
