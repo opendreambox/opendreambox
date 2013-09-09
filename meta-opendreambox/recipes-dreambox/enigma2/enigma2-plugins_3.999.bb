@@ -65,15 +65,18 @@ python populate_packages_prepend() {
         def parseControlFile(dir, d, package):
                 src = open(dir + "/" + package.split('-')[-1] + "/CONTROL/control").read()
                 for line in src.splitlines():
-                        name, value = line.strip().split(': ', 1)
-                        if name == 'Description':
-                                d.setVar('DESCRIPTION_' + package, value)
-                        elif name == 'Depends':
-                                d.setVar('RDEPENDS_' + package, ' '.join(value.split(', ')))
-                        elif name == 'Replaces':
-                                d.setVar('RREPLACES_' + package, ' '.join(value.split(', ')))
-                        elif name == 'Conflicts':
-                                d.setVar('RCONFLICTS_' + package, ' '.join(value.split(', ')))
+                        try:
+                                name, value = line.strip().split(': ', 1)
+                                if name == 'Description':
+                                        d.setVar('DESCRIPTION_' + package, value)
+                                elif name == 'Depends':
+                                        d.setVar('RDEPENDS_' + package, ' '.join(value.split(', ')))
+                                elif name == 'Replaces':
+                                        d.setVar('RREPLACES_' + package, ' '.join(value.split(', ')))
+                                elif name == 'Conflicts':
+                                        d.setVar('RCONFLICTS_' + package, ' '.join(value.split(', ')))
+                        except:
+                                bb.fatal("Error parsing control file for package %s" % package)
         def parseFileList(dir, d, package):
                 filename = os.path.join(dir, package)
                 if os.path.exists(filename):
