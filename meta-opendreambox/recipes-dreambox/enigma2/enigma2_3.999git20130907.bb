@@ -1,4 +1,6 @@
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
+
+SRC_URI += "file://0001-Navigation.py-add-missing-import-for-config.patch"
 
 SRC_URI[mips32el.md5sum] = "4b71c1fb02a36d6bdc19699192c0f115"
 SRC_URI[mips32el.sha256sum] = "d6ea3610bf1ce9d4bbb84dd61e4478f08005c78b8ee86b4215ea8ce6dc890a3f"
