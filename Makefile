@@ -39,7 +39,7 @@ MACHINE ?= dm7020hd
 USER_MACHINE := $(MACHINE)
 
 ifeq ($(MACHINE),dm7020hdv2)
-MACHINE := dm7020hd
+override MACHINE := dm7020hd
 MAKE_IMAGE_BB ?= dreambox-image-dm7020hdv2
 endif
 
