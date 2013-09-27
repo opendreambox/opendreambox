@@ -1,8 +1,0 @@
---- a/usr/lib/enigma2/python/Navigation.py
-+++ b/usr/lib/enigma2/python/Navigation.py
-@@ -1,4 +1,5 @@
- from enigma import eServiceCenter, eServiceReference, pNavigation, getBestPlayableServiceReference, iPlayableService
-+from Components.config import config
- from Components.ParentalControl import parentalControl
- from Tools.BoundFunction import boundFunction
- from Tools.DreamboxHardware import setFPWakeuptime, getFPWakeuptime, getFPWasTimerWakeup, clearFPWasTimerWakeup
