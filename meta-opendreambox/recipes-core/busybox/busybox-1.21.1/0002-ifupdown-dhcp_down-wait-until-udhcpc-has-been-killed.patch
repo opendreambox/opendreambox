@@ -1,21 +1,21 @@
-From dbac28c67036eae0ee94f814662d7ccb1ed36542 Mon Sep 17 00:00:00 2001
+From 59b4c5dcddb683ab2d61c823dc6d96c159a6359b Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 16:20:36 +0200
-Subject: [PATCH 6/9] ifupdown: dhcp_down: wait until udhcpc has been killed
+Subject: [PATCH 2/6] ifupdown: dhcp_down: wait until udhcpc has been killed
 
 * Otherwise there's a race condition between ifdown and udhcpc,
   which executes deconfig scripts in /etc/udhcpc.d.
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- networking/ifupdown.c |   23 +++++++++++++++++------
+ networking/ifupdown.c | 23 +++++++++++++++++------
  1 file changed, 17 insertions(+), 6 deletions(-)
 
 diff --git a/networking/ifupdown.c b/networking/ifupdown.c
-index 9b34986..99ed29a 100644
+index 8180482..4135216 100644
 --- a/networking/ifupdown.c
 +++ b/networking/ifupdown.c
-@@ -618,18 +618,29 @@ static int FAST_FUNC dhcp_down(struct interface_defn_t *ifd, execfn *exec)
+@@ -612,18 +612,29 @@ static int FAST_FUNC dhcp_down(struct interface_defn_t *ifd, execfn *exec)
  static int FAST_FUNC dhcp_down(struct interface_defn_t *ifd, execfn *exec)
  {
  	int result;
@@ -52,5 +52,5 @@ index 9b34986..99ed29a 100644
  # else
  static int FAST_FUNC dhcp_down(struct interface_defn_t *ifd UNUSED_PARAM,
 -- 
-1.7.10.4
+1.8.1.2
 

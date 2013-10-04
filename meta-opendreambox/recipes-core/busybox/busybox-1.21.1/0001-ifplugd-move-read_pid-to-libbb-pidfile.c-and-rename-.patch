@@ -1,18 +1,18 @@
-From dd2a007f5d98e39849e8743baa699578626546fa Mon Sep 17 00:00:00 2001
+From 52c539c6dab6e4e07dc6d9a44a1dc54fbbc9eed4 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 16:15:50 +0200
-Subject: [PATCH 5/9] ifplugd: move read_pid to libbb/pidfile.c and rename it
+Subject: [PATCH 1/6] ifplugd: move read_pid to libbb/pidfile.c and rename it
  to read_pidfile
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- include/libbb.h      |    2 ++
- libbb/pidfile.c      |   14 ++++++++++++++
- networking/ifplugd.c |   18 +-----------------
+ include/libbb.h      |  2 ++
+ libbb/pidfile.c      | 14 ++++++++++++++
+ networking/ifplugd.c | 18 +-----------------
  3 files changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/include/libbb.h b/include/libbb.h
-index 2cc1466..5f71145 100644
+index e520060..7717d58 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
 @@ -1042,10 +1042,12 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
@@ -54,7 +54,7 @@ index a48dfc3..6734a2d 100644
  {
  	int pid_fd;
 diff --git a/networking/ifplugd.c b/networking/ifplugd.c
-index d8358cd..9a15576 100644
+index 86586f0..0bf3284 100644
 --- a/networking/ifplugd.c
 +++ b/networking/ifplugd.c
 @@ -510,22 +510,6 @@ static NOINLINE int check_existence_through_netlink(void)
@@ -83,12 +83,12 @@ index d8358cd..9a15576 100644
 @@ -552,7 +536,7 @@ int ifplugd_main(int argc UNUSED_PARAM, char **argv)
  
  #if ENABLE_FEATURE_PIDFILE
- 	pidfile_name = xasprintf(_PATH_VARRUN"ifplugd.%s.pid", G.iface);
+ 	pidfile_name = xasprintf(CONFIG_PID_FILE_PATH "/ifplugd.%s.pid", G.iface);
 -	pid_from_pidfile = read_pid(pidfile_name);
 +	pid_from_pidfile = read_pidfile(pidfile_name);
  
  	if (opts & FLAG_KILL) {
  		if (pid_from_pidfile > 0)
 -- 
-1.7.10.4
+1.8.1.2
 

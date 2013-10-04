@@ -1,21 +1,21 @@
-From 1fd8cad8f4bed419722765080af625cbe7597298 Mon Sep 17 00:00:00 2001
+From cdd346fbdfc1d15581b111b6a3f5eb9892e9ba2b Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Tue, 15 Jan 2013 17:33:53 +0100
-Subject: [PATCH 8/9] udhcpc: obtain hostname from OS by default
+Subject: [PATCH 4/6] udhcpc: obtain hostname from OS by default
 
 * Doesn't require the 'hostname' option in /etc/network/interfaces,
   and thus makes udhcpc behave like other clients.
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- networking/udhcp/dhcpc.c |    9 +++++++++
+ networking/udhcp/dhcpc.c | 9 +++++++++
  1 file changed, 9 insertions(+)
 
 diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
-index 5a6c220..a9f9edd 100644
+index fe2e681..35487b6 100644
 --- a/networking/udhcp/dhcpc.c
 +++ b/networking/udhcp/dhcpc.c
-@@ -1333,6 +1333,15 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+@@ -1375,6 +1375,15 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
  		logmode |= LOGMODE_SYSLOG;
  	}
  
@@ -32,5 +32,5 @@ index 5a6c220..a9f9edd 100644
  	bb_sanitize_stdio();
  	/* Equivalent of doing a fflush after every \n */
 -- 
-1.7.10.4
+1.8.1.2
 

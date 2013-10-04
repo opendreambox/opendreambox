@@ -1,19 +1,19 @@
-From efe93f5bc8565fb0ba04df96cfc15305dfb34478 Mon Sep 17 00:00:00 2001
+From ddf767670c213c02158c518a46d3d276a5a6a81d Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 17:32:16 +0200
-Subject: [PATCH 7/9] udhcpc: calculate broadcast address if not given by
+Subject: [PATCH 3/6] udhcpc: calculate broadcast address if not given by
  server
 
 * This is more efficient than doing it in the scripts
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
- networking/udhcp/common.h |    2 +-
- networking/udhcp/dhcpc.c  |   17 +++++++++++++++++
+ networking/udhcp/common.h |  2 +-
+ networking/udhcp/dhcpc.c  | 17 +++++++++++++++++
  2 files changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/networking/udhcp/common.h b/networking/udhcp/common.h
-index cfd5867..c48dd0a 100644
+index 0e8e45f..af8c105 100644
 --- a/networking/udhcp/common.h
 +++ b/networking/udhcp/common.h
 @@ -126,7 +126,7 @@ enum {
@@ -26,7 +26,7 @@ index cfd5867..c48dd0a 100644
  //#define DHCP_NIS_DOMAIN       0x28
  //#define DHCP_NIS_SERVER       0x29
 diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
-index ddb328d..5a6c220 100644
+index 0862288..fe2e681 100644
 --- a/networking/udhcp/dhcpc.c
 +++ b/networking/udhcp/dhcpc.c
 @@ -533,6 +533,23 @@ static char **fill_envp(struct dhcp_packet *packet)
@@ -54,5 +54,5 @@ index ddb328d..5a6c220 100644
  }
  
 -- 
-1.7.10.4
+1.8.1.2
 

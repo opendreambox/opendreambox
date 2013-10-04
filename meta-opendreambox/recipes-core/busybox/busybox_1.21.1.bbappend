@@ -1,15 +1,12 @@
 SRC_URI += "file://busybox-telnetd.xinetd.in \
             file://busybox-telnetd@.service \
             file://busybox-telnetd.socket \
-            file://0001-mount-set-up-RO-loop-device-if-mount-o-ro.-Closes-47.patch \
-            file://0002-mount-undo-recent-breakage-when-mount-flags-were-mad.patch \
-            file://0003-mount-do-not-pass-comment-ANYTHING-option-to-kernel..patch \
-            file://0004-mount-support-strictatime-option.-Closes-5240.patch \
-            file://0005-ifplugd-move-read_pid-to-libbb-pidfile.c-and-rename-.patch \
-            file://0006-ifupdown-dhcp_down-wait-until-udhcpc-has-been-killed.patch \
-            file://0007-udhcpc-calculate-broadcast-address-if-not-given-by-s.patch \
-            file://0008-udhcpc-obtain-hostname-from-OS-by-default.patch \
-            file://0009-mount-don-t-pass-option-nofail-to-the-kernel.patch"
+            file://0001-ifplugd-move-read_pid-to-libbb-pidfile.c-and-rename-.patch \
+            file://0002-ifupdown-dhcp_down-wait-until-udhcpc-has-been-killed.patch \
+            file://0003-udhcpc-calculate-broadcast-address-if-not-given-by-s.patch \
+            file://0004-udhcpc-obtain-hostname-from-OS-by-default.patch \
+            file://0005-mount-don-t-pass-option-nofail-to-the-kernel.patch \
+            file://0006-mount-don-t-pass-option-auto-to-kernel.patch"
 
 inherit systemd xinetd
 
