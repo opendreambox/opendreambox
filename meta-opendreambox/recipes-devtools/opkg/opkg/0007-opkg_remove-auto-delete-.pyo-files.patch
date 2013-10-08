@@ -1,7 +1,7 @@
-From d493bc71ceba089c81c1beccf75f1164affc5b2b Mon Sep 17 00:00:00 2001
+From 681a7fa6fa5ec2b67d968ff57eb9b87ee1a4a821 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 21 May 2012 14:05:37 +0200
-Subject: [PATCH 08/16] opkg_remove: auto-delete .pyo files
+Subject: [PATCH 07/17] opkg_remove: auto-delete .pyo files
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---

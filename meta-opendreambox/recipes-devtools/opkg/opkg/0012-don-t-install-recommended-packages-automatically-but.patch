@@ -1,7 +1,7 @@
-From 75d407d4f26542f73a7d88d252f98aca41f4354b Mon Sep 17 00:00:00 2001
+From 7e8d883597fb4195f268cb5dc3777e1ec84fbd29 Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Tue, 5 Mar 2013 22:25:44 +0100
-Subject: [PATCH 13/16] don't install recommended packages automatically, but
+Subject: [PATCH 12/17] don't install recommended packages automatically, but
  print a message
 
 ---

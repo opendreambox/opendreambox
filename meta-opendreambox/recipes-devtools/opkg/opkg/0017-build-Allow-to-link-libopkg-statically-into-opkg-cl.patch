@@ -1,0 +1,45 @@
+From f5f2983f3152814d2addfa66326efe612b7a8d74 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 7 Oct 2013 21:16:33 +0200
+Subject: [PATCH 17/17] build: Allow to link libopkg statically into opkg-cl
+
+- Introduces new configure option "--with-static-opkg-cl".
+- Reduces overall binary size if a shared libopkg is not used
+  otherwise on the target.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ configure.ac    | 5 +++++
+ src/Makefile.am | 3 +++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index bb62e34..b48adc1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -273,6 +273,11 @@ fi
+ 
+ CLEAN_DATE=`date +"%B %Y" | tr -d '\n'`
+ 
++AC_ARG_WITH(static-opkg-cl,
++[  --with-static-opkg-cl   Statically link libopkg into opkg-cl.],
++[static_opkg_cl="${withval}"])
++AM_CONDITIONAL(STATIC_OPKG_CL, test "x$static_opkg_cl" = "xyes")
++
+ AC_SUBST(opkglibdir)
+ AC_SUBST(opkgetcdir)
+ AC_SUBST(opkglockfile)
+diff --git a/src/Makefile.am b/src/Makefile.am
+index c8cb89f..699b241 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -3,3 +3,6 @@ bin_PROGRAMS = opkg-cl
+ 
+ opkg_cl_SOURCES = opkg-cl.c
+ opkg_cl_LDADD = $(top_builddir)/libopkg/libopkg.la
++if STATIC_OPKG_CL
++opkg_cl_LDFLAGS = -static
++endif
+-- 
+1.8.1.2
+

@@ -1,7 +1,7 @@
-From d2eb250899e33df1aa9cfb2a08c373d522241f0f Mon Sep 17 00:00:00 2001
+From 882ac246fc642c7cd18da9d4c28c3935fc8e4920 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 17 Mar 2013 22:52:07 +0100
-Subject: [PATCH 15/16] __pkg_hash_fetch_conflicts: ignore virtual conflicts
+Subject: [PATCH 14/17] __pkg_hash_fetch_conflicts: ignore virtual conflicts
 
 * If a package a both provides and conflicts the same package b,
   then it's a virtual package. Ignore it!

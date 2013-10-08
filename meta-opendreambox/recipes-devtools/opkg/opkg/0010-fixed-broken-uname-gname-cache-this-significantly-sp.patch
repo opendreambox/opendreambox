@@ -1,7 +1,7 @@
-From 1ae2d56bb0514c1f41b05ca67bee352f3de6f6da Mon Sep 17 00:00:00 2001
+From 5532fcd48299f77afb9df25e1a530fb16b6ddb80 Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Tue, 5 Mar 2013 22:20:20 +0100
-Subject: [PATCH 11/16] fixed broken uname gname cache (this significantly
+Subject: [PATCH 10/17] fixed broken uname gname cache (this significantly
  speeds up)
 
 ---

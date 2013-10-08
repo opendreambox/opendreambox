@@ -1,0 +1,25 @@
+From 6d33cd959352d78c74d2aa842db1faa1232d0519 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 7 Oct 2013 22:09:15 +0200
+Subject: [PATCH 16/17] build: No need to add libbb.la twice, libopkg already
+ depends on it
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ src/Makefile.am | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index efdc19d..c8cb89f 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -2,5 +2,4 @@ AM_CFLAGS = -I${top_srcdir}/libopkg ${ALL_CFLAGS}
+ bin_PROGRAMS = opkg-cl
+ 
+ opkg_cl_SOURCES = opkg-cl.c
+-opkg_cl_LDADD = $(top_builddir)/libopkg/libopkg.la \
+-                $(top_builddir)/libbb/libbb.la 
++opkg_cl_LDADD = $(top_builddir)/libopkg/libopkg.la
+-- 
+1.8.1.2
+

@@ -1,14 +1,14 @@
-From 2b673b2c1d473739f6c76cb47b5f3aea41e57b85 Mon Sep 17 00:00:00 2001
+From 6362765e6ea338e1854665100a666efa8a93b062 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 16 May 2012 21:20:27 +0200
-Subject: [PATCH 10/16] use AM_SILENT_RULES
+Subject: [PATCH 09/17] use AM_SILENT_RULES
 
 ---
  configure.ac | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/configure.ac b/configure.ac
-index 996bf6a..a146681 100644
+index c6b84b4..6c52339 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -23,6 +23,7 @@ done
