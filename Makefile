@@ -68,6 +68,7 @@ BBLAYERS ?= \
 	$(CURDIR)/meta-bsp/common \
 	$(CURDIR)/meta-opendreambox \
 	$(CURDIR)/meta-openembedded/meta-oe \
+	$(CURDIR)/meta-openembedded/meta-filesystems \
 	$(CURDIR)/meta-openembedded/meta-multimedia \
 	$(CURDIR)/meta-openembedded/meta-networking \
 	$(CURDIR)/openembedded-core/meta
