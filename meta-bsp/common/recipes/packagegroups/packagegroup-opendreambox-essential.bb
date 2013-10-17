@@ -1,7 +1,7 @@
 SUMMARY = "OpenDreambox: Essential packages"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
+LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=23102313c1f42fea498404eb17e55202"
 DEPENDS = "virtual/kernel"
 RDEPENDS_${PN} = " \
         ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${ESSENTIAL_RDEPENDS_LEGACY}', '${ESSENTIAL_RDEPENDS}', d)} \
