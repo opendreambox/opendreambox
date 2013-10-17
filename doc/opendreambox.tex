@@ -54,13 +54,14 @@
 \section{Introduction}
   \begin{flushleft}
     This document briefly describes the OpenDreambox distribution, an embedded Linux
-    distribution for Set-Top-Boxes manufactured by \href{http://www.dream-multimedia-tv.de/}{Dream Multimedia GmbH}.
+    distribution for Set-Top-Boxes manufactured by \href{http://www.dream-multimedia-tv.de/}{Dream Property GmbH}.
 
     OpenDreambox is based on the \href{http://www.openembedded.org/}{OpenEmbedded} build framework, which
     uses \href{http://bitbake.berlios.de/}{BitBake} to transform build instructions into
     distributable firmare images and software packages.
 
-    The current version, OpenDreambox 2.0, is based on OpenEmbedded "denzil".
+    The current version, OpenDreambox 2.2, is based on the \href{http://www.yoctoproject.org}{Yocto Project}, release 
+    1.5 "Dora", an umbrella project for OpenEmbedded and related tools.
   \end{flushleft}
 
   \subsection{Target audience}
@@ -79,7 +80,6 @@
           \textbf{Product name} & \textbf{Environment variable} \\ \hline
           & \\
           DM 500 HD & \shell{MACHINE=dm500hd} \\
-          DM 800 HD PVR & \shell{MACHINE=dm800} \\
           DM 800 HD SE & \shell{MACHINE=dm800se} \\
           DM 7020 HD & \shell{MACHINE=dm7020hd} \\
           DM 8000 HD PVR & \shell{MACHINE=dm8000} \\
@@ -127,7 +127,7 @@ THE SOFTWARE.
     To initially download the source into the current directory, issue the
     following command:
 
-    \shell{git clone -b denzil git://git.opendreambox.org/git/opendreambox.git}
+    \shell{git clone -b dora git://git.opendreambox.org/git/opendreambox.git}
 
     The Git repository can be viewed online at:
 
@@ -145,24 +145,27 @@ THE SOFTWARE.
     This meta data is used by BitBake to download and compile source code
     and to assemble installable software packages and firmware images.
 
-    Currently, there are five layers, ordered by priority from lowest to
-    highest:
+    Currently, there are eight layers, ordered by priority from highest to
+    lowest:
 
     \begin{itemize}
-      \item \shell{openembedded-core}
-      \item \shell{meta-openembedded}
-      \item \shell{meta-opendreambox}
-      \item \shell{meta-bsp/common}
       \item \shell{meta-bsp/\$\{MACHINE\}}
+      \item \shell{meta-bsp/common}
+      \item \shell{meta-opendreambox}
+      \item \shell{meta-openembedded/meta-oe}
+      \item \shell{meta-openembedded/meta-filesystems}
+      \item \shell{meta-openembedded/meta-multimedia}
+      \item \shell{meta-openembedded/meta-networking}
+      \item \shell{openembedded-core/meta}
     \end{itemize}
 
     If a recipe for the same package exists in multiple layers,
     then the higher priority layer takes precedence over the lower priority
     layer.
 
-    For example, \shell{libmad\_0.15.1b.bb} exists in both
-    \shell{meta-openembedded} and \shell{openembedded-core}. The recipe in
-    \shell{meta-openembedded} will be used, because \shell{openembedded-core}
+    For example, if \shell{libmad\_0.15.1b.bb} existed in both
+    \shell{meta-openembedded} and \shell{openembedded-core}, the recipe in
+    \shell{meta-openembedded} would be used, because \shell{openembedded-core}
     has lower priority.
 
     \textbf{NOTE:} This would still be true even if the version of \shell{libmad} in
@@ -172,18 +175,18 @@ THE SOFTWARE.
     same version is present in a higher priority layer.
 
     \subsubsection{openembedded-core and meta-openembedded}
-       These directories contain copies of Git repositories from git.openembedded.org, including
-       the OpenEmbedded-Core layer ("meta") and the OpenEmbedded layer ("meta-oe"). They get created
-       automatically when building the distribution for the first time.
+       These directories contain copies of Git repositories from git.openembedded.org,
+       including the OpenEmbedded-Core layer and the (Meta-)OpenEmbedded layers. They
+       get created automatically when building the distribution for the first time.
 
        Throughout this document, the combination of these directories will be
        referred to as OpenEmbedded.
 
        The latest changes to these Git repositories can be seen at:
 
-       \url{http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/current}
+       \url{http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/dora}
 
-       \url{http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/current}
+       \url{http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/dora}
 
     \subsubsection{meta-opendreambox}
       This directory contains:
@@ -216,8 +219,7 @@ THE SOFTWARE.
    many Linux distributions and also for some other operating systems.
 
    \begin{itemize}
-     \item \url{http://www.openembedded.org/index.php/OEandYourDistro}
-     \item \url{http://www.openembedded.org/index.php/Required\_software}
+     \item \url{http://www.openembedded.org/wiki/Getting\_started#Required\_software}
    \end{itemize}
 
    It is highly recommended to use Linux to build OpenDreambox. In theory,
@@ -226,13 +228,8 @@ THE SOFTWARE.
    include:
 
    \begin{itemize}
-     \item Arch Linux 2011.08.19 [amd64]
-     \item Debian 6.0 (Squeeze) [i386]
-     \item Debian "Testing" (Wheezy) [i386]
-     \item Fedora 16 [i386, amd64]
-     \item Ubuntu 10.04 LTS (Lucid Lynx) [i386]
-     \item Ubuntu 11.10 (Oneiric Ocelot) [amd64]
-     \item Ubuntu 12.04 LTS (Precise Pangolin) [i386, amd64]
+     \item Debian 7.2 "Wheezy" [amd64]
+     \item Ubuntu 13.04 "Raring Ringtail" [amd64]
    \end{itemize}
 
    Distributions known not to work:
@@ -243,7 +240,7 @@ THE SOFTWARE.
 
 \pagebreak
 
-\section{Major changes since previous releases}
+\section{Major changes since previous public releases}
 
   \subsection{Changes since release 1.6}
     \begin{itemize}
@@ -258,19 +255,21 @@ THE SOFTWARE.
       \item Support for machines based on ATI Xilleon or IBM STB was dropped.
     \end{itemize}
 
+  \subsection{Changes since release 2.0}
+    \begin{itemize}
+      \item If a recipe changes, the corresponding packages will be rebuilt automatically,
+            in contrast to required manual PR bumps in the past.
+      \item Each machine uses its own tmp directory again, like before 2.0. However,
+            there is a shared \shell{sstate-cache}, which allows to share already compiled
+            data between compatible machines. This impacts performance and size of the
+            build system, but improves reliability and consistency across builds.
+      \item Support for machines without FPU and kernel versions below 3.x was dropped (DM800).
+    \end{itemize}
+
 \section{Known Issues}
 
   \begin{itemize}
-    \item
-	\textbf{Problem:} Building on eCryptfs fails, because it doesn't support sufficiently long filenames (\href{https://bugs.launchpad.net/ecryptfs/+bug/344878}{eCryptfs bug \#344878}).
-	\textbf{Solution:} Choose a different filesystem.
-    \item \textbf{Problem:} When switching between machines after the gcc recipe was updated, gcc-cross-initial, gcc-cross-intermediate and gcc-cross may fail to build with the following error message:
-
-    \shell{configure: error: changes in the environment can compromise the build}
-    \shell{configure: error: run `make distclean' and/or `rm ./config.cache' and start over}
-
-    \textbf{Solution:} \shell{bitbake -ccleansstate gcc-cross-initial gcc-cross-intermediate gcc-cross}
-
+    \item TBD
   \end{itemize}
 
 \pagebreak
@@ -368,7 +367,7 @@ THE SOFTWARE.
        \shell{INHERIT} specifies bbclasses to include from a configuration file. Usually,
        this variable gets appended to by using the \shell{+=} operator.
 
-       The OpenDreambox distribution automatically appends \shell{"buildhistory recipe\_sanity testlab"} to \shell{INHERIT}.
+       The OpenDreambox distribution automatically appends \shell{"buildhistory recipe\_sanity"} to \shell{INHERIT}.
 
        Default: \shell{INHERIT = ""}
 
@@ -382,18 +381,14 @@ THE SOFTWARE.
 
        \shell{INHERIT += "rm\_old\_work"}
 
-       Remove temporary files of a recipe after it has been built and packaged successfully.
-
-       \shell{INHERIT += "rm\_work"}
-
   \subsection{Setting up a build directory}
-     To set up a build directory for e.g. \textbf{DM 500 HD} run \shell{make MACHINE=dm500hd}. If
-     \shell{MACHINE=dm500hd} has been set in \shell{conf/make.conf}, you can simply run \shell{make}
-     with no arguments instead. This will create and initialize the directory \shell{build/dm500hd}.
+     To set up a build directory for e.g. \textbf{DM 7020 HD} run \shell{make MACHINE=dm7020hd}. If
+     \shell{MACHINE=dm7020hd} has been set in \shell{conf/make.conf} (default), you can simply run \shell{make}
+     with no arguments instead. This will create and initialize the directory \shell{build/dm7020hd}.
 
   \subsection{Building a firmware image}
-     To build a firmware image for e.g. \textbf{DM 500 HD} run \shell{make MACHINE=dm500hd image}.
-     If \shell{MACHINE=dm500hd} has been set in \shell{conf/make.conf}, you can simply run
+     To build a firmware image for e.g. \textbf{DM 7020 HD} run \shell{make MACHINE=dm7020hd image}.
+     If \shell{MACHINE=dm7020hd} has been set in \shell{conf/make.conf} (default), you can simply run
      \shell{make image} instead.
 
   \subsection{Building a package}
@@ -403,9 +398,9 @@ THE SOFTWARE.
 
      \shell{source bitbake.env}
 
-     BitBake must be run from the machine's build directory. For \textbf{DM 500 HD} run:
+     BitBake must be run from the machine's build directory. For \textbf{DM 7020 HD} run:
 
-     \shell{cd build/dm500hd}
+     \shell{cd build/dm7020hd}
 
      In order to build enigma2, run:
 

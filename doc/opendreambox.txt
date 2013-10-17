@@ -17,8 +17,9 @@ opendreambox
      1.6.3 meta-bsp
    2 Prerequisites
     2.1 Required software
-   3 Major changes since previous releases
+   3 Major changes since previous public releases
     3.1 Changes since release 1.6
+    3.2 Changes since release 2.0
    4 Known Issues
    5 Building OpenDreambox
     5.1 Makefile targets
@@ -43,13 +44,14 @@ opendreambox
   1 Introduction
 
    This document briefly describes the OpenDreambox distribution, an embedded
-   Linux distribution for Set-Top-Boxes manufactured by Dream Multimedia GmbH.
+   Linux distribution for Set-Top-Boxes manufactured by Dream Property GmbH.
 
    OpenDreambox is based on the OpenEmbedded build framework, which uses BitBake
    to transform build instructions into distributable firmare images and software
    packages.
 
-   The current version, OpenDreambox 2.0, is based on OpenEmbedded "denzil".
+   The current version, OpenDreambox 2.2, is based on the Yocto Project, release
+   1.5 "Dora", an umbrella project for OpenEmbedded and related tools.
 
     1.1 Target audience
 
@@ -65,7 +67,6 @@ opendreambox
    |Product name  |Environment variable|
    |  ----------  |  ----------------  |
    |DM 500 HD     |MACHINE=dm500hd     |
-   |DM 800 HD PVR |MACHINE=dm800       |
    |DM 800 HD SE  |MACHINE=dm800se     |
    |DM 7020 HD    |MACHINE=dm7020hd    |
    |DM 8000 HD PVR|MACHINE=dm8000      |
@@ -111,7 +112,7 @@ opendreambox
    To initially download the source into the current directory, issue the
    following command:
 
-   git clone -b denzil git://git.opendreambox.org/git/opendreambox.git
+   git clone -b dora git://git.opendreambox.org/git/opendreambox.git
 
    The Git repository can be viewed online at:
 
@@ -131,18 +132,21 @@ opendreambox
    meta data is used by BitBake to download and compile source code and to
    assemble installable software packages and firmware images.
 
-   Currently, there are five layers, ordered by priority from lowest to highest:
-     * openembedded-core
-     * meta-openembedded
-     * meta-opendreambox
-     * meta-bsp/common
+   Currently, there are eight layers, ordered by priority from highest to lowest:
      * meta-bsp/${MACHINE}
+     * meta-bsp/common
+     * meta-opendreambox
+     * meta-openembedded/meta-oe
+     * meta-openembedded/meta-filesystems
+     * meta-openembedded/meta-multimedia
+     * meta-openembedded/meta-networking
+     * openembedded-core/meta
 
    If a recipe for the same package exists in multiple layers, then the higher
    priority layer takes precedence over the lower priority layer.
 
-   For example, libmad_0.15.1b.bb exists in both meta-openembedded and
-   openembedded-core. The recipe in meta-openembedded will be used, because
+   For example, if libmad_0.15.1b.bb existed in both meta-openembedded and
+   openembedded-core, the recipe in meta-openembedded would be used, because
    openembedded-core has lower priority.
 
    NOTE: This would still be true even if the version of libmad in
@@ -154,18 +158,17 @@ opendreambox
       1.6.1 openembedded-core and meta-openembedded
 
    These directories contain copies of Git repositories from git.openembedded.org,
-   including the OpenEmbedded-Core layer ("meta") and the OpenEmbedded layer
-   ("meta-oe"). They get created automatically when building the distribution for
-   the first time.
+   including the OpenEmbedded-Core layer and the (Meta-)OpenEmbedded layers. They
+   get created automatically when building the distribution for the first time.
 
    Throughout this document, the combination of these directories will be referred
    to as OpenEmbedded.
 
    The latest changes to these Git repositories can be seen at:
 
-   http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/current
+   http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/dora
 
-   http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/current
+   http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/dora
 
       1.6.2 meta-opendreambox
 
@@ -191,24 +194,18 @@ opendreambox
 
    The OpenEmbedded project provides a general list of prerequisites for many
    Linux distributions and also for some other operating systems.
-     * http://www.openembedded.org/index.php/OEandYourDistro
-     * http://www.openembedded.org/index.php/Required\_software
+     * http://www.openembedded.org/wiki/Getting\_started#Required\_software
 
    It is highly recommended to use Linux to build OpenDreambox. In theory, any
    recent distribution will do, but not many distributions have been verified to
    build OpenDreambox without errors. Tested distributions include:
-     * Arch Linux 2011.08.19 [amd64]
-     * Debian 6.0 (Squeeze) [i386]
-     * Debian "Testing" (Wheezy) [i386]
-     * Fedora 16 [i386, amd64]
-     * Ubuntu 10.04 LTS (Lucid Lynx) [i386]
-     * Ubuntu 11.10 (Oneiric Ocelot) [amd64]
-     * Ubuntu 12.04 LTS (Precise Pangolin) [i386, amd64]
+     * Debian 7.2 "Wheezy" [amd64]
+     * Ubuntu 13.04 "Raring Ringtail" [amd64]
 
    Distributions known not to work:
      * Debian 5.0 (Lenny): Comes with Python 2.5, which is too old.
 
-  3 Major changes since previous releases
+  3 Major changes since previous public releases
 
     3.1 Changes since release 1.6
 
@@ -222,21 +219,20 @@ opendreambox
      * Kernel packages were renamed from linux-${MACHINE} to linux-dreambox.
      * Support for machines based on ATI Xilleon or IBM STB was dropped.
 
+    3.2 Changes since release 2.0
+
+     * If a recipe changes, the corresponding packages will be rebuilt
+       automatically, in contrast to required manual PR bumps in the past.
+     * Each machine uses its own tmp directory again, like before 2.0. However,
+       there is a shared sstate-cache, which allows to share already compiled data
+       between compatible machines. This impacts performance and size of the build
+       system, but improves reliability and consistency across builds.
+     * Support for machines without FPU and kernel versions below 3.x was dropped
+       (DM800).
+
   4 Known Issues
 
-     * Problem: Building on eCryptfs fails, because it doesn't support
-       sufficiently long filenames (eCryptfs bug #344878). Solution: Choose a
-       different filesystem.
-     * Problem: When switching between machines after the gcc recipe was updated,
-       gcc-cross-initial, gcc-cross-intermediate and gcc-cross may fail to build
-       with the following error message:
-
-       configure: error: changes in the environment can compromise the build
-       configure: error: run `make distclean' and/or `rm ./config.cache' and start
-       over
-
-       Solution: bitbake -ccleansstate gcc-cross-initial gcc-cross-intermediate
-       gcc-cross
+     * TBD
 
   5 Building OpenDreambox
 
@@ -330,8 +326,8 @@ opendreambox
    INHERIT specifies bbclasses to include from a configuration file. Usually, this
    variable gets appended to by using the += operator.
 
-   The OpenDreambox distribution automatically appends "buildhistory recipe_sanity
-   testlab" to INHERIT.
+   The OpenDreambox distribution automatically appends "buildhistory
+   recipe_sanity" to INHERIT.
 
    Default: INHERIT = ""
 
@@ -346,22 +342,18 @@ opendreambox
 
    INHERIT += "rm_old_work"
 
-   Remove temporary files of a recipe after it has been built and packaged
-   successfully.
-
-   INHERIT += "rm_work"
-
     5.5 Setting up a build directory
 
-   To set up a build directory for e.g. DM 500 HD run make MACHINE=dm500hd. If
-   MACHINE=dm500hd has been set in conf/make.conf, you can simply run make with no
-   arguments instead. This will create and initialize the directory build/dm500hd.
+   To set up a build directory for e.g. DM 7020 HD run make MACHINE=dm7020hd. If
+   MACHINE=dm7020hd has been set in conf/make.conf (default), you can simply run
+   make with no arguments instead. This will create and initialize the directory
+   build/dm7020hd.
 
     5.6 Building a firmware image
 
-   To build a firmware image for e.g. DM 500 HD run make MACHINE=dm500hd image. If
-   MACHINE=dm500hd has been set in conf/make.conf, you can simply run make image
-   instead.
+   To build a firmware image for e.g. DM 7020 HD run make MACHINE=dm7020hd image.
+   If MACHINE=dm7020hd has been set in conf/make.conf (default), you can simply
+   run make image instead.
 
     5.7 Building a package
 
@@ -371,9 +363,9 @@ opendreambox
 
    source bitbake.env
 
-   BitBake must be run from the machine's build directory. For DM 500 HD run:
+   BitBake must be run from the machine's build directory. For DM 7020 HD run:
 
-   cd build/dm500hd
+   cd build/dm7020hd
 
    In order to build enigma2, run:
 
