@@ -44,7 +44,7 @@ case "$CMD" in
 		( find bitbake meta-* openembedded-core $@ ) | $PAGER
 		;;
 	grep)
-		( find conf/ -name "*.conf" | xargs grep -H $@; git grep $@; for d in */.git; do d=`dirname $d`; cd $d && git grep $@ | sed -e "s,^,$d/,"; cd $OLDPWD; done ) | $PAGER
+		( find conf/ -name "*.conf" | xargs grep -H $@; git grep $@; for d in */.git */*/.git; do d=`dirname $d`; [ -d "$d" ] && cd $d && git grep $@ | sed -e "s,^,$d/,"; cd $OLDPWD; done ) | $PAGER
 		;;
 	*)
 		echo "Usage: source ${BASH_SOURCE[0]:-drepo} <diff|find|grep> [...]"
