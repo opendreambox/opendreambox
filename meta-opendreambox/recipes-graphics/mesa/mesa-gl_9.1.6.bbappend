@@ -1,3 +1,8 @@
+SRC_URI += "file://01_gbm_egl.patch \
+            file://02_gbm_no_undefined.patch"
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+
 PACKAGECONFIG = "dri \
   ${@base_contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
   ${@base_contains('DISTRO_FEATURES', 'wayland', 'egl wayland', '', d)} \
