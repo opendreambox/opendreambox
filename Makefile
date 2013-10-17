@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 #
-# Copyright (c) 2010-2012 Dream Multimedia GmbH, Germany
+# Copyright (c) 2010-2013 Dream Multimedia GmbH, Germany
 #                         http://www.dream-multimedia-tv.de/
 # Authors:
 #   Andreas Oberritter <obi@opendreambox.org>
