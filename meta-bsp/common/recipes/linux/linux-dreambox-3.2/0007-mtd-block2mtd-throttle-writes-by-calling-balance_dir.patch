@@ -1,7 +1,7 @@
-From a89d83bc415662e8a96738793736311d56798dbe Mon Sep 17 00:00:00 2001
+From 90ae25dd7c5787868bfd92dc9c059d86c6755ec2 Mon Sep 17 00:00:00 2001
 From: NeilBrown <neilb@suse.de>
 Date: Wed, 12 Dec 2012 19:32:15 +1100
-Subject: [PATCH 7/7] mtd: block2mtd: throttle writes by calling
+Subject: [PATCH 07/17] mtd: block2mtd: throttle writes by calling
  balance_dirty_pages_ratelimited.
 
 If you create a block2mtd device that is larger than main memory,
@@ -15,7 +15,7 @@ so just call balance_dirty_pages_ratelimited() directly.
 Signed-off-by: NeilBrown <neilb@suse.de>
 Signed-off-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 ---
- drivers/mtd/devices/block2mtd.c |    2 ++
+ drivers/mtd/devices/block2mtd.c | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/mtd/devices/block2mtd.c b/drivers/mtd/devices/block2mtd.c
@@ -39,5 +39,5 @@ index 67d8b49..e902944 100644
  		page_cache_release(page);
  
 -- 
-1.7.10.4
+1.8.1.2
 

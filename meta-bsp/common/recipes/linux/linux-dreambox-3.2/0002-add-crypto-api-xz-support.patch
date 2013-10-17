@@ -1,12 +1,12 @@
-From 37ae0a7544b0a8073a40b0336bc44799d97a61fb Mon Sep 17 00:00:00 2001
+From bab979da0ea46cb7f4cb384069f6de3f6a3070bc Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Tue, 12 Mar 2013 10:44:02 +0100
-Subject: [PATCH 2/7] add crypto api xz support
+Subject: [PATCH 02/17] add crypto api xz support
 
 ---
- crypto/Kconfig  |    7 ++++
- crypto/Makefile |    1 +
- crypto/xz.c     |  117 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ crypto/Kconfig  |   7 ++++
+ crypto/Makefile |   1 +
+ crypto/xz.c     | 117 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  3 files changed, 125 insertions(+)
  create mode 100644 crypto/xz.c
 
@@ -164,5 +164,5 @@ index 0000000..2c00cfd
 +MODULE_DESCRIPTION("Crypto XZ decompression support");
 +MODULE_AUTHOR("Gabor Juhos <juhosg@openwrt.org>");
 -- 
-1.7.10.4
+1.8.1.2
 

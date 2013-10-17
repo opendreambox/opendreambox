@@ -8,13 +8,6 @@ SRC_URI = " \
         ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-3.2.${PATCHLEVEL}.xz;apply=yes;name=kernel-patch \
         http://sources.dreamboxupdate.com/download/kernel-patches/${P}-${PATCHREV}.patch.bz2;name=dmm-patch \
         http://download.filesystems.org/unionfs/unionfs-2.x/unionfs-2.5.11_for_3.2.2.diff.gz;name=unionfs \
-        file://clear_sublevel.patch \
-        file://fadvise_dontneed_change.patch \
-        file://fix-proc-cputype.patch \
-        file://rtl8712-backport-b.patch \
-        file://rtl8712-backport-c.patch \
-        file://rtl8712-backport-d.patch \
-        file://make-3.82-hack.patch \
         file://0001-SCSI-sd-Use-SCSI-read-write-16-with-32-bit-LBA-drive.patch \
         file://0002-add-crypto-api-xz-support.patch \
         file://0003-add-XZ-compression-support-to-UBIFS.patch \
@@ -24,7 +17,14 @@ SRC_URI = " \
         file://0007-mtd-block2mtd-throttle-writes-by-calling-balance_dir.patch \
         file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
         file://0009-fixed-partition-is-ubi-maintained-check.patch \
-        file://0001-add-memory-mapping-support-to-usbfs-used-by-sundtek-.patch \
+        file://0010-MIPS-Refactor-clear_page-and-copy_page-functions.patch \
+        file://0011-add-memory-mapping-support-to-usbfs-used-by-sundtek-.patch \
+        file://0012-fadvise-dontneed-change.patch \
+        file://0013-fix-proc-cputype.patch \
+        file://0014-Staging-rtl8712-Remove-double-USB-device-IDs.patch \
+        file://0015-Staging-rtl8712-rtl8192u-move-USB-device-ID-within-s.patch \
+        file://0016-staging-r8712u-Fix-Smatch-warning.patch \
+        file://0017-CHROMIUM-make-3.82-hack-to-fix-differing-behaviour-b.patch \
         file://0001-linuxtv-api-DMM-drivers-are-now-ready-for-linux-tv-a.patch \
         file://defconfig \
 "
@@ -47,6 +47,10 @@ RDEPENDS_kernel-module-r8712u = "linux-firmware-rtl8192su"
 RDEPENDS_kernel-module-rt2800usb = "linux-firmware-rt2800usb"
 RDEPENDS_kernel-module-rt73usb = "linux-firmware-rt73usb"
 RDEPENDS_kernel-module-zd1211rw = "zd1211-firmware"
+
+do_configure_prepend() {
+        sed -e "/^SUBLEVEL = ${PATCHLEVEL}$/d" -i ${S}/Makefile
+}
 
 require linux-dreambox.inc
 

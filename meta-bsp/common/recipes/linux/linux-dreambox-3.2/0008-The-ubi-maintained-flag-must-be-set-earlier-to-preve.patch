@@ -1,8 +1,8 @@
 From fba157484336f1438f0cdb0f60a59a75b807235b Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Mon, 29 Jul 2013 11:36:00 +0200
-Subject: [PATCH] The ubi maintained flag must be set earlier to prevent the
- broadcom driver nand blocks refreshes that are actually managed by UBI
+Subject: [PATCH 08/17] The ubi maintained flag must be set earlier to prevent
+ the broadcom driver nand blocks refreshes that are actually managed by UBI
  Hopefully this fixes the problem that UBIFS partitions are mounted in
  read-only mode.
 
@@ -53,5 +53,5 @@ index 4f9ef05..4f3a1fd 100644
  }
  
 -- 
-1.8.3.2
+1.8.1.2
 

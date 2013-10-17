@@ -1,8 +1,20 @@
-Index: linux-3.2/include/linux/fs.h
-===================================================================
---- linux-3.2.orig/include/linux/fs.h
-+++ linux-3.2/include/linux/fs.h
-@@ -2224,8 +2224,12 @@ extern int check_disk_change(struct bloc
+From a557acd2af46640332d1a87682c70571d0c4fa5f Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 17 Oct 2013 23:04:43 +0200
+Subject: [PATCH 12/17] fadvise dontneed change
+
+---
+ include/linux/fs.h |  8 ++++++--
+ mm/fadvise.c       | 17 ++++++++++++-----
+ mm/swap.c          |  2 +-
+ mm/truncate.c      | 43 ++++++++++++++++++++++++++++++++-----------
+ 4 files changed, 51 insertions(+), 19 deletions(-)
+
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index a276817..1a6836d 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2224,8 +2224,12 @@ extern int check_disk_change(struct block_device *);
  extern int __invalidate_device(struct block_device *, bool);
  extern int invalidate_partition(struct gendisk *, int);
  #endif
@@ -17,11 +29,11 @@ Index: linux-3.2/include/linux/fs.h
  
  static inline void invalidate_remote_inode(struct inode *inode)
  {
-Index: linux-3.2/mm/fadvise.c
-===================================================================
---- linux-3.2.orig/mm/fadvise.c
-+++ linux-3.2/mm/fadvise.c
-@@ -107,7 +107,7 @@ SYSCALL_DEFINE(fadvise64_64)(int fd, lof
+diff --git a/mm/fadvise.c b/mm/fadvise.c
+index 35b2bb0..a4e44b3 100644
+--- a/mm/fadvise.c
++++ b/mm/fadvise.c
+@@ -107,7 +107,7 @@ SYSCALL_DEFINE(fadvise64_64)(int fd, loff_t offset, loff_t len, int advice)
  		nrpages = end_index - start_index + 1;
  		if (!nrpages)
  			nrpages = ~0UL;
@@ -30,7 +42,7 @@ Index: linux-3.2/mm/fadvise.c
  		ret = force_page_cache_readahead(mapping, file,
  				start_index,
  				nrpages);
-@@ -124,9 +124,16 @@ SYSCALL_DEFINE(fadvise64_64)(int fd, lof
+@@ -124,9 +124,16 @@ SYSCALL_DEFINE(fadvise64_64)(int fd, loff_t offset, loff_t len, int advice)
  		start_index = (offset+(PAGE_CACHE_SIZE-1)) >> PAGE_CACHE_SHIFT;
  		end_index = (endbyte >> PAGE_CACHE_SHIFT);
  
@@ -49,7 +61,7 @@ Index: linux-3.2/mm/fadvise.c
  
  			/*
  			 * If fewer pages were invalidated than expected then
-@@ -136,8 +143,8 @@ SYSCALL_DEFINE(fadvise64_64)(int fd, lof
+@@ -136,8 +143,8 @@ SYSCALL_DEFINE(fadvise64_64)(int fd, loff_t offset, loff_t len, int advice)
  			 */
  			if (count < (end_index - start_index + 1)) {
  				lru_add_drain_all();
@@ -60,11 +72,11 @@ Index: linux-3.2/mm/fadvise.c
  			}
  		}
  		break;
-Index: linux-3.2/mm/swap.c
-===================================================================
---- linux-3.2.orig/mm/swap.c
-+++ linux-3.2/mm/swap.c
-@@ -436,7 +436,7 @@ void add_page_to_unevictable_list(struct
+diff --git a/mm/swap.c b/mm/swap.c
+index 55b266d..e201d2b 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -436,7 +436,7 @@ void add_page_to_unevictable_list(struct page *page)
   * 2. active, dirty/writeback page -> inactive, head, PG_reclaim
   * 3. inactive, mapped page -> none
   * 4. inactive, dirty/writeback page -> inactive, head, PG_reclaim
@@ -73,11 +85,11 @@ Index: linux-3.2/mm/swap.c
   * 6. Others -> none
   *
   * In 4, why it moves inactive's head, the VM expects the page would
-Index: linux-3.2/mm/truncate.c
-===================================================================
---- linux-3.2.orig/mm/truncate.c
-+++ linux-3.2/mm/truncate.c
-@@ -315,20 +315,27 @@ void truncate_inode_pages(struct address
+diff --git a/mm/truncate.c b/mm/truncate.c
+index 00fb58a..74b65cf 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -315,20 +315,27 @@ void truncate_inode_pages(struct address_space *mapping, loff_t lstart)
  EXPORT_SYMBOL(truncate_inode_pages);
  
  /**
@@ -111,7 +123,7 @@ Index: linux-3.2/mm/truncate.c
  {
  	struct pagevec pvec;
  	pgoff_t index = start;
-@@ -359,12 +366,26 @@ unsigned long invalidate_mapping_pages(s
+@@ -359,12 +366,26 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
  			if (!trylock_page(page))
  				continue;
  			WARN_ON(page->index != index);
@@ -142,7 +154,7 @@ Index: linux-3.2/mm/truncate.c
  			if (!ret)
  				deactivate_page(page);
  			count += ret;
-@@ -376,7 +397,7 @@ unsigned long invalidate_mapping_pages(s
+@@ -376,7 +397,7 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
  	}
  	return count;
  }
@@ -151,3 +163,6 @@ Index: linux-3.2/mm/truncate.c
  
  /*
   * This is like invalidate_complete_page(), except it ignores the page's
+-- 
+1.8.1.2
+

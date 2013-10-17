@@ -1,8 +1,17 @@
+From a81fa57f8cb87fb4415c665d73d7d860a3a6df77 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 17 Oct 2013 23:05:06 +0200
+Subject: [PATCH 13/17] fix proc cputype
+
+---
+ arch/mips/kernel/cpu-probe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index bb133d1..cd52810 100644
+index e755f8b..32c80b9 100644
 --- a/arch/mips/kernel/cpu-probe.c
 +++ b/arch/mips/kernel/cpu-probe.c
-@@ -933,7 +933,7 @@ static inline void cpu_probe_broadcom(struct cpuinfo_mips *c, unsigned int cpu)
+@@ -936,7 +936,7 @@ static inline void cpu_probe_broadcom(struct cpuinfo_mips *c, unsigned int cpu)
  	case PRID_IMP_BMIPS3300_ALT:
  	case PRID_IMP_BMIPS3300_BUG:
  		c->cputype = CPU_BMIPS3300;
@@ -11,7 +20,7 @@ index bb133d1..cd52810 100644
  		set_elf_platform(cpu, "bmips3300");
  		break;
  	case PRID_IMP_BMIPS43XX: {
-@@ -942,7 +942,7 @@ static inline void cpu_probe_broadcom(struct cpuinfo_mips *c, unsigned int cpu)
+@@ -945,7 +945,7 @@ static inline void cpu_probe_broadcom(struct cpuinfo_mips *c, unsigned int cpu)
  		if (rev >= PRID_REV_BMIPS4380_LO &&
  				rev <= PRID_REV_BMIPS4380_HI) {
  			c->cputype = CPU_BMIPS4380;
@@ -20,3 +29,6 @@ index bb133d1..cd52810 100644
  			set_elf_platform(cpu, "bmips4380");
  		} else {
  			c->cputype = CPU_BMIPS4350;
+-- 
+1.8.1.2
+

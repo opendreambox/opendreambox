@@ -1,7 +1,7 @@
-From 135ea633893ac50f4079872b3ce6eca938cb0955 Mon Sep 17 00:00:00 2001
+From e5dde25832b2e175eb1787ad62bb03b7caf43b10 Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Wed, 20 Mar 2013 17:19:03 +0100
-Subject: [PATCH 6/7] mtd: block2mtd: fix recursive call of mtd_writev
+Subject: [PATCH 06/17] mtd: block2mtd: fix recursive call of mtd_writev
 
 The 'mtd_writev' interface calls the function assigned
 to the 'write' field of a given mtd device if that is
@@ -23,7 +23,7 @@ Signed-off-by: David Woodhouse <David.Woodhouse@intel.com>
 Conflicts:
 	drivers/mtd/devices/block2mtd.c
 ---
- drivers/mtd/devices/block2mtd.c |    1 -
+ drivers/mtd/devices/block2mtd.c | 1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/drivers/mtd/devices/block2mtd.c b/drivers/mtd/devices/block2mtd.c
@@ -39,5 +39,5 @@ index f95c0c5..67d8b49 100644
  	dev->mtd.read = block2mtd_read;
  	dev->mtd.priv = dev;
 -- 
-1.7.10.4
+1.8.1.2
 

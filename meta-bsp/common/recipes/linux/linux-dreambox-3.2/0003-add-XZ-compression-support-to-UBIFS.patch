@@ -1,14 +1,14 @@
-From 2dcebfcaeef4b0d77bc6cb181630829ce34a6b99 Mon Sep 17 00:00:00 2001
+From 06947401b88c3b0597583aa7f2f497f5ad67993b Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Mon, 11 Mar 2013 16:18:45 +0100
-Subject: [PATCH 3/7] add XZ compression support to UBIFS
+Subject: [PATCH 03/17] add XZ compression support to UBIFS
 
 ---
- Documentation/filesystems/ubifs.txt |    1 +
- fs/ubifs/Kconfig                    |   10 ++++++++++
- fs/ubifs/compress.c                 |   25 +++++++++++++++++++++++++
- fs/ubifs/super.c                    |    2 ++
- fs/ubifs/ubifs-media.h              |    2 ++
+ Documentation/filesystems/ubifs.txt |  1 +
+ fs/ubifs/Kconfig                    | 10 ++++++++++
+ fs/ubifs/compress.c                 | 25 +++++++++++++++++++++++++
+ fs/ubifs/super.c                    |  2 ++
+ fs/ubifs/ubifs-media.h              |  2 ++
  5 files changed, 40 insertions(+)
 
 diff --git a/Documentation/filesystems/ubifs.txt b/Documentation/filesystems/ubifs.txt
@@ -105,7 +105,7 @@ index 11e4132..a6e83b5 100644
 +	compr_exit(&xz_compr);
  }
 diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
-index ae0e76b..3f87689 100644
+index 2f467e5..7056e8e 100644
 --- a/fs/ubifs/super.c
 +++ b/fs/ubifs/super.c
 @@ -1048,6 +1048,8 @@ static int ubifs_parse_options(struct ubifs_info *c, char *options,
@@ -137,5 +137,5 @@ index e24380c..f85e3af 100644
  };
  
 -- 
-1.7.10.4
+1.8.1.2
 

@@ -1,11 +1,11 @@
-From 6bb93105ac9909c6341636cb81f39f691ff4ef3c Mon Sep 17 00:00:00 2001
+From 5ed52a003d701a179f999dbd42628f5a95be0e1b Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Mon, 11 Mar 2013 16:25:45 +0100
-Subject: [PATCH 5/7] block2mtd: add possibility to remove block2mtd devices
+Subject: [PATCH 05/17] block2mtd: add possibility to remove block2mtd devices
  when block2mtd is compiled in kernel
 
 ---
- drivers/mtd/devices/block2mtd.c |   30 ++++++++++++++++++++++++++++++
+ drivers/mtd/devices/block2mtd.c | 30 ++++++++++++++++++++++++++++++
  1 file changed, 30 insertions(+)
 
 diff --git a/drivers/mtd/devices/block2mtd.c b/drivers/mtd/devices/block2mtd.c
@@ -64,5 +64,5 @@ index a54d052..f95c0c5 100644
  		if (ret) {
  			parse_err("illegal erase size");
 -- 
-1.7.10.4
+1.8.1.2
 

@@ -1,7 +1,7 @@
 From 43ab2e3df470c90602974bb552a22e2b56c408f4 Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Wed, 31 Jul 2013 23:47:23 +0200
-Subject: [PATCH] fixed partition is ubi maintained check
+Subject: [PATCH 09/17] fixed partition is ubi maintained check
 
 ---
  drivers/mtd/brcmnand/brcmnand_base.c | 38 +++++++++++++++++++++++++++---------
@@ -92,5 +92,5 @@ index 00a9ed5..dff454a 100644
  						chip->cet->flags = BRCMNAND_CET_DISABLED;
  					}
 -- 
-1.8.3.2
+1.8.1.2
 

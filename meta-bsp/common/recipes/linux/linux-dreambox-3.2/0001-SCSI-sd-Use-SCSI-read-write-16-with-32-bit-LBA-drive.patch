@@ -1,7 +1,7 @@
-From cbb869c0b3c62cdf12ffbbaab242a01c9468e5cf Mon Sep 17 00:00:00 2001
+From 58287bf68b6da7e9b8aa2e371e75550f2e91b33d Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Wed, 20 Mar 2013 22:02:15 +0100
-Subject: [PATCH 1/7] [SCSI] sd: Use SCSI read/write(16) with > 32-bit LBA
+Subject: [PATCH 01/17] [SCSI] sd: Use SCSI read/write(16) with > 32-bit LBA
  drives
 
 Force large capacity (> 0xFFFFFFFF blocks) drives to use READ/WRITE(16) instead
@@ -15,15 +15,15 @@ Signed-off-by: James Bottomley <JBottomley@Parallels.com>
 Conflicts:
 	include/scsi/scsi_device.h
 ---
- drivers/scsi/sd.c          |    4 +++-
- include/scsi/scsi_device.h |    1 +
+ drivers/scsi/sd.c          | 4 +++-
+ include/scsi/scsi_device.h | 1 +
  2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index f44d633..ba3503b 100644
+index 6dace1a..94c7923 100644
 --- a/drivers/scsi/sd.c
 +++ b/drivers/scsi/sd.c
-@@ -833,7 +833,7 @@ static int sd_prep_fn(struct request_queue *q, struct request *rq)
+@@ -848,7 +848,7 @@ static int sd_prep_fn(struct request_queue *q, struct request *rq)
  		SCpnt->cmnd[29] = (unsigned char) (this_count >> 16) & 0xff;
  		SCpnt->cmnd[30] = (unsigned char) (this_count >> 8) & 0xff;
  		SCpnt->cmnd[31] = (unsigned char) this_count & 0xff;
@@ -32,7 +32,7 @@ index f44d633..ba3503b 100644
  		SCpnt->cmnd[0] += READ_16 - READ_6;
  		SCpnt->cmnd[1] = protect | ((rq->cmd_flags & REQ_FUA) ? 0x8 : 0);
  		SCpnt->cmnd[2] = sizeof(block) > 4 ? (unsigned char) (block >> 56) & 0xff : 0;
-@@ -1931,6 +1931,8 @@ got_data:
+@@ -1946,6 +1946,8 @@ got_data:
  		}
  	}
  
@@ -54,5 +54,5 @@ index 5591ed5..4afeaee 100644
  	unsigned skip_ms_page_3f:1;	/* do not use MODE SENSE page 0x3f */
  	unsigned use_192_bytes_for_3f:1; /* ask for 192 bytes from page 0x3f */
 -- 
-1.7.10.4
+1.8.1.2
 

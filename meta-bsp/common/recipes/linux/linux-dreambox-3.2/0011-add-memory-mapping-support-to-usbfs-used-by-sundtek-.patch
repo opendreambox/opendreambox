@@ -1,8 +1,8 @@
-From 6c704e2d8d084e51680d0984c58b06f04cb828b2 Mon Sep 17 00:00:00 2001
+From 6aad1ca434ea30d1973787a1fa60cda8a5b4e112 Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Fri, 27 Sep 2013 23:20:20 +0200
-Subject: [PATCH] add memory mapping support to usbfs (used by sundtek usb
- tuners)
+Subject: [PATCH 11/17] add memory mapping support to usbfs (used by sundtek
+ usb tuners)
 
 ---
  drivers/usb/core/devio.c     | 220 ++++++++++++++++++++++++++++++++++++++++---
@@ -382,5 +382,5 @@ index 15591d2..4261efd 100644
 +#define USBDEVFS_RELEASE_MEMORY       _IOW('U', 29, struct usbdevfs_memory)
  #endif /* _LINUX_USBDEVICE_FS_H */
 -- 
-1.8.4.rc3
+1.8.1.2
 
