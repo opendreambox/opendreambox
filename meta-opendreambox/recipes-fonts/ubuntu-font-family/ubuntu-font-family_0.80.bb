@@ -9,17 +9,12 @@ SRC_URI[sha256sum] = "107170099bbc3beae8602b97a5c423525d363106c3c24f787d43e09811
 
 inherit allarch
 
+FONTS = "Ubuntu-B.ttf Ubuntu-BI.ttf Ubuntu-C.ttf Ubuntu-R.ttf Ubuntu-RI.ttf \
+         UbuntuMono-B.ttf UbuntuMono-BI.ttf UbuntuMono-R.ttf UbuntuMono-RI.ttf"
+
 do_install(){
     install -d ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/Ubuntu-B.ttf ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/Ubuntu-BI.ttf ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/Ubuntu-C.ttf ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/Ubuntu-R.ttf ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/Ubuntu-RI.ttf ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/UbuntuMono-B.ttf ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/UbuntuMono-BI.ttf ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/UbuntuMono-R.ttf ${D}${libdir}/fonts
-    install -m 0644 ${WORKDIR}/${BPN}-${PV}/UbuntuMono-RI.ttf ${D}${libdir}/fonts
+    install -m 0644 ${FONTS} ${D}${libdir}/fonts
 }
 
 FILES_${PN} = "${libdir}/fonts"
