@@ -1,0 +1,25 @@
+From 3142f4e28f4658d55a501b18201a86ba8e5f652b Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Tue, 12 Nov 2013 22:57:17 +0100
+Subject: [PATCH 2/2] fixed possible crash on screen close
+
+---
+ usr/lib/enigma2/python/Screens/Screen.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/Screen.py b/usr/lib/enigma2/python/Screens/Screen.py
+index d43586b..e97c093 100644
+--- a/usr/lib/enigma2/python/Screens/Screen.py
++++ b/usr/lib/enigma2/python/Screens/Screen.py
+@@ -126,7 +126,7 @@ class Screen(dict, GUISkin):
+ 		for name in self.keys():
+ 			val = self[name]
+ 			del self[name] # remove from dict
+-			if val: # is not a duplicate...
++			if val is not None: # is not a duplicate...
+ 				val.destroy()
+ 				for (n, v) in self.items():
+ 					if v == val: # check if it is the same Element
+-- 
+1.7.10.4
+
