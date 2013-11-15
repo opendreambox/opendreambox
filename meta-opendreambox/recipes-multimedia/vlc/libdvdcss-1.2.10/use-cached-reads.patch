@@ -1,0 +1,243 @@
+--- libdvdcss-1.2.10.org/src/device.c	2008-07-13 14:25:49.000000000 +0200
++++ libdvdcss-1.2.10/src/device.c	2013-11-18 22:39:50.000000000 +0100
+@@ -383,7 +383,12 @@
+ 
+     return 0;
+ #else
+-    close( dvdcss->i_fd );
++    if ( dvdcss->p_read_file )
++    {
++        fclose( dvdcss->p_read_file );
++        free ( dvdcss->p_read_buf );
++        dvdcss->p_read_file = NULL;
++    }
+ 
+     if( dvdcss->i_raw_fd >= 0 )
+     {
+@@ -403,7 +408,28 @@
+ static int libc_open ( dvdcss_t dvdcss, char const *psz_device )
+ {
+ #if !defined( WIN32 )
+-    dvdcss->i_fd = dvdcss->i_read_fd = open( psz_device, 0 );
++    dvdcss->p_read_file = fopen( psz_device, "r" );
++    if ( dvdcss->p_read_file )
++    {
++        dvdcss->p_read_buf = malloc( 128*1024 );
++        if ( !dvdcss->p_read_buf )
++        {
++            print_debug( dvdcss, "allocate buffer failed!" );
++            fclose( dvdcss->p_read_file );
++            dvdcss->p_read_file = NULL;
++        }
++        else if ( setvbuf( dvdcss->p_read_file, dvdcss->p_read_buf, _IOFBF, 128*1024 ) )
++        {
++            print_debug( dvdcss, "setvbuf failed (%s)", strerror(errno) );
++            free( dvdcss->p_read_buf );
++            fclose( dvdcss->p_read_file );
++            dvdcss->p_read_file = NULL;
++        }
++    }
++    if (dvdcss->p_read_file)
++        dvdcss->i_fd = dvdcss->i_read_fd = fileno( dvdcss->p_read_file );
++    else
++        dvdcss->i_fd = dvdcss->i_read_fd = -1;
+ #else
+     dvdcss->i_fd = dvdcss->i_read_fd = open( psz_device, O_BINARY );
+ #endif
+@@ -592,7 +618,18 @@
+     }
+ 
+     i_seek = (off_t)i_blocks * (off_t)DVDCSS_BLOCK_SIZE;
+-    i_seek = lseek( dvdcss->i_read_fd, i_seek, SEEK_SET );
++
++    if ( dvdcss->i_raw_fd >= 0 )
++        i_seek = lseek( dvdcss->i_read_fd, i_seek, SEEK_SET );
++    else
++    {
++        i_seek = fseeko( dvdcss->p_read_file, i_seek, SEEK_SET );
++        if ( !i_seek )
++        {
++            dvdcss->i_pos = i_blocks;
++            return i_blocks;
++        }
++    }
+ 
+     if( i_seek < 0 )
+     {
+@@ -673,36 +710,53 @@
+  *****************************************************************************/
+ static int libc_read ( dvdcss_t dvdcss, void *p_buffer, int i_blocks )
+ {
+-    off_t i_size, i_ret;
+-
+-    i_size = (off_t)i_blocks * (off_t)DVDCSS_BLOCK_SIZE;
+-    i_ret = read( dvdcss->i_read_fd, p_buffer, i_size );
+-
+-    if( i_ret < 0 )
++    if ( dvdcss->i_raw_fd >= 0 )
+     {
+-        print_error( dvdcss, "read error" );
+-        dvdcss->i_pos = -1;
+-        return i_ret;
+-    }
++        off_t i_size, i_ret;
+ 
+-    /* Handle partial reads */
+-    if( i_ret != i_size )
+-    {
+-        int i_seek;
++        i_size = (off_t)i_blocks * (off_t)DVDCSS_BLOCK_SIZE;
++        i_ret = read( dvdcss->i_read_fd, p_buffer, i_size );
+ 
+-        dvdcss->i_pos = -1;
+-        i_seek = libc_seek( dvdcss, i_ret / DVDCSS_BLOCK_SIZE );
+-        if( i_seek < 0 )
++        if( i_ret < 0 )
+         {
+-            return i_seek;
++            print_error( dvdcss, "read error" );
++            dvdcss->i_pos = -1;
++            return i_ret;
+         }
+ 
+-        /* We have to return now so that i_pos isn't clobbered */
++        /* Handle partial reads */
++        if( i_ret != i_size )
++        {
++            int i_seek;
++
++            dvdcss->i_pos = -1;
++            i_seek = libc_seek( dvdcss, i_ret / DVDCSS_BLOCK_SIZE );
++            if( i_seek < 0 )
++            {
++                return i_seek;
++            }
++
++            /* We have to return now so that i_pos isn't clobbered */
++            return i_ret / DVDCSS_BLOCK_SIZE;
++        }
++
++        dvdcss->i_pos += i_ret / DVDCSS_BLOCK_SIZE;
+         return i_ret / DVDCSS_BLOCK_SIZE;
+     }
++    else
++    {
++        size_t i_ret = fread( p_buffer, DVDCSS_BLOCK_SIZE, i_blocks, dvdcss->p_read_file );
++
++        if ( i_ret < 0 )
++        {
++            print_error( dvdcss, "read error" );
++            dvdcss->i_pos = -1;
++            return i_ret;
++        }
+ 
+-    dvdcss->i_pos += i_ret / DVDCSS_BLOCK_SIZE;
+-    return i_ret / DVDCSS_BLOCK_SIZE;
++        dvdcss->i_pos += i_ret;
++        return i_ret;
++    }
+ }
+ 
+ #if defined( WIN32 )
+@@ -794,16 +848,72 @@
+     dvdcss->i_pos += i_total / DVDCSS_BLOCK_SIZE;
+     return i_total / DVDCSS_BLOCK_SIZE;
+ #else
+-    int i_read = readv( dvdcss->i_read_fd, p_iovec, i_blocks );
+-
+-    if( i_read < 0 )
++    if ( dvdcss->i_raw_fd >= 0 )
+     {
+-        dvdcss->i_pos = -1;
+-        return i_read;
++        int i_read = readv( dvdcss->i_read_fd, p_iovec, i_blocks );
++
++        if( i_read < 0 )
++        {
++            dvdcss->i_pos = -1;
++            return i_read;
++        }
++
++        dvdcss->i_pos += i_read / DVDCSS_BLOCK_SIZE;
++        return i_read / DVDCSS_BLOCK_SIZE;
+     }
++    else
++    {
++        int i_index, i_len, i_total = 0;
++        unsigned char *p_base;
++
++        for( i_index = i_blocks;
++             i_index;
++             i_index--, p_iovec++ )
++        {
++            int i_num_read;
++            i_len  = p_iovec->iov_len;
++            p_base = p_iovec->iov_base;
+ 
+-    dvdcss->i_pos += i_read / DVDCSS_BLOCK_SIZE;
+-    return i_read / DVDCSS_BLOCK_SIZE;
++            if( i_len <= 0 )
++            {
++                continue;
++            }
++
++            i_num_read = fread( p_base, i_len, 1, dvdcss->p_read_file );
++
++            if( i_num_read != 1 )
++            {
++                /* We reached the end of the file or a signal interrupted
++                 * the read. Return a partial read. */
++                int i_seek;
++
++                if (!i_total)
++                {
++                    /* One of the reads failed, too bad.
++                     * We won't even bother returning the reads that went ok,
++                     * and as in the posix spec the file postition is left
++                     * unspecified after a failure */
++                    dvdcss->i_pos = -1;
++                    return -1;
++                }
++
++                dvdcss->i_pos = -1;
++                i_seek = libc_seek( dvdcss, i_total / DVDCSS_BLOCK_SIZE );
++                if( i_seek < 0 )
++                {
++                    return i_seek;
++                }
++
++                /* We have to return now so that i_pos isn't clobbered */
++                return i_total / DVDCSS_BLOCK_SIZE;
++            }
++
++            i_total += i_len;
++        }
++
++        dvdcss->i_pos += i_total / DVDCSS_BLOCK_SIZE;
++        return i_total / DVDCSS_BLOCK_SIZE;
++    }
+ #endif
+ }
+ 
+--- libdvdcss-1.2.10.org/src/libdvdcss.c	2008-08-29 20:41:51.000000000 +0200
++++ libdvdcss-1.2.10/src/libdvdcss.c	2013-11-17 13:15:03.000000000 +0100
+@@ -184,6 +184,7 @@
+     /*
+      *  Initialize structure with default values
+      */
++    dvdcss->p_read_file = NULL;
+ #ifndef WIN32
+     dvdcss->i_raw_fd = -1;
+ #endif
+--- libdvdcss-1.2.10.org/src/libdvdcss.h	2008-08-29 20:39:56.000000000 +0200
++++ libdvdcss-1.2.10/src/libdvdcss.h	2013-11-17 13:15:03.000000000 +0100
+@@ -35,6 +35,9 @@
+     int    i_read_fd;
+     int    i_pos;
+ 
++    FILE * p_read_file;
++    void * p_read_buf;
++
+     /* File handling */
+     int ( * pf_seek )  ( dvdcss_t, int );
+     int ( * pf_read )  ( dvdcss_t, void *, int );
