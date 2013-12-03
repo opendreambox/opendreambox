@@ -1,0 +1,150 @@
+From 225bb35cfb2c42a84af0187f696729623a792d68 Mon Sep 17 00:00:00 2001
+From: Mladen Horvat <acid-burn@opendreambox.org>
+Date: Wed, 27 Nov 2013 10:33:45 +0100
+Subject: [PATCH] StorageManager: - fix sometimes failing manual mount. - add
+ "Eject" quick-menu point to only unmount a device so it can
+ be securely unplugged.
+
+---
+ usr/lib/enigma2/python/Components/Harddisk.py   |   32 ++++++++++++++++++++++----------
+ usr/lib/enigma2/python/Screens/HarddiskSetup.py |   19 ++++++++++++++-----
+ 2 files changed, 36 insertions(+), 15 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/Harddisk.py b/usr/lib/enigma2/python/Components/Harddisk.py
+index 5f04e2e..6501800 100644
+--- a/usr/lib/enigma2/python/Components/Harddisk.py
++++ b/usr/lib/enigma2/python/Components/Harddisk.py
+@@ -1406,7 +1406,7 @@ class HarddiskManager:
+ 							self.unmountPartitionbyMountpoint(def_mp) #current partition is default, unmount!
+ 					if old_new_default_enabled and old_new_default_mp != "" and old_new_default_mp != def_mp and path.exists(old_new_default_mp) and self.isMount(old_new_default_mp):
+ 						self.unmountPartitionbyMountpoint(old_new_default_mp, new_default_dev) #current partition is already mounted atm. unmount!
+-					if not new_default_cfg["enabled"].value or old_new_default_mp == "" or (new_default_cfg["enabled"].value and path.exists(old_new_default_mp) and not self.isMount(old_new_default_mp)):
++					if not new_default_cfg["enabled"].value or old_new_default_mp == "" or not self.isMount(old_new_default_mp):
+ 						new_default_cfg["enabled"].value = True
+ 						new_default_cfg["mountpoint"].value = new_default_newmp
+ 						if path.exists(new_default_newmp) and self.isMount(new_default_newmp):
+@@ -1425,7 +1425,7 @@ class HarddiskManager:
+ 							successfully = True
+ 							if uuid == currentDefaultStorageUUID:
+ 								config.storage_options.default_device.value = "<undefined>"
+-		if action == "unmount":
++		if action in ("unmount", "eject"):
+ 			new_default = self.getPartitionbyUUID(uuid)
+ 			new_default_cfg = config.storage.get(uuid, None)
+ 			if new_default is not None:
+@@ -1434,22 +1434,25 @@ class HarddiskManager:
+ 					old_new_default_mp = new_default_cfg["mountpoint"].value
+ 					old_new_default_enabled = new_default_cfg["enabled"].value
+ 					#[oldmountpath, oldenable, newmountpath, newenable]
+-					if mountData is not None and isinstance(mountData, (list, tuple)):
+-						old_new_default_enabled = mountData[1]
+-						old_new_default_mp = mountData[0]
++					if action == "unmount":
++						if mountData is not None and isinstance(mountData, (list, tuple)):
++							old_new_default_enabled = mountData[1]
++							old_new_default_mp = mountData[0]
+ 				if new_default_cfg is not None and path.exists(old_new_default_mp) and self.isMount(old_new_default_mp):
+ 					if uuid == currentDefaultStorageUUID:
+ 						self.unmountPartitionbyMountpoint(old_new_default_mp)
+ 					else:
+ 						self.unmountPartitionbyMountpoint(old_new_default_mp, new_default_dev)
+ 				if path.exists(old_new_default_mp) and not self.isMount(old_new_default_mp):
+-					new_default_cfg["mountpoint"].value = ""
+-					new_default_cfg["enabled"].value = False
+-					self.setupConfigEntries(initial_call = False, dev = new_default_dev)
++					if action == "unmount":
++						new_default_cfg["mountpoint"].value = ""
++						new_default_cfg["enabled"].value = False
++						self.setupConfigEntries(initial_call = False, dev = new_default_dev)
+ 					if path.exists(old_new_default_mp) and not self.isMount(old_new_default_mp):
+ 						successfully = True
+-						if uuid == currentDefaultStorageUUID:
+-							config.storage_options.default_device.value = "<undefined>"
++						if action == "unmount":
++							if uuid == currentDefaultStorageUUID:
++								config.storage_options.default_device.value = "<undefined>"
+ 		if not successfully:
+ 			print "[changeStorageDevice]: << not successfully >>"
+ 			if cur_default_cfg is not None:
+@@ -1496,6 +1499,15 @@ class HarddiskManager:
+ 							devpath = "/dev/disk/by-uuid/" + oldcurrentDefaultStorageUUID
+ 							if not self.is_fstab_mountpoint(devpath, cur_default_newmp):
+ 								self.modifyFstabEntry(devpath, cur_default_newmp, mode = "add_activated")
++			if action == "mount_only":
++				if (cur_default_dev is None and new_default_dev is not None):
++					if (cur_default is None and new_default is not None):
++						if old_new_default_mp != "":
++							devpath = "/dev/disk/by-uuid/" + uuid
++							if self.is_fstab_mountpoint(devpath, old_new_default_mp):
++								self.modifyFstabEntry(devpath, old_new_default_mp, mode = "remove")
++							if self.isMount(old_new_default_mp):
++								self.unmountPartitionbyMountpoint(old_new_default_mp)
+ 		config.storage_options.save()
+ 		config.storage.save()
+ 		configfile.save()
+diff --git a/usr/lib/enigma2/python/Screens/HarddiskSetup.py b/usr/lib/enigma2/python/Screens/HarddiskSetup.py
+index e61e4f7..7847819 100644
+--- a/usr/lib/enigma2/python/Screens/HarddiskSetup.py
++++ b/usr/lib/enigma2/python/Screens/HarddiskSetup.py
+@@ -581,6 +581,7 @@ class HarddiskDriveSelection(Screen, HelpableScreen):
+ 		multiplepartmsg = _("Multiple partitions found!")
+ 		needsattention_msg = _("Needs attention!")
+ 		systemountpoint_msg = _("Mounted by system!")
++		notmounted_msg = _("Not mounted!")
+ 
+ 		if isOfflineStorageDevice:
+ 			uuid = hd
+@@ -699,7 +700,14 @@ class HarddiskDriveSelection(Screen, HelpableScreen):
+ 										except OSError:
+ 											isReadable = False
+ 										if isReadable:
+-											device_info += " - " + nomountpoint_msg
++											if cfg_uuid is not None and cfg_uuid["enabled"].value:
++												devicepng = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "skin_default/icons/device_harddisk-attention.png"))
++												if hd.isRemovable:
++													devicepng = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "skin_default/icons/device_removable-attention.png"))
++												device_info += " - " + currentMountpoint
++												device_info += " - " + notmounted_msg
++											else:
++												device_info += " - " + nomountpoint_msg
+ 										else:
+ 											device_info += " - " + unsupportetpart_msg
+ 									else:
+@@ -963,7 +971,7 @@ class HarddiskDriveSelection(Screen, HelpableScreen):
+ 				self.session.openWithCallback(self.mainMenuClosed, HarddiskDriveSetup, device = hd, partition = partNum)
+ 			else:
+ 				self.session.openWithCallback(self.mainMenuClosed, HarddiskDriveSetup, device = hd)
+-		elif answer == "unmount":
++		elif answer in ("unmount", "eject"):
+ 			self.confirmApplyAnswer(True, answer, selection)
+ 		elif answer == "remove":
+ 			if isinstance(selection[1], (basestring, str)):
+@@ -1112,6 +1120,7 @@ class HarddiskDriveSelection(Screen, HelpableScreen):
+ 			unmountmsg = (_("Unmount this %(desc)s.") % self.devicedescription, "unmount")
+ 			removemsg = (_("Remove this %(desc)s configuration.") % self.devicedescription, "remove")
+ 			initmsg = (_("Initialize this %(desc)s.") % self.devicedescription, "init")
++			ejectmsg = (_("Eject."), "eject")
+ 
+ 			choices = [ ]
+ 			if uuid_cfg is None: # uninitialized drive
+@@ -1142,14 +1151,14 @@ class HarddiskDriveSelection(Screen, HelpableScreen):
+ 			elif uuid_cfg is not None and uuid_cfg['enabled'].value: # configured drive
+ 				if selectedPart is not None and selectedPart.isInitialized:
+ 					if defaultStorageDevice() != uuid:
+-						choices.extend([unmountmsg, defaultmsg, manualmsg])
++						choices.extend([unmountmsg, defaultmsg, manualmsg, ejectmsg])
+ 					elif defaultStorageDevice() == uuid:
+-						choices.extend([unmountmsg, mountmsg, manualmsg])
++						choices.extend([unmountmsg, mountmsg, manualmsg, ejectmsg])
+ 				else:
+ 					if offline:
+ 						choices.extend([removemsg])
+ 					else:
+-						choices.extend([unmountmsg, manualmsg])
++						choices.extend([unmountmsg, manualmsg, ejectmsg])
+ 			choices.append((_("Do nothing."), "nothing"))
+ 
+ 			if uuid_cfg is not None and not uuid_cfg['enabled'].value:
+-- 
+1.7.10.4
+

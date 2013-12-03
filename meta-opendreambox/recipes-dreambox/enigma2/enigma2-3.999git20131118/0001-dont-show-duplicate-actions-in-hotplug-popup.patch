@@ -1,0 +1,24 @@
+From 96e91239e9572ec2a04bb9f79608875474f73dd8 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Wed, 20 Nov 2013 19:15:56 +0100
+Subject: [PATCH 1/4] dont show duplicate actions in hotplug popup
+
+---
+ usr/lib/enigma2/python/Screens/HarddiskSetup.py |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/HarddiskSetup.py b/usr/lib/enigma2/python/Screens/HarddiskSetup.py
+index 2b2e948..e61e4f7 100644
+--- a/usr/lib/enigma2/python/Screens/HarddiskSetup.py
++++ b/usr/lib/enigma2/python/Screens/HarddiskSetup.py
+@@ -1139,7 +1139,6 @@ class HarddiskDriveSelection(Screen, HelpableScreen):
+ 						choices.extend([defaultmsg, mountmsg, manualmsg])
+ 					else:
+ 						choices.extend([mountmsg, manualmsg])
+-					choices.extend([mountmsg, manualmsg])
+ 			elif uuid_cfg is not None and uuid_cfg['enabled'].value: # configured drive
+ 				if selectedPart is not None and selectedPart.isInitialized:
+ 					if defaultStorageDevice() != uuid:
+-- 
+1.7.10.4
+
