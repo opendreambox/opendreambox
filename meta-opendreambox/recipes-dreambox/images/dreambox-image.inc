@@ -10,7 +10,7 @@ DEPENDS = " \
 
 BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
 
-VIRTUAL-RUNTIME_init_manager ?= "sysvinit"
+VIRTUAL-RUNTIME_init_manager ?= "systemd"
 
 # packages to drag into the image
 IMAGE_INSTALL = " \
