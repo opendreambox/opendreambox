@@ -27,6 +27,9 @@ IMAGE_FEATURES += "package-management"
 # we don't want any locales, at least not in the common way.
 IMAGE_LINGUAS = ""
 
+# 512MB rootfs
+IMAGE_ROOTFS_SIZE_ext4 = "524288"
+
 # we dont like to call ldconfig on image build...
 LDCONFIGDEPEND = ""
 
