@@ -1,0 +1,26 @@
+From a91a03f9f809e0c38ec49094364533cdefa3607a Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Mon, 21 Oct 2013 12:44:04 +0200
+Subject: [PATCH 4/4] change ConfigPIN default to 0000 (aaaa) is not a valid
+ integer
+
+---
+ usr/lib/enigma2/python/Components/config.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Components/config.py b/usr/lib/enigma2/python/Components/config.py
+index b2057dc..51bceb4 100644
+--- a/usr/lib/enigma2/python/Components/config.py
++++ b/usr/lib/enigma2/python/Components/config.py
+@@ -796,7 +796,7 @@ class ConfigPIN(ConfigInteger):
+ 	def __init__(self, default, len = 4, censor = ""):
+ 		assert isinstance(default, int), "ConfigPIN default must be an integer"
+ 		if default == -1:
+-			default = "aaaa"
++			default = "0000"
+ 		ConfigSequence.__init__(self, seperator = ":", limits = [(0, (10**len)-1)], censor_char = censor, default = default)
+ 		self.len = len
+ 
+-- 
+1.7.10.4
+

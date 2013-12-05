@@ -1,9 +1,9 @@
 From 225bb35cfb2c42a84af0187f696729623a792d68 Mon Sep 17 00:00:00 2001
 From: Mladen Horvat <acid-burn@opendreambox.org>
 Date: Wed, 27 Nov 2013 10:33:45 +0100
-Subject: [PATCH] StorageManager: - fix sometimes failing manual mount. - add
- "Eject" quick-menu point to only unmount a device so it can
- be securely unplugged.
+Subject: [PATCH 2/4] StorageManager: - fix sometimes failing manual mount. -
+ add "Eject" quick-menu point to only unmount a device
+ so it can be securely unplugged.
 
 ---
  usr/lib/enigma2/python/Components/Harddisk.py   |   32 ++++++++++++++++++++++----------
