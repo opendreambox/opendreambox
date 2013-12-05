@@ -232,7 +232,11 @@ opendreambox
 
   4 Known Issues
 
-     * TBD
+     * Problem: qt4-native may fail to build with
+
+       error: one or more PCH files were found, but they were invalid
+
+       Solution: bitbake -ccleansstate qt4-native
 
   5 Building OpenDreambox
 

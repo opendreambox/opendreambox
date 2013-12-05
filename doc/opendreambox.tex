@@ -269,7 +269,11 @@ THE SOFTWARE.
 \section{Known Issues}
 
   \begin{itemize}
-    \item TBD
+    \item \textbf{Problem:} qt4-native may fail to build with
+
+          \shell{error: one or more PCH files were found, but they were invalid}
+
+    \textbf{Solution:} \shell{bitbake -ccleansstate qt4-native}
   \end{itemize}
 
 \pagebreak
