@@ -1,4 +1,4 @@
 SUMMARY = "DreamBox TeleText Cache Daemon"
-DEPENDS = "openssl zvbi"
+DEPENDS += "openssl zvbi"
 
 inherit opendreambox-sysvinit
