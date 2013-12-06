@@ -1,7 +1,7 @@
 SUMMARY = "Dreambox TS/M2TS audio passthrough helper lib"
 
-SRC_URI[mips32el.md5sum] = "be253024a9c3a5ac7e1d68011011dede"
-SRC_URI[mips32el.sha256sum] = "b63a1b0fe4f6cc540e216023d97f27bdfeca98533fd2c5023e31c6ded2de6f20"
+SRC_URI[mips32el.md5sum] = "876af4eacdb21cfa5c5dbf1d8f1f9655"
+SRC_URI[mips32el.sha256sum] = "3c21790860cc4dda2a0a9eec0e134b511284acab69840e0d0b3eeec282695cb8"
 
 inherit opendreambox-precompiled-binary
 
