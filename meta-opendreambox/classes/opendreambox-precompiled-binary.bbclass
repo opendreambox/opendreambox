@@ -12,6 +12,8 @@ def precompiledPath(d):
     pv = d.getVar('PV', True)
     package_arch = d.getVar('PACKAGE_ARCH', True)
     md5sum = d.getVarFlag('SRC_URI', '%s.md5sum' % package_arch)
+    if md5sum is None:
+        raise bb.parse.SkipPackage("No checksum found for precompiled binary package %s" % pn)
     return '%s/%s/%s/%s/%s_%s_%s.tar.xz' % (pn, pv, package_arch, md5sum, pn, pv, package_arch)
 
 do_install() {
