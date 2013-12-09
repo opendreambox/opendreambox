@@ -53,4 +53,6 @@ pkg_postrm_${PN}-data() {
         if [ -z "$D" ] && mountpoint -q /boot; then mount -o remount,ro /boot; fi
 }
 
+COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm8000)$"
+
 INITSCRIPT_PARAMS = "start 3 S . stop 89 0 ."
