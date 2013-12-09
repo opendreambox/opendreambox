@@ -7,8 +7,6 @@ MACHINE_FEATURES += "alsa kernel26 wifi"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
 
-PREFERRED_VERSION_linux-dreambox = "${DREAMBOX_KERNEL_VERSION}"
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "${@base_contains('DREAMBOX_FEATURES', 'usbconsole', 'ttyS0,115200', 'null', d)}"

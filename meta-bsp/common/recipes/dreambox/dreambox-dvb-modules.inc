@@ -31,14 +31,6 @@ RDEPENDS_${PN} += "dreambox-secondstage kernel-${DM_LOCALVERSION}"
 FILES_${PN} = "${sysconfdir}/modules-load.d/${PN}.conf \
                /lib/modules/${DM_LOCALVERSION}/extra/LICENSE"
 
-python __anonymous () {
-        import bb, re
-        kv = d.getVar('DREAMBOX_KERNEL_VERSION', True)
-        pv = d.getVar('PV', True)
-        if kv != pv.split('-')[0]:
-                raise bb.parse.SkipPackage("incompatible with kernel version %s" % kv)
-}
-
 # We don't use KERNEL_VERSION in this recipe, because the
 # precompiled modules depend on a specific version.
 DM_LOCALVERSION = "${@'-'.join('${PV}'.split('-')[:-1])}"

@@ -48,13 +48,6 @@ python populate_packages_prepend() {
         if imagedest == "boot":
             shutil.move("%s/boot/vmlinux.nostrip" % pkgd, "%s/boot/vmlinux-%s" % (pkgd, version))
 }
-python __anonymous () {
-    import bb, re
-    kv = d.getVar('DREAMBOX_KERNEL_VERSION', True)
-    pv = d.getVar('PV', True)
-    if kv != pv:
-        raise bb.parse.SkipPackage("incompatible with kernel version %s" % kv)
-}
 
 pkg_preinst_kernel-image() {
         if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then mount -o remount,rw /${KERNEL_IMAGEDEST}; fi

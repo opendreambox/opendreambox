@@ -79,7 +79,7 @@ RRECOMMENDS_${PN} += " \
   aio-grab \
   ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-hbbtv-plugin', d)} \
   enigma2-plugin-extensions-audiosync \
-  ${@base_conditional('MACHINE', 'dm800', '', 'enigma2-plugin-extensions-browser', d)} \
+  enigma2-plugin-extensions-browser \
   enigma2-plugin-extensions-cutlisteditor \
   enigma2-plugin-extensions-graphmultiepg \
   ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-plugin-extensions-hbbtv', d)} \

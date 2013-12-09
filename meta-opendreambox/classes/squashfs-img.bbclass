@@ -50,8 +50,7 @@ python emit_pkgdata_prepend() {
         package_compressor = d.getVar('SQUASHFS_IMG_COMPRESSOR', True)
 
         if not package_compressor:
-            kernel_version = d.getVar('DREAMBOX_KERNEL_VERSION', True)
-            package_compressor = kernel_version <= '2.6.18' and 'lzma' or 'xz'
+            package_compressor = 'xz'
 
         num_replaces = len(package_replaces)
         num_blocksizes = len(package_blocksizes)

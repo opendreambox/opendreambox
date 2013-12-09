@@ -24,7 +24,6 @@ inherit gettext
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
            file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
            file://0001-accept-substream-syncwords-DTS-HD.patch \
-           ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
            file://mp4-parse-fix-typo.patch \
 "
 

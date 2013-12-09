@@ -3,12 +3,8 @@ SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=23102313c1f42fea498404eb17e55202"
 DEPENDS = "virtual/kernel"
-RDEPENDS_${PN} = " \
-        ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${ESSENTIAL_RDEPENDS_LEGACY}', '${ESSENTIAL_RDEPENDS}', d)} \
-"
-RRECOMMENDS_${PN} = " \
-        ${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', '${ESSENTIAL_RRECOMMENDS_LEGACY}', '${ESSENTIAL_RRECOMMENDS}', d)} \
-"
+RDEPENDS_${PN} = "${ESSENTIAL_RDEPENDS}"
+RRECOMMENDS_${PN} = "${ESSENTIAL_RRECOMMENDS}"
 
 inherit packagegroup
 
@@ -19,15 +15,6 @@ ESSENTIAL_RDEPENDS = " \
         kernel-module-snd-pcm \
         kernel-module-snd-timer \
         kernel-module-stv0299 \
-"
-ESSENTIAL_RDEPENDS_LEGACY = " \
-        v4l-dvb-module-dvb-core \
-        v4l-dvb-module-stv0299 \
-"
-ESSENTIAL_RDEPENDS_LEGACY_append_dm8000 = " \
-        kernel-module-fb \
-        kernel-module-snd \
-        kernel-module-snd-pcm \
 "
 ESSENTIAL_RRECOMMENDS = " \
         kernel-module-autofs4 \
@@ -40,11 +27,4 @@ ESSENTIAL_RRECOMMENDS = " \
         kernel-module-reiserfs \
         kernel-module-sr-mod \
         kernel-module-usbhid \
-"
-ESSENTIAL_RRECOMMENDS_LEGACY = " \
-        kernel-module-cifs \
-        kernel-module-nls-cp850 \
-        kernel-module-nls-iso8859-15 \
-        kernel-module-nls-utf8 \
-        kernel-module-reiserfs \
 "
