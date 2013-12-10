@@ -17,13 +17,14 @@ PACKAGECONFIG[speex] = "--enable-speex,--disable-speex,speex"
 PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 
 DEPENDS += "gst-plugins-base"
-SRCREV = "7768342230450559509e3e593b2ea33e81ea0ca4"
+SRCREV = "5af6f5bfb6c3619a9ccc3b1681579aeb90e8b89a"
 
 inherit gettext
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
            file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
            file://0001-accept-substream-syncwords-DTS-HD.patch \
+           file://0002-v4l2-fix-compilation-against-newer-kernel-headers-as.patch \
            file://mp4-parse-fix-typo.patch \
 "
 
