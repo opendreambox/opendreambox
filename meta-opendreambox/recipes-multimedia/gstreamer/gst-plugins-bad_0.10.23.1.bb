@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS += "faad2"
 DEPENDS += "gst-plugins-base"
-SRCREV = "cef47d85294a0dca38631f938b81a3f0dd6891bd"
+SRCREV = "05183675077d502aaf0e7483656f5610bb4d0f43"
 
 CPPFLAGS += "${@base_contains('DISTRO_FEATURES', 'x11', '', '-DMESA_EGL_NO_X11_HEADERS', d)}"
 
