@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
                     file://gst/ffmpegcolorspace/utils.c;beginline=1;endline=20;md5=9c83a200b8e597b26ca29df20fc6ecd0"
 
 DEPENDS += "alsa-lib liboil libogg libvorbis libtheora util-linux tremor"
-SRCREV = "bdb33163478fdf95938fbdca7eabad3ea920a277"
+SRCREV = "1e1e6eaf3f0dd11f6618154d9739cbe3e007d206"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
            file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
