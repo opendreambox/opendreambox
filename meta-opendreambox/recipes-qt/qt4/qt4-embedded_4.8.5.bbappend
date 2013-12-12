@@ -1,3 +1,5 @@
+DEPENDS := "${@oe_filter_out('^(gstreamer|gst-plugins-base)$', '${DEPENDS}', d)}"
+
 SRC_URI += "file://0001-Qt-remove-x11-from-npapi-while-keeping-some-basic-fu.patch \
             file://0002-Qt-Add-HbbTv-MIME-types.patch \
             file://0003-Qt-expose-WebKits-WebSecurityEnabled-setting.patch \
@@ -10,8 +12,7 @@ QT_CONFIG_FLAGS += "-nomake demos -nomake docs -nomake examples"
 QT_SQL_DRIVER_FLAGS = "-no-sql-ibase -no-sql-mysql -no-sql-odbc -no-sql-psql -no-sql-sqlite2 -plugin-sql-sqlite -system-sqlite"
 QT_QT3SUPPORT = "-no-qt3support"
 QT_WEBKIT = "-webkit"
-QT_PHONON = "-no-phonon"
-QT_DBUS = "-no-qdbus"
+QT_PHONON = "-no-gstreamer -no-phonon"
 
 QT_GLIB_FLAGS = "-no-glib"
 QT_IMAGEFORMAT_FLAGS += "-no-libmng"
