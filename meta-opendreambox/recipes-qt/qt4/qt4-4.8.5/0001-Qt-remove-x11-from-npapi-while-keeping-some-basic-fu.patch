@@ -1,18 +1,17 @@
-From 594004831572a4e2fdf89c5e45744b0f5ff35d80 Mon Sep 17 00:00:00 2001
+From 409ea9d5567b191a31ad379d5b354e86f831f570 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 21 Dec 2011 17:24:36 +0100
-Subject: [PATCH] Qt: remove x11 from npapi while keeping some basic
- functionality (calling SetWindow with proper position and
- size)
+Subject: [PATCH 1/6] Qt: remove x11 from npapi while keeping some basic
+ functionality (calling SetWindow with proper position and size)
 
 ---
- src/3rdparty/webkit/Source/WebCore/WebCore.pro     |    9 +-
- src/3rdparty/webkit/Source/WebCore/bridge/npapi.h  |    8 +-
- .../Source/WebCore/bridge/npruntime_internal.h     |    2 +-
- src/3rdparty/webkit/Source/WebCore/features.pri    |    1 +
- .../webkit/Source/WebCore/plugins/PluginView.cpp   |    8 +-
- .../webkit/Source/WebCore/plugins/PluginView.h     |    4 +-
- .../Source/WebCore/plugins/qt/PluginViewQt.cpp     |  578 +-------------------
+ src/3rdparty/webkit/Source/WebCore/WebCore.pro     |   9 +-
+ src/3rdparty/webkit/Source/WebCore/bridge/npapi.h  |   8 +-
+ .../Source/WebCore/bridge/npruntime_internal.h     |   2 +-
+ src/3rdparty/webkit/Source/WebCore/features.pri    |   1 +
+ .../webkit/Source/WebCore/plugins/PluginView.cpp   |   8 +-
+ .../webkit/Source/WebCore/plugins/PluginView.h     |   4 +-
+ .../Source/WebCore/plugins/qt/PluginViewQt.cpp     | 578 ++-------------------
  7 files changed, 50 insertions(+), 560 deletions(-)
 
 diff --git a/src/3rdparty/webkit/Source/WebCore/WebCore.pro b/src/3rdparty/webkit/Source/WebCore/WebCore.pro
@@ -919,5 +918,5 @@ index 2fe69d1..795cb9a 100644
  
  void PluginView::halt()
 -- 
-1.7.9.5
+1.8.3.2
 

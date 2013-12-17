@@ -1,17 +1,17 @@
-From 8dac0c9a294996cdc95666cde57a00f7c15a0f15 Mon Sep 17 00:00:00 2001
+From 2d993c3b7a15a8c828ff2edfa971fd389ce596f4 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <stephan.reichholf@dream-property.net>
 Date: Wed, 28 Mar 2012 13:52:55 +0200
-Subject: [PATCH 2/2] Qt: Add HbbTv MIME types
+Subject: [PATCH 2/6] Qt: Add HbbTv MIME types
 
 ---
- .../Source/WebCore/dom/DOMImplementation.cpp       |    6 +++++-
- .../Source/WebCore/dom/ProcessingInstruction.cpp   |    3 ++-
- .../WebCore/dom/XMLDocumentParserLibxml2.cpp       |    1 +
- .../Source/WebCore/dom/XMLDocumentParserQt.cpp     |    1 +
- .../webkit/Source/WebCore/loader/FrameLoader.cpp   |    4 ++--
- .../WebCore/loader/cache/CachedXSLStyleSheet.cpp   |    2 +-
- .../Source/WebCore/platform/MIMETypeRegistry.cpp   |    5 ++++-
- .../WebCore/platform/qt/MIMETypeRegistryQt.cpp     |    3 +++
+ src/3rdparty/webkit/Source/WebCore/dom/DOMImplementation.cpp        | 6 +++++-
+ src/3rdparty/webkit/Source/WebCore/dom/ProcessingInstruction.cpp    | 3 ++-
+ src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserLibxml2.cpp | 1 +
+ src/3rdparty/webkit/Source/WebCore/dom/XMLDocumentParserQt.cpp      | 1 +
+ src/3rdparty/webkit/Source/WebCore/loader/FrameLoader.cpp           | 4 ++--
+ .../webkit/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp      | 2 +-
+ src/3rdparty/webkit/Source/WebCore/platform/MIMETypeRegistry.cpp    | 5 ++++-
+ .../webkit/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp        | 3 +++
  8 files changed, 19 insertions(+), 6 deletions(-)
 
 diff --git a/src/3rdparty/webkit/Source/WebCore/dom/DOMImplementation.cpp b/src/3rdparty/webkit/Source/WebCore/dom/DOMImplementation.cpp
@@ -143,5 +143,5 @@ index 01cef12..b82ef14 100644
      { "wmlc", "application/vnd.wap.wmlc" },
      { 0, 0 }
 -- 
-1.7.5.4
+1.8.3.2
 
