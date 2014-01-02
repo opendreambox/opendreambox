@@ -1,4 +1,4 @@
-PR = "${INC_PR}.4"
+PR = "${INC_PR}.5"
 
 SRC_URI[mips32el.md5sum] = "91e7a213a1eae246bea95dca9243f9e3"
 SRC_URI[mips32el.sha256sum] = "472cd542105d85bb784429bf9ddb2581dd4a43fb790d64967f061fa0943c85f4"
@@ -15,6 +15,7 @@ SRC_URI += " \
 	file://0005-when-the-time-is-not-valid-after-bootup-and-idle-mod.patch \
 	file://0006-added-manual-day-month-translation-to-clocktotext-co.patch \
 	file://0007-needed-changes-since-0000-is-the-ConfigPIN-default.patch \
+	file://0008-format-translation-was-not-working-when-the-first-ch.patch \
 	file://de.mo \
 	file://en.mo \
 "

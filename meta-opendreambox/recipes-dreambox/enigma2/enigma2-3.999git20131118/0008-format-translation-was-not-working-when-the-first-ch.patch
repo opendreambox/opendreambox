@@ -1,0 +1,26 @@
+From 81aee2bd3effdffe6bd531e2c5f998a7ec588974 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 2 Jan 2014 17:08:55 +0100
+Subject: [PATCH 8/8] format translation was not working when the first
+ character after the "Format:" was a percent symbol
+
+---
+ usr/lib/enigma2/python/Components/Converter/ClockToText.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Components/Converter/ClockToText.py b/usr/lib/enigma2/python/Components/Converter/ClockToText.py
+index ca6a2ee..8aeefa8 100644
+--- a/usr/lib/enigma2/python/Components/Converter/ClockToText.py
++++ b/usr/lib/enigma2/python/Components/Converter/ClockToText.py
+@@ -65,7 +65,7 @@ class ClockToText(Converter, object):
+ 
+ 		elif self.type == self.FORMAT:
+ 			spos = self.fmt_string.find('%')
+-			if spos > 0:
++			if spos > -1:
+ 				s1 = self.fmt_string[:spos]
+ 				s2 = strftime(self.fmt_string[spos:], t)
+ 				shortDay = self.fmt_string.find('%a')
+-- 
+1.7.10.4
+
