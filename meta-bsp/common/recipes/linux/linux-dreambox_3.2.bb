@@ -1,12 +1,12 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.47"
+PR = "${INC_PR}.48"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
-PATCHLEVEL = "51"
+PATCHLEVEL = "54"
 
 SRC_URI = " \
         ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
-        ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-3.2.${PATCHLEVEL}.bz2;apply=yes;name=kernel-patch \
+        ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-3.2.${PATCHLEVEL}.xz;apply=yes;name=kernel-patch \
         http://sources.dreamboxupdate.com/download/kernel-patches/${P}-${PATCHREV}.patch.bz2;name=dmm-patch \
         http://download.filesystems.org/unionfs/unionfs-2.x/unionfs-2.5.11_for_3.2.2.diff.gz;name=unionfs \
         file://clear_sublevel.patch \
@@ -31,7 +31,7 @@ SRC_URI = " \
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "325de4129bf84f0ccea6f65a79f1811a"
+SRC_URI[kernel-patch.md5sum] = "f6b5c834cc9e7f7531748329bf589410"
 SRC_URI[kernel-patch.sha256sum] = "ce35a81143c4c58e4f97063d165f7f49d81c02c73a224152ee7b13f2af031f27"
 SRC_URI[dmm-patch.md5sum] = "d17d65e9978343d540e0b60767a82286"
 SRC_URI[dmm-patch.sha256sum] = "576356545de7f587d164d1cee2cb17b6c1ce3efbe2e01ff785c13ec2d544d220"
