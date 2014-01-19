@@ -6,4 +6,4 @@
 	url = git://git.openembedded.org/meta-openembedded-contrib
 [submodule "bitbake"]
 	path = bitbake
-	url = git://git.openembedded.org/bitbake
+	url = git://git.opendreambox.org/git/bitbake
