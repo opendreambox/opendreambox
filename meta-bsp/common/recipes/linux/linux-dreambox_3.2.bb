@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.48"
+PR = "${INC_PR}.49"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
 PATCHLEVEL = "54"
@@ -26,6 +26,7 @@ SRC_URI = " \
         file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
         file://0009-fixed-partition-is-ubi-maintained-check.patch \
         file://0001-add-memory-mapping-support-to-usbfs-used-by-sundtek-.patch \
+        file://0001-Revert-USB-ftdi_sio-fixed-handling-of-unsupported-CS.patch \
         file://defconfig \
 "
 
@@ -49,3 +50,4 @@ RDEPENDS_kernel-module-rt73usb = "linux-firmware-rt73usb"
 RDEPENDS_kernel-module-zd1211rw = "zd1211-firmware"
 
 require linux-dreambox.inc
+
