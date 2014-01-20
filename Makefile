@@ -200,8 +200,12 @@ sstate-cache-clean: init
 doc:
 	@$(MAKE) $(MFLAGS) -C doc
 
+dreambox-image enigma2 package-index: init
+	@echo '[*] Building $@ for $(USER_MACHINE)'
+	@$(BITBAKE) $@
+
 image: init
-	@echo '[*] Building image for $(USER_MACHINE)'
+	@echo '[*] Building $@ for $(USER_MACHINE)'
 	@$(BITBAKE) $(MAKE_IMAGE_BB)
 
 download: init
