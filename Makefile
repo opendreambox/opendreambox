@@ -67,10 +67,12 @@ BBLAYERS ?= \
 	$(wildcard $(CURDIR)/meta-bsp/$(MACHINE)) \
 	$(CURDIR)/meta-bsp/common \
 	$(CURDIR)/meta-opendreambox \
+	$(CURDIR)/meta-qt5 \
 	$(CURDIR)/meta-openembedded/meta-oe \
 	$(CURDIR)/meta-openembedded/meta-filesystems \
 	$(CURDIR)/meta-openembedded/meta-multimedia \
 	$(CURDIR)/meta-openembedded/meta-networking \
+	$(CURDIR)/meta-openembedded/meta-ruby \
 	$(CURDIR)/openembedded-core/meta
 
 CONFFILES_AUTO = \
