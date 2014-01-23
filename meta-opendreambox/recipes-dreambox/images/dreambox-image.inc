@@ -8,6 +8,7 @@ DEPENDS = " \
 	strace \
 "
 
+BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', 'busybox-syslog', '', d)}"
 BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
 
 VIRTUAL-RUNTIME_init_manager ?= "systemd"
