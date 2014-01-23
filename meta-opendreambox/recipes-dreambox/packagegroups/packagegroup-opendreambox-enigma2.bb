@@ -18,8 +18,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-systemplugins-frontprocessorupgrade \
   ${@base_contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
   enigma2-plugin-systemplugins-hotplug \
-  enigma2-plugin-systemplugins-networksetup \
-  enigma2-plugin-systemplugins-networkwizard \
+  enigma2-plugin-systemplugins-networkmanager \
   enigma2-plugin-systemplugins-softwaremanager \
   ${@base_contains('DREAMBOX_FEATURES', 'fan', 'enigma2-plugin-systemplugins-tempfancontrol', '', d)} \
   enigma2-plugin-systemplugins-videomode \
