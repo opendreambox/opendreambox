@@ -193,9 +193,15 @@ distclean: clean
 	@echo '[*] Deleting git submodules'
 	@$(GIT) submodule foreach 'rm -rf .* * 2>/dev/null || true'
 
+# function to convert simple space separated list to csv
+space :=
+space +=
+comma := ,
+csv = $(subst $(space),$(comma),$(strip $1))
+
 sstate-cache-clean: init
 	@echo '[*] Cleaning up sstate-cache'
-	@. $(CURDIR)/bitbake.env && sstate-cache-management.sh --cache-dir=$(SSTATE_DIR) --stamps-dir=$(TMPDIR)/stamps -v || true
+	@. $(CURDIR)/bitbake.env && sstate-cache-management.sh --cache-dir=$(SSTATE_DIR) --stamps-dir=$(call csv,$(wildcard $(CURDIR)/build/*/tmp*/stamps)) -v
 
 doc:
 	@$(MAKE) $(MFLAGS) -C doc
