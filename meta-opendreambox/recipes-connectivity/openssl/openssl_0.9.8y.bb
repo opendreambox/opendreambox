@@ -1,6 +1,6 @@
 require recipes-connectivity/openssl/openssl.inc
 
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
@@ -27,6 +27,7 @@ SRC_URI += "file://debian/ca.patch \
 SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch \
             file://parallel-make-fix.patch \
+            file://openssl-fix-doc.patch \
             file://find.pl"
 
 SRC_URI[md5sum] = "47c7fb37f78c970f1d30aa2f9e9e26d8"
