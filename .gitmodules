@@ -7,3 +7,7 @@
 [submodule "bitbake"]
 	path = bitbake
 	url = git://git.openembedded.org/bitbake
+[submodule "meta-qt5"]
+	path = meta-qt5
+	url = git://github.com/opendreambox/meta-qt5
+	branch = master
