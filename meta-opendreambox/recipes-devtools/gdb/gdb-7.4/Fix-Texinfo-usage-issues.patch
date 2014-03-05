@@ -1,0 +1,135 @@
+Upstream-Status: Backport
+
+From 984359d2e18194691beefb49eb490524936893eb Mon Sep 17 00:00:00 2001
+From: Eli Zaretskii <eliz@gnu.org>
+Date: Fri, 15 Jun 2012 09:21:37 +0000
+Subject: [PATCH] Fix Texinfo usage issues.  From Patrice Dumas
+ <pertusus@free.fr>.
+
+	* gdb.texinfo (Summary): Add a link to "Free Documentation".
+	(Free Documentation): Add @node line.
+	(Continuing and Stepping) <advance location>: Use @item instead of
+	@itemx.
+	(Reverse Execution) <set exec-direction reverse>: Use @item instead of
+	@itemx.
+	(Embedded Processors): Put the link to "PA" to its correct place,
+	according to document structure.
+	(Python API): Put the link to "Lazy Strings In Python" to its
+	correct place.
+	(Index): Use @@ in @tex block to get a literal @.
+
+	* gdbint.texinfo: Fix the @subtitle line.
+
+	* stabs.texinfo (Top): Put the link to "Symbol Types Index" to its
+	correct place.
+---
+ gdb/doc/gdb.texinfo    | 14 ++++++++------
+ gdb/doc/gdbint.texinfo |  2 +-
+ gdb/doc/stabs.texinfo  |  2 +-
+ 4 files changed, 29 insertions(+), 8 deletions(-)
+
+Index: gdb-7.4/gdb/doc/gdb.texinfo
+===================================================================
+--- gdb-7.4.orig/gdb/doc/gdb.texinfo
++++ gdb-7.4/gdb/doc/gdb.texinfo
+@@ -242,6 +242,7 @@ using either the Apple/NeXT or the GNU O
+ 
+ @menu
+ * Free Software::               Freely redistributable software
++* Free Documentation::          Free Software Needs Free Documentation
+ * Contributors::                Contributors to GDB
+ @end menu
+ 
+@@ -261,6 +262,7 @@ Fundamentally, the General Public Licens
+ you have these freedoms and that you cannot take these freedoms away
+ from anyone else.
+ 
++@node Free Documentation
+ @unnumberedsec Free Software Needs Free Documentation
+ 
+ The biggest deficiency in the free software community today is not in
+@@ -4824,7 +4826,7 @@ invocations have returned.
+ 
+ 
+ @kindex advance @var{location}
+-@itemx advance @var{location}
++@item advance @var{location}
+ Continue running the program up to the given @var{location}.  An argument is
+ required, which should be of one of the forms described in
+ @ref{Specify Location}.
+@@ -5719,7 +5721,7 @@ function invocation, you end up at the b
+ @kindex set exec-direction
+ @item set exec-direction
+ Set the direction of target execution.
+-@itemx set exec-direction reverse
++@item set exec-direction reverse
+ @cindex execute forward or backward in time
+ @value{GDBN} will perform all execution commands in reverse, until the
+ exec-direction mode is changed to ``forward''.  Affected commands include
+@@ -18799,8 +18801,8 @@ acceptable commands.
+ * MicroBlaze::			Xilinx MicroBlaze
+ * MIPS Embedded::               MIPS Embedded
+ * OpenRISC 1000::               OpenRisc 1000
+-* PA::                          HP PA Embedded
+ * PowerPC Embedded::            PowerPC Embedded
++* PA::                          HP PA Embedded
+ * Sparclet::                    Tsqware Sparclet
+ * Sparclite::                   Fujitsu Sparclite
+ * Z8000::                       Zilog Z8000
+@@ -21493,10 +21495,10 @@ situation, a Python @code{KeyboardInterr
+ * Blocks In Python::            Accessing frame blocks from Python.
+ * Symbols In Python::           Python representation of symbols.
+ * Symbol Tables In Python::     Python representation of symbol tables.
+-* Lazy Strings In Python::      Python representation of lazy strings.
+ * Breakpoints In Python::       Manipulating breakpoints using Python.
+ * Finish Breakpoints in Python:: Setting Breakpoints on function return
+                                 using Python.
++* Lazy Strings In Python::      Python representation of lazy strings.
+ @end menu
+ 
+ @node Basic Python
+@@ -38720,7 +38722,7 @@ A string in the constant pool is zero-te
+ @printindex cp
+ 
+ @tex
+-% I think something like @colophon should be in texinfo.  In the
++% I think something like @@colophon should be in texinfo.  In the
+ % meantime:
+ \long\def\colophon{\hbox to0pt{}\vfill
+ \centerline{The body of this manual is set in}
+@@ -38732,7 +38734,7 @@ A string in the constant pool is zero-te
+ \centerline{{\sl\fontname\tensl\/}}
+ \centerline{are used for emphasis.}\vfill}
+ \page\colophon
+-% Blame: doc@cygnus.com, 1991.
++% Blame: doc@@cygnus.com, 1991.
+ @end tex
+ 
+ @bye
+Index: gdb-7.4/gdb/doc/gdbint.texinfo
+===================================================================
+--- gdb-7.4.orig/gdb/doc/gdbint.texinfo
++++ gdb-7.4/gdb/doc/gdbint.texinfo
+@@ -34,7 +34,7 @@ This file documents the internals of the
+ 
+ @titlepage
+ @title @value{GDBN} Internals
+-@subtitle{A guide to the internals of the GNU debugger}
++@subtitle A guide to the internals of the GNU debugger
+ @author John Gilmore
+ @author Cygnus Solutions
+ @author Second Edition:
+Index: gdb-7.4/gdb/doc/stabs.texinfo
+===================================================================
+--- gdb-7.4.orig/gdb/doc/stabs.texinfo
++++ gdb-7.4/gdb/doc/stabs.texinfo
+@@ -73,8 +73,8 @@ This document describes the stabs debugg
+ * Questions::			Questions and anomalies
+ * Stab Sections::		In some object file formats, stabs are
+                                 in sections.
+-* Symbol Types Index::          Index of symbolic stab symbol type names.
+ * GNU Free Documentation License::  The license for this documentation
++* Symbol Types Index::          Index of symbolic stab symbol type names.
+ @end menu
+ @end ifnottex
+ 
