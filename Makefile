@@ -168,6 +168,10 @@ distclean: clean
 	@echo '[*] Deleting git submodules'
 	@$(GIT) submodule foreach 'rm -rf .* * 2>/dev/null || true'
 
+sstate-cache-clean: init
+	@echo '[*] Cleaning up sstate-cache'
+	@. $(CURDIR)/bitbake.env && sstate-cache-management.sh --cache-dir=$(SSTATE_DIR) --stamps-dir=$(TMPDIR)/stamps -v || true
+
 doc:
 	@$(MAKE) $(MFLAGS) -C doc
 
