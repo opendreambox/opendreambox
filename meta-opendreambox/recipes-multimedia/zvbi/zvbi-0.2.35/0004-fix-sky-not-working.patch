@@ -1,14 +1,14 @@
-From 2b4f7a3596a1bb305306328129255b4452243172 Mon Sep 17 00:00:00 2001
+From f9a4433f9f5951cd446e24145639b1e1c208d79a Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 02:01:29 +0200
-Subject: [PATCH 4/6] fix sky not working
+Subject: [PATCH 4/9] fix sky not working
 
 ---
- src/dvb_demux.c |    4 ++--
+ src/dvb_demux.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/dvb_demux.c b/src/dvb_demux.c
-index b670fc6..5edf3c8 100644
+index 1855518..0ce10ea 100644
 --- a/src/dvb_demux.c
 +++ b/src/dvb_demux.c
 @@ -1448,8 +1448,8 @@ valid_vbi_pes_packet_header	(vbi_dvb_demux *	dx,
@@ -23,5 +23,5 @@ index b670fc6..5edf3c8 100644
  		break;
  	}
 -- 
-1.7.9.5
+1.8.3.2
 

@@ -1,0 +1,28 @@
+From 8d497ce5b31946ad9722c052e861eac73597ba90 Mon Sep 17 00:00:00 2001
+From: mschimek <mschimek>
+Date: Tue, 18 Feb 2014 16:56:03 +0000
+Subject: [PATCH 9/9] parse_28_29: SF bug #198: Faulty logic in TTX Level 2.5,
+ 3.5 DRCS download page parser.
+
+(cherry picked from commit 9757d6a3d97ecc9d2de05b74efac905631f0eb8b)
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ src/packet.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/packet.c b/src/packet.c
+index 7ed0948..86ba151 100644
+--- a/src/packet.c
++++ b/src/packet.c
+@@ -2069,7 +2069,7 @@ parse_28_29(vbi_decoder *vbi, uint8_t *p,
+ 		coding = get_bits (&bs, 3); /* page coding ignored */
+ 
+ 		if (function != PAGE_FUNCTION_GDRCS
+-		    || function != PAGE_FUNCTION_DRCS)
++		    && function != PAGE_FUNCTION_DRCS)
+ 			return FALSE;
+ 
+ 		if (cvtp->function == PAGE_FUNCTION_UNKNOWN) {
+-- 
+1.8.3.2
+

@@ -1,0 +1,72 @@
+From 599826d4002317673ce4ee32dbdd92b9f8a8da2f Mon Sep 17 00:00:00 2001
+From: mschimek <mschimek>
+Date: Fri, 20 Dec 2013 16:31:49 +0000
+Subject: [PATCH 8/9] caption_command: SF bug #195: Mid-row codes are set-at
+ spacing attributes. Backgr. Attr. codes ditto.
+
+(cherry picked from commit 02c4ea11be6272302ccebbae4db0b5d44e914aa8)
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ src/caption.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/src/caption.c b/src/caption.c
+index 9e37f67..80c181b 100644
+--- a/src/caption.c
++++ b/src/caption.c
+@@ -854,6 +854,15 @@ put_char(struct caption *cc, cc_channel *ch, vbi_char c)
+ 		word_break(cc, ch, 1);
+ }
+ 
++static void
++put_char_space(struct caption *cc, cc_channel *ch)
++{
++	vbi_char c = ch->attr;
++
++	c.unicode = 0x0020;
++	put_char (cc, ch, c);
++}
++
+ static inline cc_channel *
+ switch_channel(struct caption *cc, cc_channel *ch, int new_chan)
+ {
+@@ -962,10 +971,14 @@ caption_command(vbi_decoder *vbi, struct caption *cc,
+ 	}
+ 
+ 	switch (c1) {
+-	case 0:		/* Optional Attributes		001 c000  010 xxxt */
+-// not verified
++	case 0:		/* Backgr. Attr. Codes -- 001 c000  010 xxxt */
++		/* EIA 608-B Section 6.2. */
+ 		ch->attr.opacity = (c2 & 1) ? VBI_SEMI_TRANSPARENT : VBI_OPAQUE;
+ 		ch->attr.background = palette_mapping[(c2 >> 1) & 7];
++
++		/* This is a set-at spacing attribute. */
++		put_char_space(cc, ch);
++
+ 		return;
+ 
+ 	case 1:
+@@ -989,7 +1002,6 @@ caption_command(vbi_decoder *vbi, struct caption *cc,
+ 				put_char(cc, ch, c);
+ 			}
+ 		} else {		/* Midrow Codes		001 c001  010 xxxu */
+-// not verified
+ 			ch->attr.flash = FALSE;
+ 			ch->attr.underline = c2 & 1;
+ 
+@@ -1002,6 +1014,11 @@ caption_command(vbi_decoder *vbi, struct caption *cc,
+ 				ch->attr.italic = TRUE;
+ 				ch->attr.foreground = VBI_WHITE;
+ 			}
++
++			/* 47 CFR 15.119 (h)(1)(i), EIA 608-B Section
++			   6.2: Mid-Row codes, FON, BT, FA and FAU are
++			   set-at spacing attributes. */
++			put_char_space(cc, ch);
+ 		}
+ 
+ 		return;
+-- 
+1.8.3.2
+

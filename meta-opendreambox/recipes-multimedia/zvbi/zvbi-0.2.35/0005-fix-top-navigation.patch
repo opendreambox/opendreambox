@@ -1,15 +1,15 @@
-From 12140c56014080e61170461d7fb1052fbd4088e8 Mon Sep 17 00:00:00 2001
+From 95008a52f4841fd556c6c71cb222bd8f3ddb835b Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Fri, 8 Jun 2012 01:02:07 +0200
-Subject: [PATCH 5/6] fix top navigation
+Subject: [PATCH 5/9] fix top navigation
 
 * patch by Roland Meier
 ---
- src/teletext.c |   94 +++++++++++++++++++++++++++-----------------------------
+ src/teletext.c | 94 ++++++++++++++++++++++++++++------------------------------
  1 file changed, 46 insertions(+), 48 deletions(-)
 
 diff --git a/src/teletext.c b/src/teletext.c
-index deeec6a..3360cbd 100644
+index e97ddcf..a75a612 100644
 --- a/src/teletext.c
 +++ b/src/teletext.c
 @@ -156,15 +156,21 @@ static void screen_color(vbi_page *pg, int flags, int color);
@@ -164,7 +164,7 @@ index deeec6a..3360cbd 100644
  		}
  	}
  }
-@@ -2876,5 +2872,7 @@ vbi_fetch_vt_page(vbi_decoder *vbi, vbi_page *pg,
+@@ -2900,5 +2896,7 @@ vbi_fetch_vt_page(vbi_decoder *vbi, vbi_page *pg,
  Local variables:
  c-set-style: K&R
  c-basic-offset: 8
@@ -173,5 +173,5 @@ index deeec6a..3360cbd 100644
  End:
  */
 -- 
-1.7.9.5
+1.8.3.2
 

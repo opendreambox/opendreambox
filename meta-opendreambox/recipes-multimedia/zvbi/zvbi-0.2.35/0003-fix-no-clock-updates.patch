@@ -1,17 +1,17 @@
-From 5b9ce4488b748f057863c1d12bc70c085100cb2a Mon Sep 17 00:00:00 2001
+From ec2c092ce7832ea4a70e2ef1ad954b76f9f1a5ed Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 23 Apr 2012 01:58:05 +0200
-Subject: [PATCH 3/6] fix no clock updates
+Subject: [PATCH 3/9] fix no clock updates
 
 ---
- src/packet.c |    2 +-
+ src/packet.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/packet.c b/src/packet.c
-index e7bad0e..17b400f 100644
+index b1c7dc1..7ed0948 100644
 --- a/src/packet.c
 +++ b/src/packet.c
-@@ -1537,7 +1537,7 @@ store_lop(vbi_decoder *vbi, const cache_page *vtp)
+@@ -1563,7 +1563,7 @@ store_lop(vbi_decoder *vbi, const cache_page *vtp)
  					vbi->vt.header_page.pgno, vbi->vt.header + 8,
  					&event.ev.ttx_page.pn_offset);
  			event.ev.ttx_page.clock_update =
@@ -21,5 +21,5 @@ index e7bad0e..17b400f 100644
  
  		switch (r) {
 -- 
-1.7.9.5
+1.8.3.2
 

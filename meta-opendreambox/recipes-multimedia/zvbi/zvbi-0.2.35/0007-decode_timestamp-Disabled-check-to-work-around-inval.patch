@@ -1,0 +1,30 @@
+From 86b3062c4bc256dfb0e05fb17b8a77ad50321c08 Mon Sep 17 00:00:00 2001
+From: mschimek <mschimek>
+Date: Fri, 20 Dec 2013 16:31:43 +0000
+Subject: [PATCH 7/9] decode_timestamp: Disabled check to work around invalid
+ mark transmitted on Dantoto Racing found by Devrim Ayyildiz.
+
+(cherry picked from commit 311f551416e95b1da3b440f35206ee33b3c19de9)
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ src/dvb_demux.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/dvb_demux.c b/src/dvb_demux.c
+index 0ce10ea..c5419e1 100644
+--- a/src/dvb_demux.c
++++ b/src/dvb_demux.c
+@@ -1346,7 +1346,9 @@ decode_timestamp		(vbi_dvb_demux *	dx,
+ 	if (mark != (p[0] & 0xF1u)) {
+ 		debug2 (&dx->frame.log,
+ 			"Invalid PTS/DTS byte[0]=0x%02x.", p[0]);
+-		return FALSE;
++		/* Check disabled to work around invalid mark 0xF1
++		   transmitted instead of 0x21 on Dantoto Racing. */
++		/* return FALSE; */
+ 	}
+ 
+ 	t  = p[1] << 22;
+-- 
+1.8.3.2
+
