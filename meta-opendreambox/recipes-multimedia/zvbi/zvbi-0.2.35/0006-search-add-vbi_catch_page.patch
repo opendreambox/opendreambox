@@ -1,12 +1,12 @@
-From 5c1a6dd50986d7734af4e3eb31d0795969bfcbea Mon Sep 17 00:00:00 2001
+From f825d67065556ff858d37bf12618c836655ca6a4 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 25 Jun 2012 11:29:45 +0200
-Subject: [PATCH 6/6] search: add vbi_catch_page()
+Subject: [PATCH 6/9] search: add vbi_catch_page()
 
 * patch by Roland Meier
 ---
- src/search.c |  204 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- src/search.h |   10 +++
+ src/search.c | 204 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/search.h |  10 +++
  2 files changed, 214 insertions(+)
 
 diff --git a/src/search.c b/src/search.c
@@ -253,5 +253,5 @@ index be904d6..20a4e4d 100644
  
  /* Private */
 -- 
-1.7.9.5
+1.8.3.2
 
