@@ -19,7 +19,7 @@ FILES_${PN} = "${datadir}/${PN}/secondstage-${MACHINE}.bin"
 
 pkg_postinst_${PN}() {
 if [ -z "$D" ] && grep -q '\<${MACHINE}\>' /proc/stb/info/model; then
-	buildimage --arch=${MACHINE} --flash-size=${DREAMBOX_FLASH_SIZE} --raw ${EXTRA_BUILDCMD} \
+	buildimage --arch=${MACHINE} --raw ${EXTRA_BUILDCMD} \
 		--erase-block-size=`mtd_debug info /dev/mtd1 | grep '^mtd\.erasesize' | awk '{print $3}'` \
 		--sector-size=`mtd_debug info /dev/mtd1 | grep '^mtd\.writesize' | awk '{print $3}'` \
 		--boot-partition=${DREAMBOX_PART0_SIZE}:${datadir}/${PN}/secondstage-${MACHINE}.bin \
