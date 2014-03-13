@@ -1,4 +1,4 @@
-PR = "${INC_PR}.0"
+PR = "${INC_PR}.1"
 
 SRC_URI[mips32el.md5sum] = "e1010ca2c45d70b922e12018f3e0f843"
 SRC_URI[mips32el.sha256sum] = "b3c57fc66b386c2b71c31ab79f2e063a73ca0e7b7cef63c9124de52050d14737"
