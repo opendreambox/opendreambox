@@ -2,7 +2,7 @@ SUMMARY = "OpenDreambox: Enigma2 Task for the OpenDreambox Distribution"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=0a5ec7423edaca24547634f416478834"
-INC_PR = "r33"
+INC_PR = "r34"
 
 inherit task
 
@@ -93,9 +93,9 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-systemplugins-positionersetup \
   enigma2-plugin-systemplugins-satfinder \
   enigma2-plugin-systemplugins-skinselector \
-  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'task-opendreambox-cdplayer', '', d)} \
+  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
-  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'task-opendreambox-dvdplayer', '', d)} \
+  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \
   ${@base_contains('MACHINE_FEATURES', 'modem', 'task-opendreambox-modem', '', d)} \
   ${@base_contains('MACHINE_FEATURES', 'wifi', 'task-opendreambox-wlan', '', d)} \
   glib-networking \
