@@ -24,7 +24,6 @@ RDEPENDS_${PN} += " \
   ${@base_contains('DREAMBOX_FEATURES', 'fan', 'enigma2-plugin-systemplugins-tempfancontrol', '', d)} \
   enigma2-plugin-systemplugins-videomode \
   enigma2-plugin-systemplugins-videotune \
-  ${@base_contains('MACHINE_FEATURES', 'wifi', 'enigma2-plugin-systemplugins-wirelesslan', '', d)} \
   enigma2-plugins-meta \
   enigma2-skins-meta \
   enigma2-streamproxy \
