@@ -18,6 +18,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-systemplugins-frontprocessorupgrade \
   ${@base_contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
   enigma2-plugin-systemplugins-hotplug \
+  enigma2-plugin-systemplugins-mediadatabasemanager \
   enigma2-plugin-systemplugins-networkmanager \
   enigma2-plugin-systemplugins-softwaremanager \
   ${@base_contains('DREAMBOX_FEATURES', 'fan', 'enigma2-plugin-systemplugins-tempfancontrol', '', d)} \
@@ -58,6 +59,9 @@ RRECOMMENDS_${PN} += " \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \
   ${@base_contains('MACHINE_FEATURES', 'modem', 'packagegroup-opendreambox-modem', '', d)} \
-  ${@base_contains('MACHINE_FEATURES', 'wifi', 'packagegroup-opendreambox-wlan', '', d)} \
   glib-networking \
+"
+
+RRECOMMENDS_${PN}_append_mipsel = " \
+  ${@base_contains('MACHINE_FEATURES', 'wifi', 'packagegroup-opendreambox-wlan', '', d)} \
 "
