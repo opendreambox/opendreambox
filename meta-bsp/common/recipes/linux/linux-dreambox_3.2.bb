@@ -25,6 +25,7 @@ SRC_URI = " \
         file://0015-Staging-rtl8712-rtl8192u-move-USB-device-ID-within-s.patch \
         file://0016-staging-r8712u-Fix-Smatch-warning.patch \
         file://0017-CHROMIUM-make-3.82-hack-to-fix-differing-behaviour-b.patch \
+        file://0018-net-ipv4-ipconfig-really-display-the-BOOTP-DHCP-serv.patch \
         file://0001-linuxtv-api-DMM-drivers-are-now-ready-for-linux-tv-a.patch \
         file://defconfig \
 "
