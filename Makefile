@@ -92,8 +92,6 @@ CONFDEPS = \
 	$(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH)
 
 CONFFILES_BITBAKE = \
-	$(TOPDIR)/conf/bblayers.conf \
-	$(TOPDIR)/conf/local.conf \
 	conf/opendreambox.conf \
 	openembedded-core/meta/conf/bitbake.conf \
 	$(wildcard \
