@@ -1,0 +1,241 @@
+From 735b396c881daa6d545a750d5a1a7653f3ca77ff Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 4 Apr 2014 17:07:44 +0200
+Subject: [PATCH] port to kernel 3.11
+
+---
+ cdXA.c   | 11 ++++++++++-
+ cdfs.h   |  2 +-
+ daemon.c | 11 +++++------
+ proc.c   |  2 +-
+ root.c   | 47 ++++++++++++++++++++++++++++++++++++++++-------
+ 5 files changed, 57 insertions(+), 16 deletions(-)
+
+diff --git a/cdXA.c b/cdXA.c
+index 09da159..3ce4546 100644
+--- a/cdXA.c
++++ b/cdXA.c
+@@ -55,14 +55,21 @@ int cdfs_read_raw_frame(struct super_block * sb, int lba, unsigned char *buf) {
+ /***********************************************************/            
+ 
+ void cdfs_get_XA_info(struct super_block * sb, int inode) {
+-  char frame[CD_FRAMESIZE_RAW0];
++  char *frame;
+   cd * this_cd = cdfs_info(sb);
+   track_info * this_track = &(this_cd->track[inode]);
+   unsigned start_lba = this_track->start_lba;
+   int status;
+ 
++  frame = kmalloc(CD_FRAMESIZE_RAW0, GFP_KERNEL);
++  if (frame == NULL) {
++    printk("get_XA_info: out of memory\n");
++    return;
++  }
++
+   if((status = cdfs_read_raw_frame(sb, start_lba, frame))) {
+     printk("get_XA_info: ioctl failed: %d\n", status);
++    kfree(frame);
+     return;
+   }
+   
+@@ -83,6 +90,7 @@ void cdfs_get_XA_info(struct super_block * sb, int inode) {
+   // Get type & title
+   if((status = cdfs_read_raw_frame(sb, 150, frame))) {
+     printk("get_XA_info: ioctl failed: %d\n", status);
++    kfree(frame);
+     return;
+   }
+ 
+@@ -91,6 +99,7 @@ void cdfs_get_XA_info(struct super_block * sb, int inode) {
+   strncpy(this_cd->videocd_title, frame+this_track->xa_data_offset+10, 16);
+   this_cd->videocd_title[16]=0;
+ 
++  kfree(frame);
+ }
+ 
+ /***********************************************************/
+diff --git a/cdfs.h b/cdfs.h
+index 8c03ce8..f8af883 100644
+--- a/cdfs.h
++++ b/cdfs.h
+@@ -194,7 +194,7 @@ int kcdfsd_add_cdhfs_request(struct file * file, struct page *page);
+ int kcdfsd_add_request(struct dentry *dentry, struct page *page, unsigned type);
+ int kcdfsd_thread(void *unused);
+ void kcdfsd_cleanup_thread(void);
+-extern int kcdfsd_pid;
++extern struct task_struct *kcdfsd_task;
+ 
+ /* for discid stuff */
+ unsigned long discid(cd *);
+diff --git a/daemon.c b/daemon.c
+index d5747aa..a687156 100644
+--- a/daemon.c
++++ b/daemon.c
+@@ -28,9 +28,10 @@
+ 
+ 
+ #include "cdfs.h"
++#include <linux/kthread.h>
+ #include <linux/sched.h>
+ 
+-int kcdfsd_pid = 0;
++struct task_struct *kcdfsd_task;
+ static int kcdfsd_running = 0;
+ static DECLARE_WAIT_QUEUE_HEAD(kcdfsd_wait);
+ static LIST_HEAD(kcdfsd_req_list);       /* List of requests needing servicing */
+@@ -158,7 +159,9 @@ int kcdfsd_thread(void *unused){
+   exit_files(current);  /* daemonize doesn't do exit_files */
+   daemonize();
+ #else
++ #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 7, 0)
+   daemonize("k"FSNAME"d");
++ #endif
+ 
+   /* Allow SIGTERM to quit properly when removing module */
+   /* By default with daemonize all signals are dropped */
+@@ -182,12 +185,8 @@ int kcdfsd_thread(void *unused){
+ 
+ void kcdfsd_cleanup_thread(){
+   int ret;
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,27)
+-  ret = kill_proc(kcdfsd_pid, SIGTERM, 1);
+-#else
+-  ret = kill_pid(find_vpid(kcdfsd_pid), SIGTERM, 1);
+-#endif
+ 
++  ret = kthread_stop(kcdfsd_task);
+   if (!ret) {
+     /* Wait 10 seconds */
+     int count = 10 * HZ;
+diff --git a/proc.c b/proc.c
+index 117e530..2f2f477 100644
+--- a/proc.c
++++ b/proc.c
+@@ -211,7 +211,7 @@ remove_trailing_blanks(
+  *============================================================================*/
+ 
+ #define TRACK_POINTER_TO_TRACK_NUMBER(pointer) \
+-    ((pointer - &cdfs_proc_cd->track[0]) - 3) + 1
++    (long)((pointer - &cdfs_proc_cd->track[0]) - 3) + 1
+ 
+ static int
+ cdfs_show(struct seq_file *file_p, void *data_p) {
+diff --git a/root.c b/root.c
+index 16ac2da..e67bdf8 100644
+--- a/root.c
++++ b/root.c
+@@ -24,6 +24,7 @@
+ 
+ #include "cdfs.h"
+ 
++#include <linux/kthread.h>
+ #include <linux/module.h>
+ #include <linux/sched.h>
+ 
+@@ -376,7 +377,11 @@ out:
+ 
+   PRINT("retinode = %ld\n", retinode->i_ino);
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 4, 0)
++  sb->s_root   = d_alloc_root(retinode);
++#else
+   sb->s_root   = d_make_root(retinode);
++#endif
+   if (sb->s_root != NULL)
+   	return -ENOMEM;
+ 
+@@ -446,17 +451,31 @@ static int cdfs_statfs(struct super_block *sb, struct kstatfs *buf) {
+ 
+ /************************************************************************/
+ 
+-static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir) {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0)
++static int cdfs_iterate(struct file *filp, struct dir_context *ctx)
++#else
++static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir)
++#endif
++{
+   struct inode *inode = filp->f_dentry->d_inode;
++  int err;
+   int i;
+   cd * this_cd = cdfs_info(inode->i_sb);
+ 
+   PRINT("cdfs_readdir ino=%ld f_pos=%u\n", inode->i_ino, (int)filp->f_pos);
+ 
+   for(i=filp->f_pos; i<T2I(this_cd->tracks); i++) {
+-    if (filldir(dirent, this_cd->track[i].name, strlen(this_cd->track[i].name), 0, i, DT_UNKNOWN) < 0) 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0)
++    err = dir_emit(ctx, this_cd->track[i].name, strlen(this_cd->track[i].name), i, DT_UNKNOWN);
++#else
++    err = filldir(dirent, this_cd->track[i].name, strlen(this_cd->track[i].name), 0, i, DT_UNKNOWN);
++#endif
++    if (err < 0)
+       return 0;
+     filp->f_pos++;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0)
++    ctx->pos++;
++#endif
+   }
+   return 1;
+ }
+@@ -464,10 +483,15 @@ static int cdfs_readdir(struct file *filp, void *dirent, filldir_t filldir) {
+ /************************************************************************/
+ 
+ #ifdef OLD_KERNEL
+-static struct dentry * cdfs_lookup(struct inode *dir, struct dentry *dentry){
++static struct dentry * cdfs_lookup(struct inode *dir, struct dentry *dentry)
+ #else
+-static struct dentry * cdfs_lookup(struct inode *dir, struct dentry *dentry, struct nameidata *nd){
++ #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 5, 0)
++static struct dentry * cdfs_lookup(struct inode *dir, struct dentry *dentry, struct nameidata *nd)
++ #else
++static struct dentry * cdfs_lookup(struct inode *dir, struct dentry *dentry, unsigned int flags)
++ #endif
+ #endif
++{
+   struct inode * inode;
+   int i;
+   cd * this_cd = cdfs_info(dir->i_sb);
+@@ -501,7 +525,11 @@ return NULL;
+ 
+ static struct file_operations cdfs_dir_operations = {
+   .read     = generic_read_dir,
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0)
++  .iterate  = cdfs_iterate,
++#else
+   .readdir  = cdfs_readdir,
++#endif
+ };
+ 
+ static struct inode_operations cdfs_inode_operations = {
+@@ -635,19 +663,24 @@ static int __init cdfs_init(void) {
+   if (err < 0) return err;
+ 
+   // register /proc entry
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0)
+   if ((cdfs_proc_entry = create_proc_entry(FSNAME, 0, NULL )))
+     cdfs_proc_entry->proc_fops = &proc_cdfs_operations;
++#else
++  cdfs_proc_entry = proc_create(FSNAME, 0, NULL, &proc_cdfs_operations);
++#endif
+   cdfs_proc_cd=NULL;
+ 
+   // start kernel thread
+-  if ((kcdfsd_pid = kernel_thread(kcdfsd_thread, NULL, CLONE_FS | CLONE_FILES | CLONE_SIGHAND)) >0 ) {
+-    return 0;
+-  } else {
++  kcdfsd_task = kthread_run(kcdfsd_thread, NULL, "k"FSNAME"d");
++  if (PTR_ERR(kcdfsd_task) < 0) {
+     printk(FSNAME" kernel_thread failed.\n");
+     if (cdfs_proc_entry) remove_proc_entry(FSNAME, NULL);
+     unregister_filesystem(&cdfs_fs_type);
+     return -1;
+   }
++
++  return 0;
+ }
+ 
+ /******************************************************************/
+-- 
+1.8.3.2
+
