@@ -1,8 +1,8 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.49"
+PR = "${INC_PR}.50"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
-PATCHLEVEL = "54"
+PATCHLEVEL = "56"
 
 SRC_URI = " \
         ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -26,14 +26,13 @@ SRC_URI = " \
         file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
         file://0009-fixed-partition-is-ubi-maintained-check.patch \
         file://0001-add-memory-mapping-support-to-usbfs-used-by-sundtek-.patch \
-        file://0001-Revert-USB-ftdi_sio-fixed-handling-of-unsupported-CS.patch \
         file://defconfig \
 "
 
 SRC_URI[kernel.md5sum] = "7ceb61f87c097fc17509844b71268935"
 SRC_URI[kernel.sha256sum] = "c881fc2b53cf0da7ca4538aa44623a7de043a41f76fd5d0f51a31f6ed699d463"
-SRC_URI[kernel-patch.md5sum] = "f6b5c834cc9e7f7531748329bf589410"
-SRC_URI[kernel-patch.sha256sum] = "394c0412d099748232d469b7b795c650b7de391d24f306dbbfbe630e74b25d6c"
+SRC_URI[kernel-patch.md5sum] = "ee23c416a00767a843250cccd8174c90"
+SRC_URI[kernel-patch.sha256sum] = "154638a2b357d66fb9fdfced9ca0a74757cb03809e735f50f04aaf61ba460521"
 SRC_URI[dmm-patch.md5sum] = "d17d65e9978343d540e0b60767a82286"
 SRC_URI[dmm-patch.sha256sum] = "576356545de7f587d164d1cee2cb17b6c1ce3efbe2e01ff785c13ec2d544d220"
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
