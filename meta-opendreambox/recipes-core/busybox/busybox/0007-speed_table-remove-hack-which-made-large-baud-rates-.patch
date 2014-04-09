@@ -1,7 +1,7 @@
-From 79b94acaa2e9258ecd37172890b9b4b8cd37056b Mon Sep 17 00:00:00 2001
+From 76906c99a163e1455e618031f2a706a69d942e14 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 3 Aug 2014 20:27:52 +0200
-Subject: [PATCH 7/8] speed_table: remove hack, which made large baud rates fit
+Subject: [PATCH 7/9] speed_table: remove hack, which made large baud rates fit
  into a short
 
 New large baud rates will be added, which aren't divisible by 256.
@@ -12,19 +12,19 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 8 insertions(+), 11 deletions(-)
 
 diff --git a/libbb/speed_table.c b/libbb/speed_table.c
-index 45159f1..941e517 100644
+index 174d531..9974966 100644
 --- a/libbb/speed_table.c
 +++ b/libbb/speed_table.c
-@@ -11,7 +11,7 @@
- 
- struct speed_map {
+@@ -16,7 +16,7 @@ struct speed_map {
+ #else
  	unsigned short speed;
+ #endif
 -	unsigned short value;
 +	unsigned value;
  };
  
  static const struct speed_map speeds[] = {
-@@ -35,24 +35,24 @@ static const struct speed_map speeds[] = {
+@@ -40,24 +40,24 @@ static const struct speed_map speeds[] = {
  	{EXTA, 19200},
  #endif
  #ifdef B38400
@@ -56,7 +56,7 @@ index 45159f1..941e517 100644
  #endif
  };
  
-@@ -64,9 +64,6 @@ unsigned FAST_FUNC tty_baud_to_value(speed_t speed)
+@@ -69,9 +69,6 @@ unsigned FAST_FUNC tty_baud_to_value(speed_t speed)
  
  	do {
  		if (speed == speeds[i].speed) {

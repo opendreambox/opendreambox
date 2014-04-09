@@ -1,7 +1,7 @@
-From 593d06b11ec84d4d9250006f5213487b02a3aa1e Mon Sep 17 00:00:00 2001
+From 766257c3e00330bb20a32603f7b0ad28d5efe0f2 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 22 Apr 2013 10:37:44 +0200
-Subject: [PATCH 6/6] mount: don't pass option "auto" to kernel
+Subject: [PATCH 6/9] mount: don't pass option "auto" to kernel
 
 Fixes the following error if "auto" is set in fs options:
 | EXT3-fs (sda1): error: unrecognized mount option "auto" or missing value
@@ -14,7 +14,7 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/util-linux/mount.c b/util-linux/mount.c
-index ebccaf6..fd3217d 100644
+index 624ca06..bc26119 100644
 --- a/util-linux/mount.c
 +++ b/util-linux/mount.c
 @@ -222,6 +222,7 @@ static const int32_t mount_options[] = {
@@ -34,5 +34,5 @@ index ebccaf6..fd3217d 100644
  		"nofail\0"
  		"sw\0"
 -- 
-1.8.1.2
+1.9.1
 

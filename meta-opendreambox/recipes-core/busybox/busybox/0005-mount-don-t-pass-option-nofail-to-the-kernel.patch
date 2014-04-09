@@ -1,7 +1,7 @@
-From ae178be17ba10123e6433da4ee6aedfceff3ddef Mon Sep 17 00:00:00 2001
+From 0b8d3b55136e99ba2bfa44f7ef62b453fe7fde1e Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 20 Mar 2013 14:59:20 +0100
-Subject: [PATCH 5/6] mount: don't pass option "nofail" to the kernel
+Subject: [PATCH 5/9] mount: don't pass option "nofail" to the kernel
 
 Fixes:
 | ubifs_parse_options: unrecognized mount option "nofail" or missing value
@@ -12,7 +12,7 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/util-linux/mount.c b/util-linux/mount.c
-index deedd17..ebccaf6 100644
+index 62fd41f..624ca06 100644
 --- a/util-linux/mount.c
 +++ b/util-linux/mount.c
 @@ -223,6 +223,7 @@ static const int32_t mount_options[] = {
@@ -32,5 +32,5 @@ index deedd17..ebccaf6 100644
  		"swap\0"
  		IF_DESKTOP("user\0")
 -- 
-1.8.1.2
+1.9.1
 

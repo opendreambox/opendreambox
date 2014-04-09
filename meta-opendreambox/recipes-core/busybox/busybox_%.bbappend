@@ -26,7 +26,7 @@ do_install_append() {
         fi
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 
 SYSTEMD_PACKAGES += "${PN}"
 SYSTEMD_SERVICE_${PN} = "busybox-telnetd.socket"

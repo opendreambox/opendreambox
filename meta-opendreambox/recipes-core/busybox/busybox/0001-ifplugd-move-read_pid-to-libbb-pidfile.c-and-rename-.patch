@@ -1,7 +1,7 @@
-From 52c539c6dab6e4e07dc6d9a44a1dc54fbbc9eed4 Mon Sep 17 00:00:00 2001
+From 3e5f3e1caba13364052f34351aea9faef8952303 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 16:15:50 +0200
-Subject: [PATCH 1/6] ifplugd: move read_pid to libbb/pidfile.c and rename it
+Subject: [PATCH 1/9] ifplugd: move read_pid to libbb/pidfile.c and rename it
  to read_pidfile
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
@@ -12,10 +12,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  3 files changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/include/libbb.h b/include/libbb.h
-index e520060..7717d58 100644
+index 68a7cf0..4fff03c 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -1042,10 +1042,12 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+@@ -1074,10 +1074,12 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
  #if ENABLE_FEATURE_PIDFILE || defined(WANT_PIDFILE)
  /* True only if we created pidfile which is *file*, not /dev/null etc */
  extern smallint wrote_pidfile;
@@ -54,10 +54,10 @@ index a48dfc3..6734a2d 100644
  {
  	int pid_fd;
 diff --git a/networking/ifplugd.c b/networking/ifplugd.c
-index 86586f0..0bf3284 100644
+index fef7a5a..75632e6 100644
 --- a/networking/ifplugd.c
 +++ b/networking/ifplugd.c
-@@ -510,22 +510,6 @@ static NOINLINE int check_existence_through_netlink(void)
+@@ -514,22 +514,6 @@ static NOINLINE int check_existence_through_netlink(void)
  	return G.iface_exists;
  }
  
@@ -80,7 +80,7 @@ index 86586f0..0bf3284 100644
  int ifplugd_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
  int ifplugd_main(int argc UNUSED_PARAM, char **argv)
  {
-@@ -552,7 +536,7 @@ int ifplugd_main(int argc UNUSED_PARAM, char **argv)
+@@ -556,7 +540,7 @@ int ifplugd_main(int argc UNUSED_PARAM, char **argv)
  
  #if ENABLE_FEATURE_PIDFILE
  	pidfile_name = xasprintf(CONFIG_PID_FILE_PATH "/ifplugd.%s.pid", G.iface);
@@ -90,5 +90,5 @@ index 86586f0..0bf3284 100644
  	if (opts & FLAG_KILL) {
  		if (pid_from_pidfile > 0)
 -- 
-1.8.1.2
+1.9.1
 

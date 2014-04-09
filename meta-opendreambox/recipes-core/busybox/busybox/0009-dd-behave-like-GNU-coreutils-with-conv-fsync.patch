@@ -1,4 +1,4 @@
-From c3166004de37b4f5a4824493c5e2d5a5379b8d58 Mon Sep 17 00:00:00 2001
+From f4527a3da0b3670f0249e223b4954a39c4f95fba Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Fri, 15 Aug 2014 16:39:02 +0200
 Subject: [PATCH 9/9] dd: behave like GNU coreutils with conv=fsync
@@ -12,13 +12,13 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/coreutils/dd.c b/coreutils/dd.c
-index 96602eb..52bc7f3 100644
+index 2838f63..3366e2d 100644
 --- a/coreutils/dd.c
 +++ b/coreutils/dd.c
-@@ -403,11 +403,6 @@ int dd_main(int argc UNUSED_PARAM, char **argv)
- 			}
- 		} else if (write_and_stats(ibuf, n, obs, outfile))
- 			goto out_status;
+@@ -445,17 +445,19 @@ int dd_main(int argc UNUSED_PARAM, char **argv)
+ 			if (write_and_stats(ibuf, n, obs, outfile))
+ 				goto out_status;
+ 		}
 -
 -		if (flags & FLAG_FSYNC) {
 -			if (fsync(ofd) < 0)
@@ -27,9 +27,8 @@ index 96602eb..52bc7f3 100644
  	}
  
  	if (ENABLE_FEATURE_DD_IBS_OBS && oc) {
-@@ -415,6 +410,13 @@ int dd_main(int argc UNUSED_PARAM, char **argv)
- 		if (w < 0) goto out_status;
- 		if (w > 0) G.out_part++;
+ 		if (write_and_stats(obuf, oc, obs, outfile))
+ 			goto out_status;
  	}
 +
 +	if (flags & FLAG_FSYNC) {

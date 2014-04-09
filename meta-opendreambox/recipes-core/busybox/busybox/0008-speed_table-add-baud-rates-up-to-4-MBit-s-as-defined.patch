@@ -1,7 +1,7 @@
-From a367c1230a5320c4195b99c681e0c5575c7dfb81 Mon Sep 17 00:00:00 2001
+From 37d3c8bd23eded0d81554ccdfc36be6179f246d7 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 3 Aug 2014 20:30:22 +0200
-Subject: [PATCH 8/8] speed_table: add baud rates up to 4 MBit/s as defined by
+Subject: [PATCH 8/9] speed_table: add baud rates up to 4 MBit/s as defined by
  glibc
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
@@ -10,10 +10,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 30 insertions(+)
 
 diff --git a/libbb/speed_table.c b/libbb/speed_table.c
-index 941e517..241e618 100644
+index 9974966..9320b70 100644
 --- a/libbb/speed_table.c
 +++ b/libbb/speed_table.c
-@@ -51,9 +51,39 @@ static const struct speed_map speeds[] = {
+@@ -56,9 +56,39 @@ static const struct speed_map speeds[] = {
  #ifdef B460800
  	{B460800, 460800},
  #endif
