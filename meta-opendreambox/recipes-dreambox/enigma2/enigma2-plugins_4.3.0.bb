@@ -6,7 +6,6 @@ DEPENDS = " \
         dvdbackup \
         enigma2 \
         hdparm \
-        python-daap \
         python-flickrapi \
         python-gdata \
         python-google-api-client \
