@@ -101,4 +101,4 @@ INSTALL_DESTDIR = "${INSTALL_ROOTDIR}/destdir"
 INSTALL_METADIR = "${INSTALL_DESTDIR}${datadir}/meta"
 INSTALL_PLUGINSDIR = "${INSTALL_DESTDIR}${libdir}/enigma2/python/Plugins"
 
-COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm7020hdv2|dm8000)$"
+COMPATIBLE_MACHINE = "^(dm500hdv2|dm800sev2|dm7020hd|dm7020hdv2|dm8000)$"
