@@ -14,10 +14,10 @@ do_configure() {
         sed -e "s/^CONFIG_PLATFORM_I386_PC.*=.*y/EXTRA_CFLAGS += -DCONFIG_${@base_conditional('SITEINFO_ENDIANNESS', 'le', 'LITTLE', 'BIG', d)}_ENDIAN/" -i Makefile
 }
 do_compile() {
-        unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+        unset CC CFLAGS CPP CPPFLAGS CXX CXXFLAGS CCLD LDFLAGS
         oe_runmake -C "${STAGING_KERNEL_DIR}" M="${S}" modules
 }
 do_install() {
-        unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+        unset CC CFLAGS CPP CPPFLAGS CXX CXXFLAGS CCLD LDFLAGS
         oe_runmake -C "${STAGING_KERNEL_DIR}" M="${S}" DEPMOD="echo" INSTALL_MOD_PATH="${D}" modules_install
 }
