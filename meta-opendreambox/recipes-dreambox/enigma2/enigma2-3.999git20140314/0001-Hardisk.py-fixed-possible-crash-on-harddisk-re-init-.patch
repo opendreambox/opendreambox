@@ -1,0 +1,35 @@
+From 3bc160c3807c344ba300a74e217733a974b7d67b Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Mon, 26 May 2014 14:39:36 +0200
+Subject: [PATCH] Hardisk.py: fixed possible crash on harddisk re-init, allow
+ fsck for ext4 (thx to jophi)
+
+---
+ usr/lib/enigma2/python/Components/Harddisk.py |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/Harddisk.py b/usr/lib/enigma2/python/Components/Harddisk.py
+index 6501800..cbe0f7f 100644
+--- a/usr/lib/enigma2/python/Components/Harddisk.py
++++ b/usr/lib/enigma2/python/Components/Harddisk.py
+@@ -388,7 +388,7 @@ class Harddisk:
+ 				sectors = self.diskSize(sectors = True)
+ 			cmd = 'parted --script --align=min ' + self.disk_path + ' -- mklabel msdos mkpart primary ext3 40s 100%'
+ 			if sectors and not self.isRemovable:
+-				part1end = int(sectors-swapPartSize) #leaving 1GB for swap
++				part1end = int(sectors)-swapPartSize #leaving 1GB for swap
+ 				cmd = 'parted --script --align=min ' + self.disk_path + ' -- mklabel msdos mkpart primary ext3 40s ' + str(part1end) + 's'
+ 				cmd+=  ' mkpart primary linux-swap ' + str(int(part1end+1)) + 's -1s'
+ 				if sectors > maxSectorsMBR:
+@@ -474,7 +474,7 @@ class Harddisk:
+ 
+ 		res = -1
+ 		if access(partitionPath, 0):
+-			if partitionType in ("ext2", "ext3"):
++			if partitionType in ("ext2", "ext3", "ext4"):
+ 				cmd = "fsck." + partitionType + " -f -p -C 0 " + partitionPath
+ 				res = system(cmd)
+ 
+-- 
+1.7.7
+
