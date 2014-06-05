@@ -1,8 +1,8 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.50"
+PR = "${INC_PR}.51"
 
 PATCHREV = "4e0356d04e89df800361b9252f990716f5523c6e"
-PATCHLEVEL = "56"
+PATCHLEVEL = "59"
 
 SRC_URI = " \
         ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.2.tar.bz2;name=kernel \
@@ -26,6 +26,7 @@ SRC_URI = " \
         file://0008-The-ubi-maintained-flag-must-be-set-earlier-to-preve.patch \
         file://0009-fixed-partition-is-ubi-maintained-check.patch \
         file://0001-add-memory-mapping-support-to-usbfs-used-by-sundtek-.patch \
+        file://0001-linuxtv-api-DMM-drivers-are-now-ready-for-linux-tv-a.patch \
         file://defconfig \
 "
 
