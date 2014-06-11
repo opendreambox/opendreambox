@@ -29,12 +29,12 @@
 -include conf/make.conf
 
 # Target platform:
-# dm8000, dm500hd, dm800se, dm7020hd, dm500hdv2, dm800sev2, dm7020hdv2
+# dm500hd, dm500hdv2, dm800se, dm800sev2, dm7020hd, dm7020hdv2, dm7080, dm8000
 #
 # This only sets the default value. All platforms now use a shared build
 # directory. Run "MACHINE=dm800se bitbake dreambox-image" to build an image
 # for the dm800se, if it is not the default.
-MACHINE ?= dm7020hd
+MACHINE ?= dm7080
 
 USER_MACHINE := $(MACHINE)
 
@@ -128,15 +128,15 @@ help:
 	@echo "      $$ view doc/opendreambox.txt"
 	@echo
 	@echo "  * Select a new target machine:"
-	@echo "      $$ echo MACHINE=dm800se >> conf/make.conf"
-	@echo "    [Valid values: dm8000, dm500hd, dm800se, dm7020hd, dm7020hdv2, dm800sev2, dm500hdv2]"
+	@echo "      $$ echo MACHINE=dm800sev2 >> conf/make.conf"
+	@echo "    [Valid values: dm500hd, dm500hdv2, dm800se, dm800sev2, dm7020hd, dm7020hdv2, dm7080, dm8000]"
 	@echo
 	@echo "  * Build a firmware image for the selected target machine:"
 	@echo "      $$ $(MAKE) image"
 	@echo
 	@echo "  * Build a firmware image for a different target machine:"
-	@echo "      $$ $(MAKE) image MACHINE=dm800se"
-	@echo "    [Valid values: dm8000, dm500hd, dm800se, dm7020hd, dm7020hdv2, dm800sev2, dm500hdv2]"
+	@echo "      $$ $(MAKE) image MACHINE=dm800sev2"
+	@echo "    [Valid values: dm500hd, dm500hdv2, dm800se, dm800sev2, dm7020hd, dm7020hdv2, dm7080, dm8000]"
 	@echo
 	@echo "  * Download all source files at once:"
 	@echo "      $$ $(MAKE) download"
