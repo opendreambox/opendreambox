@@ -2,8 +2,8 @@ require recipes/dreambox/dreambox-dvb-modules.inc
 
 PR = "${INC_PR}.0"
 
-SRC_URI[modules.md5sum] = "568eff61c284e206d8fd962f6e8459d5"
-SRC_URI[modules.sha256sum] = "2f5d0235fe5252903b29a1e2ed1892a35d28efa8c7efc26c331b58660badb32d"
+SRC_URI[modules.md5sum] = "8907582110a9b782c9a5e54115a3d34d"
+SRC_URI[modules.sha256sum] = "1874b0992eb09836463f96a70fb7f3c75ffab8954a80a050d296aa409ffcf1f6"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
