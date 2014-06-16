@@ -1,0 +1,25 @@
+From 549d4696f7bb19c13972e5a8e713cbfc64de3311 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Mon, 16 Jun 2014 23:17:11 +0200
+Subject: [PATCH] fixed typo
+
+---
+ usr/lib/enigma2/python/Screens/ScanSetup.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/ScanSetup.py b/usr/lib/enigma2/python/Screens/ScanSetup.py
+index e150bd5..0dddca2 100644
+--- a/usr/lib/enigma2/python/Screens/ScanSetup.py
++++ b/usr/lib/enigma2/python/Screens/ScanSetup.py
+@@ -226,7 +226,7 @@ class CableTransponderSearchSupport:
+ 
+ 		if cmd is not None:
+ 			if cableConfig.scan_type.value == "bands":
+-				if cmd.startswith("cxd1981") or cmd.startswith("tda1002x"):
++				if cmd.startswith("cxd1978") or cmd.startswith("tda1002x"):
+ 					cmd += " --scan-flags DVB-C"
+ 					EU = False
+ 					US = False
+-- 
+1.7.10.4
+
