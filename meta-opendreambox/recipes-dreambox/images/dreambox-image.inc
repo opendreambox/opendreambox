@@ -12,10 +12,12 @@ BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_init_manager', 'sys
 BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
 
 VIRTUAL-RUNTIME_init_manager ?= "systemd"
+VIRTUAL-RUNTIME_network_manager ?= "ifupdown"
 
 # packages to drag into the image
 IMAGE_INSTALL = " \
     packagegroup-boot-${VIRTUAL-RUNTIME_init_manager} \
+    packagegroup-net-${VIRTUAL-RUNTIME_network_manager} \
     packagegroup-opendreambox-base \
     packagegroup-opendreambox-dvbapi3 \
     packagegroup-opendreambox-enigma2 \
