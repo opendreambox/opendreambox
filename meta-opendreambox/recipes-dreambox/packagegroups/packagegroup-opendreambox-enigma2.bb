@@ -19,7 +19,6 @@ RDEPENDS_${PN} += " \
   ${@base_contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
   enigma2-plugin-systemplugins-hotplug \
   enigma2-plugin-systemplugins-mediadatabasemanager \
-  enigma2-plugin-systemplugins-networkmanager \
   enigma2-plugin-systemplugins-softwaremanager \
   ${@base_contains('DREAMBOX_FEATURES', 'fan', 'enigma2-plugin-systemplugins-tempfancontrol', '', d)} \
   enigma2-plugin-systemplugins-videomode \
@@ -51,9 +50,13 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-extensions-webinterface \
   enigma2-plugin-systemplugins-crashlogautosubmit \
   ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-plugin-systemplugins-minidlnasetup', d)} \
+  enigma2-plugin-systemplugins-networkmanager \
+  enigma2-plugin-systemplugins-networksetup \
+  enigma2-plugin-systemplugins-networkwizard \
   enigma2-plugin-systemplugins-positionersetup \
   enigma2-plugin-systemplugins-satfinder \
   enigma2-plugin-systemplugins-skinselector \
+  enigma2-plugin-systemplugins-wirelesslan \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \
