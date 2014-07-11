@@ -1,6 +1,6 @@
 require recipes-connectivity/openssl/openssl.inc
 
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.0"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
@@ -30,8 +30,8 @@ SRC_URI += "file://configure-targets.patch \
             file://openssl-fix-doc.patch \
             file://find.pl"
 
-SRC_URI[md5sum] = "47c7fb37f78c970f1d30aa2f9e9e26d8"
-SRC_URI[sha256sum] = "bbecf13495e612936e3a9860c29c0701413564b7a964bf771a3575eaa867cee3"
+SRC_URI[md5sum] = "2f989915f8fea49aa1bc37aa58500cce"
+SRC_URI[sha256sum] = "cdcb98d0fbc026ca798b17919334310271d3a593554ffd6a59659b9222fd4e48"
 
 EXTRA_OECONF += "no-idea no-mdc2 no-rc5"
 

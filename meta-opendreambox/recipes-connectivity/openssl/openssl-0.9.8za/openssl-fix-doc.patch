@@ -10,9 +10,11 @@ Backported from upstream commit 8792b7f to openssl-0.9.8y
 by Andreas Frisch <fraxinas@opendreambox.org>.
 
 .pod~ ./doc/apps/c_rehash.pod
---- a/doc/apps/c_rehash.pod
-+++ b/doc/apps/c_rehash.pod
-@@ -42,12 +42,12 @@
+Index: openssl-0.9.8za/doc/apps/c_rehash.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/apps/c_rehash.pod
++++ openssl-0.9.8za/doc/apps/c_rehash.pod
+@@ -42,12 +42,12 @@ The name (and path) of an executable to
  
  Colon separated list of directories to operate on. Ignored if directories are listed on the command line.
  
@@ -27,11 +29,11 @@ by Andreas Frisch <fraxinas@opendreambox.org>.
  =head1 BUGS
  
  No known bugs
-diff --git a/doc/apps/smime.pod b/doc/apps/smime.pod
-index e4e89af..ef8e8cd 100644
---- a/doc/apps/smime.pod
-+++ b/doc/apps/smime.pod
-@@ -308,28 +308,28 @@ remains DER.
+Index: openssl-0.9.8za/doc/apps/smime.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/apps/smime.pod
++++ openssl-0.9.8za/doc/apps/smime.pod
+@@ -265,28 +265,28 @@ encrypted data is used for other purpose
  
  =over 4
  
@@ -66,11 +68,11 @@ index e4e89af..ef8e8cd 100644
  
  the message was verified correctly but an error occurred writing out
  the signers certificates.
-diff --git a/doc/ssl/SSL_COMP_add_compression_method.pod b/doc/ssl/SSL_COMP_add_compression_method.pod
-index 42fa66b..f4d191c 100644
---- a/doc/ssl/SSL_COMP_add_compression_method.pod
-+++ b/doc/ssl/SSL_COMP_add_compression_method.pod
-@@ -53,11 +53,11 @@ SSL_COMP_add_compression_method() may return the following values:
+Index: openssl-0.9.8za/doc/ssl/SSL_COMP_add_compression_method.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_COMP_add_compression_method.pod
++++ openssl-0.9.8za/doc/ssl/SSL_COMP_add_compression_method.pod
+@@ -53,11 +53,11 @@ SSL_COMP_add_compression_method() may re
  
  =over 4
  
@@ -84,11 +86,11 @@ index 42fa66b..f4d191c 100644
  
  The operation failed. Check the error queue to find out the reason.
  
-diff --git a/doc/ssl/SSL_CTX_add_session.pod b/doc/ssl/SSL_CTX_add_session.pod
-index 82676b2..8e0abd3 100644
---- a/doc/ssl/SSL_CTX_add_session.pod
-+++ b/doc/ssl/SSL_CTX_add_session.pod
-@@ -52,13 +52,13 @@ The following values are returned by all functions:
+Index: openssl-0.9.8za/doc/ssl/SSL_CTX_add_session.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_CTX_add_session.pod
++++ openssl-0.9.8za/doc/ssl/SSL_CTX_add_session.pod
+@@ -52,13 +52,13 @@ The following values are returned by all
  
  =over 4
  
@@ -104,10 +106,10 @@ index 82676b2..8e0abd3 100644
   
   The operation succeeded.
  
-diff --git a/doc/ssl/SSL_CTX_load_verify_locations.pod b/doc/ssl/SSL_CTX_load_verify_locations.pod
-index 84a799f..d1d8977 100644
---- a/doc/ssl/SSL_CTX_load_verify_locations.pod
-+++ b/doc/ssl/SSL_CTX_load_verify_locations.pod
+Index: openssl-0.9.8za/doc/ssl/SSL_CTX_load_verify_locations.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_CTX_load_verify_locations.pod
++++ openssl-0.9.8za/doc/ssl/SSL_CTX_load_verify_locations.pod
 @@ -100,13 +100,13 @@ The following return values can occur:
  
  =over 4
@@ -124,28 +126,30 @@ index 84a799f..d1d8977 100644
  
  The operation succeeded.
  
-diff --git a/doc/ssl/SSL_CTX_set_client_CA_list.pod b/doc/ssl/SSL_CTX_set_client_CA_list.pod
-index 632b556..6122a02 100644
---- a/doc/ssl/SSL_CTX_set_client_CA_list.pod
-+++ b/doc/ssl/SSL_CTX_set_client_CA_list.pod
-@@ -66,11 +66,11 @@ values:
+Index: openssl-0.9.8za/doc/ssl/SSL_CTX_set_client_CA_list.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_CTX_set_client_CA_list.pod
++++ openssl-0.9.8za/doc/ssl/SSL_CTX_set_client_CA_list.pod
+@@ -66,13 +66,13 @@ values:
  
  =over 4
- 
--=item 1
-+=item Z<>1
- 
- The operation succeeded.
  
 -=item 0
 +=item Z<>0
  
  A failure while manipulating the STACK_OF(X509_NAME) object occurred or
  the X509_NAME could not be extracted from B<cacert>. Check the error stack
-diff --git a/doc/ssl/SSL_CTX_set_session_id_context.pod b/doc/ssl/SSL_CTX_set_session_id_context.pod
-index 58fc685..7c9e515 100644
---- a/doc/ssl/SSL_CTX_set_session_id_context.pod
-+++ b/doc/ssl/SSL_CTX_set_session_id_context.pod
+ to find out the reason.
+ 
+-=item 1
++=item Z<>1
+ 
+ The operation succeeded.
+ 
+Index: openssl-0.9.8za/doc/ssl/SSL_CTX_set_session_id_context.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_CTX_set_session_id_context.pod
++++ openssl-0.9.8za/doc/ssl/SSL_CTX_set_session_id_context.pod
 @@ -64,13 +64,13 @@ return the following values:
  
  =over 4
@@ -162,10 +166,10 @@ index 58fc685..7c9e515 100644
  
  The operation succeeded.
  
-diff --git a/doc/ssl/SSL_CTX_set_ssl_version.pod b/doc/ssl/SSL_CTX_set_ssl_version.pod
-index 254f2b4..e254f96 100644
---- a/doc/ssl/SSL_CTX_set_ssl_version.pod
-+++ b/doc/ssl/SSL_CTX_set_ssl_version.pod
+Index: openssl-0.9.8za/doc/ssl/SSL_CTX_set_ssl_version.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_CTX_set_ssl_version.pod
++++ openssl-0.9.8za/doc/ssl/SSL_CTX_set_ssl_version.pod
 @@ -42,11 +42,11 @@ and SSL_set_ssl_method():
  
  =over 4
@@ -180,29 +184,30 @@ index 254f2b4..e254f96 100644
  
  The operation succeeded.
  
-diff --git a/doc/ssl/SSL_accept.pod b/doc/ssl/SSL_accept.pod
-index cc724c0..4915e5a 100644
---- a/doc/ssl/SSL_accept.pod
-+++ b/doc/ssl/SSL_accept.pod
-@@ -44,12 +44,12 @@ The following return values can occur:
+Index: openssl-0.9.8za/doc/ssl/SSL_accept.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_accept.pod
++++ openssl-0.9.8za/doc/ssl/SSL_accept.pod
+@@ -44,13 +44,13 @@ The following return values can occur:
  
  =over 4
- 
--=item 1
-+=item Z<>1
- 
- The TLS/SSL handshake was successfully completed, a TLS/SSL connection has been
- established.
  
 -=item 0
 +=item Z<>0
  
  The TLS/SSL handshake was not successful but was shut down controlled and
  by the specifications of the TLS/SSL protocol. Call SSL_get_error() with the
-diff --git a/doc/ssl/SSL_clear.pod b/doc/ssl/SSL_clear.pod
-index d4df1bf..ba192bd 100644
---- a/doc/ssl/SSL_clear.pod
-+++ b/doc/ssl/SSL_clear.pod
+ return value B<ret> to find out the reason.
+ 
+-=item 1
++=item Z<>1
+ 
+ The TLS/SSL handshake was successfully completed, a TLS/SSL connection has been
+ established.
+Index: openssl-0.9.8za/doc/ssl/SSL_clear.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_clear.pod
++++ openssl-0.9.8za/doc/ssl/SSL_clear.pod
 @@ -56,12 +56,12 @@ The following return values can occur:
  
  =over 4
@@ -218,48 +223,50 @@ index d4df1bf..ba192bd 100644
  
  The SSL_clear() operation was successful.
  
-diff --git a/doc/ssl/SSL_connect.pod b/doc/ssl/SSL_connect.pod
-index cc56ebb..61cabb7 100644
---- a/doc/ssl/SSL_connect.pod
-+++ b/doc/ssl/SSL_connect.pod
-@@ -41,12 +41,12 @@ The following return values can occur:
+Index: openssl-0.9.8za/doc/ssl/SSL_connect.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_connect.pod
++++ openssl-0.9.8za/doc/ssl/SSL_connect.pod
+@@ -41,13 +41,13 @@ The following return values can occur:
  
  =over 4
- 
--=item 1
-+=item Z<>1
- 
- The TLS/SSL handshake was successfully completed, a TLS/SSL connection has been
- established.
  
 -=item 0
 +=item Z<>0
  
  The TLS/SSL handshake was not successful but was shut down controlled and
  by the specifications of the TLS/SSL protocol. Call SSL_get_error() with the
-diff --git a/doc/ssl/SSL_do_handshake.pod b/doc/ssl/SSL_do_handshake.pod
-index 2435764..beb0dd1 100644
---- a/doc/ssl/SSL_do_handshake.pod
-+++ b/doc/ssl/SSL_do_handshake.pod
-@@ -45,12 +45,12 @@ The following return values can occur:
- 
- =over 4
+ return value B<ret> to find out the reason.
  
 -=item 1
 +=item Z<>1
  
  The TLS/SSL handshake was successfully completed, a TLS/SSL connection has been
  established.
+Index: openssl-0.9.8za/doc/ssl/SSL_do_handshake.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_do_handshake.pod
++++ openssl-0.9.8za/doc/ssl/SSL_do_handshake.pod
+@@ -45,13 +45,13 @@ The following return values can occur:
+ 
+ =over 4
  
 -=item 0
 +=item Z<>0
  
  The TLS/SSL handshake was not successful but was shut down controlled and
  by the specifications of the TLS/SSL protocol. Call SSL_get_error() with the
-diff --git a/doc/ssl/SSL_read.pod b/doc/ssl/SSL_read.pod
-index 7038cd2..8ca0ce5 100644
---- a/doc/ssl/SSL_read.pod
-+++ b/doc/ssl/SSL_read.pod
+ return value B<ret> to find out the reason.
+ 
+-=item 1
++=item Z<>1
+ 
+ The TLS/SSL handshake was successfully completed, a TLS/SSL connection has been
+ established.
+Index: openssl-0.9.8za/doc/ssl/SSL_read.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_read.pod
++++ openssl-0.9.8za/doc/ssl/SSL_read.pod
 @@ -86,7 +86,7 @@ The following return values can occur:
  The read operation was successful; the return value is the number of
  bytes actually read from the TLS/SSL connection.
@@ -269,10 +276,10 @@ index 7038cd2..8ca0ce5 100644
  
  The read operation was not successful. The reason may either be a clean
  shutdown due to a "close notify" alert sent by the peer (in which case
-diff --git a/doc/ssl/SSL_session_reused.pod b/doc/ssl/SSL_session_reused.pod
-index da7d062..b09d8a7 100644
---- a/doc/ssl/SSL_session_reused.pod
-+++ b/doc/ssl/SSL_session_reused.pod
+Index: openssl-0.9.8za/doc/ssl/SSL_session_reused.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_session_reused.pod
++++ openssl-0.9.8za/doc/ssl/SSL_session_reused.pod
 @@ -27,11 +27,11 @@ The following return values can occur:
  
  =over 4
@@ -287,10 +294,10 @@ index da7d062..b09d8a7 100644
  
  A session was reused.
  
-diff --git a/doc/ssl/SSL_set_fd.pod b/doc/ssl/SSL_set_fd.pod
-index 7029112..1480871 100644
---- a/doc/ssl/SSL_set_fd.pod
-+++ b/doc/ssl/SSL_set_fd.pod
+Index: openssl-0.9.8za/doc/ssl/SSL_set_fd.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_set_fd.pod
++++ openssl-0.9.8za/doc/ssl/SSL_set_fd.pod
 @@ -35,11 +35,11 @@ The following return values can occur:
  
  =over 4
@@ -305,10 +312,10 @@ index 7029112..1480871 100644
  
  The operation succeeded.
  
-diff --git a/doc/ssl/SSL_set_session.pod b/doc/ssl/SSL_set_session.pod
-index 5f54714..197b521 100644
---- a/doc/ssl/SSL_set_session.pod
-+++ b/doc/ssl/SSL_set_session.pod
+Index: openssl-0.9.8za/doc/ssl/SSL_set_session.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_set_session.pod
++++ openssl-0.9.8za/doc/ssl/SSL_set_session.pod
 @@ -37,11 +37,11 @@ The following return values can occur:
  
  =over 4
@@ -323,11 +330,11 @@ index 5f54714..197b521 100644
  
  The operation succeeded.
  
-diff --git a/doc/ssl/SSL_set_shutdown.pod b/doc/ssl/SSL_set_shutdown.pod
-index 011a022..fe01308 100644
---- a/doc/ssl/SSL_set_shutdown.pod
-+++ b/doc/ssl/SSL_set_shutdown.pod
-@@ -24,7 +24,7 @@ The shutdown state of an ssl connection is a bitmask of:
+Index: openssl-0.9.8za/doc/ssl/SSL_set_shutdown.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_set_shutdown.pod
++++ openssl-0.9.8za/doc/ssl/SSL_set_shutdown.pod
+@@ -24,7 +24,7 @@ The shutdown state of an ssl connection
  
  =over 4
  
@@ -336,19 +343,13 @@ index 011a022..fe01308 100644
  
  No shutdown setting, yet.
  
-diff --git a/doc/ssl/SSL_shutdown.pod b/doc/ssl/SSL_shutdown.pod
-index 89911ac..132ebc5 100644
---- a/doc/ssl/SSL_shutdown.pod
-+++ b/doc/ssl/SSL_shutdown.pod
+Index: openssl-0.9.8za/doc/ssl/SSL_shutdown.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_shutdown.pod
++++ openssl-0.9.8za/doc/ssl/SSL_shutdown.pod
 @@ -92,19 +92,19 @@ The following return values can occur:
  
  =over 4
- 
--=item 1
-+=item Z<>1
- 
- The shutdown was successfully completed. The "close notify" alert was sent
- and the peer's "close notify" alert was received.
  
 -=item 0
 +=item Z<>0
@@ -358,15 +359,21 @@ index 89911ac..132ebc5 100644
  The output of L<SSL_get_error(3)|SSL_get_error(3)> may be misleading, as an
  erroneous SSL_ERROR_SYSCALL may be flagged even though no error occurred.
  
+-=item 1
++=item Z<>1
+ 
+ The shutdown was successfully completed. The "close notify" alert was sent
+ and the peer's "close notify" alert was received.
+ 
 -=item -1
 +=item Z<>-1
  
  The shutdown was not successful because a fatal error occurred either
  at the protocol level or a connection failure occurred. It can also occur if
-diff --git a/doc/ssl/SSL_write.pod b/doc/ssl/SSL_write.pod
-index e013c12..a57617f 100644
---- a/doc/ssl/SSL_write.pod
-+++ b/doc/ssl/SSL_write.pod
+Index: openssl-0.9.8za/doc/ssl/SSL_write.pod
+===================================================================
+--- openssl-0.9.8za.orig/doc/ssl/SSL_write.pod
++++ openssl-0.9.8za/doc/ssl/SSL_write.pod
 @@ -79,7 +79,7 @@ The following return values can occur:
  The write operation was successful, the return value is the number of
  bytes actually written to the TLS/SSL connection.
