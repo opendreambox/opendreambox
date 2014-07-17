@@ -12,7 +12,7 @@ BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_init_manager', 'sys
 BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
 
 VIRTUAL-RUNTIME_init_manager ?= "systemd"
-VIRTUAL-RUNTIME_network_manager ?= "ifupdown"
+VIRTUAL-RUNTIME_network_manager ?= "connman"
 
 # packages to drag into the image
 IMAGE_INSTALL = " \
