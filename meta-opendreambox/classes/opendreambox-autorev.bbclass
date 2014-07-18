@@ -1,7 +1,6 @@
 SRCREV_pn-aio-grab = "${AUTOREV}"
 SRCREV_pn-bdremux = "${AUTOREV}"
 SRCREV_pn-dreambox-buildimage = "${AUTOREV}"
-SRCREV_pn-enigma2 = "${AUTOREV}"
 SRCREV_pn-enigma2-plugins = "${AUTOREV}"
 SRCREV_pn-enigma2-skins = "${AUTOREV}"
 SRCREV_pn-enigma2-streamproxy = "${AUTOREV}"
