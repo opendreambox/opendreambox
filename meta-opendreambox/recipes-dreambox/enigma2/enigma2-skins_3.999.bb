@@ -1,6 +1,6 @@
 SUMMARY = "Skins for Enigma2"
 LICENSE = "CLOSED"
-SRCREV = "d50c3e73beab14488dab0cb97fba13b064de29b9"
+SRCREV = "a93d868fc534a005324a278e3c6e128da8771e47"
 
 inherit allarch autotools schwerkraft-git
 
