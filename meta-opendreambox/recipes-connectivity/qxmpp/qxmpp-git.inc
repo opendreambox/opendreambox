@@ -3,6 +3,6 @@ PV = "0.7.6"
 
 require recipes-connectivity/qxmpp/qxmpp.inc
 
-SRC_URI = "git://github.com/mtdcr/qxmpp-dev.git;branch=0.7.6-dev"
+SRC_URI = "git://github.com/mtdcr/qxmpp-dev.git;branch=v0.7.6-dev"
 
 inherit git-project
