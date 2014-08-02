@@ -43,7 +43,8 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-extensions-cutlisteditor \
   enigma2-plugin-extensions-graphmultiepg \
   ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-plugin-extensions-hbbtv', d)} \
-  enigma2-plugin-extensions-mediaplayer \
+  enigma2-plugin-extensions-mediacenter \
+  enigma2-plugin-extensions-mediarenderer \
   enigma2-plugin-extensions-pictureplayer \
   enigma2-plugin-extensions-teletext \
   enigma2-plugin-extensions-webbouqueteditor \
