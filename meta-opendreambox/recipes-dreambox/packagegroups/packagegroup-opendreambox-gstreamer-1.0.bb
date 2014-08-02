@@ -9,12 +9,12 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} += " \
   gst-plugin-dvbmediasink \
-  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gstreamer1.0-plugins-bad-cdxaparse', '', d)} \
+  gstreamer1.0-plugins-bad-cdxaparse \
   gstreamer1.0-plugins-bad-faad \
   gstreamer1.0-plugins-bad-mms \
   gstreamer1.0-plugins-bad-mpegpsdemux \
   gstreamer1.0-plugins-bad-mpegtsdemux \
-  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gstreamer1.0-plugins-bad-vcdsrc', '', d)} \
+  gstreamer1.0-plugins-bad-vcdsrc \
   gstreamer1.0-plugins-base-alsa \
   gstreamer1.0-plugins-base-app \
   gstreamer1.0-plugins-base-audioconvert \
@@ -41,7 +41,7 @@ RDEPENDS_${PN} += " \
   gstreamer1.0-plugins-good-udp \
   gstreamer1.0-plugins-good-wavparse \
   gstreamer1.0-plugins-ugly-asf \
-  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gstreamer1.0-plugins-ugly-cdio', '', d)} \
+  gstreamer1.0-plugins-ugly-cdio \
   gstreamer1.0-plugins-ugly-dvdsub \
   gstreamer1.0-plugins-ugly-mad \
 "
