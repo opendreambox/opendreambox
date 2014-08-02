@@ -2,15 +2,10 @@ SUMMARY = "OpenDreambox: Essential packages"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=ed920ea8b6701825484d079e87a3a73a"
-DEPENDS = "virtual/kernel"
-RDEPENDS_${PN} = "${ESSENTIAL_RDEPENDS}"
-RRECOMMENDS_${PN} = "${ESSENTIAL_RRECOMMENDS}"
 
 inherit packagegroup
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-ESSENTIAL_RRECOMMENDS = " \
+RRECOMMENDS_${PN} = " \
         kernel-module-autofs4 \
         kernel-module-cdrom \
         kernel-module-cifs \
