@@ -47,6 +47,4 @@ RDEPENDS_${PN} += " \
   gst-plugins-ugly-mad \
   gst-plugins-ugly-mpegaudioparse \
   gst-plugins-ugly-mpegstream \
-  ${@base_contains('DREAMBOX_FEATURES', 'libpassthrough', 'libpassthrough', '', d)} \
-  ${@base_contains('DREAMBOX_FEATURES', 'opkgfb', 'opkgfb', '', d)} \
 "
