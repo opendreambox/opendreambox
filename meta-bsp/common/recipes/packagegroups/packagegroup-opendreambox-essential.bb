@@ -5,6 +5,8 @@ LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=ed920ea8b6701825484d
 
 inherit packagegroup
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 RRECOMMENDS_${PN} = " \
         kernel-module-autofs4 \
         kernel-module-cdrom \
