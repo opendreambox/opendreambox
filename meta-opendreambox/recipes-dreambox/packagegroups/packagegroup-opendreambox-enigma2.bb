@@ -37,12 +37,12 @@ RDEPENDS_${PN}_append_dm8000 = " \
 
 RRECOMMENDS_${PN} += " \
   aio-grab \
-  ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-hbbtv-plugin', d)} \
+  enigma2-hbbtv-plugin \
   enigma2-plugin-extensions-audiosync \
   enigma2-plugin-extensions-browser \
   enigma2-plugin-extensions-cutlisteditor \
   enigma2-plugin-extensions-graphmultiepg \
-  ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-plugin-extensions-hbbtv', d)} \
+  enigma2-plugin-extensions-hbbtv \
   enigma2-plugin-extensions-mediacenter \
   enigma2-plugin-extensions-mediarenderer \
   enigma2-plugin-extensions-pictureplayer \
@@ -50,7 +50,7 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-extensions-webbouqueteditor \
   enigma2-plugin-extensions-webinterface \
   enigma2-plugin-systemplugins-crashlogautosubmit \
-  ${@base_less_or_equal('DREAMBOX_IMAGE_SIZE', 64, '', 'enigma2-plugin-systemplugins-minidlnasetup', d)} \
+  enigma2-plugin-systemplugins-minidlnasetup \
   enigma2-plugin-systemplugins-networkmanager \
   enigma2-plugin-systemplugins-networksetup \
   enigma2-plugin-systemplugins-networkwizard \
