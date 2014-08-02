@@ -11,7 +11,7 @@ RDEPENDS_${PN} += " \
   gst-plugin-dvbmediasink \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gst-plugins-bad-cdxaparse', '', d)} \
   gst-plugins-bad-faad \
-  ${@base_contains('DREAMBOX_FEATURES', 'asf', 'gst-plugins-bad-mms', '', d)} \
+  gst-plugins-bad-mms \
   gst-plugins-bad-mpegdemux \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gst-plugins-bad-vcdsrc', '', d)} \
   gst-plugins-base-alsa \
@@ -28,7 +28,7 @@ RDEPENDS_${PN} += " \
   gst-plugins-good-apetag \
   gst-plugins-good-audioparsers \
   gst-plugins-good-autodetect \
-  ${@base_contains('DREAMBOX_FEATURES', 'xvid', 'gst-plugins-good-avi', '', d)} \
+  gst-plugins-good-avi \
   gst-plugins-good-flac \
   gst-plugins-good-flv \
   gst-plugins-good-icydemux \
@@ -41,7 +41,7 @@ RDEPENDS_${PN} += " \
   gst-plugins-good-souphttpsrc \
   gst-plugins-good-udp \
   gst-plugins-good-wavparse \
-  ${@base_contains('DREAMBOX_FEATURES', 'asf', 'gst-plugins-ugly-asf', '', d)} \
+  gst-plugins-ugly-asf \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gst-plugins-ugly-cdio', '', d)} \
   gst-plugins-ugly-dvdsub \
   gst-plugins-ugly-mad \

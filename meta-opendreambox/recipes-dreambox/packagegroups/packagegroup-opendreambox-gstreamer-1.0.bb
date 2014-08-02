@@ -11,7 +11,7 @@ RDEPENDS_${PN} += " \
   gst-plugin-dvbmediasink \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gstreamer1.0-plugins-bad-cdxaparse', '', d)} \
   gstreamer1.0-plugins-bad-faad \
-  ${@base_contains('DREAMBOX_FEATURES', 'asf', 'gstreamer1.0-plugins-bad-mms', '', d)} \
+  gstreamer1.0-plugins-bad-mms \
   gstreamer1.0-plugins-bad-mpegpsdemux \
   gstreamer1.0-plugins-bad-mpegtsdemux \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gstreamer1.0-plugins-bad-vcdsrc', '', d)} \
@@ -27,7 +27,7 @@ RDEPENDS_${PN} += " \
   gstreamer1.0-plugins-good-apetag \
   gstreamer1.0-plugins-good-audioparsers \
   gstreamer1.0-plugins-good-autodetect \
-  ${@base_contains('DREAMBOX_FEATURES', 'xvid', 'gstreamer1.0-plugins-good-avi', '', d)} \
+  gstreamer1.0-plugins-good-avi \
   gstreamer1.0-plugins-good-flac \
   gstreamer1.0-plugins-good-flv \
   gstreamer1.0-plugins-good-icydemux \
@@ -40,7 +40,7 @@ RDEPENDS_${PN} += " \
   gstreamer1.0-plugins-good-souphttpsrc \
   gstreamer1.0-plugins-good-udp \
   gstreamer1.0-plugins-good-wavparse \
-  ${@base_contains('DREAMBOX_FEATURES', 'asf', 'gstreamer1.0-plugins-ugly-asf', '', d)} \
+  gstreamer1.0-plugins-ugly-asf \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'gstreamer1.0-plugins-ugly-cdio', '', d)} \
   gstreamer1.0-plugins-ugly-dvdsub \
   gstreamer1.0-plugins-ugly-mad \
