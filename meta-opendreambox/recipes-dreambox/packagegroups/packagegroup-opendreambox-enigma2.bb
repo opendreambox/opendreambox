@@ -60,7 +60,6 @@ RRECOMMENDS_${PN} += " \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \
-  ${@base_contains('MACHINE_FEATURES', 'modem', 'packagegroup-opendreambox-modem', '', d)} \
   glib-networking \
 "
 
