@@ -10,12 +10,6 @@ inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-ESSENTIAL_RDEPENDS = " \
-        kernel-module-snd-page-alloc \
-        kernel-module-snd-pcm \
-        kernel-module-snd-timer \
-        kernel-module-stv0299 \
-"
 ESSENTIAL_RRECOMMENDS = " \
         kernel-module-autofs4 \
         kernel-module-cdrom \
@@ -25,6 +19,10 @@ ESSENTIAL_RRECOMMENDS = " \
         kernel-module-nls-iso8859-15 \
         kernel-module-ntfs \
         kernel-module-reiserfs \
+        kernel-module-snd-page-alloc \
+        kernel-module-snd-pcm \
+        kernel-module-snd-timer \
         kernel-module-sr-mod \
+        kernel-module-stv0299 \
         kernel-module-usbhid \
 "
