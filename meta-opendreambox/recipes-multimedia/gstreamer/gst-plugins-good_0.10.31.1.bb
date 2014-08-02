@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 DEPENDS += "cdparanoia cairo jpeg libpng zlib libid3tag flac speex libsoup-2.4"
 DEPENDS += "gst-plugins-base"
 
-PR = "r3"
+PR = "r4"
 GIT_PV = ""
 
 SRCREV = "7768342230450559509e3e593b2ea33e81ea0ca4"
@@ -23,6 +23,7 @@ SRC_URI += " \
 	file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
 	file://0001-accept-substream-syncwords-DTS-HD.patch \
 	${@base_version_less_or_equal('DREAMBOX_KERNEL_VERSION', '2.6.18', 'file://v4l-compile-fix-old-kernel.patch', '', d)} \
+	file://mp4-parse-fix-typo.patch \
 "
 
 do_common_update() {
