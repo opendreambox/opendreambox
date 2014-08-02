@@ -39,8 +39,10 @@ RRECOMMENDS_${PN} += " \
   aio-grab \
   enigma2-hbbtv-plugin \
   enigma2-plugin-extensions-audiosync \
+  enigma2-plugin-extensions-autotimer \
   enigma2-plugin-extensions-browser \
   enigma2-plugin-extensions-cutlisteditor \
+  enigma2-plugin-extensions-epgrefresh \
   enigma2-plugin-extensions-graphmultiepg \
   enigma2-plugin-extensions-hbbtv \
   enigma2-plugin-extensions-mediacenter \
@@ -57,6 +59,7 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-systemplugins-positionersetup \
   enigma2-plugin-systemplugins-satfinder \
   enigma2-plugin-systemplugins-skinselector \
+  enigma2-plugin-systemplugins-vps \
   enigma2-plugin-systemplugins-wirelesslan \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
