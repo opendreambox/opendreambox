@@ -73,6 +73,11 @@ RDEPENDS_enigma2-plugin-extensions-modem = " \
         dreambox-modem-ppp-scripts \
         ppp \
 "
+RRECOMMENDS_enigma2-plugin-extensions-modem = " \
+        kernel-module-ppp-async \
+        kernel-module-ppp-deflate \
+        kernel-module-ppp-generic \
+"
 RDEPENDS_enigma2-plugin-systemplugins-networksetup = " \
         ethtool \
 "
