@@ -6,7 +6,9 @@ SRC_URI += "file://busybox-telnetd.xinetd.in \
             file://0003-udhcpc-calculate-broadcast-address-if-not-given-by-s.patch \
             file://0004-udhcpc-obtain-hostname-from-OS-by-default.patch \
             file://0005-mount-don-t-pass-option-nofail-to-the-kernel.patch \
-            file://0006-mount-don-t-pass-option-auto-to-kernel.patch"
+            file://0006-mount-don-t-pass-option-auto-to-kernel.patch \
+            file://0007-speed_table-remove-hack-which-made-large-baud-rates-.patch \
+            file://0008-speed_table-add-baud-rates-up-to-4-MBit-s-as-defined.patch"
 
 inherit systemd xinetd
 

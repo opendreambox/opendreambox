@@ -1,0 +1,71 @@
+From 79b94acaa2e9258ecd37172890b9b4b8cd37056b Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Sun, 3 Aug 2014 20:27:52 +0200
+Subject: [PATCH 7/8] speed_table: remove hack, which made large baud rates fit
+ into a short
+
+New large baud rates will be added, which aren't divisible by 256.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ libbb/speed_table.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/libbb/speed_table.c b/libbb/speed_table.c
+index 45159f1..941e517 100644
+--- a/libbb/speed_table.c
++++ b/libbb/speed_table.c
+@@ -11,7 +11,7 @@
+ 
+ struct speed_map {
+ 	unsigned short speed;
+-	unsigned short value;
++	unsigned value;
+ };
+ 
+ static const struct speed_map speeds[] = {
+@@ -35,24 +35,24 @@ static const struct speed_map speeds[] = {
+ 	{EXTA, 19200},
+ #endif
+ #ifdef B38400
+-	{B38400, 38400/256 + 0x8000U},
++	{B38400, 38400},
+ #elif defined(EXTB)
+-	{EXTB, 38400/256 + 0x8000U},
++	{EXTB, 38400},
+ #endif
+ #ifdef B57600
+-	{B57600, 57600/256 + 0x8000U},
++	{B57600, 57600},
+ #endif
+ #ifdef B115200
+-	{B115200, 115200/256 + 0x8000U},
++	{B115200, 115200},
+ #endif
+ #ifdef B230400
+-	{B230400, 230400/256 + 0x8000U},
++	{B230400, 230400},
+ #endif
+ #ifdef B460800
+-	{B460800, 460800/256 + 0x8000U},
++	{B460800, 460800},
+ #endif
+ #ifdef B921600
+-	{B921600, 921600/256 + 0x8000U},
++	{B921600, 921600},
+ #endif
+ };
+ 
+@@ -64,9 +64,6 @@ unsigned FAST_FUNC tty_baud_to_value(speed_t speed)
+ 
+ 	do {
+ 		if (speed == speeds[i].speed) {
+-			if (speeds[i].value & 0x8000U) {
+-				return ((unsigned long) (speeds[i].value) & 0x7fffU) * 256;
+-			}
+ 			return speeds[i].value;
+ 		}
+ 	} while (++i < NUM_SPEEDS);
+-- 
+1.9.1
+
