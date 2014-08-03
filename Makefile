@@ -70,6 +70,7 @@ BBLAYERS ?= \
 	$(CURDIR)/meta-qt5 \
 	$(CURDIR)/meta-openembedded/meta-oe \
 	$(CURDIR)/meta-openembedded/meta-filesystems \
+	$(CURDIR)/meta-openembedded/meta-initramfs \
 	$(CURDIR)/meta-openembedded/meta-multimedia \
 	$(CURDIR)/meta-openembedded/meta-networking \
 	$(CURDIR)/meta-openembedded/meta-ruby \
