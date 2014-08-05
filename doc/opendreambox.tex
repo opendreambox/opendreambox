@@ -44,7 +44,7 @@
 \begin{document}
 \title{opendreambox}
 \author{Andreas Oberritter \shell{<obi@opendreambox.org>}}
-\date{October 2013}
+\date{August 2014}
 \maketitle
 %\thispagestyle{empty}
 %\pagestyle{empty}
@@ -60,8 +60,8 @@
     uses BitBake to transform build instructions into
     distributable firmare images and software packages.
 
-    The current version, OpenDreambox 2.2, is based on the \href{http://www.yoctoproject.org}{Yocto Project}, release 
-    1.5 "Dora", an umbrella project for OpenEmbedded and related tools.
+    The current version, OpenDreambox 2.2, is based on the \href{https://www.yoctoproject.org/}{Yocto Project}, release 
+    1.5.1 "Dora", an umbrella project for OpenEmbedded and related tools.
   \end{flushleft}
 
   \subsection{Target audience}
@@ -73,19 +73,27 @@
   \subsection{Supported products}
     \label{products}
     \begin{flushleft}
-      The current version includes support for the following machines:
+      The current version includes support for the following products:
 
         \begin{tabular}{ | l | l | }
           \hline
           \textbf{Product name} & \textbf{Environment variable} \\ \hline
           & \\
           DM 500 HD & \shell{MACHINE=dm500hd} \\
+          DM 500 HD V2 & \shell{MACHINE=dm500hdv2} \\
           DM 800 HD SE & \shell{MACHINE=dm800se} \\
+          DM 800 HD SE V2 & \shell{MACHINE=dm800sev2} \\
           DM 7020 HD & \shell{MACHINE=dm7020hd} \\
+          DM 7020 HD V2 & \shell{MACHINE=dm7020hdv2} \\
+          DM 7080 & \shell{MACHINE=dm7080} \\
           DM 8000 HD PVR & \shell{MACHINE=dm8000} \\
           & \\
           \hline
         \end{tabular}
+
+      Note, that not all of these platforms offer enough internal
+      storage to actually flash a generated firmware image. It might be possible
+      to boot from external storage or network, though.
     \end{flushleft}
 
   \subsection{License}
@@ -145,17 +153,20 @@ THE SOFTWARE.
     This meta data is used by BitBake to download and compile source code
     and to assemble installable software packages and firmware images.
 
-    Currently, there are eight layers, ordered by priority from highest to
+    Currently, these layers are used, ordered by priority from highest to
     lowest:
 
     \begin{itemize}
       \item \shell{meta-bsp/\$\{MACHINE\}}
       \item \shell{meta-bsp/common}
       \item \shell{meta-opendreambox}
+      \item \shell{meta-qt5}
       \item \shell{meta-openembedded/meta-oe}
       \item \shell{meta-openembedded/meta-filesystems}
+      \item \shell{meta-openembedded/meta-initramfs}
       \item \shell{meta-openembedded/meta-multimedia}
       \item \shell{meta-openembedded/meta-networking}
+      \item \shell{meta-openembedded/meta-ruby}
       \item \shell{openembedded-core/meta}
     \end{itemize}
 
@@ -210,6 +221,12 @@ THE SOFTWARE.
         \item Splash images
       \end{itemize}
 
+\section{Further readings}
+      \begin{itemize}
+        \item The Yocto Project Reference Manual:
+              \url{https://www.yoctoproject.org/docs/1.5.1/ref-manual/ref-manual.html}
+      \end{itemize}
+
 \section{Prerequisites}
   \label{prerequisites}
 
@@ -228,14 +245,8 @@ THE SOFTWARE.
    include:
 
    \begin{itemize}
-     \item Debian 7.2 "Wheezy" [amd64]
-     \item Ubuntu 13.04 "Raring Ringtail" [amd64]
-   \end{itemize}
-
-   Distributions known not to work:
-
-   \begin{itemize}
-     \item Debian 5.0 (Lenny): Comes with Python 2.5, which is too old.
+     \item Debian 7.6 "Wheezy" [amd64]
+     \item Ubuntu 14.04.1 LTS "Trusty Tahr" [amd64]
    \end{itemize}
 
 \pagebreak
@@ -257,6 +268,7 @@ THE SOFTWARE.
 
   \subsection{Changes since release 2.0}
     \begin{itemize}
+      \item Added support for DM7080.
       \item If a recipe changes, the corresponding packages will be rebuilt automatically,
             in contrast to required manual PR bumps in the past.
       \item Each machine uses its own tmp directory again, like before 2.0. However,
@@ -268,13 +280,7 @@ THE SOFTWARE.
 
 \section{Known Issues}
 
-  \begin{itemize}
-    \item \textbf{Problem:} qt4-native may fail to build with
-
-          \shell{error: one or more PCH files were found, but they were invalid}
-
-    \textbf{Solution:} \shell{bitbake -ccleansstate qt4-native}
-  \end{itemize}
+  None.
 
 \pagebreak
 
@@ -312,9 +318,7 @@ THE SOFTWARE.
   \subsection{Configuration variables}
     \subsubsection{BB\_NUMBER\_THREADS}
       Controls how many BitBake tasks may run at a time. Defaults to the
-      number of cores available on the build system. The number of cores is
-      obtained from \shell{/proc/cpuinfo}. If this file is unavailable, the
-      default value is 1.
+      number of cores available on the build system.
 
     \subsubsection{MACHINE}
       Controls the target machine to build packages for. See section \ref{products}
@@ -322,11 +326,7 @@ THE SOFTWARE.
 
     \subsubsection{PARALLEL\_MAKE}
       Controls how many processes per recipe \shell{make} may use. Defaults to
-      the number of cores available on the build system. The number of cores is
-      obtained from \shell{/proc/cpuinfo}. If this file is unavailable, the
-      default value is 1.
-
-      NOTE: If you see seemingly random build failures, try setting this variable to 1.
+      the number of cores available on the build system.
 
   \subsection{Adding custom layers}
   \label{custom_layers}
@@ -356,7 +356,7 @@ THE SOFTWARE.
      \subsubsection{DISTRO\_FEED\_PREFIX}
 
        \shell{DISTRO\_FEED\_PREFIX} specifies the name of the package update feed.
-       This name may be arbitarily chosen.
+       This name may be chosen arbitarily.
 
        Default: \shell{DISTRO\_FEED\_PREFIX = "remote"}
 
@@ -386,13 +386,13 @@ THE SOFTWARE.
        \shell{INHERIT += "rm\_old\_work"}
 
   \subsection{Setting up a build directory}
-     To set up a build directory for e.g. \textbf{DM 7020 HD} run \shell{make MACHINE=dm7020hd}. If
-     \shell{MACHINE=dm7020hd} has been set in \shell{conf/make.conf} (default), you can simply run \shell{make}
-     with no arguments instead. This will create and initialize the directory \shell{build/dm7020hd}.
+     To set up a build directory for e.g. \textbf{DM 7080} run \shell{make MACHINE=dm7080}. If
+     \shell{MACHINE=dm7080} has been set in \shell{conf/make.conf} (default), you can simply run \shell{make}
+     with no arguments instead. This will create and initialize the directory \shell{build/dm7080}.
 
   \subsection{Building a firmware image}
-     To build a firmware image for e.g. \textbf{DM 7020 HD} run \shell{make MACHINE=dm7020hd image}.
-     If \shell{MACHINE=dm7020hd} has been set in \shell{conf/make.conf} (default), you can simply run
+     To build a firmware image for e.g. \textbf{DM 7080} run \shell{make MACHINE=dm7080 image}.
+     If \shell{MACHINE=dm7080} has been set in \shell{conf/make.conf} (default), you can simply run
      \shell{make image} instead.
 
   \subsection{Building a package}
@@ -402,9 +402,9 @@ THE SOFTWARE.
 
      \shell{source bitbake.env}
 
-     BitBake must be run from the machine's build directory. For \textbf{DM 7020 HD} run:
+     BitBake must be run from the machine's build directory. For \textbf{DM 7080} run:
 
-     \shell{cd build/dm7020hd}
+     \shell{cd build/dm7080}
 
      In order to build enigma2, run:
 
@@ -427,7 +427,7 @@ THE SOFTWARE.
     The script needs to know the target machine, which can be one of the supported products (see \ref{products}). Because the script
     adds aliases to your currently running shell session, it has to be invoked using \shell{source} or \shell{.} (the dot operator), e.g.:
 
-    \shell{source cross-compile.env dm7020hd}
+    \shell{source cross-compile.env dm7080}
 
     The script may be called from any location, but must reside inside the OpenDreambox Git tree.
     You may want to create a symlink to \shell{cross-compile.env} somewhere in your \shell{PATH}.
