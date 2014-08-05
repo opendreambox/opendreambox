@@ -26,6 +26,6 @@ RRECOMMENDS_${PN} += " \
   e2fsprogs-e2fsck \
   libpagecache \
   mc \
-  sambaserver \
+  samba-base \
   zeroconf \
 "
