@@ -1,7 +1,7 @@
 opendreambox
 
    Andreas Oberritter <obi@opendreambox.org>
-   October 2013
+   August 2014
 
   Contents
 
@@ -15,31 +15,32 @@ opendreambox
      1.6.1 openembedded-core and meta-openembedded
      1.6.2 meta-opendreambox
      1.6.3 meta-bsp
-   2 Prerequisites
-    2.1 Required software
-   3 Major changes since previous public releases
-    3.1 Changes since release 1.6
-    3.2 Changes since release 2.0
-   4 Known Issues
-   5 Building OpenDreambox
-    5.1 Makefile targets
-    5.2 Configuration variables
-     5.2.1 BB_NUMBER_THREADS
-     5.2.2 MACHINE
-     5.2.3 PARALLEL_MAKE
-    5.3 Adding custom layers
-    5.4 Adding custom options
-     5.4.1 DISTRO_FEED_PREFIX
-     5.4.2 DISTRO_FEED_URI
-     5.4.3 INHERIT
-    5.5 Setting up a build directory
-    5.6 Building a firmware image
-    5.7 Building a package
-   6 Development hints
-    6.1 Cross-compilation of external software
-    6.2 Coding style
-    6.3 Package architecture
-   7 Bug reports and patches
+   2 Further readings
+   3 Prerequisites
+    3.1 Required software
+   4 Major changes since previous public releases
+    4.1 Changes since release 1.6
+    4.2 Changes since release 2.0
+   5 Known Issues
+   6 Building OpenDreambox
+    6.1 Makefile targets
+    6.2 Configuration variables
+     6.2.1 BB_NUMBER_THREADS
+     6.2.2 MACHINE
+     6.2.3 PARALLEL_MAKE
+    6.3 Adding custom layers
+    6.4 Adding custom options
+     6.4.1 DISTRO_FEED_PREFIX
+     6.4.2 DISTRO_FEED_URI
+     6.4.3 INHERIT
+    6.5 Setting up a build directory
+    6.6 Building a firmware image
+    6.7 Building a package
+   7 Development hints
+    7.1 Cross-compilation of external software
+    7.2 Coding style
+    7.3 Package architecture
+   8 Bug reports and patches
 
   1 Introduction
 
@@ -51,7 +52,7 @@ opendreambox
    packages.
 
    The current version, OpenDreambox 2.2, is based on the Yocto Project, release
-   1.5 "Dora", an umbrella project for OpenEmbedded and related tools.
+   1.5.1 "Dora", an umbrella project for OpenEmbedded and related tools.
 
     1.1 Target audience
 
@@ -60,18 +61,26 @@ opendreambox
 
     1.2 Supported products
 
-   The current version includes support for the following machines:
+   The current version includes support for the following products:
 
-   +-----------------------------------+
-   |  ----------  |  ----------------  |
-   |Product name  |Environment variable|
-   |  ----------  |  ----------------  |
-   |DM 500 HD     |MACHINE=dm500hd     |
-   |DM 800 HD SE  |MACHINE=dm800se     |
-   |DM 7020 HD    |MACHINE=dm7020hd    |
-   |DM 8000 HD PVR|MACHINE=dm8000      |
-   |  ----------  |  ----------------  |
-   +-----------------------------------+
+   +-----------------------------------------------------------------------------+
+   |  ----------------------  |  ----------------------------------------------  |
+   |Product name              |Environment variable                              |
+   |  ----------------------  |  ----------------------------------------------  |
+   |DM 500 HD                 |MACHINE=dm500hd                                   |
+   |DM 500 HD V2              |MACHINE=dm500hdv2                                 |
+   |DM 800 HD SE              |MACHINE=dm800se                                   |
+   |DM 800 HD SE V2           |MACHINE=dm800sev2                                 |
+   |DM 7020 HD                |MACHINE=dm7020hd                                  |
+   |DM 7020 HD V2             |MACHINE=dm7020hdv2                                |
+   |DM 7080                   |MACHINE=dm7080                                    |
+   |DM 8000 HD PVR            |MACHINE=dm8000                                    |
+   |  ----------------------  |  ----------------------------------------------  |
+   +-----------------------------------------------------------------------------+
+
+   Note, that not all of these platforms offer enough internal storage to actually
+   flash a generated firmware image. It might be possible to boot from external
+   storage or network, though.
 
     1.3 License
 
@@ -107,7 +116,7 @@ opendreambox
     1.4 Obtaining the source code
 
    OpenDreambox uses the Git version control system. To obtain the source code, it
-   is required to install Git. See http://git-scm.com/.
+   is required to install Git. See http://git-_scm.com/.
 
    To initially download the source into the current directory, issue the
    following command:
@@ -124,7 +133,7 @@ opendreambox
 
    make -C opendreambox image
 
-   If this command fails, prerequisites my be missing. See section 2.
+   If this command fails, prerequisites my be missing. See section 3.
 
     1.6 Directory structure
 
@@ -132,14 +141,17 @@ opendreambox
    meta data is used by BitBake to download and compile source code and to
    assemble installable software packages and firmware images.
 
-   Currently, there are eight layers, ordered by priority from highest to lowest:
+   Currently, these layers are used, ordered by priority from highest to lowest:
      * meta-bsp/${MACHINE}
      * meta-bsp/common
      * meta-opendreambox
+     * meta-qt5
      * meta-openembedded/meta-oe
      * meta-openembedded/meta-filesystems
+     * meta-openembedded/meta-initramfs
      * meta-openembedded/meta-multimedia
      * meta-openembedded/meta-networking
+     * meta-openembedded/meta-ruby
      * openembedded-core/meta
 
    If a recipe for the same package exists in multiple layers, then the higher
@@ -166,9 +178,9 @@ opendreambox
 
    The latest changes to these Git repositories can be seen at:
 
-   http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/dora
+   http://git.openembedded.org/openembedded-_core-_contrib/log/?h=obi/dora
 
-   http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/dora
+   http://git.openembedded.org/meta-_openembedded-_contrib/log/?h=obi/dora
 
       1.6.2 meta-opendreambox
 
@@ -188,9 +200,14 @@ opendreambox
      * The boot loader
      * Splash images
 
-  2 Prerequisites
+  2 Further readings
 
-    2.1 Required software
+     * The Yocto Project Reference Manual:
+       https://www.yoctoproject.org/docs/1.5.1/ref-_manual/ref-_manual.html
+
+  3 Prerequisites
+
+    3.1 Required software
 
    The OpenEmbedded project provides a general list of prerequisites for many
    Linux distributions and also for some other operating systems.
@@ -199,15 +216,12 @@ opendreambox
    It is highly recommended to use Linux to build OpenDreambox. In theory, any
    recent distribution will do, but not many distributions have been verified to
    build OpenDreambox without errors. Tested distributions include:
-     * Debian 7.2 "Wheezy" [amd64]
-     * Ubuntu 13.04 "Raring Ringtail" [amd64]
+     * Debian 7.6 "Wheezy" [amd64]
+     * Ubuntu 14.04.1 LTS "Trusty Tahr" [amd64]
 
-   Distributions known not to work:
-     * Debian 5.0 (Lenny): Comes with Python 2.5, which is too old.
+  4 Major changes since previous public releases
 
-  3 Major changes since previous public releases
-
-    3.1 Changes since release 1.6
+    4.1 Changes since release 1.6
 
      * Recipes were split across multiple layers and categorized.
      * env.source has been replaced by two files, bitbake.env and
@@ -219,8 +233,9 @@ opendreambox
      * Kernel packages were renamed from linux-${MACHINE} to linux-dreambox.
      * Support for machines based on ATI Xilleon or IBM STB was dropped.
 
-    3.2 Changes since release 2.0
+    4.2 Changes since release 2.0
 
+     * Added support for DM7080.
      * If a recipe changes, the corresponding packages will be rebuilt
        automatically, in contrast to required manual PR bumps in the past.
      * Each machine uses its own tmp directory again, like before 2.0. However,
@@ -230,15 +245,11 @@ opendreambox
      * Support for machines without FPU and kernel versions below 3.x was dropped
        (DM800).
 
-  4 Known Issues
+  5 Known Issues
 
-     * Problem: qt4-native may fail to build with
+   None.
 
-       error: one or more PCH files were found, but they were invalid
-
-       Solution: bitbake -ccleansstate qt4-native
-
-  5 Building OpenDreambox
+  6 Building OpenDreambox
 
    In the top level directory, there is a Makefile, which is used to set up build
    directories and to fetch or update all used repositories. The Makefile can be
@@ -259,34 +270,29 @@ opendreambox
           * BitBake
           * OpenEmbedded
 
-    5.1 Makefile targets
+    6.1 Makefile targets
 
    Run make help to get a list of targets of the top level Makefile, together with
    a brief description.
 
-    5.2 Configuration variables
+    6.2 Configuration variables
 
-      5.2.1 BB_NUMBER_THREADS
+      6.2.1 BB_NUMBER_THREADS
 
    Controls how many BitBake tasks may run at a time. Defaults to the number of
-   cores available on the build system. The number of cores is obtained from
-   /proc/cpuinfo. If this file is unavailable, the default value is 1.
+   cores available on the build system.
 
-      5.2.2 MACHINE
+      6.2.2 MACHINE
 
    Controls the target machine to build packages for. See section 1.2 for a list
    of supported products.
 
-      5.2.3 PARALLEL_MAKE
+      6.2.3 PARALLEL_MAKE
 
    Controls how many processes per recipe make may use. Defaults to the number of
-   cores available on the build system. The number of cores is obtained from
-   /proc/cpuinfo. If this file is unavailable, the default value is 1.
+   cores available on the build system.
 
-   NOTE: If you see seemingly random build failures, try setting this variable to
-   1.
-
-    5.3 Adding custom layers
+    6.3 Adding custom layers
 
    It is possible to add custom layers to the build system. This can be done
    globally and per machine. To add a layer globally, edit conf/bblayers-ext.conf.
@@ -296,7 +302,7 @@ opendreambox
 
    BBLAYERS =+ "${HOME}/custom-layer"
 
-    5.4 Adding custom options
+    6.4 Adding custom options
 
    It is possible to tweak a lot more options than those used by the Makefile by
    editing conf/local-ext.conf or conf/local-${MACHINE}-ext.conf.
@@ -312,20 +318,20 @@ opendreambox
 
    The following sections list some commonly used options.
 
-      5.4.1 DISTRO_FEED_PREFIX
+      6.4.1 DISTRO_FEED_PREFIX
 
    DISTRO_FEED_PREFIX specifies the name of the package update feed. This name may
-   be arbitarily chosen.
+   be chosen arbitarily.
 
    Default: DISTRO_FEED_PREFIX = "remote"
 
-      5.4.2 DISTRO_FEED_URI
+      6.4.2 DISTRO_FEED_URI
 
    DISTRO_FEED_URI specifies the URI of the package update feed.
 
    Default: DISTRO_FEED_URI = "http://my-distribution.example/remote-feed/"
 
-      5.4.3 INHERIT
+      6.4.3 INHERIT
 
    INHERIT specifies bbclasses to include from a configuration file. Usually, this
    variable gets appended to by using the += operator.
@@ -346,20 +352,20 @@ opendreambox
 
    INHERIT += "rm_old_work"
 
-    5.5 Setting up a build directory
+    6.5 Setting up a build directory
 
-   To set up a build directory for e.g. DM 7020 HD run make MACHINE=dm7020hd. If
-   MACHINE=dm7020hd has been set in conf/make.conf (default), you can simply run
+   To set up a build directory for e.g. DM 7080 run make MACHINE=dm7080. If
+   MACHINE=dm7080 has been set in conf/make.conf (default), you can simply run
    make with no arguments instead. This will create and initialize the directory
-   build/dm7020hd.
+   build/dm7080.
 
-    5.6 Building a firmware image
+    6.6 Building a firmware image
 
-   To build a firmware image for e.g. DM 7020 HD run make MACHINE=dm7020hd image.
-   If MACHINE=dm7020hd has been set in conf/make.conf (default), you can simply
-   run make image instead.
+   To build a firmware image for e.g. DM 7080 run make MACHINE=dm7080 image. If
+   MACHINE=dm7080 has been set in conf/make.conf (default), you can simply run
+   make image instead.
 
-    5.7 Building a package
+    6.7 Building a package
 
    To build a single package, BitBake has to be used directly. First, the
    environment has to be set up, in order to make BitBake available to the shell.
@@ -367,17 +373,17 @@ opendreambox
 
    source bitbake.env
 
-   BitBake must be run from the machine's build directory. For DM 7020 HD run:
+   BitBake must be run from the machine's build directory. For DM 7080 run:
 
-   cd build/dm7020hd
+   cd build/dm7080
 
    In order to build enigma2, run:
 
    bitbake enigma2.
 
-  6 Development hints
+  7 Development hints
 
-    6.1 Cross-compilation of external software
+    7.1 Cross-compilation of external software
 
    OpenDreambox provides a script called cross-compile.env. Once run, the script
    will create the following commands (shell aliases), aiming to ease
@@ -397,23 +403,23 @@ opendreambox
    products (see 1.2). Because the script adds aliases to your currently running
    shell session, it has to be invoked using source or . (the dot operator), e.g.:
 
-   source cross-compile.env dm7020hd
+   source cross-compile.env dm7080
 
    The script may be called from any location, but must reside inside the
    OpenDreambox Git tree. You may want to create a symlink to cross-compile.env
    somewhere in your PATH.
 
-    6.2 Coding style
+    7.2 Coding style
 
    Run scripts/do_stylize.sh on new recipes to ensure proper coding style.
 
-    6.3 Package architecture
+    7.3 Package architecture
 
    Set PACKAGE_ARCH = "${MACHINE_ARCH}" if either condition is met:
      * The recipe uses COMBINED_FEATURES, MACHINE_FEATURES or DREAMBOX_FEATURES.
      * The recipe is part of meta-bsp.
 
-  7 Bug reports and patches
+  8 Bug reports and patches
 
    Please send bug reports and patches to the Enigma2 development mailing list
    <enigma2-devel@lists.elitedvb.net>.
