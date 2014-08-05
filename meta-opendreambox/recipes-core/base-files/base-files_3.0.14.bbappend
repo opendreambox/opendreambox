@@ -1,10 +1,3 @@
-do_install_append() {
-        ln -s media/hdd ${D}/hdd
-
-        rm -r ${D}/mnt
-        ln -s media ${D}/mnt
-}
-
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 # Inject the /boot partition into /etc/fstab. At image creation time,
