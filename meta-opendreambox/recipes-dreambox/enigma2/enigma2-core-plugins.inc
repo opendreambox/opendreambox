@@ -81,9 +81,6 @@ RRECOMMENDS_enigma2-plugin-extensions-modem = " \
 RDEPENDS_enigma2-plugin-systemplugins-networksetup = " \
         ethtool \
 "
-RDEPENDS_enigma2-plugin-systemplugins-nfiflash = " \
-        python-twisted-web \
-"
 RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = " \
         python-twisted-web \
 "

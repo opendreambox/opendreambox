@@ -31,10 +31,6 @@ RDEPENDS_${PN} += " \
   packagegroup-opendreambox-gstreamer-${OPENDREAMBOX_GST_VERSION} \
 "
 
-RDEPENDS_${PN}_append_dm8000 = " \
-  enigma2-plugin-systemplugins-nfiflash \
-"
-
 RRECOMMENDS_${PN} += " \
   aio-grab \
   enigma2-hbbtv-plugin \
