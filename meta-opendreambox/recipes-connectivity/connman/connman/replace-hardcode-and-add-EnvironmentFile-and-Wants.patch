@@ -1,17 +1,20 @@
-replace hardcode, and add EnvironmentFile and Wants
+From d348515f6e71ddf707c79f2341bfef18e75684c2 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Tue, 5 Aug 2014 15:18:24 +0200
+Subject: [PATCH] replace hardcode, and add EnvironmentFile and Wants
 
 Upstream-Status: Inappropriate [distribution]
 
 Signed-off-by: Roy Li <rongqing.li@windriver.com>
 ---
- src/connman.service.in | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ src/connman.service.in | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/connman.service.in b/src/connman.service.in
-index 7b6195e..89b9ffc 100644
+index 7b6195e..01bdcb4 100644
 --- a/src/connman.service.in
 +++ b/src/connman.service.in
-@@ -3,12 +3,15 @@ Description=Connection service
+@@ -3,12 +3,14 @@ Description=Connection service
  Requires=dbus.socket
  After=dbus.socket
  Before=remote-fs.target
@@ -22,9 +25,8 @@ index 7b6195e..89b9ffc 100644
  BusName=net.connman
  Restart=on-failure
 -ExecStart=@prefix@/sbin/connmand -n
-+EnvironmentFile=-@LOCALSTATEDIR@/run/connmand/connmand.env
-+ExecStartPre=-@LIBDIR@/connman/wired-setup
-+ExecStart=@SBINDIR@/connmand -n $CONNMAND_OPTS
++EnvironmentFile=-@localstatedir@/run/connmand/connmand.env
++ExecStart=@sbindir@/connmand -n $CONNMAND_OPTS
  StandardOutput=null
  
  [Install]
