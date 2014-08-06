@@ -1,0 +1,33 @@
+replace hardcode, and add EnvironmentFile and Wants
+
+Upstream-Status: Inappropriate [distribution]
+
+Signed-off-by: Roy Li <rongqing.li@windriver.com>
+---
+ src/connman.service.in | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/connman.service.in b/src/connman.service.in
+index 7b6195e..89b9ffc 100644
+--- a/src/connman.service.in
++++ b/src/connman.service.in
+@@ -3,12 +3,15 @@ Description=Connection service
+ Requires=dbus.socket
+ After=dbus.socket
+ Before=remote-fs.target
++Wants=connman-env.service
+ 
+ [Service]
+ Type=dbus
+ BusName=net.connman
+ Restart=on-failure
+-ExecStart=@prefix@/sbin/connmand -n
++EnvironmentFile=-@LOCALSTATEDIR@/run/connmand/connmand.env
++ExecStartPre=-@LIBDIR@/connman/wired-setup
++ExecStart=@SBINDIR@/connmand -n $CONNMAND_OPTS
+ StandardOutput=null
+ 
+ [Install]
+-- 
+1.9.1
+
