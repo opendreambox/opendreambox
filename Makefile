@@ -213,6 +213,10 @@ image: init
 	@echo '[*] Building $@ for $(USER_MACHINE)'
 	@$(BITBAKE) $(MAKE_IMAGE_BB)
 
+rescue-image: init
+	@echo '[*] Building $@ for $(USER_MACHINE)'
+	@$(BITBAKE) linux-dreambox-rescue
+
 download: init
 	@echo '[*] Downloading sources'
 	@$(BITBAKE) -cfetchall -k $(MAKE_IMAGE_BB)
