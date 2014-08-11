@@ -16,6 +16,7 @@ IMAGE_INSTALL = " \
         initscripts \
         parted \
         procps \
+        recovery \
         sysvinit \
         udev \
         xfsprogs-mkfs \
