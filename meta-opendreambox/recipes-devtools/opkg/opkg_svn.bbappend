@@ -16,9 +16,6 @@ SRC_URI += " \
 	file://0016-build-No-need-to-add-libbb.la-twice-libopkg-already-.patch \
 	file://0017-build-Allow-to-link-libopkg-statically-into-opkg-cl.patch \
 "
-SRC_URI_append_class-target = " \
-	file://0012-don-t-install-recommended-packages-automatically-but.patch \
-"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
