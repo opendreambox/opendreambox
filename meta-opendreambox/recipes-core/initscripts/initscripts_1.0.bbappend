@@ -1,3 +1,5 @@
+PR .= ".1"
+
 SRC_URI += "file://mountrun.sh"
 
 do_install_append() {
