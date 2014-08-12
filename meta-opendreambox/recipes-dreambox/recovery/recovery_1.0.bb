@@ -1,8 +1,8 @@
 SUMMARY = "Downloads and runs the recovery tool from the rescue partition"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
-SRCREV = "f6d9de6dc38272d83f19f63afe874e1cb58a8c61"
-SRCREV_dm7080 = "3f99886e4f6a1a73fc6ceb8d9bcefea0f3ef152e"
+SRCREV = "${@opendreambox_srcrev('f6d9de6dc38272d83f19f63afe874e1cb58a8c61', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('3f99886e4f6a1a73fc6ceb8d9bcefea0f3ef152e', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 

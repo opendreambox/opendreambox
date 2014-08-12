@@ -2,7 +2,7 @@ SUMMARY = "Preloadable library to improve large file operations"
 SECTION = "base"
 LICENSE = "CLOSED"
 DEPENDS = "libdlsym"
-SRCREV = "a9b393e1ee16bf1bc128beb58438fe68049440bc"
+SRCREV = "${@opendreambox_srcrev('a9b393e1ee16bf1bc128beb58438fe68049440bc', d)}"
 
 inherit autotools opendreambox-git
 
