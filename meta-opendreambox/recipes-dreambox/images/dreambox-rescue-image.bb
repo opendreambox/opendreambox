@@ -12,6 +12,7 @@ IMAGE_INSTALL = " \
         dropbear \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
+        google-dns \
         netbase \
         initscripts \
         parted \
