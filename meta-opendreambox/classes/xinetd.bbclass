@@ -57,13 +57,13 @@ python xinetd_populate_packages() {
         if not pkg in packages:
             bb.error('%s does not appear in package list, please add it' % pkg)
 
-    def xinetd_add_rdepends(pkg):
+    def xinetd_add_rrecommends(pkg):
         bb.note("adding xinetd dependency to %s" % pkg)
 
-        rdepends = (d.getVar('RDEPENDS_%s' % pkg, True) or "").split()
-        if not 'xinetd' in rdepends:
-            rdepends.append('xinetd')
-        d.setVar('RDEPENDS_%s' % pkg, ' '.join(rdepends))
+        rrecommends = (d.getVar('RRECOMMENDS_%s' % pkg, True) or "").split()
+        if not 'xinetd' in rrecommends:
+            rrecommends.append('xinetd')
+        d.setVar('RRECOMMENDS_%s' % pkg, ' '.join(rrecommends))
 
     def xinetd_generate_package_scripts(pkg):
         bb.note('adding xinetd postinst and postrm scripts to %s' % pkg)
@@ -92,7 +92,7 @@ python xinetd_populate_packages() {
         for pkg in d.getVar('XINETD_PACKAGES', True).split():
             xinetd_check_package(pkg)
             xinetd_generate_package_scripts(pkg)
-            xinetd_add_rdepends(pkg)
+            xinetd_add_rrecommends(pkg)
         xinetd_check_services()
 }
 
