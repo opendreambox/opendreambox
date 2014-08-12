@@ -24,6 +24,7 @@ RRECOMMENDS_${PN} += " \
   avahi-daemon \
   dccamd \
   e2fsprogs-e2fsck \
+  joe \
   libpagecache \
   mc \
   samba-base \
