@@ -9,7 +9,8 @@ DEPENDS = " \
 "
 
 BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', 'busybox-syslog', '', d)}"
-BAD_RECOMMENDATIONS += "libnss-mdns wpa-supplicant-passphrase"
+BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_network_manager', 'connman', 'busybox-udhcpc', '', d)}"
+BAD_RECOMMENDATIONS += "libnss-mdns udev-hwdb wpa-supplicant-passphrase xinetd"
 
 VIRTUAL-RUNTIME_init_manager ?= "systemd"
 VIRTUAL-RUNTIME_network_manager ?= "connman"
