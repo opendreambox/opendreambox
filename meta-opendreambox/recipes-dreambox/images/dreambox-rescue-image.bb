@@ -13,6 +13,7 @@ IMAGE_INSTALL = " \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
         google-dns \
+        mkbootblob \
         netbase \
         initscripts \
         parted \
