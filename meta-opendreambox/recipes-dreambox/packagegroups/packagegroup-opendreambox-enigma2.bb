@@ -48,16 +48,12 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-extensions-webbouqueteditor \
   enigma2-plugin-extensions-webinterface \
   enigma2-plugin-systemplugins-crashlogautosubmit \
-  enigma2-plugin-systemplugins-minidlnasetup \
   enigma2-plugin-systemplugins-networkmanager \
-  enigma2-plugin-systemplugins-networksetup \
-  enigma2-plugin-systemplugins-networkwizard \
   enigma2-plugin-systemplugins-positionersetup \
   enigma2-plugin-systemplugins-satfinder \
   enigma2-plugin-systemplugins-skinselector \
   enigma2-plugin-systemplugins-upnp \
   enigma2-plugin-systemplugins-vps \
-  enigma2-plugin-systemplugins-wirelesslan \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \

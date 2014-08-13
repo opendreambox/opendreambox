@@ -6,15 +6,12 @@ SUMMARY_enigma2-plugin-extensions-modem = "Connect to the internet by modem"
 SUMMARY_enigma2-plugin-extensions-pictureplayer = "Show photos"
 SUMMARY_enigma2-plugin-systemplugins-cleanupwizard = "Detect low flash memory"
 SUMMARY_enigma2-plugin-systemplugins-crashlogautosubmit = "Send crash logs to Dream Multimedia"
-SUMMARY_enigma2-plugin-systemplugins-minidlnasetup = "DLNA media server (minidlna)"
-SUMMARY_enigma2-plugin-systemplugins-networkwizard = "General network settings"
 SUMMARY_enigma2-plugin-systemplugins-positionersetup = "Install a motorized dish"
 SUMMARY_enigma2-plugin-systemplugins-satelliteequipmentcontrol = "Fine-tune DiSEqC settings"
 SUMMARY_enigma2-plugin-systemplugins-satfinder = "Find satellites"
 SUMMARY_enigma2-plugin-systemplugins-skinselector = "Select installed skins"
 SUMMARY_enigma2-plugin-systemplugins-upnp = "UPnP tools based on python-coherence"
 SUMMARY_enigma2-plugin-systemplugins-videomode = "Select custom video modes"
-SUMMARY_enigma2-plugin-systemplugins-wirelesslan = "Wireless network settings"
 
 QT_BASE_NAME ?= "${@base_contains('DISTRO_FEATURES', 'x11', 'qt4', 'qt4-embedded', d)}"
 QT_IMAGEFORMATS ?= "${QT_BASE_NAME}-plugin-imageformat-gif \
@@ -66,9 +63,6 @@ RDEPENDS_enigma2-plugin-systemplugins-hotplug = " \
         python-fcntl \
         python-threading \
 "
-RDEPENDS_enigma2-plugin-systemplugins-minidlnasetup = " \
-        minidlna \
-"
 RDEPENDS_enigma2-plugin-extensions-modem = " \
         dreambox-modem-ppp-scripts \
         ppp \
@@ -78,20 +72,11 @@ RRECOMMENDS_enigma2-plugin-extensions-modem = " \
         kernel-module-ppp-deflate \
         kernel-module-ppp-generic \
 "
-RDEPENDS_enigma2-plugin-systemplugins-networksetup = " \
-        ethtool \
-"
 RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = " \
         python-twisted-web \
 "
 RDEPENDS_enigma2-plugin-systemplugins-upnp = " \
         python-coherence \
-"
-RDEPENDS_enigma2-plugin-systemplugins-wirelesslan = " \
-        python-stringold \
-        python-wifi \
-        wireless-tools \
-        wpa-supplicant \
 "
 
 python populate_packages_prepend() {
