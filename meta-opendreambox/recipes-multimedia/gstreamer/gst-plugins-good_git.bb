@@ -18,6 +18,7 @@ PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 
 DEPENDS += "gst-plugins-base"
 SRCREV = "5af6f5bfb6c3619a9ccc3b1681579aeb90e8b89a"
+PV = "0.10.31.1+git${SRCPV}"
 
 inherit gettext
 
@@ -31,11 +32,4 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
 EXTRA_OECONF += "--disable-aalib --disable-esd --disable-shout2 --disable-libcaca --disable-hal --without-check \
                  --disable-examples --disable-taglib"
 
-do_configure_prepend() {
-	# This m4 file contains nastiness which conflicts with libtool 2.2.2
-	rm ${S}/m4/lib-link.m4 || true
-}
-
-FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.31"
-
-require gst-plugins-git.inc
+require gst-git.inc

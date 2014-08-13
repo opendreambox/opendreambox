@@ -8,12 +8,13 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 
 DEPENDS += "alsa-lib liboil libogg libvorbis libtheora util-linux tremor"
 SRCREV = "1e1e6eaf3f0dd11f6618154d9739cbe3e007d206"
+PV = "0.10.36.1+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
            file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch \
-           file://disable-vorbis-encoder.patch"
-SRC_URI += "file://gst-plugins-base-tremor.patch \
-            file://configure.ac-fix-subparse-plugin.patch"
+           file://disable-vorbis-encoder.patch \
+           file://gst-plugins-base-tremor.patch \
+           file://configure.ac-fix-subparse-plugin.patch"
 
 inherit gettext
 
@@ -26,15 +27,8 @@ PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc orc-native"
 PACKAGECONFIG[pango] = "--enable-pango,--disable-pango,pango"
 PACKAGECONFIG[x11] = "--enable-x --enable-xvideo,--disable-x --disable-xvideo,virtual/libx11 libxv libsm libice"
 
-do_configure_prepend() {
-	# This m4 file contains nastiness which conflicts with libtool 2.2.2
-	rm -f ${S}/m4/lib-link.m4
-}
-
 FILES_${PN} += "${datadir}/${BPN}"
 
 PACKAGES_DYNAMIC += "^libgst(app|audio|cdda|fft|interfaces|netbuffer|pbutils|riff|rtp|rtsp|sdp|tag|video)-${LIBV}.*"
 
-FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.36.1"
-
-require gst-plugins-git.inc
+require gst-git.inc

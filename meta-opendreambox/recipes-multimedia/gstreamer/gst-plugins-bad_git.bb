@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3 \
 DEPENDS += "faad2"
 DEPENDS += "gst-plugins-base"
 SRCREV = "05183675077d502aaf0e7483656f5610bb4d0f43"
+PV = "0.10.23.1+git${SRCPV}"
 
 CPPFLAGS += "${@base_contains('DISTRO_FEATURES', 'x11', '', '-DMESA_EGL_NO_X11_HEADERS', d)}"
 
@@ -42,13 +43,6 @@ PACKAGECONFIG[musicbrainz] = "--enable-musicbrainz,--disable-musicbrainz,libmusi
 
 ARM_INSTRUCTION_SET = "arm"
 
-do_configure_prepend() {
-	# This m4 file contains nastiness which conflicts with libtool 2.2.2
-	rm ${S}/m4/lib-link.m4 || true
-}
-
 PACKAGES_DYNAMIC += "^libgst(basecamerabinsrc|basevideo|codecparsers|photography|signalprocessor)-${LIBV}.*"
 
-FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.23"
-
-require gst-plugins-git.inc
+require gst-git.inc

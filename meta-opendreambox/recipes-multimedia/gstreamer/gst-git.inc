@@ -1,4 +1,11 @@
-inherit git-project
+PE = "1"
+
+S = "${WORKDIR}/git"
+
+do_configure_prepend() {
+	# This m4 file contains nastiness which conflicts with libtool 2.2.2
+	rm ${S}/m4/lib-link.m4 || true
+}
 
 do_common_update() {
 	cd ${S}

@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 DEPENDS += "gst-plugins-base"
 SRCREV = "5ddd97ff27ffeb03298be3a02ed18e8c2674d365"
+PV = "0.10.19.1+git${SRCPV}"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
            file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch"
@@ -23,11 +24,4 @@ PACKAGECONFIG[mad] = "--enable-mad,--disable-mad,libmad"
 PACKAGECONFIG[mpeg2dec] = "--enable-mpeg2dec,--disable-mpeg2dec,mpeg2dec"
 PACKAGECONFIG[orc] = "--enable-orc,--disable-orc,orc orc-native"
 
-do_configure_prepend() {
-	# This m4 file contains nastiness which conflicts with libtool 2.2.2
-	rm ${S}/m4/lib-link.m4 || true
-}
-
-FILESPATH = "${FILE_DIRNAME}/${PN}-0.10.19"
-
-require gst-plugins-git.inc
+require gst-git.inc
