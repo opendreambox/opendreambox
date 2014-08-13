@@ -1,8 +1,8 @@
 SUMMARY = "Dreamcrypt/Firecrypt Conditional Access Daemon"
 DEPENDS = "openssl systemd"
 
-SRC_URI[mips32el.md5sum] = "c067750c8178ae870f12dedb9915cfd3"
-SRC_URI[mips32el.sha256sum] = "b2be93c0f13a93d3340c6866593ed2e2b5051e4706cc20f13ed7aac3848a389a"
+SRC_URI[mips32el.md5sum] = "8b673ed2235b7f68a0ed89ee65b888d2"
+SRC_URI[mips32el.sha256sum] = "ce7072c43d8806c6c8f1cac2574f918cbbdceeaee3d4045eb1538b3da8076d4e"
 
 SYSTEMD_SERVICE_${PN} = "dccamd.service"
 
