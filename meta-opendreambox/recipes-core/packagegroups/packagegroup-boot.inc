@@ -17,7 +17,7 @@ RDEPENDS_${PN} += " \
         ${@base_contains('MACHINE_FEATURES', 'keyboard', 'keymaps', '', d)} \
         netbase \
         udev \
-        update-alternatives-cworth \
+        ${VIRTUAL-RUNTIME_update-alternatives} \
         ${MACHINE_ESSENTIAL_EXTRA_RDEPENDS}"
 
 RRECOMMENDS_${PN} += "${MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS}"
