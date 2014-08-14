@@ -12,9 +12,13 @@ SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman.git \
 S = "${WORKDIR}/git"
 
 do_install_append() {
+	rm -rf ${D}${sysconfdir}/init.d
+
         install -m 755 ${WORKDIR}/connmand-env ${D}${sbindir}/connmand-env
         sed -e 's,@sbindir@,${sbindir},g' < ${WORKDIR}/connman-env.service.in > ${D}${systemd_unitdir}/system/connman-env.service
         chmod 644 ${D}${systemd_unitdir}/system/connman-env.service
 }
 
 FILES_${PN} += "${sbindir}/connmand-env ${systemd_unitdir}/system/connman-env.service"
+
+INHIBIT_UPDATERCD_BBCLASS = "1"
