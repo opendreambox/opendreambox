@@ -39,7 +39,7 @@ PACKAGES += "\
     ${PN}-core \
 "
 
-RDEPENDS_${PN} = "python-core python-zopeinterface python-numbers"
+RDEPENDS_${PN} = "python-core python-zopeinterface"
 RDEPENDS_${PN} += "\
     ${PN}-conch \
     ${PN}-lore \
@@ -50,6 +50,9 @@ RDEPENDS_${PN} += "\
     ${PN}-web \
     ${PN}-words \
 "
+
+# twisted.spread imports decimal
+RDEPENDS_${PN}-core = "python-numbers"
 
 ALLOW_EMPTY_${PN} = "1"
 FILES_${PN} = ""
