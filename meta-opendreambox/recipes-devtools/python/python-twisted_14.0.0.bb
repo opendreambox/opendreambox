@@ -24,7 +24,6 @@ do_install_append() {
 PACKAGES += "\
     ${PN}-zsh \
     ${PN}-test \
-    ${PN}-protocols \
     ${PN}-conch \
     ${PN}-lore \
     ${PN}-mail \
@@ -39,8 +38,7 @@ PACKAGES += "\
     ${PN}-core \
 "
 
-RDEPENDS_${PN} = "python-core python-zopeinterface"
-RDEPENDS_${PN} += "\
+RDEPENDS_${PN} = "\
     ${PN}-conch \
     ${PN}-lore \
     ${PN}-mail \
@@ -51,8 +49,19 @@ RDEPENDS_${PN} += "\
     ${PN}-words \
 "
 
-# twisted.spread imports decimal
-RDEPENDS_${PN}-core = "python-numbers"
+RDEPENDS_${PN}-core = "python-core python-numbers python-zopeinterface"
+
+RDEPENDS_${PN}-conch = "${PN}-core python-pycrypto python-pyasn1"
+RDEPENDS_${PN}-flow  = "${PN}-core"
+RDEPENDS_${PN}-lore = "${PN}-web"
+RDEPENDS_${PN}-mail = "${PN}-core python-openssl"
+RDEPENDS_${PN}-names = "${PN}-core"
+RDEPENDS_${PN}-news = "${PN}-core"
+RDEPENDS_${PN}-pair = "${PN}-core"
+RDEPENDS_${PN}-positioning = "${PN}-core"
+RDEPENDS_${PN}-runner = "${PN}-core"
+RDEPENDS_${PN}-web = "${PN}-core"
+RDEPENDS_${PN}-words = "${PN}-core python-openssl"
 
 ALLOW_EMPTY_${PN} = "1"
 FILES_${PN} = ""
@@ -60,12 +69,6 @@ FILES_${PN} = ""
 FILES_${PN}-test = " \
     ${libdir}/${PYTHON_DIR}/site-packages/twisted/test \
     ${libdir}/${PYTHON_DIR}/site-packages/twisted/*/test \
-"
-
-FILES_${PN}-protocols = " \
-    ${libdir}/${PYTHON_DIR}/site-packages/twisted/protocols/*.py* \
-    ${libdir}/${PYTHON_DIR}/site-packages/twisted/protocols/gps/ \
-    ${libdir}/${PYTHON_DIR}/site-packages/twisted/protocols/mice/ \
 "
 
 FILES_${PN}-zsh = " \
@@ -115,8 +118,8 @@ ${libdir}/${PYTHON_DIR}/site-packages/twisted/internet \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/manhole \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/manhole \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/persisted \
-${libdir}/${PYTHON_DIR}/site-packages/twisted/protocols\
-${libdir}/${PYTHON_DIR}/site-packages/twisted/python\
+${libdir}/${PYTHON_DIR}/site-packages/twisted/protocols \
+${libdir}/${PYTHON_DIR}/site-packages/twisted/python \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/python/timeoutqueue.py* \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/python/filepath.py* \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/python/dxprofile.py* \
