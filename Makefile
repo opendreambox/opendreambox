@@ -259,6 +259,13 @@ OPENDREAMBOX_CONF_HASH := $(call hash, \
 	'DL_DIR = "$(DL_DIR)"' \
 	'PERSISTENT_DIR = "$(PERSISTENT_DIR)"' \
 	'SSTATE_DIR = "$(SSTATE_DIR)"' \
+	'BB_GENERATE_MIRROR_TARBALLS = "$(BB_GENERATE_MIRROR_TARBALLS)"' \
+	'BBINCLUDELOGS = "$(BBINCLUDELOGS)"' \
+	'CONF_VERSION = "$(CONF_VERSION)"' \
+	'DISTRO = "$(DISTRO)"' \
+	'USER_CLASSES = "$(USER_CLASSES)"' \
+	'PATCHRESOLVE = "$(PATCHRESOLVE)"' \
+	'PRSERV_HOST = "$(PRSERV_HOST)"' \
 	)
 
 conf/opendreambox.conf: $(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH)
@@ -274,7 +281,6 @@ conf/opendreambox.conf: $(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH)
 	@echo 'BBINCLUDELOGS = "yes"' >> $@
 	@echo 'CONF_VERSION = "1"' >> $@
 	@echo 'DISTRO = "opendreambox"' >> $@
-	@echo 'EXTRA_IMAGE_FEATURES = "debug-tweaks"' >> $@
 	@echo 'USER_CLASSES = "buildstats"' >> $@
 	@echo 'PATCHRESOLVE = "noop"' >> $@
 	@echo 'PRSERV_HOST = "localhost:0"' >> $@
@@ -285,6 +291,8 @@ LOCAL_CONF_HASH := $(call hash, \
 	'TOPDIR = "$(TOPDIR)"' \
 	'MACHINE = "$(MACHINE)"' \
 	'TMPDIR = "$(TMPDIR)"' \
+	'DISTRO_INCLUDE_CONF = "$(DISTRO_INCLUDE_CONF)"' \
+	'MACHINE_INCLUDE_CONF = "$(MACHINE_INCLUDE_CONF)"' \
 	)
 
 $(TOPDIR)/conf/local.conf: $(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH)
@@ -301,7 +309,11 @@ $(TOPDIR)/conf/local.conf: $(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH)
 BBLAYERS_CONF_HASH := $(call hash, \
 	'BBLAYERS_CONF_VERSION = "0"' \
 	'CURDIR = "$(CURDIR)"' \
+	'LCONF_VERSION = "$(LCONF_VERSION)"' \
+	'BBFILES = "$(BBFILES)"' \
 	'BBLAYERS = "$(BBLAYERS)"' \
+	'DISTRO_INCLUDE_CONF = "$(DISTRO_INCLUDE_CONF)"' \
+	'MACHINE_INCLUDE_CONF = "$(MACHINE_INCLUDE_CONF)"' \
 	)
 
 $(TOPDIR)/conf/bblayers.conf: $(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CONF_HASH)
