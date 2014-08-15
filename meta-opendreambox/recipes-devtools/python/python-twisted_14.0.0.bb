@@ -232,3 +232,6 @@ ${libdir}/${PYTHON_DIR}/site-packages/twisted/*/.debug \
 ${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*/.debug \
 "
 
+RPROVIDES_${PN}-core = "${PN}-protocols"
+RREPLACES_${PN}-core = "${PN}-protocols"
+RCONFLICTS_${PN}-core = "${PN}-protocols"
