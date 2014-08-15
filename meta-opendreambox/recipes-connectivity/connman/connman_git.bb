@@ -21,4 +21,4 @@ do_install_append() {
 
 FILES_${PN} += "${sbindir}/connmand-env ${systemd_unitdir}/system/connman-env.service"
 
-INHIBIT_UPDATERCD_BBCLASS = "1"
+INITSCRIPT_PACKAGES = ""
