@@ -1,7 +1,9 @@
-From 8652b2ddf6fecbfeeafed0e8c5eec67d1985241a Mon Sep 17 00:00:00 2001
+From d3f85ed4de7707f17ea2354440c59bbf75eb21c2 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:32:43 +0200
-Subject: [PATCH 02/17] Makefile.am: remove -g and -O compiler flags
+Subject: [PATCH 02/19] Makefile.am: remove -g and -O compiler flags
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
@@ -11,7 +13,7 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 26f2d99..1c6226f 100644
+index a691674..371d518 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -6,7 +6,7 @@ SUBDIRS = libbb libopkg src tests utils man
@@ -46,5 +48,5 @@ index 1a6f565..cfe77c1 100644
  #noinst_PROGRAMS = opkg_hash_test opkg_extract_test
  #noinst_PROGRAMS = libopkg_test opkg_active_list_test
 -- 
-1.8.1.2
+1.9.1
 

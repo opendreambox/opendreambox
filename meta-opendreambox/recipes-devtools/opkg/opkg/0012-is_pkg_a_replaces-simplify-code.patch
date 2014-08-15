@@ -1,7 +1,9 @@
-From da64b1edfadbbba8a9d6203d48bd5ec86bd9eae5 Mon Sep 17 00:00:00 2001
+From 8b5564f0ff75bd65b480ac37809868df7892cda3 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 17 Mar 2013 22:51:13 +0100
-Subject: [PATCH 13/17] is_pkg_a_replaces(): simplify code
+Subject: [PATCH 12/19] is_pkg_a_replaces(): simplify code
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
@@ -9,10 +11,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 3 insertions(+), 7 deletions(-)
 
 diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
-index e4bac38..cbb77ce 100644
+index 2422fb5..6b5a1a5 100644
 --- a/libopkg/pkg_depends.c
 +++ b/libopkg/pkg_depends.c
-@@ -350,22 +350,18 @@ pkg_hash_fetch_satisfied_dependencies(pkg_t * pkg)
+@@ -345,22 +345,18 @@ pkg_hash_fetch_satisfied_dependencies(pkg_t * pkg)
    really conflicts
    returns 0 if conflicts <> replaces or 1 if conflicts == replaces
  */
@@ -39,5 +41,5 @@ index e4bac38..cbb77ce 100644
  
  }
 -- 
-1.8.1.2
+1.9.1
 

@@ -1,8 +1,10 @@
-From 663e7a2798f325bcf07b084ba53f50878bb6e0a2 Mon Sep 17 00:00:00 2001
+From f87279fa462f11eac1a11dea5f3ccaaa7d8d66c9 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 10 Jul 2013 16:32:50 +0200
-Subject: [PATCH 15/17] opkg-key: don't install unless compiled with GPG
+Subject: [PATCH 14/19] opkg-key: don't install unless compiled with GPG
  support
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
@@ -12,7 +14,7 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  3 files changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 6c52339..bb62e34 100644
+index a707d01..3cb6b86 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -169,6 +169,7 @@ if test "x$want_gpgme" = "xyes"; then
@@ -49,5 +51,5 @@ index acac628..23f97ca 100644
  
  EXTRA_DIST = $(bin_SCRIPTS)
 -- 
-1.8.1.2
+1.9.1
 

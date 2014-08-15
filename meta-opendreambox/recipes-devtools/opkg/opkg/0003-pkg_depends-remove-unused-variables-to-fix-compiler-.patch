@@ -1,8 +1,10 @@
-From f5702f766380753a01f39fcbfdcf55d870065ff3 Mon Sep 17 00:00:00 2001
+From 581dd878713a542cca4061919c80b46701d800b2 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:14:23 +0200
-Subject: [PATCH 03/17] pkg_depends: remove unused variables to fix compiler
+Subject: [PATCH 03/19] pkg_depends: remove unused variables to fix compiler
  warnings
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
@@ -44,5 +46,5 @@ index 4664d4e..8291c68 100644
  
  
 -- 
-1.8.1.2
+1.9.1
 

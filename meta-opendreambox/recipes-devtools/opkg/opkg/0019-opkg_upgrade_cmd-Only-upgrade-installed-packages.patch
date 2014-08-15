@@ -1,0 +1,75 @@
+From d1af83268c5daba08a5a307c344d3b9fc544c2ad Mon Sep 17 00:00:00 2001
+From: Paul Barker <paul@paulbarker.me.uk>
+Date: Tue, 22 Apr 2014 10:55:01 +0100
+Subject: [PATCH 19/19] opkg_upgrade_cmd: Only upgrade installed packages
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
+
+Fixes issue 127.
+
+The manual page says that `opkg upgrade` upgrades already installed packages. If
+a package given on the command line is not already installed, an error message
+should be raised instead of installing the package. This bad argument is skipped
+and other arguments are upgraded if they are installed.
+
+The call to opkg_prepare_url_for_install() is removed as it is not necessary to
+handle remote URLs or file names when the packages must already be installed.
+
+The unused variable 'arg' is also removed.
+
+Signed-off-by: Paul Barker <paul@paulbarker.me.uk>
+(cherry picked from commit 68d05cad132da635715539fb5cfef8f4138f67d6)
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org> (merge fixes)
+---
+ libopkg/opkg_cmd.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
+
+diff --git a/libopkg/opkg_cmd.c b/libopkg/opkg_cmd.c
+index ee82462..f75a196 100644
+--- a/libopkg/opkg_cmd.c
++++ b/libopkg/opkg_cmd.c
+@@ -521,34 +521,26 @@ opkg_upgrade_cmd(int argc, char **argv)
+      signal(SIGINT, sigint_handler);
+ 
+      if (argc) {
+-	  for (i=0; i < argc; i++) {
+-	       char *arg = argv[i];
+-
+-               if (opkg_prepare_url_for_install(arg, &arg))
+-                   return -1;
+-	  }
+ 	  pkg_info_preinstall_check();
+ 
+ 	  for (i=0; i < argc; i++) {
+-	       char *arg = argv[i];
+ 	       if (conf->restrict_to_default_dest) {
+ 		    pkg = pkg_hash_fetch_installed_by_name_dest(argv[i],
+ 							conf->default_dest);
+ 		    if (pkg == NULL) {
+-			 opkg_msg(NOTICE, "Package %s not installed in %s.\n",
++			 opkg_msg(ERROR, "Package %s not installed in %s.\n",
+ 				      argv[i], conf->default_dest->name);
+ 			 continue;
+ 		    }
+ 	       } else {
+ 		    pkg = pkg_hash_fetch_installed_by_name(argv[i]);
++		    if (pkg == NULL) {
++			 opkg_msg(ERROR, "Package %s not installed.\n", argv[i]);
++			 continue;
++		    }
+ 	       }
+-	       if (pkg) {
+-		    if (opkg_upgrade_pkg(pkg))
+-			    err = -1;
+-	       } else {
+-		    if (opkg_install_by_name(arg))
+-			    err = -1;
+-               }
++	       if (opkg_upgrade_pkg(pkg))
++		    err = -1;
+ 	  }
+      } else {
+ 	  pkg_vec_t *installed = pkg_vec_alloc();
+-- 
+1.9.1
+

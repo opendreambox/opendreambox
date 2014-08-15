@@ -1,15 +1,17 @@
-From 910377538f51b84c0f9e7ed92582d6034b0e88dc Mon Sep 17 00:00:00 2001
+From c4f480d03a97478cf682b1d0b15e00b4f12b0bea Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Tue, 5 Mar 2013 22:23:21 +0100
-Subject: [PATCH 11/17] Keep auto-installed recommends when moved from depends
+Subject: [PATCH 11/19] Keep auto-installed recommends when moved from depends
  to recommends
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 ---
  libopkg/opkg_install.c | 7 ++++---
  1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
-index be36a64..8cd5cbf 100644
+index 0ff7705..6d0ff1f 100644
 --- a/libopkg/opkg_install.c
 +++ b/libopkg/opkg_install.c
 @@ -366,11 +366,12 @@ pkg_remove_orphan_dependent(pkg_t *pkg, pkg_t *old_pkg)
@@ -29,5 +31,5 @@ index be36a64..8cd5cbf 100644
  						break;
  					}
 -- 
-1.8.1.2
+1.9.1
 

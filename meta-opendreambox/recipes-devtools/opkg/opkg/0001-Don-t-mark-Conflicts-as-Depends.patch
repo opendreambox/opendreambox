@@ -1,7 +1,9 @@
-From 8cdffb1d7b29f25ea8155af42f0db43f85dfc649 Mon Sep 17 00:00:00 2001
+From cd93b79fe14a6f2f90f39c9c83d789166ca9e532 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 16 May 2012 23:29:04 +0200
-Subject: [PATCH 01/17] Don't mark Conflicts as Depends
+Subject: [PATCH 01/19] Don't mark Conflicts as Depends
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 - Fixes 'whatconflicts' sub-command.
 
@@ -25,5 +27,5 @@ index a4df7de..4664d4e 100644
  	 conflicts++;
      }
 -- 
-1.8.1.2
+1.9.1
 

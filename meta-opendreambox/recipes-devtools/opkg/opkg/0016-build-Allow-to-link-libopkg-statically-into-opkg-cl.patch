@@ -1,7 +1,9 @@
-From f5f2983f3152814d2addfa66326efe612b7a8d74 Mon Sep 17 00:00:00 2001
+From 5ae83f2c2621c243eeb77ac614cc36966433bc94 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 7 Oct 2013 21:16:33 +0200
-Subject: [PATCH 17/17] build: Allow to link libopkg statically into opkg-cl
+Subject: [PATCH 16/19] build: Allow to link libopkg statically into opkg-cl
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 - Introduces new configure option "--with-static-opkg-cl".
 - Reduces overall binary size if a shared libopkg is not used
@@ -14,7 +16,7 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  2 files changed, 8 insertions(+)
 
 diff --git a/configure.ac b/configure.ac
-index bb62e34..b48adc1 100644
+index 3cb6b86..5aa0b57 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -273,6 +273,11 @@ fi
@@ -41,5 +43,5 @@ index c8cb89f..699b241 100644
 +opkg_cl_LDFLAGS = -static
 +endif
 -- 
-1.8.1.2
+1.9.1
 

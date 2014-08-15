@@ -1,7 +1,9 @@
-From a066ab779583e9c037416b859481904484daf46b Mon Sep 17 00:00:00 2001
+From 5c9b0af051da35127a9020db7e4beb97547d53f7 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:15:15 +0200
-Subject: [PATCH 04/17] pkg_hash_fetch_conflicts: fix possible segfaults
+Subject: [PATCH 04/19] pkg_hash_fetch_conflicts: fix possible segfaults
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
@@ -30,5 +32,5 @@ index 8291c68..cd9d2c8 100644
  	    if (test_vec) {
                  /* pkg_vec found, it is an actual package conflict
 -- 
-1.8.1.2
+1.9.1
 

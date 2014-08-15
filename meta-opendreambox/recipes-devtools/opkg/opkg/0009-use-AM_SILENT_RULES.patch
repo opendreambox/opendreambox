@@ -1,14 +1,16 @@
-From 6362765e6ea338e1854665100a666efa8a93b062 Mon Sep 17 00:00:00 2001
+From 9418243d2f69a6dcfba7d9691636939f09dd83f3 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 16 May 2012 21:20:27 +0200
-Subject: [PATCH 09/17] use AM_SILENT_RULES
+Subject: [PATCH 09/19] use AM_SILENT_RULES
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 ---
  configure.ac | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/configure.ac b/configure.ac
-index c6b84b4..6c52339 100644
+index ab6bed0..a707d01 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -23,6 +23,7 @@ done
@@ -20,5 +22,5 @@ index c6b84b4..6c52339 100644
  # Checks for programs
  AC_PROG_AWK
 -- 
-1.8.1.2
+1.9.1
 

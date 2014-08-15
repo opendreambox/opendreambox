@@ -1,8 +1,10 @@
-From 54f87f881e504190f5a9c8db0ec571953557fd3c Mon Sep 17 00:00:00 2001
+From d0a0f6e1baffc619fba50695baaf5f3ee81db6d6 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 17 May 2012 01:17:52 +0200
-Subject: [PATCH 05/17] pkg_hash_fetch_conflicts: move iteration over conflicts
+Subject: [PATCH 05/19] pkg_hash_fetch_conflicts: move iteration over conflicts
  to subroutine
+To: opkg-devel@googlegroups.com
+Cc: paul@paulbarker.me.uk
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
@@ -90,5 +92,5 @@ index cd9d2c8..3190b16 100644
  
  int version_constraints_satisfied(depend_t * depends, pkg_t * pkg)
 -- 
-1.8.1.2
+1.9.1
 
