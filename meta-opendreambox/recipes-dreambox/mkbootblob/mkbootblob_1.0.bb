@@ -2,7 +2,7 @@ SUMMARY = "Create Dreambox eMMC boot BLOBs"
 SECTION = "console/utils"
 LICENSE = "CLOSED"
 
-SRCREV = "${@opendreambox_srcrev('08dce8bbef22c3c981c0d476ed3d424a10ef61c7', d)}"
+SRCREV = "${@opendreambox_srcrev('60d15e3867a1c6f801117e42d67e6e2fe207fe07', d)}"
 
 inherit autotools opendreambox-git
 
