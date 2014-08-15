@@ -11,13 +11,13 @@ SRC_URI += "file://busybox-telnetd.xinetd.in \
             file://0008-speed_table-add-baud-rates-up-to-4-MBit-s-as-defined.patch \
             file://0009-dd-behave-like-GNU-coreutils-with-conv-fsync.patch"
 
-inherit systemd xinetd
+inherit xinetd
 
 do_install_append() {
-        if grep -q "CONFIG_CRONTAB=y" ${WORKDIR}/defconfig; then
+        if grep -q "CONFIG_CRONTAB=y" ${B}/.config; then
                 install -d ${D}${sysconfdir}/cron/crontabs
         fi
-        if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+        if grep -q "CONFIG_TELNETD=y" ${B}/.config; then
                 install -d ${D}${systemd_unitdir}/system
                 ln -sf /dev/null ${D}${systemd_unitdir}/system/busybox-telnetd.service
                 install -m644 ${WORKDIR}/busybox-telnetd@.service ${D}${systemd_unitdir}/system
