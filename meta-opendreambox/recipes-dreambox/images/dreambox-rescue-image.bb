@@ -7,12 +7,15 @@ IMAGE_FSTYPES = "cpio"
 IMAGE_INSTALL = " \
         base-files \
         base-passwd \
+        boot-scripts \
         busybox \
         devnodes-minimal \
+        dreambox-dvb-modules-lcd \
         dropbear \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
         google-dns \
+        kmod \
         mkbootblob \
         netbase \
         initscripts \
@@ -21,6 +24,7 @@ IMAGE_INSTALL = " \
         recovery \
         sysvinit \
         udev \
+        util-linux-mount \
         xfsprogs-mkfs \
 "
 IMAGE_LINGUAS = ""
