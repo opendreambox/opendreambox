@@ -2,7 +2,7 @@ SUMMARY = "Provides web pages for the rescue partition"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 SRCREV = "${@opendreambox_srcrev('5d68fcde19886c1fdf4987ec18ceaa346a40c68a', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('770aadc790650980f58e0dda4e385409ee2bead9', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('cf02f108ea3f97520457f6438554097b6f3ba737', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
