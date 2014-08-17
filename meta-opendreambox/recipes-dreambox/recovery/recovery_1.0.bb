@@ -16,7 +16,13 @@ PACKAGES =+ "boot-scripts"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "boot-scripts gpgv"
+RDEPENDS_${PN} = " \
+    boot-scripts \
+    e2fsprogs-mke2fs \
+    gpgv \
+    parted \
+    util-linux-mount \
+"
 RDEPENDS_boot-scripts = "mkbootblob"
 
 FILES_boot-scripts = "${sbindir}/flash-kernel ${sbindir}/select-boot-source"
