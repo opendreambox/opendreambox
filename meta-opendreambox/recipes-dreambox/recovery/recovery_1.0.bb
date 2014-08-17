@@ -1,8 +1,8 @@
-SUMMARY = "Downloads and runs the recovery tool from the rescue partition"
+SUMMARY = "Command-line tools to flash and recover your Dreambox"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 SRCREV = "${@opendreambox_srcrev('f6d9de6dc38272d83f19f63afe874e1cb58a8c61', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('e20a4f70057457825bb924d16f58485e28732b98', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('a8ee9b3734afd4c5579ef7597d649b3f4f703ab9', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
@@ -12,20 +12,24 @@ do_install() {
     oe_runmake install DESTDIR=${D}
 }
 
-PACKAGES =+ "boot-scripts"
+PACKAGES =+ "flash-scripts"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = " \
-    boot-scripts \
     e2fsprogs-mke2fs \
+    flash-scripts \
     gpgv \
     parted \
     util-linux-mount \
 "
-RDEPENDS_boot-scripts = "mkbootblob"
+RDEPENDS_flash-scripts = " \
+    fastboot \
+    mkbootblob \
+    util-linux-sfdisk \
+"
 
-FILES_boot-scripts = "${sbindir}/flash-kernel ${sbindir}/select-boot-source"
+FILES_flash-scripts = "${sbindir}/flash-rescue ${sbindir}/flash-kernel ${sbindir}/select-boot-source"
 
 BRANCH = "master"
 BRANCH_dm7080 = "dm7080"
