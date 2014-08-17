@@ -2,15 +2,14 @@ SUMMARY = "Downloads and runs the recovery tool from the rescue partition"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 SRCREV = "${@opendreambox_srcrev('f6d9de6dc38272d83f19f63afe874e1cb58a8c61', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('e98b1615fd68a998961761e5f0cdc8a751228a27', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('e20a4f70057457825bb924d16f58485e28732b98', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
 inherit opendreambox-git
 
 do_install() {
-    install -d ${D}${sbindir}
-    install -m 755 flash-kernel select-boot-source run-recovery ${D}${sbindir}
+    oe_runmake install DESTDIR=${D}
 }
 
 PACKAGES =+ "boot-scripts"
