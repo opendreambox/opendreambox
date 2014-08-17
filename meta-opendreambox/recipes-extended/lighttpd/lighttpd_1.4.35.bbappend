@@ -1,6 +1,7 @@
 DEPENDS = ""
 
-SRC_URI += "file://lighttpd.conf.in"
+SRC_URI += "file://include-conf-enabled.sh.in \
+            file://lighttpd.conf.in"
 
 EXTRA_OECONF = ""
 
@@ -29,10 +30,27 @@ PACKAGECONFIG[gdbm] = "--with-gdbm,--without-gdbm,gdbm"
 PACKAGECONFIG[memcache] = "--with-memcache,--without-memcache,memcached"
 PACKAGECONFIG[lua] = "--with-lua,--without-lua,lua5.1"
 
+SED = "sed -e 's,@localstatedir@,${localstatedir},g' \
+           -e 's,@pkgdatadir@,${datadir}/${PN},g' \
+           -e 's,@pkgsysconfdir@,${sysconfdir}/${PN},g'"
+
+do_install_prepend() {
+        sed -e 's,/etc/lighttpd\.conf,${sysconfdir}/${PN}/lighttpd.conf,g' -i ${WORKDIR}/lighttpd
+        sed -e 's,@SYSCONFDIR@/lighttpd\.conf,${sysconfdir}/${PN}/lighttpd.conf,g' -i ${WORKDIR}/lighttpd.service
+}
 do_install_append() {
-        rm -rf ${D}/www
-        sed -e 's,@localstatedir@,${localstatedir},g' -e 's,@sysconfdir@,${sysconfdir},g' \
-                < ${WORKDIR}/lighttpd.conf.in > ${D}${sysconfdir}/lighttpd.conf
+        rm -r ${D}${sysconfdir}/lighttpd.d ${D}/www
+        rm ${D}${sysconfdir}/lighttpd.conf
+
+        install -d ${D}${sysconfdir}/${PN}
+        ${SED} < ${WORKDIR}/lighttpd.conf.in > ${D}${sysconfdir}/${PN}/lighttpd.conf
+        chmod 644 ${D}${sysconfdir}/${PN}/lighttpd.conf
+
+        install -d ${D}${datadir}/${PN}
+        ${SED} < ${WORKDIR}/include-conf-enabled.sh.in > ${D}${datadir}/${PN}/include-conf-enabled.sh
+        chmod 755 ${D}${datadir}/${PN}/include-conf-enabled.sh
+
+        install -d ${D}${sysconfdir}/${PN}/conf-enabled
 }
 
 RDEPENDS_${PN} = "lighttpd-module-dirlisting \

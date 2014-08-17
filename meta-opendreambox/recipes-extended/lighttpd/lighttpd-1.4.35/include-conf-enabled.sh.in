@@ -1,0 +1,3 @@
+#!/bin/sh
+pkgsysconfdir=${1:-@pkgsysconfdir@}
+cd $pkgsysconfdir && find conf-enabled/ -maxdepth 1 -name '*.conf' -exec printf 'include "{}"\n' \;
