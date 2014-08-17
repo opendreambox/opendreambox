@@ -1,6 +1,7 @@
 DEPENDS = ""
 
-SRC_URI += "file://include-conf-enabled.sh.in \
+SRC_URI += "file://configure.ac-force-enable-sendfile-when-cross-compiling.patch \
+            file://include-conf-enabled.sh.in \
             file://lighttpd.conf.in"
 
 EXTRA_OECONF = ""

@@ -1,0 +1,29 @@
+Upstream-Status: Inappropriate [configuration]
+
+From 53da8221d9192ab3756487ed5740decff85c8dcf Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Sun, 17 Aug 2014 22:08:41 +0200
+Subject: [PATCH] configure.ac: force enable sendfile when cross-compiling
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ configure.ac | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 48e6b52..396f69c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -564,8 +564,7 @@ if test "x$ac_cv_func_sendfile" = xyes; then
+ 		    [ AC_MSG_RESULT(no)
+ 		    AC_DEFINE([HAVE_SENDFILE_BROKEN], [1], [broken sendfile]) ] )
+ 	else
+-	      AC_MSG_RESULT(no, cross-compiling)
+-	      AC_DEFINE([HAVE_SENDFILE_BROKEN], [1], [broken sendfile])
++	      AC_MSG_RESULT(yes, cross-compiling)
+ 	fi
+ fi
+ 
+-- 
+1.9.1
+
