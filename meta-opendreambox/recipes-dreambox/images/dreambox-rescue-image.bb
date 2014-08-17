@@ -30,6 +30,7 @@ IMAGE_INSTALL = " \
         parted \
         procps \
         recovery \
+        recovery-web \
         sysvinit \
         udev \
         util-linux-mount \
