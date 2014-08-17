@@ -1,6 +1,12 @@
 inherit image
 
-BAD_RECOMMENDATIONS += "busybox-syslog udev-hwdb update-rc.d"
+BAD_RECOMMENDATIONS += " \
+        busybox-syslog \
+        lighttpd-module-access \
+        lighttpd-module-accesslog \
+        udev-hwdb \
+        update-rc.d \
+"
 
 IMAGE_FEATURES = ""
 IMAGE_FSTYPES = "cpio"
@@ -15,7 +21,9 @@ IMAGE_INSTALL = " \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
         google-dns \
+        haserl \
         kmod \
+        lighttpd \
         mkbootblob \
         netbase \
         initscripts \
