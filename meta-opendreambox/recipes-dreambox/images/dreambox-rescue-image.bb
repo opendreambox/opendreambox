@@ -21,6 +21,7 @@ IMAGE_INSTALL = " \
         google-dns \
         kmod \
         netbase \
+        init-ifupdown \
         initscripts \
         procps \
         recovery-web \
