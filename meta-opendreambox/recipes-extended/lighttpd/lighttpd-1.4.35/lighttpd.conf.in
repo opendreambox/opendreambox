@@ -1,7 +1,3 @@
-var.server_document_root = "@localstatedir@/www/html"
-var.server_port = 8080
-
+server.document-root = "@localstatedir@/www/html"
+server.port = 8080
 include_shell "@pkgdatadir@/include-conf-enabled.sh"
-
-server.document-root = server_document_root
-server.port = server_port
