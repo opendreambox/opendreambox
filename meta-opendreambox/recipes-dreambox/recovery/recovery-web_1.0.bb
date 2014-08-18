@@ -1,8 +1,9 @@
 SUMMARY = "Provides web pages for the rescue partition"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
+DEPENDS = "fcgi"
 SRCREV = "${@opendreambox_srcrev('5d68fcde19886c1fdf4987ec18ceaa346a40c68a', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('cf02f108ea3f97520457f6438554097b6f3ba737', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('21c7b1d3bd1e06ea4cad657fc004eff5a0914d63', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
@@ -18,6 +19,7 @@ RDEPENDS_${PN} = " \
     haserl \
     lighttpd \
     lighttpd-module-cgi \
+    lighttpd-module-fastcgi \
     recovery \
 "
 
