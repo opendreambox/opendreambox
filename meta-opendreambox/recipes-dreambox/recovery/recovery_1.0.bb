@@ -2,7 +2,7 @@ SUMMARY = "Command-line tools to flash and recover your Dreambox"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 SRCREV = "${@opendreambox_srcrev('f6d9de6dc38272d83f19f63afe874e1cb58a8c61', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('a8ee9b3734afd4c5579ef7597d649b3f4f703ab9', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('c84aa8f92ee686e031cc773b0aad317aab534bc1', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
