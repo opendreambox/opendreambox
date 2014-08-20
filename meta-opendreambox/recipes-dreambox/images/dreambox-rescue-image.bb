@@ -33,9 +33,16 @@ IMAGE_LINGUAS = ""
 IMAGE_ROOTFS_SIZE = "16384"
 USE_DEVFS = "1"
 
+ISSUE_TEXT  = ">>> Your Dreambox has booted into RESCUE MODE.\n"
+ISSUE_TEXT .= ">>> Please log in as user 'root' (no password required),\n"
+ISSUE_TEXT .= ">>> then run 'help' to get further information.\n"
+ISSUE_TEXT .= "\n"
+
 tweak_initramfs() {
         touch ${IMAGE_ROOTFS}${sysconfdir}/initrd-release
         sed -e '/enigma2/d' -i ${IMAGE_ROOTFS}${sysconfdir}/inittab
+        printf "${ISSUE_TEXT}" >> ${IMAGE_ROOTFS}${sysconfdir}/issue
+        printf "${ISSUE_TEXT}" >> ${IMAGE_ROOTFS}${sysconfdir}/issue.net
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "tweak_initramfs; "
