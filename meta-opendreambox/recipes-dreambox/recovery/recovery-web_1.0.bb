@@ -3,7 +3,7 @@ HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 DEPENDS = "fcgi"
 SRCREV = "${@opendreambox_srcrev('5d68fcde19886c1fdf4987ec18ceaa346a40c68a', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('fa9854bf263d3d7ecc916ea5962c0f8ed5d1b39e', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('266167797fd0f2abeaf537efb09a2e012adf0873', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
