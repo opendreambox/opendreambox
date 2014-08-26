@@ -14,15 +14,16 @@ BAD_RECOMMENDATIONS += "libnss-mdns udev-hwdb wpa-supplicant-passphrase xinetd"
 
 VIRTUAL-RUNTIME_init_manager ?= "systemd"
 VIRTUAL-RUNTIME_network_manager ?= "connman"
+VIRTUAL-RUNTIME_package_manager ?= "${IMAGE_PKGTYPE}"
 
 # packages to drag into the image
 IMAGE_INSTALL = " \
     packagegroup-boot-${VIRTUAL-RUNTIME_init_manager} \
     packagegroup-net-${VIRTUAL-RUNTIME_network_manager} \
+    packagegroup-pkg-${VIRTUAL-RUNTIME_package_manager} \
     packagegroup-opendreambox-base \
     packagegroup-opendreambox-dvbapi3 \
     packagegroup-opendreambox-enigma2 \
-    ${ROOTFS_PKGMANAGE} \
 "
 
 # enable online package management
