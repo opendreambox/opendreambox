@@ -35,9 +35,6 @@ IMAGE_LINGUAS = ""
 # 512MB rootfs
 IMAGE_ROOTFS_SIZE_ext4 = "524288"
 
-# we dont like to call ldconfig on image build...
-LDCONFIGDEPEND = ""
-
 inherit image
 
 opendreambox_rootfs_postprocess() {
