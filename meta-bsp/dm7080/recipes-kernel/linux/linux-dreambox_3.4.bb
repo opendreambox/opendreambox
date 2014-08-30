@@ -10,8 +10,8 @@ SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
 SRC_URI[stable-patch.md5sum] = "bc5a50cfaea51528e0f78b5d19684a8d"
 SRC_URI[stable-patch.sha256sum] = "4f208c4ac5d76580680d9fa8fd35d5d35c7699565a59280d5173d66538c0a219"
-SRC_URI[dream-patch.md5sum] = "fc836e439a77d0ca4399d75eefa45b8c"
-SRC_URI[dream-patch.sha256sum] = "c8d8c2c7b63b1b2a50f1e8a2189346917f42382979840ad0255326d58fbc2f3f"
+SRC_URI[dream-patch.md5sum] = "6301c34f5f0c36ed297e6c31cc326022"
+SRC_URI[dream-patch.sha256sum] = "f8d33822468fd514132d6d2f394ba24ab364d546b6bc43bf08eb9098af60e29e"
 
 S = "${WORKDIR}/linux-3.4"
 
