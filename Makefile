@@ -241,15 +241,23 @@ update:
 MACHINE_INCLUDE_CONF = $(CURDIR)/conf/$(basename $(@F))-$(MACHINE)-ext.conf
 DISTRO_INCLUDE_CONF = $(CURDIR)/conf/$(basename $(@F))-ext.conf
 
+BB_ENV_EXTRAWHITE = MACHINE DISTRO TCMODE TCLIBC HTTP_PROXY http_proxy \
+	HTTPS_PROXY https_proxy FTP_PROXY ftp_proxy FTPS_PROXY ftps_proxy ALL_PROXY \
+	all_proxy NO_PROXY no_proxy SSH_AGENT_PID SSH_AUTH_SOCK BB_SRCREV_POLICY \
+	SDKMACHINE BB_NUMBER_THREADS BB_NO_NETWORK PARALLEL_MAKE GIT_PROXY_COMMAND \
+	SOCKS5_PASSWD SOCKS5_USER SCREENDIR STAMPS_DIR
+
 BITBAKE_ENV_HASH := $(call hash, \
 	'BITBAKE_ENV_VERSION = "0"' \
+	'BB_ENV_EXTRAWHITE = "$(BB_ENV_EXTRAWHITE)"' \
 	'CURDIR = "$(CURDIR)"' \
 	)
 
 bitbake.env: $(DEPDIR)/.bitbake.env.$(BITBAKE_ENV_HASH)
 	@echo '[*] Generating $@'
 	@echo '# Automatically generated file. Do not edit!' > $@
-	@echo 'export PATH=$(CURDIR)/openembedded-core/scripts:$(CURDIR)/bitbake/bin:$${PATH}' >> $@
+	@echo 'export BB_ENV_EXTRAWHITE="$(BB_ENV_EXTRAWHITE)"' >> $@
+	@echo 'export PATH="$(CURDIR)/openembedded-core/scripts:$(CURDIR)/bitbake/bin:$${PATH}"' >> $@
 
 OPENDREAMBOX_CONF_HASH := $(call hash, \
 	'OPENDREAMBOX_CONF_VERSION = "2"' \
