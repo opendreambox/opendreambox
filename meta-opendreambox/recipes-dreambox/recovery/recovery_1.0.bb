@@ -29,7 +29,7 @@ RDEPENDS_flash-scripts = " \
     util-linux-sfdisk \
 "
 
-FILES_flash-scripts = "${sbindir}/flash-rescue ${sbindir}/flash-kernel ${sbindir}/select-boot-source"
+FILES_flash-scripts = "${sbindir}/flash-rescue ${sbindir}/flash-kernel ${sbindir}/flash-ssbl ${sbindir}/select-boot-source"
 
 BRANCH = "master"
 BRANCH_dm7080 = "dm7080"
