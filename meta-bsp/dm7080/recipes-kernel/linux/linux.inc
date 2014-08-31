@@ -5,10 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 inherit kernel siteinfo
 
-# Set the verbosity of kernel messages during runtime
-# You can define CMDLINE_DEBUG in your local.conf or distro.conf to override this behaviour
-CMDLINE_DEBUG ?= ""
-
+CMDLINE ?= ""
 LOCALVERSION ?= ""
 
 #kernel_conf_variable CMDLINE "\"${CMDLINE} ${CMDLINE_DEBUG}\""
@@ -31,9 +28,13 @@ do_configure_prepend() {
     echo "" > ${S}/.config
     CONF_SED_SCRIPT=""
 
-    kernel_conf_variable CMDLINE "\"${CMDLINE} ${CMDLINE_DEBUG}\""
+    if [ -n "${CMDLINE}" ]; then
+        kernel_conf_variable CMDLINE "\"${CMDLINE}\""
+    fi
 
-    kernel_conf_variable LOCALVERSION "\"${LOCALVERSION}\""
+    if [ -n "${LOCALVERSION}" ]; then
+        kernel_conf_variable LOCALVERSION "\"${LOCALVERSION}\""
+    fi
     kernel_conf_variable LOCALVERSION_AUTO n
 
     kernel_conf_variable SYSFS_DEPRECATED n

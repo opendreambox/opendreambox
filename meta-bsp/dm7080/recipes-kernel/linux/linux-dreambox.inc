@@ -43,7 +43,3 @@ pkg_postinst_kernel-image () {
 }
 pkg_postrm_kernel-image () {
 }
-
-CMDLINE = "root=/dev/nfs ip=dhcp ${CMDLINE_CONSOLE}"
-
-LOCALVERSION = "-${MACHINE}"
