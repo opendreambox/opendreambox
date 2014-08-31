@@ -21,7 +21,7 @@ do_install_append() {
                 # Mark the kernel as executable, so it gets stripped during do_package.
                 chmod +x ${D}/${KERNEL_IMAGEDEST}/vmlinux-${KERNEL_VERSION}
         fi
-        echo "/boot/bootlogo-${MACHINE}.elf.gz filename=/boot/bootlogo-${MACHINE}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
+        echo "/boot/bootlogo.elf.gz filename=/boot/bootlogo.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${CMDLINE}" >> ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
 }
 
