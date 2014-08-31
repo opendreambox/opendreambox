@@ -27,6 +27,7 @@ SRC_URI = " \
         file://0017-CHROMIUM-make-3.82-hack-to-fix-differing-behaviour-b.patch \
         file://0018-net-ipv4-ipconfig-really-display-the-BOOTP-DHCP-serv.patch \
         file://0001-linuxtv-api-DMM-drivers-are-now-ready-for-linux-tv-a.patch \
+        file://0001-add-support-for-DM800SEv2-and-DM500HDv2-simplified-1.patch \
         file://defconfig \
 "
 
