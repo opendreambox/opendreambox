@@ -3,6 +3,7 @@
 /.deps/
 /meta-*/
 !/meta-bsp/
+!/meta-dreambox/
 !/meta-opendreambox/
 !/meta-openembedded/
 /persist-cache/

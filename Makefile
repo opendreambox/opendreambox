@@ -65,7 +65,7 @@ BITBAKE = . $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake
 
 BBLAYERS ?= \
 	$(wildcard $(CURDIR)/meta-bsp/$(MACHINE)) \
-	$(CURDIR)/meta-bsp/common \
+	$(CURDIR)/meta-dreambox \
 	$(CURDIR)/meta-opendreambox \
 	$(CURDIR)/meta-qt5 \
 	$(CURDIR)/meta-openembedded/meta-oe \
