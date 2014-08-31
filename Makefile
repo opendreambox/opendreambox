@@ -38,11 +38,6 @@ MACHINE ?= dm7080
 
 USER_MACHINE := $(MACHINE)
 
-ifeq ($(MACHINE),dm7020hdv2)
-override MACHINE := dm7020hd
-MAKE_IMAGE_BB ?= dreambox-image-dm7020hdv2
-endif
-
 MAKE_IMAGE_BB ?= dreambox-image
 
 # Adjust according to the number CPU cores to use for parallel build.
