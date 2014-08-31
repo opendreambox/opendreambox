@@ -2,7 +2,6 @@
 /.cross-compile-*.env
 /.deps/
 /meta-*/
-!/meta-bsp/
 !/meta-dreambox/
 !/meta-opendreambox/
 !/meta-openembedded/
