@@ -7,7 +7,7 @@
 <meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
 <!-- html --> 
 <meta name="src" content="opendreambox.tex"> 
-<meta name="date" content="2014-08-05 13:27:00"> 
+<meta name="date" content="2014-09-01 00:59:00"> 
 <link rel="stylesheet" type="text/css" href="opendreambox.css"> 
 </head><body 
 >
@@ -25,7 +25,7 @@ class="cmr-12">Andreas Oberritter </span><span
 class="cmtt-9">&#x003C;obi@opendreambox.org&#x003E;</span></div>
 <br />
 <div class="date" ><span 
-class="cmr-12">August 2014</span></div>
+class="cmr-12">September 2014</span></div>
 </div>
 <h3 class="likesectionHead"><a 
  id="x1-1000"></a>Contents</h3>
@@ -49,7 +49,7 @@ href="#x1-90001.6.1" id="QQ2-1-9">openembedded-core and meta-openembedded</a></s
 <br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >1.6.2 <a 
 href="#x1-100001.6.2" id="QQ2-1-10">meta-opendreambox</a></span>
 <br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >1.6.3 <a 
-href="#x1-110001.6.3" id="QQ2-1-11">meta-bsp</a></span>
+href="#x1-110001.6.3" id="QQ2-1-11">meta-dreambox</a></span>
 <br /><span class="sectionToc" >2 <a 
 href="#x1-120002" id="QQ2-1-12">Further readings</a></span>
 <br /><span class="sectionToc" >3 <a 
@@ -282,13 +282,7 @@ installable software packages and firmware images.
 <!--l. 156--><p class="noindent" >Currently, these layers are used, ordered by priority from highest to lowest:
      <ul class="itemize1">
      <li class="itemize"><span 
-class="cmtt-9">meta-bsp/$</span><span 
-class="cmsy-9">{</span><span 
-class="cmtt-9">MACHINE</span><span 
-class="cmsy-9">}</span>
-     </li>
-     <li class="itemize"><span 
-class="cmtt-9">meta-bsp/common</span>
+class="cmtt-9">meta-dreambox</span>
      </li>
      <li class="itemize"><span 
 class="cmtt-9">meta-opendreambox</span>
@@ -319,9 +313,9 @@ class="cmtt-9">openembedded-core/meta</span></li></ul>
                                                                   
 
                                                                   
-<!--l. 173--><p class="noindent" >If a recipe for the same package exists in multiple layers, then the higher priority
+<!--l. 172--><p class="noindent" >If a recipe for the same package exists in multiple layers, then the higher priority
 layer takes precedence over the lower priority layer.
-<!--l. 177--><p class="noindent" >For example, if <span 
+<!--l. 176--><p class="noindent" >For example, if <span 
 class="cmtt-9">libmad</span><span 
 class="cmtt-9">_0.15.1b.bb </span>existed in both <span 
 class="cmtt-9">meta-openembedded </span>and
@@ -330,7 +324,7 @@ class="cmtt-9">openembedded-core</span>, the recipe in <span
 class="cmtt-9">meta-openembedded </span>would be used, because
 <span 
 class="cmtt-9">openembedded-core </span>has lower priority.
-<!--l. 182--><p class="noindent" ><span 
+<!--l. 181--><p class="noindent" ><span 
 class="cmbx-10">NOTE: </span>This would still be true even if the version of <span 
 class="cmtt-9">libmad </span>in <span 
 class="cmtt-9">openembeded-core</span>
@@ -343,26 +337,26 @@ was set to the version in <span
 class="cmtt-9">openembedded-core</span>. There is currently no way to prefer a
 version of a lower priority layer, if the same version is present in a higher priority
 layer.
-<!--l. 188--><p class="noindent" >
+<!--l. 187--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">1.6.1   </span> <a 
  id="x1-90001.6.1"></a>openembedded-core and meta-openembedded</h5>
-<!--l. 189--><p class="noindent" >These directories contain copies of Git repositories from git.openembedded.org,
+<!--l. 188--><p class="noindent" >These directories contain copies of Git repositories from git.openembedded.org,
 including the OpenEmbedded-Core layer and the (Meta-)OpenEmbedded layers.
 They get created automatically when building the distribution for the first
 time.
-<!--l. 193--><p class="noindent" >Throughout this document, the combination of these directories will be referred to as
+<!--l. 192--><p class="noindent" >Throughout this document, the combination of these directories will be referred to as
 OpenEmbedded.
-<!--l. 196--><p class="noindent" >The latest changes to these Git repositories can be seen at:
-<!--l. 198--><p class="noindent" ><a 
+<!--l. 195--><p class="noindent" >The latest changes to these Git repositories can be seen at:
+<!--l. 197--><p class="noindent" ><a 
 href="http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/dora" class="url" ><span 
 class="cmtt-10">http://git.openembedded.org/openembedded-_core-_contrib/log/?h=obi/dora</span></a>
-<!--l. 200--><p class="noindent" ><a 
+<!--l. 199--><p class="noindent" ><a 
 href="http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/dora" class="url" ><span 
 class="cmtt-10">http://git.openembedded.org/meta-_openembedded-_contrib/log/?h=obi/dora</span></a>
-<!--l. 202--><p class="noindent" >
+<!--l. 201--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">1.6.2   </span> <a 
  id="x1-100001.6.2"></a>meta-opendreambox</h5>
-<!--l. 203--><p class="noindent" >This directory contains:
+<!--l. 202--><p class="noindent" >This directory contains:
      <ul class="itemize1">
      <li class="itemize">Recipes   for   packages   written   specifically   for   the   OpenDreambox
      distribution
@@ -377,12 +371,12 @@ class="cmtt-10">http://git.openembedded.org/meta-_openembedded-_contrib/log/?h=o
                                                                   
 
                                                                   
-<!--l. 212--><p class="noindent" >
+<!--l. 211--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">1.6.3   </span> <a 
- id="x1-110001.6.3"></a>meta-bsp</h5>
-<!--l. 213--><p class="noindent" >The directory <span 
-class="cmtt-9">meta-bsp </span>contains Board Support Packages (BSP) for the supported
-Dreambox models. This includes:
+ id="x1-110001.6.3"></a>meta-dreambox</h5>
+<!--l. 212--><p class="noindent" >The directory <span 
+class="cmtt-9">meta-dreambox </span>contains Board Support Packages (BSP) for the
+supported Dreambox models. This includes:
      <ul class="itemize1">
      <li class="itemize">Hardware drivers
      </li>
@@ -393,20 +387,20 @@ Dreambox models. This includes:
      <li class="itemize">The boot loader
      </li>
      <li class="itemize">Splash images</li></ul>
-<!--l. 224--><p class="noindent" >
+<!--l. 223--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">2   </span> <a 
  id="x1-120002"></a>Further readings</h3>
      <ul class="itemize1">
      <li class="itemize">The Yocto Project Reference Manual: <a 
 href="https://www.yoctoproject.org/docs/1.5.1/ref-manual/ref-manual.html" class="url" ><span 
 class="cmtt-10">https://www.yoctoproject.org/docs/1.5.1/ref-_manual/ref-_manual.html</span></a></li></ul>
-<!--l. 230--><p class="noindent" >
+<!--l. 229--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">3   </span> <a 
  id="x1-130003"></a>Prerequisites</h3>
-<!--l. 233--><p class="noindent" >
+<!--l. 232--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">3.1   </span> <a 
  id="x1-140003.1"></a>Required software</h4>
-<!--l. 235--><p class="noindent" >The OpenEmbedded project provides a general list of prerequisites for many Linux
+<!--l. 234--><p class="noindent" >The OpenEmbedded project provides a general list of prerequisites for many Linux
 distributions and also for some other operating systems.
                                                                   
 
@@ -415,7 +409,7 @@ distributions and also for some other operating systems.
      <li class="itemize"><a 
 href="http://www.openembedded.org/wiki/Getting\_started#Required\_software" class="url" ><span 
 class="cmtt-10">http://www.openembedded.org/wiki/Getting\_started#Required\_software</span></a></li></ul>
-<!--l. 242--><p class="noindent" >It is highly recommended to use Linux to build OpenDreambox. In theory, any recent
+<!--l. 241--><p class="noindent" >It is highly recommended to use Linux to build OpenDreambox. In theory, any recent
 distribution will do, but not many distributions have been verified to build
 OpenDreambox without errors. Tested distributions include:
      <ul class="itemize1">
@@ -425,10 +419,10 @@ OpenDreambox without errors. Tested distributions include:
                                                                   
 
                                                                   
-<!--l. 254--><p class="noindent" >
+<!--l. 253--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">4   </span> <a 
  id="x1-150004"></a>Major changes since previous public releases</h3>
-<!--l. 256--><p class="noindent" >
+<!--l. 255--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">4.1   </span> <a 
  id="x1-160004.1"></a>Changes since release 1.6</h4>
      <ul class="itemize1">
@@ -464,7 +458,7 @@ class="cmsy-9">} </span>to <span
 class="cmtt-9">linux-dreambox</span>.
      </li>
      <li class="itemize">Support for machines based on ATI Xilleon or IBM STB was dropped.</li></ul>
-<!--l. 269--><p class="noindent" >
+<!--l. 268--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">4.2   </span> <a 
  id="x1-170004.2"></a>Changes since release 2.0</h4>
      <ul class="itemize1">
@@ -483,7 +477,9 @@ class="cmtt-9">sstate-cache</span>, which allows to share already compiled
                                                                   
      </li>
      <li class="itemize">Support for machines without FPU and kernel versions below 3.x was
-     dropped (DM800).</li></ul>
+     dropped (DM800).
+     </li>
+     <li class="itemize">Layers under meta-bsp were combined into meta-dreambox.</li></ul>
 <!--l. 281--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">5   </span> <a 
  id="x1-180005"></a>Known Issues</h3>
@@ -802,18 +798,22 @@ class="cmtt-9">_FEATURES    </span>or
 class="cmtt-9">DREAMBOX</span><span 
 class="cmtt-9">_FEATURES</span>.
      </li>
-     <li class="itemize">The recipe is part of <span 
-class="cmtt-9">meta-bsp</span>.</li></ul>
+     <li class="itemize">The recipe uses <span 
+class="cmtt-9">COMPATIBLE</span><span 
+class="cmtt-9">_MACHINE</span>.
                                                                   
 
                                                                   
-<!--l. 445--><p class="noindent" >
+     </li>
+     <li class="itemize">The recipe is part of <span 
+class="cmtt-9">meta-dreambox</span>.</li></ul>
+<!--l. 446--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">8   </span> <a 
  id="x1-370008"></a>Bug reports and patches</h3>
-<!--l. 447--><p class="noindent" >Please send bug reports and patches to the Enigma2 development mailing list
+<!--l. 448--><p class="noindent" >Please send bug reports and patches to the Enigma2 development mailing list
 <span 
 class="cmtt-9">&#x003C;enigma2-devel@lists.elitedvb.net&#x003E;</span>.
-<!--l. 449--><p class="noindent" >A comfortable way to create patches is to use <span 
+<!--l. 450--><p class="noindent" >A comfortable way to create patches is to use <span 
 class="cmtt-9">git format-patch</span>, after all changes
 have been committed to your local copy of the repository.
  

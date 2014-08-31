@@ -44,7 +44,7 @@
 \begin{document}
 \title{opendreambox}
 \author{Andreas Oberritter \shell{<obi@opendreambox.org>}}
-\date{August 2014}
+\date{September 2014}
 \maketitle
 %\thispagestyle{empty}
 %\pagestyle{empty}
@@ -157,8 +157,7 @@ THE SOFTWARE.
     lowest:
 
     \begin{itemize}
-      \item \shell{meta-bsp/\$\{MACHINE\}}
-      \item \shell{meta-bsp/common}
+      \item \shell{meta-dreambox}
       \item \shell{meta-opendreambox}
       \item \shell{meta-qt5}
       \item \shell{meta-openembedded/meta-oe}
@@ -209,8 +208,8 @@ THE SOFTWARE.
         \item Recipes for software versions newer than those available from OpenEmbedded
       \end{itemize}
 
-    \subsubsection{meta-bsp}
-      The directory \shell{meta-bsp} contains Board Support Packages (BSP)
+    \subsubsection{meta-dreambox}
+      The directory \shell{meta-dreambox} contains Board Support Packages (BSP)
       for the supported Dreambox models. This includes:
 
       \begin{itemize}
@@ -276,6 +275,7 @@ THE SOFTWARE.
             data between compatible machines. This impacts performance and size of the
             build system, but improves reliability and consistency across builds.
       \item Support for machines without FPU and kernel versions below 3.x was dropped (DM800).
+      \item Layers under meta-bsp were combined into meta-dreambox.
     \end{itemize}
 
 \section{Known Issues}
@@ -439,7 +439,8 @@ THE SOFTWARE.
     Set \shell{PACKAGE\_ARCH = "\$\{MACHINE\_ARCH\}"} if either condition is met:
     \begin{itemize}
       \item The recipe uses \shell{COMBINED\_FEATURES}, \shell{MACHINE\_FEATURES} or \shell{DREAMBOX\_FEATURES}.
-      \item The recipe is part of \shell{meta-bsp}.
+      \item The recipe uses \shell{COMPATIBLE\_MACHINE}.
+      \item The recipe is part of \shell{meta-dreambox}.
     \end{itemize}
 
 \section{Bug reports and patches}

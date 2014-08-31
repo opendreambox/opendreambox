@@ -1,7 +1,7 @@
 opendreambox
 
    Andreas Oberritter <obi@opendreambox.org>
-   August 2014
+   September 2014
 
   Contents
 
@@ -14,7 +14,7 @@ opendreambox
     1.6 Directory structure
      1.6.1 openembedded-core and meta-openembedded
      1.6.2 meta-opendreambox
-     1.6.3 meta-bsp
+     1.6.3 meta-dreambox
    2 Further readings
    3 Prerequisites
     3.1 Required software
@@ -142,8 +142,7 @@ opendreambox
    assemble installable software packages and firmware images.
 
    Currently, these layers are used, ordered by priority from highest to lowest:
-     * meta-bsp/${MACHINE}
-     * meta-bsp/common
+     * meta-dreambox
      * meta-opendreambox
      * meta-qt5
      * meta-openembedded/meta-oe
@@ -190,10 +189,10 @@ opendreambox
      * Recipes for software versions older than those available from OpenEmbedded
      * Recipes for software versions newer than those available from OpenEmbedded
 
-      1.6.3 meta-bsp
+      1.6.3 meta-dreambox
 
-   The directory meta-bsp contains Board Support Packages (BSP) for the supported
-   Dreambox models. This includes:
+   The directory meta-dreambox contains Board Support Packages (BSP) for the
+   supported Dreambox models. This includes:
      * Hardware drivers
      * Machine specific overrides
      * The Linux kernel
@@ -244,6 +243,7 @@ opendreambox
        system, but improves reliability and consistency across builds.
      * Support for machines without FPU and kernel versions below 3.x was dropped
        (DM800).
+     * Layers under meta-bsp were combined into meta-dreambox.
 
   5 Known Issues
 
@@ -417,7 +417,8 @@ opendreambox
 
    Set PACKAGE_ARCH = "${MACHINE_ARCH}" if either condition is met:
      * The recipe uses COMBINED_FEATURES, MACHINE_FEATURES or DREAMBOX_FEATURES.
-     * The recipe is part of meta-bsp.
+     * The recipe uses COMPATIBLE_MACHINE.
+     * The recipe is part of meta-dreambox.
 
   8 Bug reports and patches
 
