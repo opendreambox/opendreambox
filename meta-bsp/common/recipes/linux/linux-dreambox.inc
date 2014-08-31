@@ -10,9 +10,6 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-USB_ROOT = "/dev/sdb2"
-USB_ROOT_dm8000 = "/dev/sdf2"
-
 do_install_append() {
         if [ "${KERNEL_IMAGETYPE}" = "vmlinux" ]; then
                 # We want a stripped kernel that gets gzipped and booted from and
@@ -26,15 +23,12 @@ do_install_append() {
         fi
         echo "/boot/bootlogo-${MACHINE}.elf.gz filename=/boot/bootlogo-${MACHINE}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${CMDLINE}" >> ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
-        echo "/boot/bootlogo-${MACHINE}.elf.gz filename=/boot/bootlogo-${MACHINE}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
-        echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${USB_CMDLINE}" >> ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
 }
 
-PACKAGES += "kernel-image-dbg kernel-image-usb"
+PACKAGES += "kernel-image-dbg"
 
 FILES_kernel-image += "/${KERNEL_IMAGEDEST}/autoexec.bat"
 FILES_kernel-image-dbg = "/${KERNEL_IMAGEDEST}/.debug"
-FILES_kernel-image-usb = "/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat"
 FILES_kernel-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}"
 
 python populate_packages_prepend() {
@@ -76,7 +70,6 @@ pkg_postrm_kernel () {
 CMDLINE_JFFS2 = "root=/dev/mtdblock3 rootfstype=jffs2 rw ${CMDLINE_CONSOLE}"
 CMDLINE_UBI = "ubi.mtd=root root=ubi0:rootfs rootfstype=ubifs rw ${CMDLINE_CONSOLE}"
 CMDLINE = "${@base_contains('IMAGE_FSTYPES', 'ubi.nfi', '${CMDLINE_UBI}', '${CMDLINE_JFFS2}', d)}"
-USB_CMDLINE = "root=${USB_ROOT} rootdelay=10 rw ${CMDLINE_CONSOLE}"
 
 COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm8000)$"
 
