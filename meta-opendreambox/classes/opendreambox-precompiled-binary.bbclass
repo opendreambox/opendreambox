@@ -1,16 +1,19 @@
 LICENSE = "CLOSED"
-PRECOMPILED_URI ?= "http://dreamboxupdate.com/download/${DISTRO}/${DISTRO_VERSION}/${@precompiledPath(d)};name=${PACKAGE_ARCH}"
+PRECOMPILED_NAME ?= "${PN}"
+PRECOMPILED_ARCH ?= "${PACKAGE_ARCH}"
+PRECOMPILED_VERSION ?= "${PV}"
+PRECOMPILED_URI ?= "http://dreamboxupdate.com/download/${DISTRO}/${DISTRO_VERSION}/${@precompiledPath(d)};name=${PRECOMPILED_ARCH}"
 
 SRC_URI += "${PRECOMPILED_URI}"
 
-S = "${WORKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
+S = "${WORKDIR}/${PRECOMPILED_NAME}_${PRECOMPILED_VERSION}_${PRECOMPILED_ARCH}"
 
 PACKAGES = "${PN}"
 
 def precompiledPath(d):
-    pn = d.getVar('PN', True)
-    pv = d.getVar('PV', True)
-    package_arch = d.getVar('PACKAGE_ARCH', True)
+    pn = d.getVar('PRECOMPILED_NAME', True)
+    pv = d.getVar('PRECOMPILED_VERSION', True)
+    package_arch = d.getVar('PRECOMPILED_ARCH', True)
     md5sum = d.getVarFlag('SRC_URI', '%s.md5sum' % package_arch)
     if md5sum is None:
         raise bb.parse.SkipPackage("No checksum found for precompiled binary package %s" % pn)
