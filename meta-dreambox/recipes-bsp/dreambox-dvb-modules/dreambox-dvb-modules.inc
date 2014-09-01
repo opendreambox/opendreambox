@@ -6,8 +6,9 @@ PRIORITY = "required"
 
 # Use precompiled binaries from the previous opendreambox release.
 DREAMBOX_DVB_MODULES_MIRROR ?= "http://dreamboxupdate.com/download/${DISTRO}/2.0.0/${PN}"
+PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
 
-SRC_URI = "${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules-${MACHINE}-${PV}.tar.bz2;name=modules"
+SRC_URI = "${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules-${PRECOMPILED_ARCH}-${PV}.tar.bz2;name=modules"
 
 inherit module-base
 
