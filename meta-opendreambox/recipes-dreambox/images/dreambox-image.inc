@@ -8,6 +8,15 @@ DEPENDS = " \
 	strace \
 "
 
+PROVIDES = "dreambox-image"
+
+python __anonymous() {
+    pkgtype = d.getVar('IMAGE_PKGTYPE', d)
+    if not oe.utils.inherits(d, 'package_%s' % pkgtype):
+        pn = d.getVar('PN', d)
+        raise bb.parse.SkipPackage("Unable to build %s without %s packages" % (pn, pkgtype))
+}
+
 BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', 'busybox-syslog', '', d)}"
 BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_network_manager', 'connman', 'busybox-udhcpc', '', d)}"
 BAD_RECOMMENDATIONS += "libnss-mdns udev-hwdb wpa-supplicant-passphrase xinetd"
