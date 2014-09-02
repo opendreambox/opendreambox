@@ -8,8 +8,6 @@ SRC_URI += "${PRECOMPILED_URI}"
 
 S = "${WORKDIR}/${PRECOMPILED_NAME}_${PRECOMPILED_VERSION}_${PRECOMPILED_ARCH}"
 
-PACKAGES = "${PN}"
-
 def precompiledPath(d):
     pn = d.getVar('PRECOMPILED_NAME', True)
     pv = d.getVar('PRECOMPILED_VERSION', True)
