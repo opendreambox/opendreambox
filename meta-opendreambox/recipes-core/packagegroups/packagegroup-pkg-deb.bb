@@ -1,4 +1,4 @@
-RDEPENDS_${PN} = "apt dpkg"
+RDEPENDS_${PN} = "apt apt-opkg dpkg"
 
 require packagegroup-pkg.inc
 
