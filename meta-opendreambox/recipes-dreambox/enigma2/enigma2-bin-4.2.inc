@@ -1,4 +1,4 @@
-LIC_FILES_CHKSUM = "file://usr/share/doc/enigma2/LICENSE;md5=e943a2b66bda2bf828e561a3e6c7ecfc"
+LIC_FILES_CHKSUM = "file://usr/share/doc/enigma2/LICENSE;md5=b7af6701c3fc2185e1ee44e9b94dff63"
 
 DEPENDS += " \
     freetype \
