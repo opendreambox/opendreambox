@@ -5,6 +5,7 @@ SRC_URI[mips32el.sha256sum] = "3c21790860cc4dda2a0a9eec0e134b511284acab69840e0d0
 
 inherit opendreambox-precompiled-binary
 
-FILES_${PN} = "${libdir}"
+FILES_${PN} = "${libdir}/lib*${SOLIBSDEV}"
+FILES_SOLIBSDEV = ""
 
 DEBIAN_NOAUTONAME_${PN} = "1"
