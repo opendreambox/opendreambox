@@ -13,6 +13,20 @@ SUMMARY_enigma2-plugin-systemplugins-skinselector = "Select installed skins"
 SUMMARY_enigma2-plugin-systemplugins-upnp = "UPnP tools based on python-coherence"
 SUMMARY_enigma2-plugin-systemplugins-videomode = "Select custom video modes"
 
+PACKAGES =+ " \
+    enigma2-plugin-extensions-browser \
+    enigma2-plugin-extensions-cutlisteditor \
+    enigma2-plugin-extensions-dvdburn \
+    enigma2-plugin-extensions-dvdplayer \
+    enigma2-plugin-extensions-hbbtv \
+    enigma2-plugin-extensions-modem \
+    enigma2-plugin-systemplugins-commoninterfaceassignment \
+    enigma2-plugin-systemplugins-crashlogautosubmit \
+    enigma2-plugin-systemplugins-hotplug \
+    enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-upnp \
+"
+
 QT_BASE_NAME ?= "${@base_contains('DISTRO_FEATURES', 'x11', 'qt4', 'qt4-embedded', d)}"
 QT_IMAGEFORMATS ?= "${QT_BASE_NAME}-plugin-imageformat-gif \
                     ${QT_BASE_NAME}-plugin-imageformat-ico \
