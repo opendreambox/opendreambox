@@ -1,6 +1,8 @@
 SUMMARY = "Framebuffer-based digital media application"
 LICENSE = "Proprietary"
 
+SYSTEMD_SERVICE_${PN} = "enigma2.service"
+
 inherit systemd
 
 # Qt won't start without this fonts directory.
