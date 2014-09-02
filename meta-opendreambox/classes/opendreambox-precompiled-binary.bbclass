@@ -18,7 +18,7 @@ def precompiledPath(d):
     return '%s/%s/%s/%s/%s_%s_%s.tar.xz' % (pn, pv, package_arch, md5sum, pn, pv, package_arch)
 
 do_install() {
-    cp -r * ${D}
+    find . -depth -not -path "./patches*" -not -path "./.pc*" -print0 | cpio --null -pdlu ${D}
 }
 
 INHIBIT_PACKAGE_STRIP = "1"
