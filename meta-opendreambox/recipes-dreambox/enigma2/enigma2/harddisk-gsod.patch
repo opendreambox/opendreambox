@@ -1,0 +1,20 @@
+--- /usr/lib/enigma2/python/Components/Harddisk.py.orig
++++ /usr/lib/enigma2/python/Components/Harddisk.py
+@@ -902,7 +902,7 @@
+ 	def addHotplugPartition(self, device, data):
+ 		print "found block device '%s':" % device
+ 		if not device:
+-			return
++			return False, False, False
+ 
+ 		blkdev = self.BlockDevice(device)
+ 		physdev = blkdev.sysfsPath('device', physdev=True)[4:]
+@@ -936,7 +936,7 @@
+ 						p = self.getPartitionbyDevice(device)
+ 						if p is None:
+ 							self.addDevicePartition(device, physdev)
+-				return
++				return removable, is_cdrom, medium_found
+ 
+ 			if not blkdev.isPartition() and not is_cdrom and medium_found and self.getHDD(device) is None:
+ 				self.hdd.append(Harddisk(device, removable))
