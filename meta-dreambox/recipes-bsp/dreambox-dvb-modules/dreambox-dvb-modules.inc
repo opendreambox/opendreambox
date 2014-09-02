@@ -6,7 +6,7 @@ PRIORITY = "required"
 
 # Use precompiled binaries from the previous opendreambox release.
 DREAMBOX_DVB_MODULES_MIRROR ?= "http://dreamboxupdate.com/download/${DISTRO}/2.0.0/${PN}"
-PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
+PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[-2]}"
 
 SRC_URI = "${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules-${PRECOMPILED_ARCH}-${PV}.tar.bz2;name=modules"
 
@@ -50,4 +50,4 @@ FILES_${PN}-lcd = "${sysconfdir}/modules-load.d/01-${BPN}-lcd.conf \
 
 # We don't use KERNEL_VERSION in this recipe, because the
 # precompiled modules depend on a specific version.
-DM_LOCALVERSION = "${@'-'.join('${PV}'.split('-')[:-1])}"
+DM_LOCALVERSION = "${@d.getVar('PV', True).rsplit('-', 1)[0]}"
