@@ -23,7 +23,6 @@ RRECOMMENDS_${PN} += " \
   dccamd \
   e2fsprogs-e2fsck \
   joe \
-  libpagecache \
   mc \
   samba-base \
   zeroconf \
