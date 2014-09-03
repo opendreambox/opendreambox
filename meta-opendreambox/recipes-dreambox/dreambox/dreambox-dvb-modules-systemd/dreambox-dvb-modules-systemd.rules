@@ -1,3 +1,4 @@
+SUBSYSTEM=="dvb", TAG+="systemd"
 SUBSYSTEM=="misc", KERNEL=="dbox/lcd[0-9]*", TAG+="systemd"
 SUBSYSTEM=="misc", KERNEL=="sci[0-9]*", TAG+="systemd"
 SUBSYSTEM=="misc", KERNEL=="tpm[0-9]*", TAG+="systemd"
