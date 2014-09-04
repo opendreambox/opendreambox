@@ -220,7 +220,7 @@ update:
 	@echo '[*] Updating Git repositories...'
 	@HASH=`$(XSUM) $(MAKEFILE_LIST)`; \
 	if [ -n "$(GIT_REMOTE)" ]; then \
-		$(GIT) pull --ff-only || $(GIT) pull --rebase; \
+		$(GIT) pull --ff-only || $(GIT) pull --rebase || exit 1; \
 	fi; \
 	if [ "$$HASH" != "`$(XSUM) $(MAKEFILE_LIST)`" ]; then \
 		echo '[*] Makefile changed. Restarting...'; \
