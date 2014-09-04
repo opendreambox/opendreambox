@@ -108,7 +108,7 @@ python dreambox_image_nfo() {
     else:
         raise bb.build.FuncFailed('Invalid IMAGE_FSTYPES')
 
-    image_path = os.path.join(deploy_dir_image, '%s.%s' % (image_name, ext))
+    image_path = os.path.join(deploy_dir_image, '.'.join((image_name, ext)))
 
     attr = dict()
 
@@ -122,18 +122,29 @@ python dreambox_image_nfo() {
     else:
         status_path = image_rootfs + '/var/lib/dpkg/status'
 
+    control = parse_status_file(status_path, 'kernel-image')
+    if 'Version' in control:
+        if 'Provides' in control:
+            attr['Kernel'] = ' '.join((control['Provides'], control['Version']))
+        else:
+            attr['Kernel'] = control['Version']
+
+    control = parse_status_file(status_path, 'dreambox-dvb-modules')
+    if 'Version' in control:
+        attr['Drivers'] = control['Version']
+
     control = parse_status_file(status_path, 'enigma2')
     if 'Version' in control:
         attr['Enigma2'] = control['Version']
 
     if distro_name and distro_version:
-        attr['Distro'] = '%s %s' % (distro_name, distro_version)
+        attr['Distro'] = ' '.join((distro_name, distro_version))
 
     if machine:
-        attr['Machine'] = 'Dreambox %s' % machine
+        attr['Machine'] = ' '.join(('Dreambox', machine.upper()))
 
     if distro_feed_uri and image_pkgtype:
-        attr['Link'] = '%s/%s' % (distro_feed_uri, image_pkgtype)
+        attr['Link'] = '/'.join((distro_feed_uri, image_pkgtype))
 
     md5 = hash_image(image_path, 'md5')
     if md5:
