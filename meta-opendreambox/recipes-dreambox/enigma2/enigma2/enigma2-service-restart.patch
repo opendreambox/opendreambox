@@ -14,3 +14,19 @@ diff -Naur enigma2_4.2.0r1_dm7080.orig/lib/systemd/system/enigma2.service enigma
  Type=notify
  
  [Install]
+diff -Naur enigma2_4.2.0r1_dm7080.orig/usr/bin/enigma2-system-state enigma2_4.2.0r1_dm7080/usr/bin/enigma2-system-state
+--- enigma2_4.2.0r1_dm7080.orig/usr/bin/enigma2-system-state	2014-09-05 01:09:28.000000000 +0200
++++ enigma2_4.2.0r1_dm7080/usr/bin/enigma2-system-state	2014-09-05 23:39:06.382982710 +0200
+@@ -3,10 +3,10 @@
+ 	state=`cat /run/enigma2/system-state`
+ 	case "$state" in
+ 		"system-restart")
+-			/sbin/reboot
++			systemctl --no-block reboot
+ 			;;
+ 		"system-standby")
+-			/sbin/poweroff
++			systemctl --no-block poweroff
+ 			;;
+ 		"ui-restart")
+ 			;;
