@@ -1,8 +1,8 @@
 SUMMARY = "Fastboot stuff for a Dreambox"
 LICENSE = "CLOSED"
 
-SRC_URI[dm7080.md5sum] = "b179a7540b38fff299214b911241ba73"
-SRC_URI[dm7080.sha256sum] = "8d55fdc2034740a093c615f3b46ada05a7d2f4bc729c15cfbab59e0299f47abb"
+SRC_URI[dm7080.md5sum] = "7c4a85efd1a96757e109014f29b2214b"
+SRC_URI[dm7080.sha256sum] = "507f880ea4fcb052b71d7739e9ec2629eecff6b0b41fa6a3c1f7722e82e2c430"
 
 inherit opendreambox-precompiled-binary
 
