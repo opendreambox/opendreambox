@@ -13,9 +13,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 RDEPENDS_${PN} = "flash-scripts"
 
 pkg_postinst_${PN}() {
-if [ -z "$D" ] && grep -q '^${PRECOMPILED_ARCH}$' /proc/stb/info/model; then
-    flash-ssbl ${datadir}/${PN}/ssbl.bin
-fi
+flash-ssbl ${datadir}/${PN}/ssbl.bin
 }
 
 COMPATIBLE_MACHINE = "^(dm7080)$"
