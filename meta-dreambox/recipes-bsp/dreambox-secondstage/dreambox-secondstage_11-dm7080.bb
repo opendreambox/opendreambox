@@ -13,7 +13,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 RDEPENDS_${PN} = "flash-scripts"
 
 pkg_postinst_${PN}() {
-flash-ssbl ${datadir}/${PN}/ssbl.bin
+[ -n "$D" ] || flash-ssbl ${datadir}/${PN}/ssbl.bin
 }
 
 COMPATIBLE_MACHINE = "^(dm7080)$"
