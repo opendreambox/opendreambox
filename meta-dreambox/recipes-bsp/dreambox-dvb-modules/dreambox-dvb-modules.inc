@@ -37,9 +37,10 @@ do_install_append() {
     chmod 0644 ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf
 }
 
-PACKAGES =+ "${PN}-lcd"
+PACKAGES =+ "${PN}-lcd ${PN}-stb-core"
 
-RDEPENDS_${PN} = "${PN}-lcd kernel-${DM_LOCALVERSION}"
+RDEPENDS_${PN} = "${PN}-lcd ${PN}-stb-core"
+RDEPENDS_${PN}-lcd = "${PN}-stb-core"
 RRECOMMENDS_${PN} = "${PN}-systemd"
 
 FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
@@ -47,6 +48,8 @@ FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
 
 FILES_${PN}-lcd = "${sysconfdir}/modules-load.d/01-${BPN}-lcd.conf \
                    /lib/modules/${DM_LOCALVERSION}/extra/lcd.ko"
+
+FILES_${PN}-stb-core = "/lib/modules/${DM_LOCALVERSION}/extra/stb-core.ko"
 
 # We don't use KERNEL_VERSION in this recipe, because the
 # precompiled modules depend on a specific version.
