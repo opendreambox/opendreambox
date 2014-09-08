@@ -24,6 +24,7 @@ IMAGE_INSTALL = " \
         init-ifupdown \
         initscripts \
         procps \
+        recovery-ui \
         recovery-web \
         sysvinit \
         udev \
