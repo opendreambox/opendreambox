@@ -23,6 +23,7 @@ IMAGE_INSTALL = " \
         netbase \
         init-ifupdown \
         initscripts \
+        modutils-initscripts \
         procps \
         recovery-ui \
         recovery-web \
