@@ -2,7 +2,7 @@ SUMMARY = "Simple user interface for Dreambox rescue mode"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 SRCREV = "${@opendreambox_srcrev('1cd69394b3702a06cadfce078289dd351a07b152', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('162a22c8075eaaf1640e2fe32de3b31d6b864c67', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('8b23214c55d29a85961ba11c90cc7a2ca8c92794', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
