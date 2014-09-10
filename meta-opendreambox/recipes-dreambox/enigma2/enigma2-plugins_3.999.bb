@@ -22,6 +22,8 @@ SRC_URI += "file://print.mak"
 
 GIT_BRANCH = "4.0"
 
+PE = "1"
+
 inherit autotools schwerkraft-git
 
 EXTRA_OECONF = " \
