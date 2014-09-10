@@ -1,5 +1,5 @@
-SRC_URI[dm7080.md5sum] = "de0f62f981fba95c5b6b0ecc5ad64e1e"
-SRC_URI[dm7080.sha256sum] = "906ba8684fafaf82cfeb09c31cdaaddf8d2a8efeddcc9002e191ed51a700e31c"
+SRC_URI[dm7080.md5sum] = "869b748235dc1c1c44e3dda08bdf71a2"
+SRC_URI[dm7080.sha256sum] = "44e0867055759934c5b7476c53d8d3d91fb49a57eedae32c74d16053d253892b"
 
 require enigma2-bin-4.2.inc
 
