@@ -7,7 +7,7 @@
 <meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
 <!-- html --> 
 <meta name="src" content="opendreambox.tex"> 
-<meta name="date" content="2014-09-01 00:59:00"> 
+<meta name="date" content="2014-09-10 02:55:00"> 
 <link rel="stylesheet" type="text/css" href="opendreambox.css"> 
 </head><body 
 >
@@ -260,8 +260,8 @@ command:
 class="cmtt-9">git clone -b dora git://git.opendreambox.org/git/opendreambox.git</span>
 <!--l. 140--><p class="noindent" >The Git repository can be viewed online at:
 <!--l. 142--><p class="noindent" ><a 
-href="http://cgit.opendreambox.org/opendreambox.git" class="url" ><span 
-class="cmtt-10">http://cgit.opendreambox.org/opendreambox.git</span></a>
+href="http://git.opendreambox.org/?p=opendreambox.git" class="url" ><span 
+class="cmtt-10">http://git.opendreambox.org/?p=opendreambox.git</span></a>
                                                                   
 
                                                                   
@@ -413,7 +413,7 @@ class="cmtt-10">http://www.openembedded.org/wiki/Getting\_started#Required\_soft
 distribution will do, but not many distributions have been verified to build
 OpenDreambox without errors. Tested distributions include:
      <ul class="itemize1">
-     <li class="itemize">Debian 7.6 &#8221;Wheezy&#8221; [amd64]
+     <li class="itemize">Debian 7.6 &#8221;Wheezy&#8221; [i386, amd64]
      </li>
      <li class="itemize">Ubuntu 14.04.1 LTS &#8221;Trusty Tahr&#8221; [amd64]</li></ul>
                                                                   
@@ -479,18 +479,25 @@ class="cmtt-9">sstate-cache</span>, which allows to share already compiled
      <li class="itemize">Support for machines without FPU and kernel versions below 3.x was
      dropped (DM800).
      </li>
-     <li class="itemize">Layers under meta-bsp were combined into meta-dreambox.</li></ul>
-<!--l. 281--><p class="noindent" >
+     <li class="itemize">Layers under meta-bsp were combined into meta-dreambox.
+     </li>
+     <li class="itemize">Default package format switched from ipk (opkg) to deb (dpkg + apt).
+     </li>
+     <li class="itemize"><span 
+class="cmtt-9">dreambox-image   </span>was    renamed    to    include    the    package    format
+     (<span 
+class="cmtt-9">dreambox-image-deb</span>).</li></ul>
+<!--l. 283--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">5   </span> <a 
  id="x1-180005"></a>Known Issues</h3>
-<!--l. 283--><p class="noindent" >None.
+<!--l. 285--><p class="noindent" >None.
                                                                   
 
                                                                   
-<!--l. 287--><p class="noindent" >
+<!--l. 289--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">6   </span> <a 
  id="x1-190006"></a>Building OpenDreambox</h3>
-<!--l. 289--><p class="noindent" >In the top level directory, there is a <span 
+<!--l. 291--><p class="noindent" >In the top level directory, there is a <span 
 class="cmtt-9">Makefile</span>, which is used to set up build
 directories and to fetch or update all used repositories. The Makefile can
 be influenced by environment variables, either by specifing them on the
@@ -499,7 +506,7 @@ class="cmtt-9">conf/make.conf</span>. It is not
 recommended to edit the <span 
 class="cmtt-9">Makefile </span>directly in order to avoid conflicts with future
 updates.
-<!--l. 296--><p class="noindent" >When the <span 
+<!--l. 298--><p class="noindent" >When the <span 
 class="cmtt-9">Makefile </span>is run for the first time, the following steps will be executed:
      <ul class="itemize1">
      <li class="itemize">Creation of configuration files
@@ -532,39 +539,39 @@ class="cmtt-9">/conf/local.conf</span></li></ul>
          </li>
          <li class="itemize">OpenEmbedded</li></ul>
      </li></ul>
-<!--l. 315--><p class="noindent" >
+<!--l. 317--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">6.1   </span> <a 
  id="x1-200006.1"></a>Makefile targets</h4>
-<!--l. 316--><p class="noindent" >Run <span 
+<!--l. 318--><p class="noindent" >Run <span 
 class="cmtt-9">make help </span>to get a list of targets of the top level Makefile, together with a brief
 description.
                                                                   
 
                                                                   
-<!--l. 318--><p class="noindent" >
+<!--l. 320--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">6.2   </span> <a 
  id="x1-210006.2"></a>Configuration variables</h4>
-<!--l. 319--><p class="noindent" >
+<!--l. 321--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">6.2.1   </span> <a 
  id="x1-220006.2.1"></a>BB_NUMBER_THREADS</h5>
-<!--l. 320--><p class="noindent" >Controls how many BitBake tasks may run at a time. Defaults to the number of cores
+<!--l. 322--><p class="noindent" >Controls how many BitBake tasks may run at a time. Defaults to the number of cores
 available on the build system.
-<!--l. 323--><p class="noindent" >
+<!--l. 325--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">6.2.2   </span> <a 
  id="x1-230006.2.2"></a>MACHINE</h5>
-<!--l. 324--><p class="noindent" >Controls the target machine to build packages for. See section <a 
+<!--l. 326--><p class="noindent" >Controls the target machine to build packages for. See section <a 
 href="#x1-40001.2">1.2<!--tex4ht:ref: products --></a> for a list of
 supported products.
-<!--l. 327--><p class="noindent" >
+<!--l. 329--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">6.2.3   </span> <a 
  id="x1-240006.2.3"></a>PARALLEL_MAKE</h5>
-<!--l. 328--><p class="noindent" >Controls how many processes per recipe <span 
+<!--l. 330--><p class="noindent" >Controls how many processes per recipe <span 
 class="cmtt-9">make </span>may use. Defaults to the number of
 cores available on the build system.
-<!--l. 331--><p class="noindent" >
+<!--l. 333--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">6.3   </span> <a 
  id="x1-250006.3"></a>Adding custom layers</h4>
-<!--l. 333--><p class="noindent" >It is possible to add custom layers to the build system. This can be done globally and
+<!--l. 335--><p class="noindent" >It is possible to add custom layers to the build system. This can be done globally and
 per machine. To add a layer globally, edit <span 
 class="cmtt-9">conf/bblayers-ext.conf</span>. To add a
 machine-specific layer, edit <span 
@@ -580,16 +587,16 @@ class="cmtt-9">HOME</span><span
 class="cmsy-9">}</span><span 
 class="cmtt-9">/custom-layer</span>, the entry to add to the file will
 look like this:
-<!--l. 339--><p class="noindent" ><span 
+<!--l. 341--><p class="noindent" ><span 
 class="cmtt-9">BBLAYERS =+ "$</span><span 
 class="cmsy-9">{</span><span 
 class="cmtt-9">HOME</span><span 
 class="cmsy-9">}</span><span 
 class="cmtt-9">/custom-layer"</span>
-<!--l. 341--><p class="noindent" >
+<!--l. 343--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">6.4   </span> <a 
  id="x1-260006.4"></a>Adding custom options</h4>
-<!--l. 342--><p class="noindent" >It is possible to tweak a lot more options than those used by the <span 
+<!--l. 344--><p class="noindent" >It is possible to tweak a lot more options than those used by the <span 
 class="cmtt-9">Makefile </span>by editing
 <span 
 class="cmtt-9">conf/local-ext.conf </span>or <span 
@@ -601,11 +608,11 @@ class="cmtt-9">-ext.conf</span>.
                                                                   
 
                                                                   
-<!--l. 345--><p class="noindent" >For example, if the firmware shall use the package feed built on the develoment
+<!--l. 347--><p class="noindent" >For example, if the firmware shall use the package feed built on the develoment
 machine, which happens to be 192.168.1.1 and has a webserver configured to point to
 <span 
 class="cmtt-9">tmp/deploy/ipk</span>, a line like the following may be added:
-<!--l. 349--><p class="noindent" ><span 
+<!--l. 351--><p class="noindent" ><span 
 class="cmtt-9">DISTRO</span><span 
 class="cmtt-9">_FEED</span><span 
 class="cmtt-9">_URI = "http://192.168.1.1/$</span><span 
@@ -618,66 +625,66 @@ class="cmtt-9">DISTRO</span><span
 class="cmtt-9">_VERSION</span><span 
 class="cmsy-9">}</span><span 
 class="cmtt-9">"</span>
-<!--l. 351--><p class="noindent" >In general, any variable in OpenEmbedded that uses weak assignment (<span 
+<!--l. 353--><p class="noindent" >In general, any variable in OpenEmbedded that uses weak assignment (<span 
 class="cmtt-9">?=</span>) may be
 overridden from these files.
-<!--l. 354--><p class="noindent" >The following sections list some commonly used options.
-<!--l. 356--><p class="noindent" >
+<!--l. 356--><p class="noindent" >The following sections list some commonly used options.
+<!--l. 358--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">6.4.1   </span> <a 
  id="x1-270006.4.1"></a>DISTRO_FEED_PREFIX</h5>
-<!--l. 358--><p class="noindent" ><span 
+<!--l. 360--><p class="noindent" ><span 
 class="cmtt-9">DISTRO</span><span 
 class="cmtt-9">_FEED</span><span 
 class="cmtt-9">_PREFIX </span>specifies the name of the package update feed. This name may be
 chosen arbitarily.
-<!--l. 361--><p class="noindent" >Default: <span 
+<!--l. 363--><p class="noindent" >Default: <span 
 class="cmtt-9">DISTRO</span><span 
 class="cmtt-9">_FEED</span><span 
 class="cmtt-9">_PREFIX = "remote"</span>
-<!--l. 363--><p class="noindent" >
+<!--l. 365--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">6.4.2   </span> <a 
  id="x1-280006.4.2"></a>DISTRO_FEED_URI</h5>
-<!--l. 365--><p class="noindent" ><span 
+<!--l. 367--><p class="noindent" ><span 
 class="cmtt-9">DISTRO</span><span 
 class="cmtt-9">_FEED</span><span 
 class="cmtt-9">_URI </span>specifies the URI of the package update feed.
-<!--l. 367--><p class="noindent" >Default: <span 
+<!--l. 369--><p class="noindent" >Default: <span 
 class="cmtt-9">DISTRO</span><span 
 class="cmtt-9">_FEED</span><span 
 class="cmtt-9">_URI = "http://my-distribution.example/remote-feed/"</span>
-<!--l. 369--><p class="noindent" >
+<!--l. 371--><p class="noindent" >
 <h5 class="subsubsectionHead"><span class="titlemark">6.4.3   </span> <a 
  id="x1-290006.4.3"></a>INHERIT</h5>
-<!--l. 371--><p class="noindent" ><span 
+<!--l. 373--><p class="noindent" ><span 
 class="cmtt-9">INHERIT </span>specifies bbclasses to include from a configuration file. Usually, this variable
 gets appended to by using the <span 
 class="cmtt-9">+= </span>operator.
-<!--l. 374--><p class="noindent" >The OpenDreambox distribution automatically appends <span 
+<!--l. 376--><p class="noindent" >The OpenDreambox distribution automatically appends <span 
 class="cmtt-9">"buildhistory recipe</span><span 
 class="cmtt-9">_sanity"</span>
 to <span 
 class="cmtt-9">INHERIT</span>.
-<!--l. 376--><p class="noindent" >Default: <span 
+<!--l. 378--><p class="noindent" >Default: <span 
 class="cmtt-9">INHERIT = ""</span>
-<!--l. 378--><p class="noindent" ><span 
+<!--l. 380--><p class="noindent" ><span 
 class="cmbx-10">Some examples:</span>
-<!--l. 380--><p class="noindent" >Always build the latest versions of OpenDreambox-related projects from
+<!--l. 382--><p class="noindent" >Always build the latest versions of OpenDreambox-related projects from
 Git:
-<!--l. 382--><p class="noindent" ><span 
+<!--l. 384--><p class="noindent" ><span 
 class="cmtt-9">INHERIT += "opendreambox-autorev"</span>
-<!--l. 384--><p class="noindent" >Remove temporary files of previous versions of a recipe before a newer version gets
+<!--l. 386--><p class="noindent" >Remove temporary files of previous versions of a recipe before a newer version gets
 built:
-<!--l. 386--><p class="noindent" ><span 
+<!--l. 388--><p class="noindent" ><span 
 class="cmtt-9">INHERIT += "rm</span><span 
 class="cmtt-9">_old</span><span 
 class="cmtt-9">_work"</span>
                                                                   
 
                                                                   
-<!--l. 388--><p class="noindent" >
+<!--l. 390--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">6.5   </span> <a 
  id="x1-300006.5"></a>Setting up a build directory</h4>
-<!--l. 389--><p class="noindent" >To set up a build directory for e.g. <span 
+<!--l. 391--><p class="noindent" >To set up a build directory for e.g. <span 
 class="cmbx-10">DM 7080 </span>run <span 
 class="cmtt-9">make MACHINE=dm7080</span>. If
 <span 
@@ -687,10 +694,10 @@ class="cmtt-9">conf/make.conf </span>(default), you can simply run
 class="cmtt-9">make </span>with no arguments instead. This will create and initialize the directory
 <span 
 class="cmtt-9">build/dm7080</span>.
-<!--l. 393--><p class="noindent" >
+<!--l. 395--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">6.6   </span> <a 
  id="x1-310006.6"></a>Building a firmware image</h4>
-<!--l. 394--><p class="noindent" >To build a firmware image for e.g. <span 
+<!--l. 396--><p class="noindent" >To build a firmware image for e.g. <span 
 class="cmbx-10">DM 7080 </span>run <span 
 class="cmtt-9">make MACHINE=dm7080 image</span>. If
 <span 
@@ -699,29 +706,29 @@ class="cmtt-9">conf/make.conf </span>(default), you can simply run <span
 class="cmtt-9">make</span>
 <span 
 class="cmtt-9">image </span>instead.
-<!--l. 398--><p class="noindent" >
+<!--l. 400--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">6.7   </span> <a 
  id="x1-320006.7"></a>Building a package</h4>
-<!--l. 399--><p class="noindent" >To build a single package, BitBake has to be used directly. First, the environment has
+<!--l. 401--><p class="noindent" >To build a single package, BitBake has to be used directly. First, the environment has
 to be set up, in order to make BitBake available to the shell. This can be done with
 the following command:
-<!--l. 403--><p class="noindent" ><span 
+<!--l. 405--><p class="noindent" ><span 
 class="cmtt-9">source bitbake.env</span>
-<!--l. 405--><p class="noindent" >BitBake must be run from the machine&#8217;s build directory. For <span 
+<!--l. 407--><p class="noindent" >BitBake must be run from the machine&#8217;s build directory. For <span 
 class="cmbx-10">DM 7080</span>
 run:
-<!--l. 407--><p class="noindent" ><span 
+<!--l. 409--><p class="noindent" ><span 
 class="cmtt-9">cd build/dm7080</span>
-<!--l. 409--><p class="noindent" >In order to build enigma2, run:
-<!--l. 411--><p class="noindent" ><span 
+<!--l. 411--><p class="noindent" >In order to build enigma2, run:
+<!--l. 413--><p class="noindent" ><span 
 class="cmtt-9">bitbake enigma2</span>.
-<!--l. 413--><p class="noindent" >
+<!--l. 415--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">7   </span> <a 
  id="x1-330007"></a>Development hints</h3>
-<!--l. 415--><p class="noindent" >
+<!--l. 417--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">7.1   </span> <a 
  id="x1-340007.1"></a>Cross-compilation of external software</h4>
-<!--l. 416--><p class="noindent" >OpenDreambox provides a script called <span 
+<!--l. 418--><p class="noindent" >OpenDreambox provides a script called <span 
 class="cmtt-9">cross-compile.env</span>. Once run, the script will
 create the following commands (shell aliases), aiming to ease cross-compilation of
 external source trees:
@@ -758,29 +765,29 @@ class="cmtt-9">_env env</span>).
 class="cmtt-9">oe</span><span 
 class="cmtt-9">_setenv </span>- Exports the OE environment to the currently running shell
      session.</li></ul>
-<!--l. 427--><p class="noindent" >The script needs to know the target machine, which can be one of the supported
+<!--l. 429--><p class="noindent" >The script needs to know the target machine, which can be one of the supported
 products (see <a 
 href="#x1-40001.2">1.2<!--tex4ht:ref: products --></a>). Because the script adds aliases to your currently running shell
 session, it has to be invoked using <span 
 class="cmtt-9">source </span>or <span 
 class="cmtt-9">. </span>(the dot operator), e.g.:
-<!--l. 430--><p class="noindent" ><span 
+<!--l. 432--><p class="noindent" ><span 
 class="cmtt-9">source cross-compile.env dm7080</span>
-<!--l. 432--><p class="noindent" >The script may be called from any location, but must reside inside the OpenDreambox
+<!--l. 434--><p class="noindent" >The script may be called from any location, but must reside inside the OpenDreambox
 Git tree. You may want to create a symlink to <span 
 class="cmtt-9">cross-compile.env </span>somewhere in your
 <span 
 class="cmtt-9">PATH</span>.
-<!--l. 435--><p class="noindent" >
+<!--l. 437--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">7.2   </span> <a 
  id="x1-350007.2"></a>Coding style</h4>
-<!--l. 436--><p class="noindent" >Run <span 
+<!--l. 438--><p class="noindent" >Run <span 
 class="cmtt-9">scripts/do</span><span 
 class="cmtt-9">_stylize.sh </span>on new recipes to ensure proper coding style.
-<!--l. 438--><p class="noindent" >
+<!--l. 440--><p class="noindent" >
 <h4 class="subsectionHead"><span class="titlemark">7.3   </span> <a 
  id="x1-360007.3"></a>Package architecture</h4>
-<!--l. 439--><p class="noindent" >Set <span 
+<!--l. 441--><p class="noindent" >Set <span 
 class="cmtt-9">PACKAGE</span><span 
 class="cmtt-9">_ARCH = "$</span><span 
 class="cmsy-9">{</span><span 
@@ -807,13 +814,13 @@ class="cmtt-9">_MACHINE</span>.
      </li>
      <li class="itemize">The recipe is part of <span 
 class="cmtt-9">meta-dreambox</span>.</li></ul>
-<!--l. 446--><p class="noindent" >
+<!--l. 448--><p class="noindent" >
 <h3 class="sectionHead"><span class="titlemark">8   </span> <a 
  id="x1-370008"></a>Bug reports and patches</h3>
-<!--l. 448--><p class="noindent" >Please send bug reports and patches to the Enigma2 development mailing list
+<!--l. 450--><p class="noindent" >Please send bug reports and patches to the Enigma2 development mailing list
 <span 
 class="cmtt-9">&#x003C;enigma2-devel@lists.elitedvb.net&#x003E;</span>.
-<!--l. 450--><p class="noindent" >A comfortable way to create patches is to use <span 
+<!--l. 452--><p class="noindent" >A comfortable way to create patches is to use <span 
 class="cmtt-9">git format-patch</span>, after all changes
 have been committed to your local copy of the repository.
  

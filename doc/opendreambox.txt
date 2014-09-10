@@ -125,7 +125,7 @@ opendreambox
 
    The Git repository can be viewed online at:
 
-   http://cgit.opendreambox.org/opendreambox.git
+   http://git.opendreambox.org/?p=opendreambox.git
 
     1.5 Quick start
 
@@ -215,7 +215,7 @@ opendreambox
    It is highly recommended to use Linux to build OpenDreambox. In theory, any
    recent distribution will do, but not many distributions have been verified to
    build OpenDreambox without errors. Tested distributions include:
-     * Debian 7.6 "Wheezy" [amd64]
+     * Debian 7.6 "Wheezy" [i386, amd64]
      * Ubuntu 14.04.1 LTS "Trusty Tahr" [amd64]
 
   4 Major changes since previous public releases
@@ -244,6 +244,9 @@ opendreambox
      * Support for machines without FPU and kernel versions below 3.x was dropped
        (DM800).
      * Layers under meta-bsp were combined into meta-dreambox.
+     * Default package format switched from ipk (opkg) to deb (dpkg + apt).
+     * dreambox-image was renamed to include the package format
+       (dreambox-image-deb).
 
   5 Known Issues
 

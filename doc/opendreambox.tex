@@ -139,7 +139,7 @@ THE SOFTWARE.
 
     The Git repository can be viewed online at:
 
-    \url{http://cgit.opendreambox.org/opendreambox.git}
+    \url{http://git.opendreambox.org/?p=opendreambox.git}
 
   \subsection{Quick start}
     For the impatient:
@@ -244,7 +244,7 @@ THE SOFTWARE.
    include:
 
    \begin{itemize}
-     \item Debian 7.6 "Wheezy" [amd64]
+     \item Debian 7.6 "Wheezy" [i386, amd64]
      \item Ubuntu 14.04.1 LTS "Trusty Tahr" [amd64]
    \end{itemize}
 
@@ -276,6 +276,8 @@ THE SOFTWARE.
             build system, but improves reliability and consistency across builds.
       \item Support for machines without FPU and kernel versions below 3.x was dropped (DM800).
       \item Layers under meta-bsp were combined into meta-dreambox.
+      \item Default package format switched from ipk (opkg) to deb (dpkg + apt).
+      \item \shell{dreambox-image} was renamed to include the package format (\shell{dreambox-image-deb}).
     \end{itemize}
 
 \section{Known Issues}
