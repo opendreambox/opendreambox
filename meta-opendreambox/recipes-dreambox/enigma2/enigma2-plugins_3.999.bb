@@ -20,7 +20,7 @@ SRCREV = "93ecd8e1f658d92b9ddc0064a3dc3b76735328f0"
 
 SRC_URI += "file://print.mak"
 
-GIT_BRANCH = "4.0"
+SCHWERKRAFT_BRANCH = "4.0"
 
 PE = "1"
 
