@@ -116,7 +116,7 @@ opendreambox
     1.4 Obtaining the source code
 
    OpenDreambox uses the Git version control system. To obtain the source code, it
-   is required to install Git. See http://git-_scm.com/.
+   is required to install Git. See http://git-scm.com/.
 
    To initially download the source into the current directory, issue the
    following command:
@@ -177,9 +177,9 @@ opendreambox
 
    The latest changes to these Git repositories can be seen at:
 
-   http://git.openembedded.org/openembedded-_core-_contrib/log/?h=obi/dora
+   http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/dora
 
-   http://git.openembedded.org/meta-_openembedded-_contrib/log/?h=obi/dora
+   http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/dora
 
       1.6.2 meta-opendreambox
 
@@ -202,7 +202,7 @@ opendreambox
   2 Further readings
 
      * The Yocto Project Reference Manual:
-       https://www.yoctoproject.org/docs/1.5.1/ref-_manual/ref-_manual.html
+       https://www.yoctoproject.org/docs/1.5.1/ref-manual/ref-manual.html
 
   3 Prerequisites
 
