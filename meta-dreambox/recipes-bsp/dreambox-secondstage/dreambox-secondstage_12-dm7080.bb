@@ -3,8 +3,8 @@ PROVIDES = "virtual/bootloader"
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
 PRECOMPILED_VERSION = "${@d.getVar('PV', True).split('-')[0]}"
 
-SRC_URI[dm7080.md5sum] = "f8ae44006c7bc4ea9e4871eb42194196"
-SRC_URI[dm7080.sha256sum] = "cf1a651afc8acfc6daf04650c81453f001156e9578c54d7cc281b482fa8330a1"
+SRC_URI[dm7080.md5sum] = "c5febe94aed02841216ae90bf5cec242"
+SRC_URI[dm7080.sha256sum] = "5110acf39ec4dcafdb9b6cebdaedd61b8727e0ac6a1c1d888cb56a1ac00bc2d2"
 
 inherit opendreambox-precompiled-binary
 
