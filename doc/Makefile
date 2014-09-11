@@ -17,8 +17,6 @@ HTLATEX_OPTIONS = "html"
 %.html: %.tex Makefile
 	@echo '[*] Generating $@'
 	@htlatex $< "${HTLATEX_OPTIONS}" >/dev/null
-	@htlatex $< "${HTLATEX_OPTIONS}" >/dev/null
-	@htlatex $< "${HTLATEX_OPTIONS}" >/dev/null
 
 %.txt: %.html
 	@echo '[*] Generating $@'
