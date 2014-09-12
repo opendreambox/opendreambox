@@ -15,7 +15,6 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-extensions-genuinedreambox \
   enigma2-plugin-extensions-mediascanner \
   ${@base_contains('DREAMBOX_FEATURES', 'ci', 'enigma2-plugin-systemplugins-commoninterfaceassignment', '', d)} \
-  enigma2-plugin-systemplugins-frontprocessorupgrade \
   ${@base_contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
   enigma2-plugin-systemplugins-hotplug \
   enigma2-plugin-systemplugins-mediadatabasemanager \
