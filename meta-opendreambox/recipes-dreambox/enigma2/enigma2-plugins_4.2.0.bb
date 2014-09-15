@@ -98,3 +98,5 @@ INSTALL_ROOTDIR = "${WORKDIR}/${PN}-packaging-tempdir"
 INSTALL_DESTDIR = "${INSTALL_ROOTDIR}/destdir"
 INSTALL_METADIR = "${INSTALL_DESTDIR}${datadir}/meta"
 INSTALL_PLUGINSDIR = "${INSTALL_DESTDIR}${libdir}/enigma2/python/Plugins"
+
+COMPATIBLE_MACHINE = "^(dm7080)$"
