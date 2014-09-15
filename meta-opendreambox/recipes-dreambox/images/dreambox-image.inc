@@ -18,17 +18,14 @@ python __anonymous() {
 }
 
 BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', 'busybox-syslog', '', d)}"
-BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_network_manager', 'connman', 'busybox-udhcpc', '', d)}"
 BAD_RECOMMENDATIONS += "libnss-mdns udev-hwdb wpa-supplicant-passphrase xinetd"
 
 VIRTUAL-RUNTIME_init_manager ?= "systemd"
-VIRTUAL-RUNTIME_network_manager ?= "connman"
 VIRTUAL-RUNTIME_package_manager ?= "${IMAGE_PKGTYPE}"
 
 # packages to drag into the image
 IMAGE_INSTALL = " \
     packagegroup-boot-${VIRTUAL-RUNTIME_init_manager} \
-    packagegroup-net-${VIRTUAL-RUNTIME_network_manager} \
     packagegroup-pkg-${VIRTUAL-RUNTIME_package_manager} \
     packagegroup-opendreambox-base \
     packagegroup-opendreambox-dvbapi3 \
