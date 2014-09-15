@@ -23,6 +23,7 @@ PACKAGES =+ " \
     enigma2-plugin-systemplugins-commoninterfaceassignment \
     enigma2-plugin-systemplugins-crashlogautosubmit \
     enigma2-plugin-systemplugins-hotplug \
+    enigma2-plugin-systemplugins-networkmanager \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-upnp \
 "
@@ -85,6 +86,9 @@ RRECOMMENDS_enigma2-plugin-extensions-modem = " \
         kernel-module-ppp-async \
         kernel-module-ppp-deflate \
         kernel-module-ppp-generic \
+"
+RDEPENDS_enigma2-plugin-systemplugins-networkmanager = " \
+        packagegroup-net-connman \
 "
 RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = " \
         python-twisted-web \
