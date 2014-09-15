@@ -5,6 +5,7 @@ PROVIDES = "virtual/bootloader"
 PRIORITY = "required"
 
 PRECOMPILED_ARCH ?= "${MACHINE_ARCH}"
+PRECOMPILED_VERSION ?= "${PV}"
 
 do_install() {
         install -d ${D}${datadir}/${PN}
