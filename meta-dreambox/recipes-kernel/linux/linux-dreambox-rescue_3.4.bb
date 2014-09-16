@@ -18,8 +18,6 @@ KERNEL_EXTRA_IMAGE_SYMLINK_NAME = "${KERNEL_EXTRA_IMAGETYPE}-rescue-${MACHINE}"
 
 MODULE_TARBALL_DEPLOY = "0"
 
-CMDLINE += "ip=dhcp"
-
 do_compile[depends] += "${INITRAMFS_IMAGE}:do_rootfs"
 
 # disable unneeded tasks
