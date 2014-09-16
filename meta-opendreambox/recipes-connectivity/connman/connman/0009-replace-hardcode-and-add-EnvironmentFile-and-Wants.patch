@@ -1,7 +1,7 @@
-From d348515f6e71ddf707c79f2341bfef18e75684c2 Mon Sep 17 00:00:00 2001
+From 42f55b5e641a6ac0c44be34399170201bdb4af93 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Tue, 5 Aug 2014 15:18:24 +0200
-Subject: [PATCH] replace hardcode, and add EnvironmentFile and Wants
+Subject: [PATCH 9/9] replace hardcode, and add EnvironmentFile and Wants
 
 Upstream-Status: Inappropriate [distribution]
 
