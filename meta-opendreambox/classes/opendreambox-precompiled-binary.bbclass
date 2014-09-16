@@ -19,6 +19,7 @@ def precompiledPath(d):
 
 do_install() {
     find . -depth -not -path "./patches*" -not -path "./.pc*" -print0 | cpio --null -pdlu ${D}
+    chown -hR root:root ${D}
 }
 
 INHIBIT_PACKAGE_STRIP = "1"
