@@ -21,6 +21,7 @@ RRECOMMENDS_${PN} += " \
   autofs \
   avahi-daemon \
   dccamd \
+  dreambox-compat \
   e2fsprogs-e2fsck \
   joe \
   mc \
