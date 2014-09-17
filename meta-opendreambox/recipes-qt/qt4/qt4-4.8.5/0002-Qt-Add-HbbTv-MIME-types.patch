@@ -1,7 +1,7 @@
 From 2d993c3b7a15a8c828ff2edfa971fd389ce596f4 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <stephan.reichholf@dream-property.net>
 Date: Wed, 28 Mar 2012 13:52:55 +0200
-Subject: [PATCH 2/6] Qt: Add HbbTv MIME types
+Subject: [PATCH 2/7] Qt: Add HbbTv MIME types
 
 ---
  src/3rdparty/webkit/Source/WebCore/dom/DOMImplementation.cpp        | 6 +++++-
@@ -143,5 +143,5 @@ index 01cef12..b82ef14 100644
      { "wmlc", "application/vnd.wap.wmlc" },
      { 0, 0 }
 -- 
-1.8.3.2
+1.9.1
 

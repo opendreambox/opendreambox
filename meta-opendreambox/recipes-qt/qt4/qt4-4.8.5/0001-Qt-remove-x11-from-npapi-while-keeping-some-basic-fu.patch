@@ -1,7 +1,7 @@
 From 409ea9d5567b191a31ad379d5b354e86f831f570 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 21 Dec 2011 17:24:36 +0100
-Subject: [PATCH 1/6] Qt: remove x11 from npapi while keeping some basic
+Subject: [PATCH 1/7] Qt: remove x11 from npapi while keeping some basic
  functionality (calling SetWindow with proper position and size)
 
 ---
@@ -918,5 +918,5 @@ index 2fe69d1..795cb9a 100644
  
  void PluginView::halt()
 -- 
-1.8.3.2
+1.9.1
 

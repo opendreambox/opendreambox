@@ -1,7 +1,7 @@
 From bd873550e72ed1c19dad664e4dd8b9c2ca1c6182 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Tue, 17 Dec 2013 19:01:22 +0100
-Subject: [PATCH 6/6] QtWebKit: disable video to get rid of gstreamer
+Subject: [PATCH 6/7] QtWebKit: disable video to get rid of gstreamer
  dependency
 
 ---
@@ -22,5 +22,5 @@ index 48b2eb2..d08116b 100644
  # We require QtMultimedia
  !contains(DEFINES, ENABLE_VIDEO=.) {
 -- 
-1.8.3.2
+1.9.1
 

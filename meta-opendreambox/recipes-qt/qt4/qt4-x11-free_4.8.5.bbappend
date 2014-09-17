@@ -4,7 +4,8 @@ SRC_URI += "file://0002-Qt-Add-HbbTv-MIME-types.patch \
             file://0003-Qt-Expose-Webkits-WebSecurityEnabled-settings-via-QW.patch \
             file://0004-QtWebkit-Expose-keypress-event-and-correct-keycode-f.patch \
             file://0005-WebKit-small-hack-to-disable-use-of-WebkitWebSourceG.patch \
-            file://0006-QtWebKit-disable-video-to-get-rid-of-gstreamer-depen.patch"
+            file://0006-QtWebKit-disable-video-to-get-rid-of-gstreamer-depen.patch \
+            file://0007-QWS-Export-qt_get_server_queue.patch"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/qt4-${PV}:"
 

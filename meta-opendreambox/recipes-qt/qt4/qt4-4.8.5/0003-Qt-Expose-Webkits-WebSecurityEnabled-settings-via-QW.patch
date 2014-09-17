@@ -1,7 +1,7 @@
 From 3c9d368544a85b7bc6581164c1125cbe8f6dd928 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Thu, 19 Apr 2012 16:45:36 +0200
-Subject: [PATCH 3/6] Qt: Expose Webkits WebSecurityEnabled settings via
+Subject: [PATCH 3/7] Qt: Expose Webkits WebSecurityEnabled settings via
  QWebSettings (see https://bugs.webkit.org/show_bug.cgi?id=45436 )
 
 ---
@@ -61,5 +61,5 @@ index 008035b..233fa4f 100644
      enum WebGraphic {
          MissingImageGraphic,
 -- 
-1.8.3.2
+1.9.1
 
