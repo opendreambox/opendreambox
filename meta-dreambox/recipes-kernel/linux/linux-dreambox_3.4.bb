@@ -1,17 +1,17 @@
-PATCHREV = "32815dacc5f4cbe1e7a4388cf50027834b99501b"
+PATCHREV = "f346eec2f3eeae0d960a8cd998af341f0dcea392"
 PATCHLEVEL = "101"
 
 SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.4.tar.xz;name=kernel \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-3.4.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
-    http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}-2.patch.xz;apply=yes;name=dream-patch \
+    http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
 "
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
 SRC_URI[stable-patch.md5sum] = "bc5a50cfaea51528e0f78b5d19684a8d"
 SRC_URI[stable-patch.sha256sum] = "4f208c4ac5d76580680d9fa8fd35d5d35c7699565a59280d5173d66538c0a219"
-SRC_URI[dream-patch.md5sum] = "3460ffcd2a1f3a8382f68588ab741a30"
-SRC_URI[dream-patch.sha256sum] = "7de2b75050f97d80ccadd848f54c9d8bd51a051dfeb1c62cdbf8558d300fdb54"
+SRC_URI[dream-patch.md5sum] = "c302e059842a97f8f837cab8330bc23c"
+SRC_URI[dream-patch.sha256sum] = "f9137054c76d7d5efe5b5e64ca096dcef43b20bfe0225676bf7b625407d2babe"
 
 S = "${WORKDIR}/linux-3.4"
 
