@@ -1,5 +1,4 @@
-inherit image_types_nfi
-
+IMAGE_CLASSES ?= "image_types_nfi"
 IMAGE_FSTYPES ?= "ubi.nfi"
 UBI_VOLNAME = "rootfs"
 UBINIZE_VOLSIZE ?= "0"
