@@ -49,7 +49,7 @@ RDEPENDS_${PN} = "\
     ${PN}-words \
 "
 
-RDEPENDS_${PN}-core = "python-core python-numbers python-zopeinterface"
+RDEPENDS_${PN}-core = "python-compression python-core python-numbers python-zopeinterface"
 
 RDEPENDS_${PN}-conch = "${PN}-core python-pycrypto python-pyasn1"
 RDEPENDS_${PN}-flow  = "${PN}-core"
