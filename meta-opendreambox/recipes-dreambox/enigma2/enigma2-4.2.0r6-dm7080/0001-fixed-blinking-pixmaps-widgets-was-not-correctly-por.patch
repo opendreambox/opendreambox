@@ -1,0 +1,83 @@
+From f064dbe56066aca0edeccf61b23ebfc010b2b6dd Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Sun, 21 Sep 2014 20:17:38 +0200
+Subject: [PATCH] fixed blinking pixmaps / widgets (was not correctly ported
+ to new eSignal API) fixes rotor turning indication
+
+---
+ usr/lib/enigma2/python/Components/ConditionalWidget.py |   16 ++++++++--------
+ usr/lib/enigma2/python/Components/Pixmap.py            |    2 +-
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/ConditionalWidget.py b/usr/lib/enigma2/python/Components/ConditionalWidget.py
+index 1379074..43d1403 100644
+--- a/usr/lib/enigma2/python/Components/ConditionalWidget.py
++++ b/usr/lib/enigma2/python/Components/ConditionalWidget.py
+@@ -9,7 +9,7 @@ class ConditionalWidget(GUIComponent):
+ 		
+ 		if (withTimer):
+ 			self.conditionCheckTimer = eTimer()
+-			self.conditionCheckTimer.timeout.connect(self.update)
++			self.conditionCheckTimer_conn = self.conditionCheckTimer.timeout.connect(self.update)
+ 			self.conditionCheckTimer.start(1000)
+ 
+ 	def postWidgetCreate(self, instance):
+@@ -17,7 +17,7 @@ class ConditionalWidget(GUIComponent):
+ 
+ 	def setConnect(self, conditionalFunction):
+ 		self.conditionalFunction = conditionalFunction
+-		
++
+ 	def activateCondition(self, condition):
+ 		if condition:
+ 			self.visible = 1
+@@ -38,19 +38,19 @@ class BlinkingWidget(GUIComponent):
+ 		self.blinking = False
+ 		self.setBlinkTime(500)
+ 		self.timer = eTimer()
+-		self.timer.timeout.connect(self.blink)
+-	
++		self.timer_conn = self.timer.timeout.connect(self.blink)
++
+ 	def setBlinkTime(self, time):
+ 		self.blinktime = time
+-		
++
+ 	def blink(self):
+ 		if self.blinking == True:
+ 			self.visible = not self.visible
+-			
++
+ 	def startBlinking(self):
+ 		self.blinking = True
+ 		self.timer.start(self.blinktime)
+-		
++
+ 	def stopBlinking(self):
+ 		self.blinking = False
+ 		if self.visible:
+@@ -61,7 +61,7 @@ class BlinkingWidgetConditional(BlinkingWidget, ConditionalWidget):
+ 	def __init__(self):
+ 		BlinkingWidget.__init__(self)
+ 		ConditionalWidget.__init__(self)
+-		
++
+ 	def activateCondition(self, condition):
+ 		if (condition):
+ 			if not self.blinking: # we are already blinking
+diff --git a/usr/lib/enigma2/python/Components/Pixmap.py b/usr/lib/enigma2/python/Components/Pixmap.py
+index cf300b6..86a838d 100644
+--- a/usr/lib/enigma2/python/Components/Pixmap.py
++++ b/usr/lib/enigma2/python/Components/Pixmap.py
+@@ -12,7 +12,7 @@ class Pixmap(GUIComponent):
+ 
+ class PixmapConditional(ConditionalWidget, Pixmap):
+ 	def __init__(self, withTimer = True):
+-		ConditionalWidget.__init__(self)
++		ConditionalWidget.__init__(self, withTimer)
+ 		Pixmap.__init__(self)
+ 
+ class MovingPixmap(Pixmap):
+-- 
+1.7.10.4
+

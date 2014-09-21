@@ -3,6 +3,10 @@ SRC_URI[dm7080.sha256sum] = "9bae01a7d0496b87790be3416ac6bf5f98d515c6d4efb9b8f53
 
 require enigma2-bin-4.2.inc
 
+SRC_URI += " \
+	file://0001-fixed-blinking-pixmaps-widgets-was-not-correctly-por.patch \
+"
+
 COMPATIBLE_MACHINE = "^(dm7080)$"
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
