@@ -5,6 +5,7 @@ require enigma2-bin-4.2.inc
 
 SRC_URI += " \
 	file://0001-fixed-blinking-pixmaps-widgets-was-not-correctly-por.patch \
+	file://0002-SoftwareManager-fix-restore.patch \
 "
 
 COMPATIBLE_MACHINE = "^(dm7080)$"
