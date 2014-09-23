@@ -90,11 +90,35 @@ RRECOMMENDS_enigma2-plugin-extensions-modem = " \
 RDEPENDS_enigma2-plugin-systemplugins-networkmanager = " \
         packagegroup-net-connman \
 "
+RPROVIDES_enigma2-plugin-systemplugins-networkmanager = " \
+        enigma2-plugin-systemplugins-networksetup \
+        enigma2-plugin-systemplugins-networkwizard \
+        enigma2-plugin-systemplugins-wirelesslan \
+"
+RCONFLICTS_enigma2-plugin-systemplugins-networkmanager = " \
+        enigma2-plugin-systemplugins-networksetup \
+        enigma2-plugin-systemplugins-networkwizard \
+        enigma2-plugin-systemplugins-wirelesslan \
+"
+RREPLACES_enigma2-plugin-systemplugins-networkmanager = " \
+        enigma2-plugin-systemplugins-networksetup \
+        enigma2-plugin-systemplugins-networkwizard \
+        enigma2-plugin-systemplugins-wirelesslan \
+"
 RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = " \
         python-twisted-web \
 "
 RDEPENDS_enigma2-plugin-systemplugins-upnp = " \
         python-coherence \
+"
+RPROVIDES_enigma2-plugin-systemplugins-upnp = " \
+        enigma2-plugin-systemplugins-minidlnasetup \
+"
+RCONFLICTS_enigma2-plugin-systemplugins-upnp = " \
+        enigma2-plugin-systemplugins-minidlnasetup \
+"
+RREPLACES_enigma2-plugin-systemplugins-upnp = " \
+        enigma2-plugin-systemplugins-minidlnasetup \
 "
 
 python populate_packages_prepend() {
