@@ -1,26 +1,54 @@
 #!/bin/sh
 
-EXTRA_PARAM=""
+ip=
+nfsroot=
+root=
 
-NET_DEVS=`cat /proc/net/dev | sed -ne 's/^\([a-zA-Z0-9 ]*\):.*$/\1/p'`
-NET_ADDR=`cat /proc/cmdline | sed -ne 's/^.*ip=\([^ :]*\).*$/\1/p'`
+set -- $(cat /proc/cmdline)
+for arg do
+	key=${arg%%=*}
+	if [ "$arg" = "$key" ]; then
+		val=
+	else
+		val=${arg#*=}
+	fi
+	case "$key" in
+		ip)
+			ip=${val%%:*}
+			;;
+		nfsroot)
+			nfsroot=$val
+			;;
+		root)
+			root=$val
+			;;
+	esac
+done
 
-if [ ! -z "$NET_ADDR" ]; then
-    if [ "$NET_ADDR" = dhcp ]; then
-        ethn=`ifconfig | grep "^eth" | sed -e "s/\(eth[0-9]\)\(.*\)/\1/"`
-        if [ ! -z "$ethn" ]; then
-            EXTRA_PARAM="-I $ethn"
-        fi
-    else
-        for i in $NET_DEVS; do
-        ADDR=`ifconfig $i | sed 's/addr://g' | sed -ne 's/^.*inet \([0-9.]*\) .*$/\1/p'`
-        if [ "$NET_ADDR" = "$ADDR" ]; then
-            EXTRA_PARAM="-I $i"
-            break
-        fi
-        done
-    fi
+options=
+
+if [ "$root" = "/dev/nfs" -o -n "$nfsroot" -a -n "$ip" ]; then
+	set -- $(ip -4 -o addr show | awk '{print $2}' | grep -v '^lo$')
+	for dev do
+		case "$ip" in
+			any|bootp|both|dhcp|on|rarp)
+				options="-I $dev $options"
+				;;
+			*)
+				dev_addr=`ip -4 -o addr show $dev | awk '{print $4}' | grep -o '^[0-9.]\+'`
+				if [ "$ip" = "$dev_addr" ]; then
+					options="-I $dev"
+					break
+				fi
+				;;
+		esac
+	done
+
+	if [ -n "$options" ] && grep -q '^nameserver [0-9.]*[1-9]' /proc/net/pnp; then
+		options="-r $options"
+		grep -Ew '^(domain|nameserver)' /proc/net/pnp >/etc/resolv.conf
+	fi
 fi
 
-[ ! -d /run/connmand ] && mkdir -p /run/connmand
-echo "CONNMAND_OPTS=$EXTRA_PARAM">/run/connmand/connmand.env
+[ -d /run/connmand ] || mkdir -p /run/connmand
+echo "CONNMAND_OPTS=$options" >/run/connmand/connmand.env
