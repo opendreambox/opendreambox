@@ -17,10 +17,12 @@ PACKAGES =+ "flash-scripts"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = " \
+    coreutils-realpath \
     e2fsprogs-mke2fs \
     flash-scripts \
     gpgv \
     parted \
+    pigz \
     util-linux-mount \
 "
 RDEPENDS_flash-scripts = " \
