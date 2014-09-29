@@ -9,4 +9,6 @@ do_install_append() {
     install -m755 ${WORKDIR}/autofs.init ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
 }
 
+PARALLEL_MAKEINST = ""
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
