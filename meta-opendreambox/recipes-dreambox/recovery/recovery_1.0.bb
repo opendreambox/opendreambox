@@ -2,7 +2,7 @@ SUMMARY = "Command-line tools to flash and recover your Dreambox"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 SRCREV = "${@opendreambox_srcrev('f6d9de6dc38272d83f19f63afe874e1cb58a8c61', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('40887ab41080d372aaa1fa3130858040afead64e', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('2766f96988091284200f16b9192fc98e9f80c780', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
@@ -31,7 +31,7 @@ RDEPENDS_flash-scripts = " \
     util-linux-sfdisk \
 "
 
-FILES_flash-scripts = "${sbindir}/flash-rescue ${sbindir}/flash-kernel ${sbindir}/flash-ssbl ${sbindir}/select-boot-source"
+FILES_flash-scripts = "${sbindir}/flash-rescue ${sbindir}/flash-kernel ${sbindir}/flash-ssbl ${sbindir}/select-boot-source ${sbindir}/to-the-rescue"
 
 BRANCH = "master"
 BRANCH_dm7080 = "dm7080"
