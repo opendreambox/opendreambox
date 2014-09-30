@@ -9,12 +9,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} += " \
   gst-plugin-dvbmediasink \
-  gstreamer1.0-plugins-bad-cdxaparse \
   gstreamer1.0-plugins-bad-faad \
   gstreamer1.0-plugins-bad-mms \
   gstreamer1.0-plugins-bad-mpegpsdemux \
   gstreamer1.0-plugins-bad-mpegtsdemux \
-  gstreamer1.0-plugins-bad-vcdsrc \
   gstreamer1.0-plugins-base-alsa \
   gstreamer1.0-plugins-base-app \
   gstreamer1.0-plugins-base-audioconvert \
