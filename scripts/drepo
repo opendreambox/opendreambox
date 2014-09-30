@@ -33,7 +33,7 @@ if [ -z "$LESS" ]; then
 fi
 
 if [ -z "$PAGER" ]; then
-	PAGER="pager"
+	PAGER=$(set -- $(which pager less more); echo $1)
 fi
 
 case "$CMD" in
