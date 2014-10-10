@@ -18,8 +18,3 @@ do_install(){
 }
 
 FILES_${PN} = "${libdir}/fonts"
-
-SQUASHFS_IMG_PACKAGES = "${PN}-sqsh-img"
-SQUASHFS_IMG_REPLACES = "${PN}"
-SQUASHFS_IMG_BLOCKSIZES = "262144"
-inherit squashfs-img
