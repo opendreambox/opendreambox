@@ -1,3 +1,16 @@
+From a88501b9dd1fbc4cbbc26649f78281c9922ec9eb Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 10 Oct 2014 22:27:31 +0200
+Subject: [PATCH 3/7] hls: locking fixes
+
+---
+ gst/hls/gsthlsdemux.c | 19 ++++++++++++++-----
+ gst/hls/m3u8.c        |  7 +++++--
+ gst/hls/m3u8.h        |  6 +++---
+ 3 files changed, 22 insertions(+), 10 deletions(-)
+
+diff --git a/gst/hls/gsthlsdemux.c b/gst/hls/gsthlsdemux.c
+index 3308a29..8d0dfa7 100644
 --- a/gst/hls/gsthlsdemux.c
 +++ b/gst/hls/gsthlsdemux.c
 @@ -1116,6 +1116,8 @@ gst_hls_demux_change_playlist (GstHLSDemux * demux, guint max_bitrate)
@@ -63,6 +76,8 @@
    return TRUE;
  }
  
+diff --git a/gst/hls/m3u8.c b/gst/hls/m3u8.c
+index 65afa8b..0712842 100644
 --- a/gst/hls/m3u8.c
 +++ b/gst/hls/m3u8.c
 @@ -423,7 +423,8 @@ gst_m3u8_client_new (const gchar * uri)
@@ -86,6 +101,8 @@
    g_free (self);
  }
  
+diff --git a/gst/hls/m3u8.h b/gst/hls/m3u8.h
+index 6d60809..9a7084d 100644
 --- a/gst/hls/m3u8.h
 +++ b/gst/hls/m3u8.h
 @@ -32,8 +32,8 @@ typedef struct _GstM3U8Client GstM3U8Client;
@@ -108,3 +125,6 @@
  };
  
  
+-- 
+1.9.1
+

@@ -13,12 +13,12 @@ PV = "0.10.23.1+git${SRCPV}"
 CPPFLAGS += "${@base_contains('DISTRO_FEATURES', 'x11', '', '-DMESA_EGL_NO_X11_HEADERS', d)}"
 
 SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
-           file://0003-mpegpsdemux_speedup.diff.patch \
-           file://0004-mpegdemux-compile-fixes.patch \
-           file://0005-hlsdemux-locking-fixes.patch \
-           file://0006-hlsdemux-backport.patch \
-           file://0007-revert-rtmp-change.patch \
-           file://0008-faad-lower-rank.patch \
+           file://0001-mpegdemux-speedup.patch \
+           file://0002-mpegdemux-compile-fixes.patch \
+           file://0003-hls-locking-fixes.patch \
+           file://0004-hls-demux-backport.patch \
+           file://0005-rtmp-revert-change.patch \
+           file://0006-faad-lower-rank.patch \
            file://orc.m4-fix-location-of-orcc-when-cross-compiling.patch"
 
 inherit gettext
@@ -43,6 +43,7 @@ PACKAGECONFIG[faad] = "--enable-faad,--disable-faad,faad2"
 PACKAGECONFIG[jp2k] = "--enable-jp2k,--disable-jp2k,jasper"
 PACKAGECONFIG[modplug] = "--enable-modplug,--disable-modplug,libmodplug"
 PACKAGECONFIG[opus] = "--enable-opus,--disable-opus,libopus"
+PACKAGECONFIG[rtmp] = "--enable-rtmp,--disable-rtmp,rtmpdump"
 PACKAGECONFIG[sndfile] = "--enable-sndfile,--disable-sndfile,libsndfile1"
 PACKAGECONFIG[vp8] = "--enable-vp8,--disable-vp8,libvpx"
 PACKAGECONFIG[ass] = "--enable-assrender,--disable-assrender,libass"

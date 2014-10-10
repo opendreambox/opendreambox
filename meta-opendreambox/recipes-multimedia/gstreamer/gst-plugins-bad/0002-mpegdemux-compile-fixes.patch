@@ -1,7 +1,17 @@
-diff -Naur git.org/gst/mpegdemux/gstmpegdemux.c git/gst/mpegdemux/gstmpegdemux.c
---- git.org/gst/mpegdemux/gstmpegdemux.c	2012-08-01 19:21:08.662409533 +0200
-+++ git/gst/mpegdemux/gstmpegdemux.c	2012-08-01 19:18:15.294405055 +0200
-@@ -292,7 +292,7 @@
+From e2f8d10c6c46acc1c2e7d24f01b5d2929505c907 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 10 Oct 2014 22:26:47 +0200
+Subject: [PATCH 2/7] mpegdemux: compile fixes
+
+---
+ gst/mpegdemux/gstmpegdemux.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gst/mpegdemux/gstmpegdemux.c b/gst/mpegdemux/gstmpegdemux.c
+index 6fe21e7..840ca1c 100644
+--- a/gst/mpegdemux/gstmpegdemux.c
++++ b/gst/mpegdemux/gstmpegdemux.c
+@@ -292,7 +292,7 @@ gst_flups_demux_reset (GstFluPSDemux * demux)
        if (stream->pad)
          gst_element_remove_pad (GST_ELEMENT_CAST (demux), stream->pad);
        if (stream->buf)
@@ -10,7 +20,7 @@ diff -Naur git.org/gst/mpegdemux/gstmpegdemux.c git/gst/mpegdemux/gstmpegdemux.c
        if (stream->meta_buf)
          gst_buffer_unref(stream->meta_buf);
        g_free (stream);
-@@ -426,7 +426,7 @@
+@@ -429,7 +429,7 @@ gst_flups_demux_create_stream (GstFluPSDemux * demux, gint id, gint stream_type)
    stream->segment_thresh = threshold;
  
    if (threshold == VIDEO_SEGMENT_THRESHOLD) {
@@ -19,7 +29,7 @@ diff -Naur git.org/gst/mpegdemux/gstmpegdemux.c git/gst/mpegdemux/gstmpegdemux.c
      stream->buf_pos = 0;
      stream->meta_buf = gst_buffer_new();
    }
-@@ -481,7 +481,7 @@
+@@ -484,7 +484,7 @@ static GstFlowReturn
  gst_flups_demux_send_data (GstFluPSDemux * demux, GstFluPSStream * stream,
      GstBuffer * buf)
  {
@@ -28,3 +38,6 @@ diff -Naur git.org/gst/mpegdemux/gstmpegdemux.c git/gst/mpegdemux/gstmpegdemux.c
    guint64 timestamp;
    guint size;
    gboolean sent = FALSE;
+-- 
+1.9.1
+

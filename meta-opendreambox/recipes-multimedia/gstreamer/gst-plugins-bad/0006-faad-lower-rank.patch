@@ -1,0 +1,25 @@
+From 1d350910d7ebdcb39b15cf0eadadb038d2e554fe Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 10 Oct 2014 22:28:46 +0200
+Subject: [PATCH 6/7] faad: lower rank
+
+---
+ ext/faad/gstfaad.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/faad/gstfaad.c b/ext/faad/gstfaad.c
+index 4dd73eb..c9661ab 100644
+--- a/ext/faad/gstfaad.c
++++ b/ext/faad/gstfaad.c
+@@ -867,7 +867,7 @@ gst_faad_close_decoder (GstFaad * faad)
+ static gboolean
+ plugin_init (GstPlugin * plugin)
+ {
+-  return gst_element_register (plugin, "faad", GST_RANK_PRIMARY, GST_TYPE_FAAD);
++  return gst_element_register (plugin, "faad", GST_RANK_SECONDARY, GST_TYPE_FAAD);
+ }
+ 
+ GST_PLUGIN_DEFINE (GST_VERSION_MAJOR,
+-- 
+1.9.1
+

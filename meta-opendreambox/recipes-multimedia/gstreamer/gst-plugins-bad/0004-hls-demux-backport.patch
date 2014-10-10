@@ -1,5 +1,15 @@
+From f2dddf3f19299ec6c3488306e0b2d85b191890d7 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 10 Oct 2014 22:27:49 +0200
+Subject: [PATCH 4/7] hls: demux backport
+
+---
+ gst/hls/gsthlsdemux.c | 33 +++++++++---------------
+ gst/hls/m3u8.c        | 70 ++++++++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 64 insertions(+), 39 deletions(-)
+
 diff --git a/gst/hls/gsthlsdemux.c b/gst/hls/gsthlsdemux.c
-index 3308a29..09acee1 100644
+index 8d0dfa7..9af7fca 100644
 --- a/gst/hls/gsthlsdemux.c
 +++ b/gst/hls/gsthlsdemux.c
 @@ -315,14 +315,6 @@ gst_hls_demux_change_state (GstElement * element, GstStateChange transition)
@@ -97,7 +107,7 @@ index 3308a29..09acee1 100644
        if (!gst_hls_demux_get_next_fragment (demux, FALSE)) {
          if (demux->cancelled) {
            goto quit;
-@@ -1289,6 +1279,7 @@ gst_hls_demux_get_next_fragment (GstHLSDemux * demux, gboolean caching)
+@@ -1298,6 +1288,7 @@ gst_hls_demux_get_next_fragment (GstHLSDemux * demux, gboolean caching)
      GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
    }
  
@@ -106,7 +116,7 @@ index 3308a29..09acee1 100644
    gst_buffer_list_unref (buffer_list);
    if (!caching) {
 diff --git a/gst/hls/m3u8.c b/gst/hls/m3u8.c
-index 65afa8b..b6c04a8 100644
+index 0712842..a58bdae 100644
 --- a/gst/hls/m3u8.c
 +++ b/gst/hls/m3u8.c
 @@ -37,6 +37,7 @@ static gboolean gst_m3u8_update (GstM3U8 * m3u8, gchar * data,
@@ -145,7 +155,7 @@ index 65afa8b..b6c04a8 100644
  
        r = g_utf8_strchr (data, -1, '\r');
        if (r)
-@@ -674,3 +660,51 @@ gst_m3u8_client_get_playlist_for_bitrate (GstM3U8Client * client, guint bitrate)
+@@ -677,3 +663,51 @@ gst_m3u8_client_get_playlist_for_bitrate (GstM3U8Client * client, guint bitrate)
  
    return current_variant;
  }
@@ -197,3 +207,6 @@ index 65afa8b..b6c04a8 100644
 +  g_free (uri_copy);
 +  return ret;
 +}
+-- 
+1.9.1
+
