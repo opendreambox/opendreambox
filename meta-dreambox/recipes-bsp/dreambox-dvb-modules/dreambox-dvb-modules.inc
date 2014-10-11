@@ -39,9 +39,9 @@ do_install_append() {
 
 PACKAGES =+ "${PN}-lcd ${PN}-stb-core"
 
-RDEPENDS_${PN} = "${PN}-lcd ${PN}-stb-core"
+RDEPENDS_${PN} = "${PN}-stb-core"
 RDEPENDS_${PN}-lcd = "${PN}-stb-core"
-RRECOMMENDS_${PN} = "${PN}-systemd"
+RRECOMMENDS_${PN} = "${PN}-lcd ${PN}-systemd"
 
 FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
                /lib/modules/${DM_LOCALVERSION}/extra/"
