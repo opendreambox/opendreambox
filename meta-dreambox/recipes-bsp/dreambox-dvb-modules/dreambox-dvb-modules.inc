@@ -54,3 +54,19 @@ FILES_${PN}-stb-core = "/lib/modules/${DM_LOCALVERSION}/extra/stb-core.ko"
 # We don't use KERNEL_VERSION in this recipe, because the
 # precompiled modules depend on a specific version.
 DM_LOCALVERSION = "${@d.getVar('PV', True).rsplit('-', 1)[0]}"
+
+pkg_postinst_${PN} () {
+if [ -z "$D" ]; then
+	depmod -a ${DM_LOCALVERSION}
+fi
+}
+pkg_postinst_${PN}-lcd () {
+if [ -z "$D" ]; then
+	depmod -a ${DM_LOCALVERSION}
+fi
+}
+pkg_postinst_${PN}-stb-core () {
+if [ -z "$D" ]; then
+	depmod -a ${DM_LOCALVERSION}
+fi
+}
