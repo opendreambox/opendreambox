@@ -25,11 +25,10 @@ SRC_URI += "file://debian/ca.patch \
 SRC_URI += "file://configure-targets.patch \
             file://shared-libs.patch \
             file://parallel-make-fix.patch \
-            file://openssl-fix-doc.patch \
             file://find.pl"
 
-SRC_URI[md5sum] = "2f989915f8fea49aa1bc37aa58500cce"
-SRC_URI[sha256sum] = "cdcb98d0fbc026ca798b17919334310271d3a593554ffd6a59659b9222fd4e48"
+SRC_URI[md5sum] = "1b239eea3a60d67863e7b66700e47a16"
+SRC_URI[sha256sum] = "461cc694f29e72f59c22e7ea61bf44671a5fc2f8b3fc2eeac89714b7be915881"
 
 EXTRA_OECONF += "no-idea no-mdc2 no-rc5"
 
