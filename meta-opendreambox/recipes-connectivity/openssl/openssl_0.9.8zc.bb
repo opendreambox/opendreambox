@@ -16,7 +16,6 @@ SRC_URI += "file://debian/ca.patch \
             file://debian/pkg-config.patch \
             file://debian/rc4-amd64.patch \
             file://debian/rehash-crt.patch \
-            file://debian/rehash_pod.patch \
             file://debian/shared-lib-ext.patch \
             file://debian/stddef.patch \
             file://debian/version-script.patch \
