@@ -2,6 +2,8 @@ require recipes-connectivity/openssl/openssl.inc
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 
+PROVIDES = "libssl0.9.8"
+
 SRC_URI += "file://debian/ca.patch \
             file://debian/config-hurd.patch;apply=no \
             file://debian/debian-targets.patch \
