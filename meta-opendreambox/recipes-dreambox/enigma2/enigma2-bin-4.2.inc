@@ -19,8 +19,8 @@ DEPENDS += " \
     libjpeg-turbo \
     libpng \
     libsigc++-2.0 \
+    libssl0.9.8 \
     libxml2 \
-    openssl \
     python \
     qt4-embedded \
     qxmpp-e \
