@@ -19,9 +19,9 @@ DEPENDS = " \
     libjpeg-turbo \
     libpng12 \
     libsigc++-2.0 \
+    libssl0.9.8 \
     libxml2 \
     libxmlccwrap \
-    openssl \
     python \
     qt4-embedded \
 "
