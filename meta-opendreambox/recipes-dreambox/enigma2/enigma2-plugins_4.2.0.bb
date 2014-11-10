@@ -16,7 +16,7 @@ DEPENDS = " \
         smartmontools \
         streamripper \
 "
-SRCREV = "${@opendreambox_srcrev('52d2497a28799789bfdf1d8ea8068c5c6f86f335', d)}"
+SRCREV = "${@opendreambox_srcrev('814afc4318a33e327407a94241099a8778dd66db', d)}"
 
 SRC_URI += "file://print.mak"
 
