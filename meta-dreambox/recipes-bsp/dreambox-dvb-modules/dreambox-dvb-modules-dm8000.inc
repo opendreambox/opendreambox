@@ -1,4 +1,4 @@
-require dreambox-dvb-modules.inc
+require dreambox-dvb-modules-legacy.inc
 
 SRC_URI += "http://sources.dreamboxupdate.com/download/7020/fpupgrade-${MACHINE}-v7;name=fpupgrade"
 SRC_URI[fpupgrade.md5sum] = "2e13b98624aa56e14d458573e46709ba"
