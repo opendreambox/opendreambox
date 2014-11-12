@@ -2,7 +2,7 @@ SUMMARY = "Command-line tools to flash and recover your Dreambox"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 SRCREV = "${@opendreambox_srcrev('f6d9de6dc38272d83f19f63afe874e1cb58a8c61', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('c0552663e93650ac2036be5938b086867a72951b', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('d04ef152c73dac9460a56503d81708eb4f6dcff2', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
@@ -38,6 +38,7 @@ FILES_flash-scripts = " \
     ${sbindir}/librecovery \
     ${sbindir}/select-boot-source \
     ${sbindir}/to-the-rescue \
+    ${sbindir}/writespi \
 "
 
 BRANCH = "master"
