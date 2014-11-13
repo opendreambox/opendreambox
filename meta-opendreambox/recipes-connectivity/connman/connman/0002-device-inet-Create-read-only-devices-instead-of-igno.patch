@@ -1,9 +1,7 @@
-Upstream-Status: inappropriate
-
-From 67bed4cf2d4733df514b7be7ffad29a10d1b81a2 Mon Sep 17 00:00:00 2001
+From ebb025e937aa38cb2c237dd983a0d9b73f99099e Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 29 Oct 2014 21:19:25 +0100
-Subject: [PATCH 1/2] device/inet: Create read-only devices instead of ignoring
+Subject: [PATCH 2/3] device/inet: Create read-only devices instead of ignoring
  completely
 
 Booting an nfsroot with connman requires passing -I eth0 to ignore

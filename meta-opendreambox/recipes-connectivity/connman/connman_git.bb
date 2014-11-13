@@ -4,8 +4,9 @@ SRCREV = "6a9196a51418c26ae2dbffa4d3f3b96243fd55f3"
 PV = "1.26+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman.git \
-           file://0001-device-inet-Create-read-only-devices-instead-of-igno.patch \
-           file://0002-replace-hardcode-and-add-EnvironmentFile-and-Wants.patch \
+           file://0001-connman.service.in-start-before-remote-fs-mounts.patch \
+           file://0002-device-inet-Create-read-only-devices-instead-of-igno.patch \
+           file://0003-replace-hardcode-and-add-EnvironmentFile-and-Wants.patch \
            file://connman \
            file://connmand-env \
            file://connman-env.service.in"
