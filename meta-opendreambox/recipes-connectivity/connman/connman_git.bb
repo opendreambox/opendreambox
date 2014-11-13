@@ -1,6 +1,6 @@
 require recipes-connectivity/connman/connman.inc
 
-SRCREV = "6a9196a51418c26ae2dbffa4d3f3b96243fd55f3"
+SRCREV = "d83837ce485110507e2370f21fb94fab85d4befb"
 PV = "1.26+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman.git \
