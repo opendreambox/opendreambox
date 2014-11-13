@@ -1,4 +1,4 @@
-From c50f315fa325289c7bad1cc94a6afa5ca866b2ee Mon Sep 17 00:00:00 2001
+From f1f27acf3c73e8c50f8b7a2164c800089988efbd Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Tue, 5 Aug 2014 15:18:24 +0200
 Subject: [PATCH 3/3] replace hardcode, and add EnvironmentFile and Wants
@@ -11,12 +11,12 @@ Signed-off-by: Roy Li <rongqing.li@windriver.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/connman.service.in b/src/connman.service.in
-index 0b4d66b..4906c55 100644
+index ed62add..093e485 100644
 --- a/src/connman.service.in
 +++ b/src/connman.service.in
 @@ -4,12 +4,14 @@ Requires=dbus.socket
  After=dbus.socket
- Before=remote-fs.target
+ Before=remote-fs-pre.target
  Wants=remote-fs-pre.target
 +Wants=connman-env.service
  
