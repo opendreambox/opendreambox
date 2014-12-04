@@ -5,4 +5,4 @@ inherit opendreambox-precompiled-binary
 
 require enigma2-hbbtv-plugin.inc
 
-COMPATIBLE_MACHINE = "^(dm7080)$"
+COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
