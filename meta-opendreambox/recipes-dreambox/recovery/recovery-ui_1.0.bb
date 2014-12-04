@@ -2,7 +2,8 @@ SUMMARY = "Simple user interface for Dreambox rescue mode"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
 SRCREV = "${@opendreambox_srcrev('1cd69394b3702a06cadfce078289dd351a07b152', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('8b23214c55d29a85961ba11c90cc7a2ca8c92794', d)}"
+SRCREV_dm820 = "${SRCREV_dm7080}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('f8f428ba77ea76df72766827c4b00d4be93535cf', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
@@ -17,8 +18,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 RDEPENDS_${PN} = "dreambox-dvb-modules-lcd"
 
 BRANCH = "master"
+BRANCH_dm820 = "${BRANCH_dm7080}"
 BRANCH_dm7080 = "dm7080"
 
-COMPATIBLE_MACHINE = "^(dm7080)$"
+COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 INITSCRIPT_NAME = "${BPN}"
