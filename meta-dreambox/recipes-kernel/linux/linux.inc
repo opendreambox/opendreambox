@@ -85,3 +85,5 @@ do_install_append() {
 
 PACKAGES =+ "kernel-headers"
 FILES_kernel-headers = "${exec_prefix}/src/linux*"
+
+KERNEL_MODULE_AUTOLOAD += "nfsd"
