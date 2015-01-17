@@ -13,6 +13,7 @@ DEPENDS = " \
         python-pycrypto \
         python-pyopenssl \
         python-transmissionrpc \
+        python-youtube-dl \
         smartmontools \
         streamripper \
 "
