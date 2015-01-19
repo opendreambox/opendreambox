@@ -1,5 +1,5 @@
-PATCHREV = "6f9e08215367366976219255501f4247a280cb13"
-PATCHLEVEL = "101"
+PATCHREV = "a210e7b36b8f028554c7f45485c5b363a513275f"
+PATCHLEVEL = "105"
 
 SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.4.tar.xz;name=kernel \
@@ -8,10 +8,10 @@ SRC_URI = " \
 "
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
-SRC_URI[stable-patch.md5sum] = "bc5a50cfaea51528e0f78b5d19684a8d"
-SRC_URI[stable-patch.sha256sum] = "4f208c4ac5d76580680d9fa8fd35d5d35c7699565a59280d5173d66538c0a219"
-SRC_URI[dream-patch.md5sum] = "f73577468ad4538483c202b3b927b7ff"
-SRC_URI[dream-patch.sha256sum] = "93ba17a37784a582adfa320c12ca29233df195301201cb677072af9022160ac6"
+SRC_URI[stable-patch.md5sum] = "0f43fcca926776fd6fe849dcf62e633e"
+SRC_URI[stable-patch.sha256sum] = "e596f2b874a6a8f31a6f93cb40457694d30ff641d760b70a7419c983e67d1317"
+SRC_URI[dream-patch.md5sum] = "ba1e49421dc25c5ede02a4bea2c63c8c"
+SRC_URI[dream-patch.sha256sum] = "f85f6532093cf640727e9c2a4adbacb5ef7cff972e276d8a20555562871b0114"
 
 S = "${WORKDIR}/linux-3.4"
 
