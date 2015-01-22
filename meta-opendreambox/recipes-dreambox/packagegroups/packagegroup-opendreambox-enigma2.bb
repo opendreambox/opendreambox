@@ -3,6 +3,8 @@ SECTION = "opendreambox/base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=ed920ea8b6701825484d079e87a3a73a"
 
+PR = "r1"
+
 inherit packagegroup
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -27,6 +29,7 @@ RDEPENDS_${PN} += " \
   libpassthrough \
   ${@base_contains('DREAMBOX_FEATURES', 'opkgfb', 'opkgfb', '', d)} \
   packagegroup-opendreambox-gstreamer-${OPENDREAMBOX_GST_VERSION} \
+  packagegroup-opendreambox-systemlocales \
 "
 
 RRECOMMENDS_${PN} += " \
