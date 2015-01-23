@@ -25,6 +25,7 @@ PACKAGES =+ " \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-networkmanager \
     enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-streamserver \
     enigma2-plugin-systemplugins-upnp \
 "
 
@@ -107,6 +108,9 @@ RREPLACES_enigma2-plugin-systemplugins-networkmanager = " \
 "
 RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = " \
         python-twisted-web \
+"
+RDEPENDS_enigma2-plugin-systemplugins-streamserver = " \
+        dreamrtspserver \
 "
 RDEPENDS_enigma2-plugin-systemplugins-upnp = " \
         python-coherence \
