@@ -5,5 +5,9 @@ require enigma2-bin-4.2.inc
 
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
+SRC_URI += " \
+        file://0001-StreamServer-Fix-meta.patch \
+"
+
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
 PRECOMPILED_VERSION = "${@d.getVar('PV', True).split('-')[0]}"
