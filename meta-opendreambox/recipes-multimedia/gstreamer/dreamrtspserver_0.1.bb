@@ -12,6 +12,7 @@ RDEPENDS_${PN} = "gst-plugin-dreamsource \
                   gstreamer1.0-plugins-base-app \
                   gstreamer1.0-plugins-good-audioparsers \
                   gstreamer1.0-plugins-good-rtp \
+                  gstreamer1.0-plugins-good-rtpmanager \
                   gstreamer1.0-plugins-good-udp"
 
 SYSTEMD_SERVICE_${PN} = "dreamrtspserver.service"
