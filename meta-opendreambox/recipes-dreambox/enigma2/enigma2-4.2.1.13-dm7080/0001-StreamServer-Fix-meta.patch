@@ -1,8 +1,12 @@
 diff -rupN a/usr/share/meta/index-enigma2.xml b/usr/share/meta/index-enigma2.xml
 --- a/usr/share/meta/index-enigma2.xml	2015-01-23 20:44:15.000000000 +0100
-+++ b/usr/share/meta/index-enigma2.xml	2015-01-25 14:10:04.938609174 +0100
-@@ -162,6 +162,7 @@
- 	<package details="plugin_streamserversetup.xml" name="StreamServerSetup" packagename="enigma2-plugin-extensions-streamserversetup" shortdescription="Control the Streaming Server">
++++ b/usr/share/meta/index-enigma2.xml	2015-01-27 12:11:46.523963659 +0100
+@@ -159,9 +159,10 @@
+ 			<tag type="System" />
+ 		</prerequisites>
+ 	</package>
+-	<package details="plugin_streamserversetup.xml" name="StreamServerSetup" packagename="enigma2-plugin-extensions-streamserversetup" shortdescription="Control the Streaming Server">
++	<package details="plugin_streamserver.xml" name="Streaming Server" packagename="enigma2-plugin-systemplugins-streamserver" shortdescription="Configuration Utility for the Dreambox Streaming Server">
  		<prerequisites>
  			<tag type="Multimedia" />
 +			<tag type="Network" />
