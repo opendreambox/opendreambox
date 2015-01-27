@@ -7,6 +7,7 @@ COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 SRC_URI += " \
         file://0001-StreamServer-Fix-meta.patch \
+        file://0002-Components-Language.py-revert-change-of-existing-key.patch \
 "
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
