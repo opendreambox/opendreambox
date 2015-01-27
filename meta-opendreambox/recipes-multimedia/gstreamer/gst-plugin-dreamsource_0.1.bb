@@ -1,9 +1,9 @@
 SUMMARY = "dreambox video and audio encoder source elements for Gstreamer 1.0"
 SECTION = "multimedia"
 LICENSE = "CC-BY-NC-SA-3.0 | DreamProperty"
-LIC_FILES_CHKSUM = "file://COPYING;md5=bc2953f0a89e22cf0b1f6f4628b06b17"
+LIC_FILES_CHKSUM = "file://COPYING;md5=1f6263f0928e695084f3f0055be80eb3"
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base"
-SRCREV = "036b1ff2f0f3ad1e7c4e99fdd56b648926f1fe44"
+SRCREV = "${@opendreambox_srcrev('41a58584a638113723b2892e981444eaba342607', d)}"
 
 inherit autotools opendreambox-git
 
