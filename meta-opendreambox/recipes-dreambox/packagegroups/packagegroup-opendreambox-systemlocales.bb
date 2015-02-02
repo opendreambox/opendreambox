@@ -27,17 +27,17 @@ RRECOMMENDS_${PN} += " \
   locale-base-lv-lv \
   locale-base-is-is \
   locale-base-it-it \
-  locale-base-no-no \
+  locale-base-nb-no \
   locale-base-fa-ir \
   locale-base-pl-pl \
   locale-base-pt-pt \
   locale-base-ru-ru \
-  locale-base-sr-yu \
+  locale-base-sr-rs+latin \
   locale-base-sk-sk \
   locale-base-sl-si \
   locale-base-es-es \
   locale-base-sv-se \
-  locale-base-tr-tr \
+  locale-base-tr-cy \
   locale-base-uk-ua \
   locale-base-fy-nl \
 "
