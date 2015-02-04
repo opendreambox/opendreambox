@@ -3,6 +3,8 @@ SRC_URI[dm7080.sha256sum] = "972edd55c2152db368bffefdd346f9ea6bcad78679d0b8cab64
 
 require enigma2-bin-4.2.inc
 
+SRC_URI += "file://0001-fixed-imagewizard-settings-restore.patch"
+
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"

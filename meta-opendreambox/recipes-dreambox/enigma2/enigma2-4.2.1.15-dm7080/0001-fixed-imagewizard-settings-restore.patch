@@ -1,0 +1,51 @@
+From 34b15195ca767f9d85609d605714d1c9a8c88045 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Tue, 3 Feb 2015 22:48:51 +0100
+Subject: [PATCH] fixed imagewizard settings restore
+
+---
+ .../Plugins/SystemPlugins/SoftwareManager/ImageWizard.py      |    9 +--------
+ .../Plugins/SystemPlugins/SoftwareManager/imagewizard.xml     |    2 ++
+ 2 files changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/ImageWizard.py b/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/ImageWizard.py
+index ef834cc..e0b25cd 100644
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/ImageWizard.py
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/ImageWizard.py
+@@ -56,11 +56,6 @@ def checkBackupFile():
+ 		else:
+ 			return False
+ 
+-if checkConfigBackup() is None:
+-	backupAvailable = 0
+-else:
+-	backupAvailable = 1
+-
+ class ImageWizard(WizardLanguage, Rc):
+ 	skin = """
+ 		<screen name="ImageWizard" position="0,0" size="720,576" title="Welcome..." flags="wfNoBorder" >
+@@ -112,7 +107,5 @@ class ImageWizard(WizardLanguage, Rc):
+ 		config.plugins.configurationbackup.backuplocation.save()
+ 		config.plugins.configurationbackup.save()
+ 
+-	
+-if config.misc.firstrun.value:
+-	wizardManager.registerWizard(ImageWizard, backupAvailable, priority = 10)
++wizardManager.registerWizard(ImageWizard, config.misc.firstrun.value, priority = 10)
+ 
+diff --git a/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/imagewizard.xml b/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/imagewizard.xml
+index 087c12a..7ae03a9 100644
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/imagewizard.xml
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/SoftwareManager/imagewizard.xml
+@@ -5,6 +5,8 @@ from Components.config import config
+ from Plugins.SystemPlugins.SoftwareManager.ImageWizard import checkConfigBackup
+ self.backuppath = checkConfigBackup()
+ self.condition = (self.backuppath is not None and config.misc.firstrun.value)
++if config.misc.firstrun.value and not self.condition:
++		self.currStep = self.getStepWithID('end')
+ 		</condition>
+ 		<text value="Do you want to restore your settings?" />
+ 		<short_title value="Restore"/>
+-- 
+1.7.10.4
+
