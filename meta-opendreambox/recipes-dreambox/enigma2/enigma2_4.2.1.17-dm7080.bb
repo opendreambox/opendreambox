@@ -3,7 +3,11 @@ SRC_URI[dm7080.sha256sum] = "7c4eba49e89166b18a7896e77402de54b7034c5d6e109728b9a
 
 require enigma2-bin-4.2.inc
 
-SRC_URI += "file://0001-set-priority-of-our-kernel-demux-threads-on-e2-start.patch"
+SRC_URI += " \
+	file://0001-set-priority-of-our-kernel-demux-threads-on-e2-start.patch \
+	file://0002-config.py-fixed-possible-crash.patch \
+	file://0003-CecRemoteHandler-use-correct-target-for-volume-keys.patch \
+"
 
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 

@@ -1,0 +1,49 @@
+From b6709a38a07f8e336585b473845a0057ad77ddf7 Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Mon, 9 Feb 2015 10:32:34 +0100
+Subject: [PATCH 2/2] CecRemoteHandler: use correct target for volume keys
+
+---
+ lib/python/Components/HdmiCec.py                             |    5 ++++-
+ lib/python/Plugins/SystemPlugins/HdmiCec/CecRemoteHandler.py |    2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/HdmiCec.py b/usr/lib/enigma2/python/Components/HdmiCec.py
+index b5a5245..fa68ca2 100644
+--- a/usr/lib/enigma2/python/Components/HdmiCec.py
++++ b/usr/lib/enigma2/python/Components/HdmiCec.py
+@@ -5,7 +5,7 @@ from Tools.Log import Log
+ 
+ config.cec = ConfigSubsection()
+ config.cec.sendpower = ConfigOnOff(default=True)
+-config.cec.avr_power_explicit = ConfigOnOff(default = False)
++config.cec.avr_power_explicit = ConfigOnOff(default=False)
+ config.cec.receivepower = ConfigOnOff(default=False)
+ config.cec.receive_remotekeys = ConfigOnOff(default=True)
+ config.cec.volume_forward = ConfigOnOff(default=False)
+@@ -36,6 +36,9 @@ class HdmiCec:
+ 	def sendSystemAudioKey(self, keyid):
+ 		self.sendKey(self.instance.getVolumeTarget(), keyid)
+ 
++	def getVolumeTarget(self):
++		return self.instance.getVolumeTarget()
++
+ 	def sendKey(self, dest, keyid):
+ 		self.instance.sendKey(dest, keyid)
+ 
+diff --git a/usr/lib/enigma2/python/Plugins/SystemPlugins/HdmiCec/CecRemoteHandler.py b/usr/lib/enigma2/python/Plugins/SystemPlugins/HdmiCec/CecRemoteHandler.py
+index faeb249..0353112 100644
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/HdmiCec/CecRemoteHandler.py
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/HdmiCec/CecRemoteHandler.py
+@@ -94,7 +94,7 @@ class CecRemoteHandler(object):
+ 
+ 	def sendSystemAudioKey(self, keyid):
+ 		if keyid in self.SYSTEM_AUDIO_KEYS:
+-			self.sendKey(5, keyid, translate=True)
++			self.sendKey(hdmi_cec.getVolumeTarget(), keyid, translate=True)
+ 
+ 	def sendKey(self, dest, keyid, translate=False):
+ 		if translate:
+-- 
+1.7.10.4
+
