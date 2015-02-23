@@ -21,4 +21,4 @@ FILES_${PN} = " \
 "
 FILES_${PN}-full = "${libexecdir}/* ${sysconfdir} ${datadir}/${BPN}"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
