@@ -8,9 +8,9 @@ DEPENDS = " \
 "
 DEPENDS_append_mipsel = " r8192c"
 
-inherit packagegroup
-
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+inherit packagegroup
 
 RDEPENDS_${PN} = " \
   wireless-tools \
