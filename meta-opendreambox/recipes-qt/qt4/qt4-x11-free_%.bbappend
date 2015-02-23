@@ -7,7 +7,7 @@ SRC_URI += "file://0002-Qt-Add-HbbTv-MIME-types.patch \
             file://0006-QtWebKit-disable-video-to-get-rid-of-gstreamer-depen.patch \
             file://0007-QWS-Export-qt_get_server_queue.patch"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/qt4-${PV}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/qt4:"
 
 QT_SQL_DRIVER_FLAGS += "-no-sql-sqlite2"
 QT_GLFLAGS = "-opengl es2"

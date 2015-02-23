@@ -9,7 +9,7 @@ SRC_URI += "file://0001-Qt-remove-x11-from-npapi-while-keeping-some-basic-fu.pat
             file://0007-QWS-Export-qt_get_server_queue.patch \
             file://0008-QEventLoop-dont-catch-exceptions.patch"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/qt4-${PV}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/qt4:"
 
 QT_CONFIG_FLAGS += "-nomake demos -nomake docs -nomake examples"
 QT_SQL_DRIVER_FLAGS = "-no-sql-ibase -no-sql-mysql -no-sql-odbc -no-sql-psql -no-sql-sqlite2 -plugin-sql-sqlite -system-sqlite"
