@@ -1,7 +1,7 @@
 require recipes-connectivity/connman/connman.inc
 
-SRCREV = "d83837ce485110507e2370f21fb94fab85d4befb"
-PV = "1.26+git${SRCPV}"
+SRCREV = "83929765bd1551e2ba982570e72b84aa3c7d70b7"
+PV = "1.28+git${SRCPV}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/network/connman/connman.git \
            file://0001-connman.service.in-start-before-remote-fs-mounts.patch \
