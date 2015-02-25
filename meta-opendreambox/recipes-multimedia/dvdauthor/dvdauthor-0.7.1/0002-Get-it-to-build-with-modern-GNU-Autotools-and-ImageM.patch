@@ -1,0 +1,61 @@
+From d99219ad66972247ccf9d51ca83ba91a776d0ad1 Mon Sep 17 00:00:00 2001
+From: Dan Fandrich <dan@coneharvesters.com>
+Date: Sun, 14 Sep 2014 22:27:01 +0000
+Subject: [PATCH 2/4] Get it to build with modern GNU Autotools and ImageMagick
+
+(cherry picked from commit d737ef1e5d0fec850dd4271474cf4f8ec8a269f9)
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ configure.ac | 4 ++--
+ src/dvdvml.l | 1 +
+ src/dvdvmy.y | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 52e3cb3..a7caa8b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,6 +1,6 @@
+ AC_INIT(DVDAuthor,0.7.1,dvdauthor-users@lists.sourceforge.net)
+ 
+-AM_CONFIG_HEADER(src/config.h)
++AC_CONFIG_HEADERS(src/config.h)
+ AC_CONFIG_AUX_DIR(autotools)
+ 
+ AM_INIT_AUTOMAKE
+@@ -41,7 +41,7 @@ AC_SUBST(LIBPNG_LIBS)
+ 
+ usemagick=0
+ 
+-AC_CHECK_PROGS(MAGICKCONFIG, [Magick-config])
++AC_CHECK_PROGS(MAGICKCONFIG, [MagickCore-config])
+ if test -n "$MAGICKCONFIG"; then
+     ac_save_CPPFLAGS="$CPPFLAGS"
+     ac_save_LIBS="$LIBS"
+diff --git a/src/dvdvml.l b/src/dvdvml.l
+index 3e5528a..654f411 100644
+--- a/src/dvdvml.l
++++ b/src/dvdvml.l
+@@ -19,6 +19,7 @@
+  * USA
+  */
+ 
++#include "config.h"
+ #include "compat.h" /* needed for bool */
+ #include "dvdvm.h"
+ #include "dvdvmy.h"
+diff --git a/src/dvdvmy.y b/src/dvdvmy.y
+index 944d153..0090464 100644
+--- a/src/dvdvmy.y
++++ b/src/dvdvmy.y
+@@ -19,6 +19,7 @@
+  * USA
+  */
+ 
++#include "config.h"
+ #include "compat.h" /* needed for bool */
+ #include "dvdvm.h"
+ 
+-- 
+1.9.1
+

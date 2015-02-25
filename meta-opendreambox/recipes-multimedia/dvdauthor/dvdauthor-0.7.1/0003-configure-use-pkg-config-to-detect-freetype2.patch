@@ -1,0 +1,87 @@
+From e4ee5debf58887c46d014957d910d3e08fc9f49c Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 25 Feb 2015 16:01:42 +0100
+Subject: [PATCH 3/4] configure: use pkg-config to detect freetype2
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ configure.ac    | 17 +----------------
+ src/Makefile.am |  2 +-
+ src/compat.h    |  5 -----
+ src/subfont.h   |  2 --
+ 4 files changed, 2 insertions(+), 24 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index a7caa8b..819ef2c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -78,22 +78,7 @@ PKG_CHECK_MODULES([FRIBIDI], [fribidi], [AC_DEFINE(HAVE_FRIBIDI, 1, [whether Fri
+ AC_SUBST(FRIBIDI_CFLAGS)
+ AC_SUBST(FRIBIDI_LIBS)
+ 
+-AC_CHECK_PROGS(FREETYPECONFIG, [freetype-config])
+-if test -n "$FREETYPECONFIG"; then
+-    FREETYPE_CPPFLAGS="`$FREETYPECONFIG --cflags`"
+-    FREETYPE_LIBS="`$FREETYPECONFIG --libs`"
+-    AC_DEFINE(HAVE_FREETYPE, 1, [Whether FreeType is available])
+-
+-    ac_save_CPPFLAGS="$CPPFLAGS"
+-    CPPFLAGS="$CPPFLAGS $FREETYPE_CPPFLAGS"
+-    AC_CHECK_HEADERS(ft2build.h)
+-    CPPFLAGS="$ac_save_CPPFLAGS"
+-    AC_SUBST(FREETYPE_CPPFLAGS)
+-    AC_SUBST(FREETYPE_LIBS)
+-else
+-    AC_MSG_ERROR([freetype not found])
+-fi
+-
++PKG_CHECK_MODULES([FREETYPE], [freetype2 >= 2.0.2], [AC_DEFINE(HAVE_FREETYPE, 1, [Whether FreeType is available])])
+ 
+ AC_ARG_ENABLE([default-video-format],
+ AS_HELP_STRING([--enable-default-video-format=format], [specify a default video format, either NTSC or PAL, to be used if no configuration or input setting is given]),
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 5ef90c3..3cec718 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -8,7 +8,7 @@ endif
+ nodist_bin_SCRIPTS = dvddirdel
+ 
+ AM_CPPFLAGS = -DSYSCONFDIR="\"$(sysconfdir)\"" \
+-    @XML_CPPFLAGS@ @MAGICK_CFLAGS@ @FREETYPE_CPPFLAGS@ @FRIBIDI_CFLAGS@ @FONTCONFIG_CFLAGS@
++    @XML_CPPFLAGS@ @MAGICK_CFLAGS@ @FREETYPE_CFLAGS@ @FRIBIDI_CFLAGS@ @FONTCONFIG_CFLAGS@
+ AM_CFLAGS = -Wall
+ 
+ dvdauthor_SOURCES = dvdauthor.c common.h dvdauthor.h da-internal.h \
+diff --git a/src/compat.h b/src/compat.h
+index 126dcd7..ea7eba8 100644
+--- a/src/compat.h
++++ b/src/compat.h
+@@ -183,11 +183,6 @@ char * locale_decode
+ 
+ #define PACKAGE_HEADER(x) PACKAGE_NAME "::" x ", version " PACKAGE_VERSION ".\nBuild options:" BUILDSPEC "\nSend bug reports to <" PACKAGE_BUGREPORT ">\n\n"
+ 
+-#ifndef HAVE_FT2BUILD_H
+-#define FT_FREETYPE_H <freetype/freetype.h>
+-#define FT_GLYPH_H <freetype/ftglyph.h>
+-#endif
+-
+ enum {VF_NONE=0,VF_NTSC=1,VF_PAL=2}; /* values for videodesc.vformat in da-internal.h as well as other uses */
+ 
+ typedef struct
+diff --git a/src/subfont.h b/src/subfont.h
+index 5b39c04..88099ed 100644
+--- a/src/subfont.h
++++ b/src/subfont.h
+@@ -5,9 +5,7 @@
+ #define __SUBFONT_H
+ 
+ #ifdef HAVE_FREETYPE
+-#ifdef HAVE_FT2BUILD_H
+ #include <ft2build.h>
+-#endif
+ #include FT_FREETYPE_H
+ #endif
+ 
+-- 
+1.9.1
+

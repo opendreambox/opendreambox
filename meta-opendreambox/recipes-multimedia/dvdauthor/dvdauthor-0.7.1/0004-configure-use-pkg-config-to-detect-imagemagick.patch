@@ -1,0 +1,60 @@
+From ad6455f38b8137faa63e33f5ff281ff8cc1fb701 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 25 Feb 2015 16:17:26 +0100
+Subject: [PATCH 4/4] configure: use pkg-config to detect imagemagick
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ configure.ac | 36 ++++++------------------------------
+ 1 file changed, 6 insertions(+), 30 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 819ef2c..0c4fa6e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -39,36 +39,12 @@ PKG_CHECK_MODULES(LIBPNG, [libpng])
+ AC_SUBST(LIBPNG_CFLAGS)
+ AC_SUBST(LIBPNG_LIBS)
+ 
+-usemagick=0
+-
+-AC_CHECK_PROGS(MAGICKCONFIG, [MagickCore-config])
+-if test -n "$MAGICKCONFIG"; then
+-    ac_save_CPPFLAGS="$CPPFLAGS"
+-    ac_save_LIBS="$LIBS"
+-    MAGICK_CPPFLAGS="`$MAGICKCONFIG --cppflags`"
+-    MAGICK_LIBS="`$MAGICKCONFIG --ldflags` `$MAGICKCONFIG --libs`"
+-    CPPFLAGS="$CPPFLAGS $MAGICK_CPPFLAGS"
+-    LIBS="$MAGICK_LIBS $LIBS"
+-    AC_CHECK_FUNC(ExportImagePixels, usemagick=1, AC_MSG_NOTICE([ImageMagick does not support the function
+-         ExportImagePixels.  Please upgrade to ImageMagick 5.5.7 or newer]))
+-    CPPFLAGS="$ac_save_CPPFLAGS"
+-    LIBS="$ac_save_LIBS"
+-    if test "$usemagick" = 1; then
+-        AC_DEFINE(HAVE_MAGICK, 1, [Whether the ImageMagick libraries are available])
+-    fi
+-fi
+-
+-if test "$usemagick" != 1; then
+-    PKG_CHECK_MODULES([MAGICK], [GraphicsMagick], usemagick=1; [AC_DEFINE(HAVE_GMAGICK, 1, [whether the GraphicsMagick libraries are available])], [:])
+-fi
+-
+-if test "$usemagick" != 1; then
+-    MAGICK_CPPFLAGS="$LIBPNG_CFLAGS"
+-    MAGICK_LIBS="$LIBPNG_LIBS"
+-fi
+-
+-AC_SUBST(MAGICK_CPPFLAGS)
+-AC_SUBST(MAGICK_LIBS)
++PKG_CHECK_MODULES([MAGICK], [MagickCore >= 5.5.7], [AC_DEFINE(HAVE_MAGICK, 1, [Whether the ImageMagick libraries are available])],
++    PKG_CHECK_MODULES([MAGICK], [GraphicsMagick], [AC_DEFINE(HAVE_GMAGICK, 1, [whether the GraphicsMagick libraries are available])],
++        MAGICK_CFLAGS="$LIBPNG_CFLAGS"
++        MAGICK_LIBS="$LIBPNG_LIBS"
++    )
++)
+ 
+ PKG_CHECK_MODULES([FONTCONFIG], [fontconfig], [AC_DEFINE(HAVE_FONTCONFIG, 1, [whether Fontconfig is available])], [:])
+ AC_SUBST(FONTCONFIG_CFLAGS)
+-- 
+1.9.1
+
