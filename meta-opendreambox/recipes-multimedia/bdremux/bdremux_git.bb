@@ -8,4 +8,4 @@ SRCREV = "${@opendreambox_srcrev('${GST_SRCREV}', d)}"
 
 SRC_URI_append = ";branch=${@base_conditional('OPENDREAMBOX_GST_VERSION', '0.10', 'master', 'gst_1.0', d)}"
 
-inherit autotools opendreambox-git
+inherit autotools opendreambox-git pkgconfig
