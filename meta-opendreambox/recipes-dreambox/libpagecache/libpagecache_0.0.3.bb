@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 DEPENDS = "libdlsym"
 SRCREV = "${@opendreambox_srcrev('a9b393e1ee16bf1bc128beb58438fe68049440bc', d)}"
 
-inherit autotools opendreambox-git
+inherit autotools opendreambox-git pkgconfig
 
 FILES_${PN} = "${libdir}/lib*${SOLIBSDEV}"
 FILES_SOLIBSDEV = ""
