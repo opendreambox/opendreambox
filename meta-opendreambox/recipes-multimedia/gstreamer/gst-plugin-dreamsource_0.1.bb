@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1f6263f0928e695084f3f0055be80eb3"
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base"
 SRCREV = "${@opendreambox_srcrev('eed2180119401246fa831404ede9eb61401e22ec', d)}"
 
-inherit autotools opendreambox-git
+inherit autotools opendreambox-git pkgconfig
 
 do_install_append() {
         rm -f ${D}${libdir}/gstreamer-1.0/*.a
