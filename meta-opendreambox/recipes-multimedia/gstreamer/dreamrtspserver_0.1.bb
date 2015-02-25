@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d0bc37dd201603b26956a4e5f4a3601d"
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-rtsp-server"
 SRCREV = "${@opendreambox_srcrev('57438d10a4d0b1fafc0da8501691b81632426d15', d)}"
 
-inherit autotools opendreambox-git systemd
+inherit autotools opendreambox-git pkgconfig systemd
 
 RDEPENDS_${PN} = "gst-plugin-dreamsource \
                   gstreamer1.0-plugins-bad-fragmented \
