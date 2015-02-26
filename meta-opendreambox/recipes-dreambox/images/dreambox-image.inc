@@ -23,6 +23,8 @@ BAD_RECOMMENDATIONS += "libnss-mdns udev-hwdb wpa-supplicant-passphrase xinetd"
 VIRTUAL-RUNTIME_init_manager ?= "systemd"
 VIRTUAL-RUNTIME_package_manager ?= "${IMAGE_PKGTYPE}"
 
+SYSTEMD_DEFAULT_TARGET = "graphical.target"
+
 # packages to drag into the image
 IMAGE_INSTALL = " \
     packagegroup-boot-${VIRTUAL-RUNTIME_init_manager} \
