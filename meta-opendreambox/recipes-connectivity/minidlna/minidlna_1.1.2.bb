@@ -10,7 +10,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}/${PV}/${BP}.tar.gz \
 SRC_URI[md5sum] = "65cebffaf9b57bf30fbfcf2a3a3253e6"
 SRC_URI[sha256sum] = "97e2e9141c1190d76ad97f0da083874bccf9f9590841be9eb7668bcf695b7204"
 
-inherit autotools gettext
+inherit autotools-brokensep gettext
 
 PACKAGES =+ "${PN}-utils"
 
