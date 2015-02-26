@@ -1,8 +1,9 @@
 SUMMARY = "Skins for Enigma2"
 LICENSE = "CLOSED"
+DEPENDS = "enigma2-plugins"
 SRCREV = "${@opendreambox_srcrev('0884ec3e4a3fc216c8a827ff776594a0c3d1c58d', d)}"
 
-inherit allarch autotools opendreambox-github
+inherit allarch autotools-brokensep opendreambox-github
 
 PACKAGES_DYNAMIC = "enigma2-skin-*"
 PACKAGES += "${PN}-meta"
