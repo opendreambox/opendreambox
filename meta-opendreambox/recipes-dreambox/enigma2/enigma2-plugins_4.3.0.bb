@@ -2,9 +2,16 @@ SUMMARY = "Additional plugins for Enigma2"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 DEPENDS = " \
+        aio-grab \
+        avahi \
+        cdrkit \
+        cdtextinfo \
         dbttcd \
         dvdbackup \
         enigma2 \
+        enigma2-streamproxy \
+        gst-plugins-bad \
+        gst-plugins-good \
         hdparm \
         python-flickrapi \
         python-gdata \
@@ -12,7 +19,9 @@ DEPENDS = " \
         python-mutagen \
         python-pycrypto \
         python-pyopenssl \
+        python-simplejson \
         python-transmissionrpc \
+        python-twisted \
         python-youtube-dl \
         smartmontools \
         streamripper \
@@ -22,7 +31,7 @@ SRCREV = "${@opendreambox_srcrev('e0a36c7ec1f85800249322eb92e9c4bb8bc370b5', d)}
 
 SRC_URI += "file://print.mak"
 
-inherit autotools opendreambox-github pythonnative
+inherit autotools-brokensep opendreambox-github pkgconfig pythonnative
 
 export BUILD_SYS
 export HOST_SYS
