@@ -1,0 +1,56 @@
+From 32c2b7fe1afb0c1756bbb60e43b90178395fcaae Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Tue, 3 Mar 2015 12:58:15 +0100
+Subject: [PATCH] add support for toshiba 1GB nand flash
+
+---
+ drivers/mtd/brcmnand/brcmnand_base.c |   19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/brcmnand/brcmnand_base.c b/drivers/mtd/brcmnand/brcmnand_base.c
+index dff454a..d25d525 100644
+--- a/drivers/mtd/brcmnand/brcmnand_base.c
++++ b/drivers/mtd/brcmnand/brcmnand_base.c
+@@ -743,7 +743,7 @@ static brcmnand_chip_Id brcmnand_chips[] = {
+ 		.timing1 = 0, 
+ 		.timing2 = 0,
+ 		.nop=4,
+-		.eccLevel=4,
++//		.eccLevel=4,
+ 		.nbrBlocks = 4096,
+ 		.ctrlVersion = CONFIG_MTD_BRCMNAND_VERS_3_0, 
+ 	},
+@@ -9485,6 +9485,21 @@ printk("%s: Ecc level set to %d, sectorSize=%d from ID table\n", __FUNCTION__, c
+ 	 * else ID not in database, but CONFIG reg was passed at command line, already handled
+ 	 */
+ 
++	if (foundInIdTable && brcmnand_dev_id == TOSHIBA_TC58NVG3S0ETA00 && brcmnand_maf_id == FLASHTYPE_TOSHIBA) {
++		nand_config &= ~(BCHP_NAND_CONFIG_BLOCK_SIZE_MASK);
++		nand_config |= (BCHP_NAND_CONFIG_BLOCK_SIZE_BK_SIZE_128KB << BCHP_NAND_CONFIG_BLOCK_SIZE_SHIFT); 
++
++		nand_config &= ~(BCHP_NAND_CONFIG_PAGE_SIZE_MASK);
++		nand_config |= (BCHP_NAND_CONFIG_PAGE_SIZE_PG_SIZE_2KB << BCHP_NAND_CONFIG_PAGE_SIZE_SHIFT); 
++
++		nand_config &= ~(BCHP_NAND_CONFIG_DEVICE_SIZE_MASK);
++		nand_config |= (BCHP_NAND_CONFIG_DEVICE_SIZE_DVC_SIZE_512MB << BCHP_NAND_CONFIG_DEVICE_SIZE_SHIFT); 
++
++		chip->ctrl_write(bchp_nand_config(chip->ctrl->CS[chip->csi]), nand_config);
++
++		chip->ecclevel = BRCMNAND_ECC_HAMMING;
++	}
++
+ 	/* 
+ 	 * For some ID case, the ID decode does not yield all informations,
+ 	 * so we read it back, making sure that NAND CONFIG register and chip-> struct
+@@ -10699,7 +10714,7 @@ printk("ECC layout=brcmnand_oob_bch8_16_2k\n");
+ 				}
+ 			}
+ 			else if (chip->ecclevel == BRCMNAND_ECC_HAMMING) {
+-printk("ECC layout=brcmnand_oob_bch4_4k\n");
++printk("ECC layout=brcmnand_oob_64\n");
+ 				chip->ecclayout = &brcmnand_oob_64;
+ 			}
+ 			else {
+-- 
+1.7.10.4
+
