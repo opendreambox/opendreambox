@@ -1,0 +1,26 @@
+From 4b35370bf6701c400d1d4f248faa20edf622e92c Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Tue, 10 Mar 2015 12:36:10 +0100
+Subject: [PATCH] Satconfig.py: fixed crash caused by DreamboxOS backport
+ (ad73a293acb96da2ec8210ee98a76fb0e7ac6617)
+
+---
+ lib/python/Screens/Satconfig.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/Satconfig.py b/usr/lib/enigma2/python/Screens/Satconfig.py
+index cdbc51f..5d24af6 100644
+--- a/usr/lib/enigma2/python/Screens/Satconfig.py
++++ b/usr/lib/enigma2/python/Screens/Satconfig.py
+@@ -509,7 +509,7 @@ class NimSelection(Screen):
+ 
+ 	def updateList(self):
+ 		self.list = [ ]
+-		slot_names = [ x.slot_input_name for x in nimmanager.nim_slots ]
++		slot_names = [ chr(ord('A') + x.slot) for x in nimmanager.nim_slots ]
+ 		for x in nimmanager.nim_slots:
+ 			slotid = x.slot
+ 			nimConfig = nimmanager.getNimConfig(x.slot)
+-- 
+1.7.10.4
+
