@@ -26,7 +26,7 @@ require linux-dreambox.inc
 require linux-extra-image.inc
 require linux-rdepends.inc
 
-CMDLINE = "bmem=384M@640M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
+CMDLINE = "bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 DEFCONFIG = "${MACHINE}"
