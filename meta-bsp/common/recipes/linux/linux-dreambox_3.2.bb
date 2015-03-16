@@ -1,5 +1,5 @@
 DEPENDS = "carl9170fw linux-firmware zd1211-firmware"
-PR = "${INC_PR}.53"
+PR = "${INC_PR}.54"
 
 PATCHREV = "3c7230bc0819495db75407c365f4d1db70008044"
 PATCHLEVEL = "68"
@@ -16,7 +16,7 @@ SRC_URI = " \
         file://rtl8712-backport-c.patch \
         file://rtl8712-backport-d.patch \
         file://make-3.82-hack.patch \
-	file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
+        file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
         file://defconfig \
 "
 
