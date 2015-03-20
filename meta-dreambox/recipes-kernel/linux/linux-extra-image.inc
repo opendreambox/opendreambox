@@ -3,7 +3,6 @@ do_install_append() {
                 if [ ${KERNEL_EXTRA_INSTALL} = "1" ]; then
                         install -m 0644 ${KERNEL_EXTRA_OUTPUT} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_EXTRA_IMAGETYPE}-${KERNEL_VERSION}
                 fi
-                install -m 0644 ${KERNEL_EXTRA_OUTPUT} ${D}${KERNEL_SRC_PATH}/${KERNEL_EXTRA_IMAGETYPE}
         fi
 }
 

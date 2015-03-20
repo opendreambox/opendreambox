@@ -13,9 +13,9 @@ kernel_conf_variable() {
     CONF_SED_SCRIPT="$CONF_SED_SCRIPT /CONFIG_$1[ =]/d;"
     if test "$2" = "n"
     then
-        echo "# CONFIG_$1 is not set" >> ${S}/.config
+        echo "# CONFIG_$1 is not set" >> ${B}/.config
     else
-        echo "CONFIG_$1=$2" >> ${S}/.config
+        echo "CONFIG_$1=$2" >> ${B}/.config
     fi
 }
 
@@ -23,11 +23,11 @@ DEFCONFIG_IN_SRC_URI = "${@base_contains('SRC_URI', 'file://defconfig', 'true', 
 
 do_configure_prepend() {
     if [ -n "${DEFCONFIG}" ] && ! ${DEFCONFIG_IN_SRC_URI}; then
-        oe_runmake ${DEFCONFIG}_defconfig
+        yes '' | oe_runmake -C ${S} O=${B} ${DEFCONFIG}_defconfig
         mv ${B}/.config ${WORKDIR}/defconfig
     fi
 
-    echo "" > ${S}/.config
+    echo "" > ${B}/.config
     CONF_SED_SCRIPT=""
 
     if [ -n "${CMDLINE}" ]; then
@@ -68,9 +68,9 @@ do_configure_prepend() {
     fi
 
     sed -e "${CONF_SED_SCRIPT}" \
-    < '${WORKDIR}/defconfig' >>'${S}/.config'
+    < '${WORKDIR}/defconfig' >>'${B}/.config'
 
-    yes '' | oe_runmake oldconfig
+    yes '' | oe_runmake -C ${S} O=${B} oldconfig
 }
 
 do_configure_append() {

@@ -27,6 +27,8 @@ SRC_URI[dream-patch.md5sum] = "81d8689bc16214cd1737e029d39bb46c"
 SRC_URI[dream-patch-dm520.sha256sum] = "667fa08e2f6e2f3f45e48e7ac2b0f60fc8391579fa12cb427f2a0c247488fba7"
 SRC_URI[dream-patch.sha256sum] = "4e4d40bc4ea6d1425348c6a01aad637686da835378ef78896e89686c38884d44"
 
+require linux-dreambox.inc
+
 S = "${WORKDIR}/linux-3.4"
 
 do_configure_prepend() {
@@ -36,7 +38,6 @@ do_compile_append() {
         gzip < vmlinux > vmlinuz
 }
 
-require linux-dreambox.inc
 require linux-extra-image.inc
 require linux-rdepends.inc
 
