@@ -1,14 +1,5 @@
---- configure.in.org	2008-05-01 12:40:58.000000000 +0200
-+++ configure.in	2008-05-01 12:39:39.000000000 +0200
-@@ -998,7 +999,7 @@
- # so we need to run a program to see whether it really made the
- # function available.
- AC_MSG_CHECKING(whether $CC accepts -pthread)
--AC_CACHE_VAL(ac_cv_thread,
-+AC_CACHE_VAL(ac_cv_pthread,
- [ac_save_cc="$CC"
- CC="$CC -pthread"
- AC_TRY_RUN([
+--- a/configure.ac	2008-05-01 12:40:58.000000000 +0200
++++ b/configure.ac	2008-05-01 12:39:39.000000000 +0200
 @@ -1023,11 +1024,11 @@
  
  # If we have set a CC compiler flag for thread support then
