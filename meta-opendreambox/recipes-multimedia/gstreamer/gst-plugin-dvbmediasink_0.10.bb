@@ -6,9 +6,7 @@ LIC_FILES_CHKSUM = "file://src/gstdvbaudiosink.c;beginline=1;endline=45;md5=023e
 DEPENDS = "gstreamer gst-plugins-base"
 SRCREV = "${@opendreambox_srcrev('69abc67153b2675dea6f2ad4522f812737228dda', d)}"
 
-SCHWERKRAFT_PROJECT = "dvbmediasink"
-
-inherit autotools schwerkraft-git pkgconfig
+inherit autotools opendreambox-git pkgconfig
 
 FILES_${PN} = "${libdir}/gstreamer-0.10/*.so"
 FILES_${PN}-dev += "${libdir}/gstreamer-0.10/*.la"
