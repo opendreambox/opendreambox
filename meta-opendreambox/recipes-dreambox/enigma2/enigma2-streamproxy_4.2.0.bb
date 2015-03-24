@@ -7,9 +7,7 @@ SRC_URI = "file://streamproxy.xinetd.in \
            file://streamproxy@.service \
            file://streamproxy.socket"
 
-SCHWERKRAFT_PROJECT = "streamproxy"
-
-inherit autotools schwerkraft-git systemd xinetd
+inherit autotools opendreambox-git systemd xinetd
 
 do_install_append() {
         if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
