@@ -8,7 +8,7 @@ BAD_RECOMMENDATIONS += " \
         update-rc.d \
 "
 
-IMAGE_FEATURES = ""
+IMAGE_FEATURES = "empty-root-password"
 IMAGE_FSTYPES = "cpio"
 IMAGE_INSTALL = " \
         base-files \
