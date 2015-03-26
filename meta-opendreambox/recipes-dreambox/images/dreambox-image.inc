@@ -35,7 +35,7 @@ IMAGE_INSTALL = " \
 "
 
 # enable online package management
-IMAGE_FEATURES += "package-management"
+IMAGE_FEATURES = "empty-root-password package-management"
 
 # we don't want any locales, at least not in the common way.
 IMAGE_LINGUAS = ""
