@@ -22,6 +22,9 @@ SRC_URI[sha256sum] = "fc883c34111a487c4a783f91b1b2bb5610d8d8e58dcba80c7ab31e67e4
 
 inherit autotools gettext pkgconfig
 
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}"
+PACKAGECONFIG[x11] = "--with-x,--without-x,virtual/libx11"
+
 PACKAGES =+ "libzvbi libzvbi-chains"
 
 FILES_libzvbi = "${libdir}/libzvbi${SOLIBS}"
