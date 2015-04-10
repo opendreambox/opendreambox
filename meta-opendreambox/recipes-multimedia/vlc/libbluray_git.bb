@@ -12,6 +12,7 @@ S = "${WORKDIR}/git"
 inherit autotools lib_package pkgconfig
 
 PACKAGECONFIG ??= "fontconfig freetype libxml2"
+PACKAGECONFIG[bdjava] = "--enable-bdjava,--disable-bdjava,ant-native"
 PACKAGECONFIG[fontconfig] = "--with-freetype,--without-freetype,freetype"
 PACKAGECONFIG[freetype] = "--with-fontconfig,--without-fontconfig,fontconfig"
 PACKAGECONFIG[libxml2] = "--with-libxml2,--without-libxml2,libxml2"
