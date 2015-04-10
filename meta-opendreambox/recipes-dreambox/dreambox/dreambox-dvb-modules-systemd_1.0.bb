@@ -3,6 +3,8 @@ LICENSE = "CLOSED"
 
 SRC_URI = "file://${BPN}.rules"
 
+S = "${WORKDIR}"
+
 inherit allarch
 
 do_install() {
