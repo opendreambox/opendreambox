@@ -5,6 +5,8 @@ SRC_URI = "file://enigma2.autofs \
            file://auto.hotplug \
            file://auto.network"
 
+S = "${WORKDIR}"
+
 inherit allarch
 
 do_install() {
