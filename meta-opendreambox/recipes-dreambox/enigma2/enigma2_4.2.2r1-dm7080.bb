@@ -3,6 +3,8 @@ SRC_URI[dm7080.sha256sum] = "284dbe059ce5201baac7ff95ef4cbf03437b2f74eb3c64caffd
 
 require enigma2-bin-4.2.inc
 
+SRC_URI += " file://0001-add-missing-private-data-entry-to-returned-ServiceIn.patch"
+
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"

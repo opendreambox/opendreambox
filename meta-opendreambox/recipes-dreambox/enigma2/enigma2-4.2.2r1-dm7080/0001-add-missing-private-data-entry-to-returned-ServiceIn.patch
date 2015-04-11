@@ -1,0 +1,25 @@
+From 9cb1b483467e56a585d0dc0c935ac74a7fe2db38 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Sat, 11 Apr 2015 17:24:31 +0200
+Subject: [PATCH] add missing private data entry to returned
+ ServiceInfoListEntry list
+
+---
+ lib/python/Components/ServiceInfoList.py |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/usr/lib/enigma2/python/Components/ServiceInfoList.py b/usr/lib/enigma2/python/Components/ServiceInfoList.py
+index 3cb9e21..a8392c6 100644
+--- a/usr/lib/enigma2/python/Components/ServiceInfoList.py
++++ b/usr/lib/enigma2/python/Components/ServiceInfoList.py
+@@ -37,6 +37,7 @@ def ServiceInfoListEntry(a, b, valueType=TYPE_TEXT, param=4):
+ 			b = str(b)
+ 
+ 	return [
++		None, # No private data needed...
+ 		#PyObject *type, *px, *py, *pwidth, *pheight, *pfnt, *pstring, *pflags;
+ 		(eListboxPythonMultiContent.TYPE_TEXT, tx, ty, tw, th, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, a),
+ 		(eListboxPythonMultiContent.TYPE_TEXT, t2x, t2y, t2w, t2h, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, b)
+-- 
+1.7.10.4
+
