@@ -1,0 +1,29 @@
+diff -Naur zvbi-0.2.35.orig/src/dvb_demux.c zvbi-0.2.35/src/dvb_demux.c
+--- zvbi-0.2.35.orig/src/dvb_demux.c	2014-09-02 22:30:11.000000000 +0200
++++ zvbi-0.2.35/src/dvb_demux.c	2015-04-04 12:56:46.197771443 +0200
+@@ -910,14 +910,8 @@
+ 			if (unlikely (data_unit_length < 1 + 1 + 42))
+ 				goto bad_length;
+ 
+-			/* FIXME */
+-			if (unlikely (0xE4 != p[3])) { /* vbi_rev8 (0x27) */
+-			        warning (&f->log,
+-					 "Libzvbi does not support "
+-					 "Teletext services with "
+-					 "custom framing code.");
+-				break;
+-			}
++			if (unlikely (0xE4 != p[3]))
++				goto skip_wrong_framing_code;
+ 
+ 			err = line_address (f, &s, /* rpp */ NULL,
+ 					    p[2], SYSTEM_625);
+@@ -939,7 +933,7 @@
+ 
+ 			if (f->log.mask & VBI_LOG_DEBUG2)
+ 				log_du_ttx (f, s);
+-
++skip_wrong_framing_code:
+ 			break;
+ 
+ 		case DATA_UNIT_VPS:
