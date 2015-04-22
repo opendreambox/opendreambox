@@ -1,13 +1,16 @@
 [submodule "openembedded-core"]
 	path = openembedded-core
 	url = git://git.openembedded.org/openembedded-core-contrib
+	branch = obi/dora
 [submodule "meta-openembedded"]
 	path = meta-openembedded
 	url = git://git.openembedded.org/meta-openembedded-contrib
+	branch = obi/dora
 [submodule "bitbake"]
 	path = bitbake
 	url = git://git.openembedded.org/bitbake
+	branch = 1.20
 [submodule "meta-qt5"]
 	path = meta-qt5
 	url = git://github.com/opendreambox/meta-qt5
-	branch = master
+	branch = obi/daisy
