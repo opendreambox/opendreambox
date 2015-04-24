@@ -10,6 +10,6 @@ SRC_URI = "http://downloads.sourceforge.net/${PN}/${P}.tar.gz \
 SRC_URI[md5sum] = "24693cae30d77c957f34cfb2c8159661"
 SRC_URI[sha256sum] = "e9a99cc81ef0a93f3484e5093efd14d93cc967221fcd22c151f0bea32eb91da7"
 
-inherit autotools
+inherit autotools pkgconfig
 
 EXTRA_OECONF = "--enable-webless"
