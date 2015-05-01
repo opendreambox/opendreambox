@@ -1,6 +1,5 @@
 rootfs	/		rootfs	rw,relatime					0 1
 proc	/proc		proc	rw,nosuid,nodev,noexec,relatime			0 0
-usbfs	/proc/bus/usb	usbfs	rw,nosuid,nodev,noexec,relatime			0 0
 sysfs	/sys		sysfs	rw,nosuid,nodev,noexec,relatime			0 0
 devpts	/dev/pts	devpts	rw,nosuid,noexec,relatime,gid=5,mode=620	0 0
 tmpfs	/dev/shm	tmpfs	rw,nosuid,nodev,relatime			0 0
