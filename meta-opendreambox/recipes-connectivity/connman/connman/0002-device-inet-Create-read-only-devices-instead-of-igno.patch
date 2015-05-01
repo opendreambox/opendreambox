@@ -1,4 +1,4 @@
-From 6f59293860dd9ed9ff4148812d965b076c4b8f12 Mon Sep 17 00:00:00 2001
+From 614e217f39cf3c4a1ecdfaa7025e6899400c5d02 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 29 Oct 2014 21:19:25 +0100
 Subject: [PATCH 2/3] device/inet: Create read-only devices instead of ignoring
@@ -28,10 +28,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  6 files changed, 178 insertions(+), 36 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index a574170..47aa7b8 100644
+index bc3c695..9c7ea95 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -209,6 +209,7 @@ src_connmand_CFLAGS = @DBUS_CFLAGS@ @GLIB_CFLAGS@ @XTABLES_CFLAGS@ \
+@@ -217,6 +217,7 @@ src_connmand_CFLAGS = @DBUS_CFLAGS@ @GLIB_CFLAGS@ @XTABLES_CFLAGS@ \
  				-DSTORAGEDIR=\""$(storagedir)\"" \
  				-DVPN_STORAGEDIR=\""$(vpn_storagedir)\"" \
  				-DCONFIGDIR=\""$(configdir)\"" \
@@ -438,10 +438,10 @@ index cd220ff..ac646c9 100644
  
  	rth.req.n.nlmsg_len = NLMSG_LENGTH(sizeof(struct rtmsg));
 diff --git a/src/ipconfig.c b/src/ipconfig.c
-index 2e840a6..a353112 100644
+index f8c148b..3ecabfc 100644
 --- a/src/ipconfig.c
 +++ b/src/ipconfig.c
-@@ -92,6 +92,17 @@ static GHashTable *ipdevice_hash = NULL;
+@@ -90,6 +90,17 @@ static GHashTable *ipdevice_hash = NULL;
  static GList *ipconfig_list = NULL;
  static bool is_ipv6_supported = false;
  
@@ -459,7 +459,7 @@ index 2e840a6..a353112 100644
  void __connman_ipconfig_clear_address(struct connman_ipconfig *ipconfig)
  {
  	if (!ipconfig)
-@@ -211,6 +222,8 @@ static void set_ipv6_state(gchar *ifname, bool enable)
+@@ -210,6 +221,8 @@ static void set_ipv6_state(gchar *ifname, bool enable)
  
  	if (!ifname)
  		path = g_strdup("/proc/sys/net/ipv6/conf/all/disable_ipv6");
@@ -468,7 +468,7 @@ index 2e840a6..a353112 100644
  	else
  		path = g_strdup_printf(
  			"/proc/sys/net/ipv6/conf/%s/disable_ipv6", ifname);
-@@ -274,6 +287,9 @@ static void set_ipv6_privacy(gchar *ifname, int value)
+@@ -273,6 +286,9 @@ static void set_ipv6_privacy(gchar *ifname, int value)
  	if (!ifname)
  		return;
  
@@ -479,7 +479,7 @@ index 2e840a6..a353112 100644
  								ifname);
  
 diff --git a/src/rtnl.c b/src/rtnl.c
-index a46aa28..b5a6dfa 100644
+index d1b851f..82e97dc 100644
 --- a/src/rtnl.c
 +++ b/src/rtnl.c
 @@ -83,17 +83,6 @@ static void free_interface(gpointer data)
