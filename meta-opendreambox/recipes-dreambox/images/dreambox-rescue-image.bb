@@ -19,11 +19,11 @@ IMAGE_INSTALL = " \
         dropbear \
         e2fsprogs-e2fsck \
         google-dns \
-        kmod \
-        netbase \
         init-ifupdown \
         initscripts \
+        kmod \
         modutils-initscripts \
+        netbase \
         procps \
         recovery-ui \
         recovery-web \
