@@ -208,6 +208,10 @@ image: init
 	@echo '[*] Building $@ for $(USER_MACHINE)'
 	@$(BITBAKE) $(MAKE_IMAGE_BB)
 
+console-image: init
+	@echo '[*] Building $@ for $(USER_MACHINE)'
+	@$(BITBAKE) dreambox-$@
+
 rescue-image: init
 	@echo '[*] Building $@ for $(USER_MACHINE)'
 	@$(BITBAKE) linux-dreambox-rescue
