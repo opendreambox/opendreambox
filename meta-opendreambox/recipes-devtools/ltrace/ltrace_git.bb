@@ -4,15 +4,12 @@ SECTION = "devel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 DEPENDS = "binutils elfutils"
-SRCREV = "d66c8b11facf570d96a49c1b812b90101c62023b"
-PV = "0.7.2"
+SRCREV = "be0c6870e08a3be43b3a0d210fb8dc7614b1e82f"
+PV = "0.7.3"
 
-SRC_URI = "git://anonscm.debian.org/collab-maint/ltrace.git \
-           file://0001-linux-uclibc-targets-should-be-handled-by-linux-gnu-.patch"
+SRC_URI = "git://anonscm.debian.org/collab-maint/ltrace.git"
 
 inherit autotools git-project
-
-EXTRA_OECONF = "--disable-werror"
 
 do_configure_prepend() {
     # from autogen.sh
