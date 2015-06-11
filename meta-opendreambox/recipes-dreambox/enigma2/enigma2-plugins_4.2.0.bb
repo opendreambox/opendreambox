@@ -9,6 +9,7 @@ DEPENDS = " \
         python-daap \
         python-flickrapi \
         python-gdata \
+        python-google-api-client \
         python-mutagen \
         python-pycrypto \
         python-pyopenssl \
