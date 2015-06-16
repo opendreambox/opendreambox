@@ -1,0 +1,30 @@
+From c77be2cdaaf1fb7b689f392e9152c3908c8c8560 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 22 Jan 2015 23:30:17 +0100
+Subject: [PATCH] CommonInterfaceAssignment: dont crash when no accessible CI
+ is available
+
+(cherry picked from commit 961ad59ad8cd63a4d50ed4d183aa2c6f3839df2a)
+---
+ lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/plugin.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Plugins/SystemPlugins/CommonInterfaceAssignment/plugin.py b/usr/lib/enigma2/python/Plugins/SystemPlugins/CommonInterfaceAssignment/plugin.py
+index 38422a6..c3d2482 100644
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/CommonInterfaceAssignment/plugin.py
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/CommonInterfaceAssignment/plugin.py
+@@ -54,8 +54,9 @@ class CIselectMainMenu(Screen):
+ 					appname = _("Slot %d") %(slot+1) + " - " + _("init modules")
+ 				elif state == 2:
+ 					appname = _("Slot %d") %(slot+1) + " - " + eDVBCI_UI.getInstance().getAppName(slot)
+-				self.list.append( (appname, ConfigNothing(), 0, slot) )
+-		else:
++				if state != -1:
++					self.list.append( (appname, ConfigNothing(), 0, slot) )
++		if not self.list:
+ 			self.list.append( (_("no CI slots found") , ConfigNothing(), 1, -1) )
+ 
+ 		menuList = ConfigList(self.list)
+-- 
+1.9.1
+
