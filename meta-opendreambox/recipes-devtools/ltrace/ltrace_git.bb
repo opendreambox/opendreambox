@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.ltrace.org/"
 SECTION = "devel"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
-DEPENDS = "binutils elfutils"
+DEPENDS = "binutils"
 SRCREV = "be0c6870e08a3be43b3a0d210fb8dc7614b1e82f"
 PV = "0.7.3"
 
@@ -16,9 +16,6 @@ do_configure_prepend() {
     mkdir -p config/autoconf config/m4
 }
 
-PACKAGECONFIG ??= "${LIBUNWIND}"
+PACKAGECONFIG ??= "elfutils"
+PACKAGECONFIG[elfutils] = "--with-elfutils,--without-elfutils,elfutils"
 PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind"
-
-LIBUNWIND = "libunwind"
-LIBUNWIND_arm = ""
-LIBUNWIND_libc-uclibc = ""
