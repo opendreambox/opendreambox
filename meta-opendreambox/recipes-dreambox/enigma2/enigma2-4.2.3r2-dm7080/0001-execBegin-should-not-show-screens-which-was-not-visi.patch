@@ -1,0 +1,48 @@
+From 364a56bd255c563f05e4bc3ffa6a991bf274a664 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 18 Jun 2015 00:33:44 +0200
+Subject: [PATCH] execBegin should not show screens which was not visible on
+ prev execEnd (on popCurrent)
+
+---
+ usr/lib/enigma2/python/Screens/Screen.py | 4 ++--
+ mytest.py                    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/Screen.py b/usr/lib/enigma2/python/Screens/Screen.py
+index c2fa37b..2cb8082 100644
+--- a/usr/lib/enigma2/python/Screens/Screen.py
++++ b/usr/lib/enigma2/python/Screens/Screen.py
+@@ -222,14 +222,14 @@ class Screen(dict, GUISkin):
+ 		for fnc in self.onHideFinished:
+ 			fnc()
+ 
+-	def enable(self):
++	def enable(self, do_show=True):
+ 		if self.isEnabled() or not self.instance:
+ 			return
+ 
+ 		self.instance.enable()
+ 		if self.instance.isVisible():
+ 			self.__onShow()
+-		else:
++		elif do_show:
+ 			self.show()
+ 
+ 	def disable(self):
+diff --git a/usr/lib/enigma2/python/mytest.py b/usr/lib/enigma2/python/mytest.py
+index 863e385..90bc66f 100644
+--- a/usr/lib/enigma2/python/mytest.py
++++ b/usr/lib/enigma2/python/mytest.py
+@@ -315,7 +315,7 @@ class Session:
+ 				c.addSummary(self.summary)
+ 
+ 		c.saveKeyboardMode()
+-		c.enable()
++		c.enable(do_show) # we must pass the "do_show" boolean to enable because "show" also can be called from within the enable function
+ 		c.execBegin()
+ 
+ 		# when execBegin opened a new dialog, don't bother showing the old one.
+-- 
+1.9.1
+
