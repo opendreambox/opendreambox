@@ -12,4 +12,4 @@ S = "${WORKDIR}/git"
 
 inherit setuptools
 
-RDEPENDS_${PN} = "python-unixadmin python-subprocess"
+RDEPENDS_${PN} = "python-unixadmin python-subprocess python-email"
