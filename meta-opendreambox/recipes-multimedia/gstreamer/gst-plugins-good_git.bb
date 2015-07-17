@@ -27,6 +27,7 @@ SRC_URI = "git://anongit.freedesktop.org/gstreamer/${PN} \
            file://0001-accept-substream-syncwords-DTS-HD.patch \
            file://0002-v4l2-fix-compilation-against-newer-kernel-headers-as.patch \
            file://mp4-parse-fix-typo.patch \
+	   file://matroskademux-add-pgs-subtitle-flags-to-caps.patch \
 "
 
 EXTRA_OECONF += "--disable-aalib --disable-esd --disable-shout2 --disable-libcaca --disable-hal --without-check \

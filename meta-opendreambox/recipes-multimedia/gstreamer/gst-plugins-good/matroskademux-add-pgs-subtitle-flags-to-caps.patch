@@ -1,0 +1,39 @@
+diff -Naur a/gst/matroska/matroska-demux.c b/gst/matroska/matroska-demux.c
+--- a/gst/matroska/matroska-demux.c	2015-07-17 14:26:47.000000000 +0200
++++ b/gst/matroska/matroska-demux.c	2015-07-17 14:26:59.359393767 +0200
+@@ -1079,7 +1079,7 @@
+           context->flags &= ~GST_MATROSKA_TRACK_DEFAULT;
+ 
+         GST_DEBUG_OBJECT (demux, "TrackDefault: %d",
+-            (context->flags & GST_MATROSKA_TRACK_ENABLED) ? 1 : 0);
++            (context->flags & GST_MATROSKA_TRACK_DEFAULT) ? 1 : 0);
+         break;
+       }
+ 
+@@ -1096,7 +1096,7 @@
+           context->flags &= ~GST_MATROSKA_TRACK_FORCED;
+ 
+         GST_DEBUG_OBJECT (demux, "TrackForced: %d",
+-            (context->flags & GST_MATROSKA_TRACK_ENABLED) ? 1 : 0);
++            (context->flags & GST_MATROSKA_TRACK_FORCED) ? 1 : 0);
+         break;
+       }
+ 
+@@ -1114,7 +1114,7 @@
+           context->flags &= ~GST_MATROSKA_TRACK_LACING;
+ 
+         GST_DEBUG_OBJECT (demux, "TrackLacing: %d",
+-            (context->flags & GST_MATROSKA_TRACK_ENABLED) ? 1 : 0);
++            (context->flags & GST_MATROSKA_TRACK_LACING) ? 1 : 0);
+         break;
+       }
+ 
+@@ -5551,7 +5551,7 @@
+     caps = gst_caps_new_simple ("video/x-dvd-subpicture", NULL);
+     ((GstMatroskaTrackContext *) subtitlecontext)->send_dvd_event = TRUE;
+   } else if (!strcmp (codec_id, GST_MATROSKA_CODEC_ID_SUBTITLE_HDMVPGS)) {
+-    caps = gst_caps_new_simple ("subpicture/x-pgs", NULL);
++    caps = gst_caps_new_simple ("subpicture/x-pgs", "stream_flags", G_TYPE_INT, context->flags, NULL);
+   } else if (!strcmp (codec_id, GST_MATROSKA_CODEC_ID_SUBTITLE_KATE)) {
+     caps = gst_caps_new_simple ("subtitle/x-kate", NULL);
+     context->send_xiph_headers = TRUE;
