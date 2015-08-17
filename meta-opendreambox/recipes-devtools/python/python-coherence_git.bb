@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=3f7c147addd67ce1d53239c68a6b7022"
 DEPENDS = "libxml2"
-SRCREV = "4de3d43b94e876959d2a91940dead26c3beabd65"
+SRCREV = "3526bad97dca89a2113664924a2deced3a401c55"
 PV = "0.6.9"
 
 SRC_URI = "git://github.com/sreichholf/python-coherence.git;protocol=git;branch=develop"
