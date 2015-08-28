@@ -5,7 +5,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=3f7c147addd67ce1d53239c68a6b7022"
 DEPENDS = "libxml2"
 SRCREV = "c00eb70950d54d4384437e503e84bd11631ebc28"
-PV = "0.6.9"
+BASEPV = "0.6.9"
+PV = "${BASEPV}+git${SRCPV}"
 
 SRC_URI = "git://github.com/sreichholf/python-coherence.git;protocol=git;branch=develop"
 
@@ -14,11 +15,11 @@ S = "${WORKDIR}/git"
 inherit setuptools
 
 do_configure_prepend() {
-        sed -e 's,from coherence import __version__$,__version__ = "${PV}",' -i setup.py
+        sed -e 's,from coherence import __version__$,__version__ = "${BASEPV}",' -i setup.py
 }
 do_install_append() {
         rm ${D}${bindir}/applet-coherence
-        rm -r ${D}${PYTHON_SITEPACKAGES_DIR}/Coherence-${PV}-*.egg-info
+        rm -r ${D}${PYTHON_SITEPACKAGES_DIR}/Coherence-${BASEPV}-*.egg-info
         rm -r ${D}${PYTHON_SITEPACKAGES_DIR}/coherence/test
 }
 
