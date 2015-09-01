@@ -20,7 +20,7 @@ index 12197ae..f02024f 100644
 +iSubtitleOutputPtr_getSubtitleList_org = enigma.iSubtitleOutputPtr.getSubtitleList
 +def iSubtitleOutputPtr_getSubtitleList(self):
 +	lst_filtered = [ ]
-+	for x in iSubtitleOutputPtr_getSubtitleList_org(self):
++	for x in iSubtitleOutputPtr_getSubtitleList_org(self) or [ ]:
 +		if x[0] == 2 and x[2] in (stPGS, stVOB):
 +			print "PGS/VOB subtitles broken... ignore", x
 +		else:
