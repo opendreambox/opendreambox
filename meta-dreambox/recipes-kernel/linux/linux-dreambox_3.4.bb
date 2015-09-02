@@ -6,6 +6,7 @@ SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-3.4.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://backport_bcmgenet_fix_from_3.3-3.6.patch \
+    file://0001-re-enable-native-ext2-ext3-support-because-we-have-s.patch \
 "
 
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
