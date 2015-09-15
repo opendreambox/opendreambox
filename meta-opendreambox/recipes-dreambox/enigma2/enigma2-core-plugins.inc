@@ -112,7 +112,6 @@ RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = " \
 "
 RDEPENDS_enigma2-plugin-systemplugins-streamserver = " \
         dreamrtspserver \
-        python-dbus \
 "
 RDEPENDS_enigma2-plugin-systemplugins-upnp = " \
         python-coherence \
