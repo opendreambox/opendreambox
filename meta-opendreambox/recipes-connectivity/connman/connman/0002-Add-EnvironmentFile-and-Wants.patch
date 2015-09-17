@@ -1,0 +1,33 @@
+From 2a52e03088db43adc2cd6fbae81d276d64e0eb00 Mon Sep 17 00:00:00 2001
+From: Stephan Reichholf <reichi@opendreambox.org>
+Date: Thu, 17 Sep 2015 11:50:18 +0200
+Subject: [PATCH 2/2] Add EnvironmentFile and Wants
+
+---
+ src/connman.service.in | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/connman.service.in b/src/connman.service.in
+index 8f7f342..b280121 100644
+--- a/src/connman.service.in
++++ b/src/connman.service.in
+@@ -2,13 +2,14 @@
+ Description=Connection service
+ After=dbus.service network-pre.target
+ Before=network.target remote-fs-pre.target
+-Wants=network.target remote-fs-pre.target
++Wants=network.target remote-fs-pre.target connman-env.service
+ 
+ [Service]
+ Type=dbus
+ BusName=net.connman
+ Restart=on-failure
+-ExecStart=@sbindir@/connmand -n
++EnvironmentFile=-/run/connmand/connmand.env
++ExecStart=@sbindir@/connmand -n $CONNMAND_OPTS
+ StandardOutput=null
+ 
+ [Install]
+-- 
+1.9.1
+
