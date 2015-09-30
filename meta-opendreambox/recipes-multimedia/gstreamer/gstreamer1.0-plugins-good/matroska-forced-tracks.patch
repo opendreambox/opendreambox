@@ -1,0 +1,26 @@
+From 57ca9a471741031a1a1271e93444e194e5652bef Mon Sep 17 00:00:00 2001
+From: Andreas Frisch <fraxinas@opendreambox.org>
+Date: Thu, 17 Sep 2015 14:57:19 +0200
+Subject: [PATCH] set GST_STREAM_FLAG_FORCED for GST_MATROSKA_TRACK_FORCED
+ streams. refs #755159
+
+---
+ gst/matroska/matroska-demux.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/gst/matroska/matroska-demux.c b/gst/matroska/matroska-demux.c
+index 01a65ff..bc0e66e 100644
+--- a/gst/matroska/matroska-demux.c
++++ b/gst/matroska/matroska-demux.c
+@@ -1291,6 +1291,8 @@ gst_matroska_demux_add_stream (GstMatroskaDemux * demux, GstEbmlRead * ebml)
+     stream_flags |= GST_STREAM_FLAG_SPARSE;
+   if (context->flags & GST_MATROSKA_TRACK_DEFAULT)
+     stream_flags |= GST_STREAM_FLAG_SELECT;
++  if (context->flags & GST_MATROSKA_TRACK_FORCED)
++    stream_flags |= GST_STREAM_FLAG_FORCED;
+   gst_event_set_stream_flags (stream_start, stream_flags);
+   gst_pad_push_event (context->pad, stream_start);
+   gst_pad_set_caps (context->pad, context->caps);
+-- 
+2.3.5
+

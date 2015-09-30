@@ -1,0 +1,182 @@
+diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
+--- a/gst/dvdspu/gstdvdspu.c	2015-09-28 16:35:11.004443667 +0200
++++ b/gst/dvdspu/gstdvdspu.c	2015-09-28 16:43:39.976693443 +0200
+@@ -55,6 +55,29 @@
+   /* FILL ME */
+   LAST_SIGNAL
+ };
++enum
++{
++  ARG_0,
++  ARG_FORCED_MODE
++};
++
++GType gst_dvd_spu_forced_mode_get_type (void)
++{
++  static volatile gsize forced_mode_type = 0;
++  static const GEnumValue forced_mode[] = {
++    {GST_DVD_SPU_FORCED_MODE_SHOW_NONE,        "GST_DVD_SPU_FORCED_MODE_SHOW_NONE",        "none"},
++    {GST_DVD_SPU_FORCED_MODE_SHOW_FORCED_ONLY, "GST_DVD_SPU_FORCED_MODE_SHOW_FORCED_ONLY", "forcedonly"},
++    {GST_DVD_SPU_FORCED_MODE_SHOW_ALL,         "GST_DVD_SPU_FORCED_MODE_SHOW_ALL",         "all"},
++    {0, NULL, NULL},
++};
++
++  if (g_once_init_enter (&forced_mode_type)) {
++    GType tmp = g_enum_register_static ("GstDVDSpuForcedMode", forced_mode);
++    g_once_init_leave (&forced_mode_type, tmp);
++  }
++  return (GType) forced_mode_type;
++}
++#define DEFAULT_FORCED_MODE GST_DVD_SPU_FORCED_MODE_SHOW_FORCED_ONLY
+ 
+ #define VIDEO_FORMATS GST_VIDEO_OVERLAY_COMPOSITION_BLEND_FORMATS
+ 
+@@ -92,6 +115,11 @@
+ static GstStateChangeReturn gst_dvd_spu_change_state (GstElement * element,
+     GstStateChange transition);
+ 
++static void gst_dvd_spu_set_property (GObject * object, guint prop_id,
++    const GValue * value, GParamSpec * pspec);
++static void gst_dvd_spu_get_property (GObject * object, guint prop_id,
++    GValue * value, GParamSpec * pspec);
++
+ static gboolean gst_dvd_spu_src_event (GstPad * pad, GstObject * parent,
+     GstEvent * event);
+ static gboolean gst_dvd_spu_src_query (GstPad * pad, GstObject * parent,
+@@ -138,6 +166,9 @@
+   gobject_class = (GObjectClass *) klass;
+   gstelement_class = (GstElementClass *) klass;
+ 
++  gobject_class->set_property = gst_dvd_spu_set_property;
++  gobject_class->get_property = gst_dvd_spu_get_property;
++
+   gobject_class->dispose = (GObjectFinalizeFunc) gst_dvd_spu_dispose;
+   gobject_class->finalize = (GObjectFinalizeFunc) gst_dvd_spu_finalize;
+ 
+@@ -150,6 +181,12 @@
+   gst_element_class_add_pad_template (gstelement_class,
+       gst_static_pad_template_get (&subpic_sink_factory));
+ 
++  g_object_class_install_property (gobject_class, ARG_FORCED_MODE,
++    g_param_spec_enum ("forced-mode", "Forced Mode",
++      "How to handle subtitles in forced subtitle streams",
++      GST_TYPE_DVD_SPU_FORCED_MODE, DEFAULT_FORCED_MODE,
++      G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++
+   gst_element_class_set_static_metadata (gstelement_class,
+       "Sub-picture Overlay", "Mixer/Video/Overlay/SubPicture/DVD/Bluray",
+       "Parses Sub-Picture command streams and renders the SPU overlay "
+@@ -569,6 +606,44 @@
+   return caps;
+ }
+ 
++static void
++gst_dvd_spu_set_property (GObject * object, guint prop_id, const GValue * value, GParamSpec * pspec)
++{
++  GstDVDSpu *dvdspu = (GstDVDSpu *) object;
++
++  switch (prop_id) {
++    case ARG_FORCED_MODE:
++    {
++      GstDVDSpuForcedMode mode = g_value_get_enum (value);
++      GEnumValue *val = g_enum_get_value (G_ENUM_CLASS (g_type_class_ref (GST_TYPE_DVD_SPU_FORCED_MODE)), mode);
++      if (val)
++      {
++        GST_DEBUG_OBJECT (dvdspu, "successfully set forced mode to %s (%i)", val->value_nick, mode);
++      }
++      dvdspu->forced_mode = g_value_get_enum (value);
++      break;
++    }
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++      break;
++  }
++}
++
++static void
++gst_dvd_spu_get_property (GObject * object, guint prop_id, GValue * value, GParamSpec * pspec)
++{
++  GstDVDSpu *dvdspu = (GstDVDSpu *) object;
++
++  switch (prop_id) {
++    case ARG_FORCED_MODE:
++      g_value_set_enum (value, dvdspu->forced_mode);
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++      break;
++  }
++}
++
+ /* With SPU lock held */
+ static void
+ update_video_to_position (GstDVDSpu * dvdspu, GstClockTime new_pos)
+@@ -1662,6 +1737,11 @@
+        * video might still continue, though */
+       gst_event_unref (event);
+       goto done;
++    case GST_EVENT_STREAM_START:
++      gst_event_parse_stream_flags (event, &dvdspu->stream_flags);
++      GST_INFO_OBJECT (dvdspu, "GST_EVENT_STREAM_START %" GST_PTR_FORMAT " stream_flags: %02X", event, dvdspu->stream_flags);
++      res = gst_pad_event_default (pad, parent, event);
++      goto done;
+     default:
+       res = gst_pad_event_default (pad, parent, event);
+       break;
+diff -u a/gst/dvdspu/gstdvdspu.h b/gst/dvdspu/gstdvdspu.h
+--- a/gst/dvdspu/gstdvdspu.h	2015-09-28 16:32:19.551442789 +0200
++++ b/gst/dvdspu/gstdvdspu.h	2015-09-28 16:43:39.976693443 +0200
+@@ -65,6 +65,14 @@
+ 
+ #define SPU_STATE_FLAGS_MASK (0xff)
+ 
++typedef enum _gst_dvd_spu_forced_modes {
++  GST_DVD_SPU_FORCED_MODE_SHOW_NONE = 0,
++  GST_DVD_SPU_FORCED_MODE_SHOW_FORCED_ONLY,
++  GST_DVD_SPU_FORCED_MODE_SHOW_ALL
++} GstDVDSpuForcedMode;
++
++#define GST_TYPE_DVD_SPU_FORCED_MODE (gst_dvd_spu_forced_mode_get_type ())
++
+ struct SpuState {
+   GstClockTime next_ts; /* Next event TS in running time */
+   SpuStateFlags flags;
+@@ -117,6 +125,9 @@
+   /* Overlay composition */
+   gboolean attach_compo_to_buffer;
+   GstVideoOverlayComposition *composition;
++
++  GstDVDSpuForcedMode forced_mode;
++  GstStreamFlags stream_flags;
+ };
+ 
+ struct _GstDVDSpuClass {
+@@ -124,6 +135,7 @@
+ };
+ 
+ GType gst_dvd_spu_get_type (void);
++GType gst_dvd_spu_forced_mode_get_type (void);
+ 
+ typedef enum {
+   GST_DVD_SPU_DEBUG_RENDER_RECTANGLE = (1 << 0),
+diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
+--- a/gst/dvdspu/gstspu-pgs.c	2015-09-28 16:30:56.646658928 +0200
++++ b/gst/dvdspu/gstspu-pgs.c	2015-09-28 16:43:39.976693443 +0200
+@@ -621,7 +621,16 @@
+ 
+   obj = pgs_presentation_segment_find_object (&(pgs_state->pres_seg), obj_id);
+ 
+-  PGS_DUMP ("Object ID %d ver %u flags 0x%02x\n", obj_id, obj_ver, flags);
++  PGS_DUMP ("Object ID %d ver %u flags 0x%02x obj->id %d obj->flags 0x%02x\n",
++      obj_id, obj_ver, flags, obj->id, obj->flags);
++
++  if (dvdspu->stream_flags & GST_STREAM_FLAG_FORCED &&
++      (dvdspu->forced_mode == GST_DVD_SPU_FORCED_MODE_SHOW_NONE ||
++       (dvdspu->forced_mode == GST_DVD_SPU_FORCED_MODE_SHOW_FORCED_ONLY &&
++        !(obj->flags & PGS_COMPOSITION_OBJECT_FLAG_FORCED)))) {
++    PGS_DUMP ("discard because forced_mode=%i\n", dvdspu->forced_mode);
++    return 0;
++  }
+ 
+   if (flags & PGS_OBJECT_UPDATE_FLAG_START_RLE) {
+     obj->rle_data_ver = obj_ver;

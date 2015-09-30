@@ -1,0 +1,19 @@
+--- a/ext/pango/gstbasetextoverlay.c	2015-08-11 08:26:47.734559069 +0200
++++ b/ext/pango/gstbasetextoverlay.c	2015-09-28 09:28:46.305177538 +0200
+@@ -114,14 +114,14 @@
+ GST_STATIC_PAD_TEMPLATE ("src",
+     GST_PAD_SRC,
+     GST_PAD_ALWAYS,
+-    GST_STATIC_CAPS (BASE_TEXT_OVERLAY_ALL_CAPS)
++    GST_STATIC_CAPS (BASE_TEXT_OVERLAY_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-divx; video/x-xvid; video/x-wmv")
+     );
+ 
+ static GstStaticPadTemplate video_sink_template_factory =
+ GST_STATIC_PAD_TEMPLATE ("video_sink",
+     GST_PAD_SINK,
+     GST_PAD_ALWAYS,
+-    GST_STATIC_CAPS (BASE_TEXT_OVERLAY_ALL_CAPS)
++    GST_STATIC_CAPS (BASE_TEXT_OVERLAY_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-divx; video/x-xvid; video/x-wmv")
+     );
+ 
+ #define GST_TYPE_BASE_TEXT_OVERLAY_VALIGN (gst_base_text_overlay_valign_get_type())

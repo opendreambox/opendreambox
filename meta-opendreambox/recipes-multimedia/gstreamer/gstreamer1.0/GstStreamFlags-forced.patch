@@ -1,0 +1,38 @@
+From 0eb64386e3c546842e4bc2e32214f774b11a9666 Mon Sep 17 00:00:00 2001
+From: Andreas Frisch <fraxinas@opendreambox.org>
+Date: Thu, 17 Sep 2015 14:59:31 +0200
+Subject: [PATCH] add GstStreamFlags bit to mark forced streams. refs #755159
+
+---
+ gst/gstevent.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/gst/gstevent.h b/gst/gstevent.h
+index 9fe9bcf..dffb5f1 100644
+--- a/gst/gstevent.h
++++ b/gst/gstevent.h
+@@ -379,8 +379,10 @@ typedef enum {
+  * @GST_STREAM_FLAG_UNSELECT: This stream should not be selected by default.
+  *    This flag may be used by demuxers to signal that a stream should not
+  *    be selected by default in a playback scenario, but only if explicitly
+- *    selected by the user (e.g. an audio track for the hard of hearing or
++ *    selected by the user (e.g. an audio track for the visually impaired or
+  *    a director's commentary track).
++ * @GST_STREAM_FLAG_FORCED: Some or all of the data in this stream should be
++ *    presented in any case (e.g. subtitles when somebody speaks Klingon)
+  *
+  * Since: 1.2
+  */
+@@ -388,7 +390,8 @@ typedef enum {
+   GST_STREAM_FLAG_NONE,
+   GST_STREAM_FLAG_SPARSE       = (1 << 0),
+   GST_STREAM_FLAG_SELECT       = (1 << 1),
+-  GST_STREAM_FLAG_UNSELECT     = (1 << 2)
++  GST_STREAM_FLAG_UNSELECT     = (1 << 2),
++  GST_STREAM_FLAG_FORCED       = (1 << 3)
+ } GstStreamFlags;
+ 
+ /**
+-- 
+2.3.5
+

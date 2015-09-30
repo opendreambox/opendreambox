@@ -1,0 +1,21 @@
+diff --git a/ext/assrender/gstassrender.c b/ext/assrender/gstassrender.c
+index 711ab04..2b72ee6 100644
+--- a/ext/assrender/gstassrender.c
++++ b/ext/assrender/gstassrender.c
+@@ -76,14 +76,14 @@ static GstStaticCaps sw_template_caps = GST_STATIC_CAPS (ASSRENDER_CAPS);
+ static GstStaticPadTemplate src_factory = GST_STATIC_PAD_TEMPLATE ("src",
+     GST_PAD_SRC,
+     GST_PAD_ALWAYS,
+-    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS)
++    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-divx; video/x-xvid; video/x-wmv")
+     );
+ 
+ static GstStaticPadTemplate video_sink_factory =
+ GST_STATIC_PAD_TEMPLATE ("video_sink",
+     GST_PAD_SINK,
+     GST_PAD_ALWAYS,
+-    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS)
++    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-divx; video/x-xvid; video/x-wmv")
+     );
+ 
+ static GstStaticPadTemplate text_sink_factory =

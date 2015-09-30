@@ -1,0 +1,11 @@
+--- a/configure.ac	2015-09-28 18:04:08.198168909 +0200
++++ b/configure.ac	2015-09-28 18:06:22.027185848 +0200
+@@ -8,7 +8,7 @@
+ AG_GST_INIT
+ 
+ dnl initialize automake
+-AM_INIT_AUTOMAKE([-Wno-portability 1.14 no-dist-gzip dist-xz tar-ustar subdir-objects])
++AM_INIT_AUTOMAKE([-Wno-portability 1.12 no-dist-gzip dist-xz tar-ustar subdir-objects])
+ 
+ dnl define PACKAGE_VERSION_* variables
+ AS_VERSION

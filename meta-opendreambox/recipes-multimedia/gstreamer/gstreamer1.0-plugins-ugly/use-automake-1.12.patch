@@ -1,0 +1,25 @@
+From aff15c173111f1c6dc3d387cedda4aa97116ef66 Mon Sep 17 00:00:00 2001
+From: Andreas Frisch <fraxinas@opendreambox.org>
+Date: Tue, 8 Sep 2015 17:46:27 +0200
+Subject: [PATCH] patch configure to require automake 1.12 instead of 1.14
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index bd18632..63e5100 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -10,7 +10,7 @@
+ AG_GST_INIT
+ 
+ dnl initialize automake
+-AM_INIT_AUTOMAKE([-Wno-portability 1.14 no-dist-gzip dist-xz tar-ustar subdir-objects])
++AM_INIT_AUTOMAKE([-Wno-portability 1.12 no-dist-gzip dist-xz tar-ustar subdir-objects])
+ 
+ dnl define PACKAGE_VERSION_* variables
+ AS_VERSION
+-- 
+2.3.5
+
