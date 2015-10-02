@@ -6,7 +6,8 @@ SRC_URI += "file://0001-Qt-remove-x11-from-npapi-while-keeping-some-basic-fu.pat
             file://0004-QtWebkit-Expose-keypress-event-and-correct-keycode-f.patch \
             file://0005-WebKit-small-hack-to-disable-use-of-WebkitWebSourceG.patch \
             file://0006-QtWebKit-disable-video-to-get-rid-of-gstreamer-depen.patch \
-            file://0007-QWS-Export-qt_get_server_queue.patch"
+            file://0007-QWS-Export-qt_get_server_queue.patch \
+            file://0008-QEventLoop-dont-catch-exceptions.patch"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/qt4-${PV}:"
 

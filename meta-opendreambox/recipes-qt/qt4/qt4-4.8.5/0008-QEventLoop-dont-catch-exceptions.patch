@@ -1,0 +1,11 @@
+--- a/src/corelib/kernel/qeventloop.cpp	2013-06-07 07:16:52.000000000 +0200
++++ b/src/corelib/kernel/qeventloop.cpp	2015-10-01 19:45:26.127707851 +0200
+@@ -195,7 +195,7 @@
+     if (app && app->thread() == thread())
+         QCoreApplication::removePostedEvents(app, QEvent::Quit);
+ 
+-#if defined(QT_NO_EXCEPTIONS)
++#if 1 || defined(QT_NO_EXCEPTIONS)
+     while (!d->exit)
+         processEvents(flags | WaitForMoreEvents | EventLoopExec);
+ #else
