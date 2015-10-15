@@ -47,6 +47,7 @@ NR_CPU := $(shell [ -f /proc/cpuinfo ] && grep -c '^processor\s*:' /proc/cpuinfo
 BB_NUMBER_THREADS ?= $(NR_CPU)
 PARALLEL_MAKE ?= -j $(NR_CPU)
 
+NICE ?= nice -n 19
 XSUM ?= md5sum
 
 BUILD_DIR = $(CURDIR)/build
@@ -57,7 +58,7 @@ SSTATE_DIR = $(CURDIR)/sstate-cache
 TMPDIR = $(TOPDIR)/tmp
 DEPDIR = $(CURDIR)/.deps
 
-BITBAKE = . $(CURDIR)/bitbake.env && cd $(TOPDIR) && bitbake
+BITBAKE = . $(CURDIR)/bitbake.env && cd $(TOPDIR) && $(NICE) bitbake
 
 BBLAYERS ?= \
 	$(CURDIR)/meta-dreambox \
