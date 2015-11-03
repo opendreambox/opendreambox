@@ -39,7 +39,7 @@ do_install_append() {
                 CATEGORY=`ls -1 ${INSTALL_PLUGINSDIR} | head -n1 | tr '[:upper:]' '[:lower:]'`
                 NAME=`echo $SUBDIR | tr '[:upper:]' '[:lower:]'`
                 PKG="enigma2-plugin-$CATEGORY-$NAME"
-                rm -rf ${INSTALL_METADIR} ${INSTALL_PLUGINSDIR}
+                rm -rf ${INSTALL_METADIR} ${INSTALL_PODIR} ${INSTALL_PLUGINSDIR}
                 find ${INSTALL_DESTDIR} -type f -name "*.la" -delete -fprintf ${INSTALL_ROOTDIR}/$PKG-dev '/%P\n'
                 [ -s ${INSTALL_ROOTDIR}/$PKG-dev ] || rm ${INSTALL_ROOTDIR}/$PKG-dev
                 find ${INSTALL_DESTDIR} -type f -name "*.a" -delete -fprintf ${INSTALL_ROOTDIR}/$PKG-staticdev '/%P\n'
@@ -52,9 +52,11 @@ do_install_append() {
 
 PACKAGES_DYNAMIC = "enigma2-plugin-*"
 PACKAGES += "${PN}-meta"
+PACKAGES =+ "${PN}-po"
 
 FILES_${PN} += "${datadir}/enigma2 ${datadir}/fonts"
 FILES_${PN}-meta = "${datadir}/meta"
+FILES_${PN}-po = "${datadir}/enigma2/po"
 
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
@@ -99,6 +101,7 @@ python populate_packages_prepend() {
 INSTALL_ROOTDIR = "${WORKDIR}/${PN}-packaging-tempdir"
 INSTALL_DESTDIR = "${INSTALL_ROOTDIR}/destdir"
 INSTALL_METADIR = "${INSTALL_DESTDIR}${datadir}/meta"
+INSTALL_PODIR = "${INSTALL_DESTDIR}${datadir}/enigma2/po"
 INSTALL_PLUGINSDIR = "${INSTALL_DESTDIR}${libdir}/enigma2/python/Plugins"
 
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"

@@ -24,6 +24,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-systemplugins-videomode \
   enigma2-plugin-systemplugins-videotune \
   enigma2-plugins-meta \
+  enigma2-plugins-po \
   enigma2-skins-meta \
   enigma2-streamproxy \
   libpassthrough \
