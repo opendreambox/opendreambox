@@ -3,6 +3,8 @@ SRC_URI[dm7080.sha256sum] = "dd608a5ba245db897d6d8b0ffbf8ea6c77f259116c6376694e6
 
 require enigma2-bin-4.2.inc
 
+SRC_URI += "file://0001-re-add-global-VideoHardware-instance-without-this-on.patch"
+
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
