@@ -30,4 +30,5 @@ EXTRA_OECONF += " \
     --disable-openni2 \
     --disable-winks \
     --disable-x265 \
+    --disable-dvb \
 "
