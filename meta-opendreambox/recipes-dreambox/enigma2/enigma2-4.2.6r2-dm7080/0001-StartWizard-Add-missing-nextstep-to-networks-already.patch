@@ -1,0 +1,26 @@
+From 353a57fa18fbb20e34991ada37bfeb0748cd5fdc Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Wed, 2 Dec 2015 13:53:44 +0100
+Subject: [PATCH 1/3] StartWizard: Add missing nextstep to networks
+ alreadyconnected step
+
+---
+ usr/share/enigma2/startwizard.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/share/enigma2/startwizard.xml b/usr/share/enigma2/startwizard.xml
+index 0681bbd..54e0a8d 100644
+--- a/usr/share/enigma2/startwizard.xml
++++ b/usr/share/enigma2/startwizard.xml
+@@ -290,7 +290,7 @@ self.selectKey("OK")
+ self.condition = self.networkWizardAvailable and not self.isNetworkConnected()
+ 			</condition>
+ 	</step>
+-	<step id="alreadyconnected">
++	<step id="alreadyconnected" nextstep="technologies">
+ 		<text value="Your Dreambox is already connected to the Internet.\nThere is no network configuration required." />
+ 		<short_title value="Connected" />
+ 		<list>
+-- 
+1.9.1
+

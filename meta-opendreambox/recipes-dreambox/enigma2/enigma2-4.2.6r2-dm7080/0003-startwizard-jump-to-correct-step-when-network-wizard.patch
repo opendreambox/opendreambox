@@ -1,0 +1,26 @@
+From ab780cce2ce4ac80fdb9efc3180faed1b4cc1ab8 Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Wed, 2 Dec 2015 14:10:51 +0100
+Subject: [PATCH 3/3] startwizard: jump to correct step when network wizard
+ should be aborted besides not being connected
+
+---
+ usr/share/enigma2/startwizard.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/share/enigma2/startwizard.xml b/usr/share/enigma2/startwizard.xml
+index 54e0a8d..ebc3515 100644
+--- a/usr/share/enigma2/startwizard.xml
++++ b/usr/share/enigma2/startwizard.xml
+@@ -344,7 +344,7 @@ self.showHideButtons()
+ 		<short_title value="No Connection" />
+ 		<list>
+ 			<listentry caption="Start over" step="technologies" />
+-			<listentry caption="Exit wizard" step="end" />
++			<listentry caption="Exit wizard" step="networkend" />
+ 		</list>
+ 		<condition>
+ self.condition = self.networkWizardAvailable and not self.isNetworkConnected()
+-- 
+1.9.1
+
