@@ -1,0 +1,61 @@
+From ccd454facf1f9aee26aa2d9fae57b2866b303623 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 3 Dec 2015 11:40:42 +0100
+Subject: [PATCH] detect if the channelselection is initialized in a way which
+ is more compatible with some external plugins
+
+(cherry picked from commit a1d0ae6f61f76647b0aeb3e72aacfba4ea35a282)
+---
+ usr/lib/enigma2/python/Navigation.py                          | 3 ++-
+ usr/lib/enigma2/python/Screens/ChannelSelection.py | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Navigation.py b/usr/lib/enigma2/python/Navigation.py
+index d6a5b18..adcaace 100644
+--- a/usr/lib/enigma2/python/Navigation.py
++++ b/usr/lib/enigma2/python/Navigation.py
+@@ -14,6 +14,7 @@ import ServiceReference
+ # TODO: remove pNavgation, eNavigation and rewrite this stuff in python.
+ class Navigation:
+ 	def __init__(self, nextRecordTimerAfterEventActionAuto=False):
++		from Screens.ChannelSelection import ChannelSelection
+ 		if NavigationInstance.instance is not None:
+ 			raise NavigationInstance.instance
+ 		
+@@ -43,7 +44,7 @@ class Navigation:
+ 						Notifications.AddNotificationWithID("Standby", Screens.Standby.Standby, domain="RecordTimer")
+ 		self.SleepTimer = SleepTimer.SleepTimer()
+ 		self.scheduledServiceReference = None
+-		config.servicelist.initialized.addNotifier(self.serviceListInitialized, initial_call = True)
++		ChannelSelection.initialized.addNotifier(self.serviceListInitialized, initial_call = True)
+ 
+ 	def serviceListInitialized(self, configElement):
+ 		self.immediatePlay = configElement.value
+diff --git a/usr/lib/enigma2/python/Screens/ChannelSelection.py b/usr/lib/enigma2/python/Screens/ChannelSelection.py
+index 27e18e7..c295db1 100644
+--- a/usr/lib/enigma2/python/Screens/ChannelSelection.py
++++ b/usr/lib/enigma2/python/Screens/ChannelSelection.py
+@@ -1233,9 +1233,10 @@ config.radio.lastservice = ConfigText()
+ config.radio.lastroot = ConfigText()
+ config.servicelist = ConfigSubsection()
+ config.servicelist.lastmode = ConfigText(default = "tv")
+-config.servicelist.initialized = NoSave(ConfigBoolean(default = False))
+ 
+ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelectionEPG, SelectionEventInfo):
++	initialized = NoSave(ConfigBoolean(default = False))
++
+ 	def __init__(self, session):
+ 		ChannelSelectionBase.__init__(self,session)
+ 		ChannelSelectionEdit.__init__(self)
+@@ -1327,7 +1328,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
+ 				self.zap()
+ 			else:
+ 				Screens.Standby.inStandby.onClose.append(self.zap)
+-		config.servicelist.initialized.value = True
++		ChannelSelection.initialized.value = True
+ 
+ 	def channelSelected(self):
+ 		ref = self.getCurrentSelection()
+-- 
+1.9.1
+
