@@ -7,6 +7,7 @@ SRC_URI += " \
 	file://0001-StartWizard-Add-missing-nextstep-to-networks-already.patch \
 	file://0002-Screen-call-_initAnimations-in-onLayoutFinish-so-it-.patch \
 	file://0003-startwizard-jump-to-correct-step-when-network-wizard.patch \
+	file://0004-detect-if-the-channelselection-is-initialized-in-a-w.patch \
 "
 
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
