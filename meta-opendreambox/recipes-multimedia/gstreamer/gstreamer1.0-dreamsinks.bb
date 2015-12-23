@@ -11,8 +11,6 @@ inherit autotools opendreambox-git pkgconfig
 
 FILES_${PN} = "${libdir}/gstreamer-1.0/*.so"
 FILES_${PN}-dbg += "${libdir}/gstreamer-1.0/.debug"
-#FILES_${PN}-dev += "${libdir}/gstreamer-0.10/*.la"
-#FILES_${PN}-staticdev += "${libdir}/gstreamer-0.10/*.a"
 
 do_install_append() {
         rm -f ${D}${libdir}/gstreamer-1.0/*.a

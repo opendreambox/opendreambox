@@ -8,7 +8,7 @@ inherit packagegroup
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} += " \
-  gst-plugin-dvbmediasink \
+  gstreamer1.0-dreamsinks \
   gstreamer1.0-plugins-bad-assrender \
   gstreamer1.0-plugins-bad-dvdspu \
   gstreamer1.0-plugins-bad-faad \
