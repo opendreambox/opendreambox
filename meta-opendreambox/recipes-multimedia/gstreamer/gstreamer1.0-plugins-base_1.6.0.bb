@@ -10,6 +10,7 @@ DEPENDS += " iso-codes "
 SRC_URI += " \
     file://use-automake-1.12.patch \
     file://gstbasetextoverlay-overlaycaps.patch \
+    file://gsttextoverlay-timestamps.patch \
 "
 
 SRC_URI[md5sum] = "3c223f1d2716e1861ba84287ea02b164"

@@ -1,0 +1,57 @@
+diff --git a/ext/pango/gstbasetextoverlay.c b/ext/pango/gstbasetextoverlay.c
+index bde4303..06074b3 100644
+--- a/ext/pango/gstbasetextoverlay.c
++++ b/ext/pango/gstbasetextoverlay.c
+@@ -2490,6 +2490,7 @@ gst_base_text_overlay_video_chain (GstPad * pad, GstObject * parent,
+   guint64 start, stop, clip_start = 0, clip_stop = 0;
+   gchar *text = NULL;
+   GstVideoOverlayCompositionMeta *composition_meta;
++  GstClockTime *timestamp;
+ 
+   overlay = GST_BASE_TEXT_OVERLAY (parent);
+ 
+@@ -2507,11 +2508,15 @@ gst_base_text_overlay_video_chain (GstPad * pad, GstObject * parent,
+ 
+   klass = GST_BASE_TEXT_OVERLAY_GET_CLASS (overlay);
+ 
+-  if (!GST_BUFFER_TIMESTAMP_IS_VALID (buffer))
++  if (GST_BUFFER_PTS_IS_VALID (buffer))
++    timestamp = &GST_BUFFER_PTS (buffer);
++  else if (GST_BUFFER_DTS_IS_VALID (buffer))
++    timestamp = &GST_BUFFER_DTS (buffer);
++  else
+     goto missing_timestamp;
+ 
+   /* ignore buffers that are outside of the current segment */
+-  start = GST_BUFFER_TIMESTAMP (buffer);
++  start = *timestamp;
+ 
+   if (!GST_BUFFER_DURATION_IS_VALID (buffer)) {
+     stop = GST_CLOCK_TIME_NONE;
+@@ -2538,7 +2543,7 @@ gst_base_text_overlay_video_chain (GstPad * pad, GstObject * parent,
+   if (clip_start != start || (stop != -1 && clip_stop != stop)) {
+     GST_DEBUG_OBJECT (overlay, "clipping buffer timestamp/duration to segment");
+     buffer = gst_buffer_make_writable (buffer);
+-    GST_BUFFER_TIMESTAMP (buffer) = clip_start;
++      timestamp = &clip_start;
+     if (stop != -1)
+       GST_BUFFER_DURATION (buffer) = clip_stop - clip_start;
+   }
+@@ -2557,7 +2562,7 @@ gst_base_text_overlay_video_chain (GstPad * pad, GstObject * parent,
+     }
+   }
+ 
+-  gst_object_sync_values (GST_OBJECT (overlay), GST_BUFFER_TIMESTAMP (buffer));
++gst_object_sync_values (GST_OBJECT (overlay), *timestamp);
+ 
+ wait_for_text_buf:
+ 
+@@ -2779,7 +2784,7 @@ wait_for_text_buf:
+ 
+ missing_timestamp:
+   {
+-    GST_WARNING_OBJECT (overlay, "buffer without timestamp, discarding");
++    GST_WARNING_OBJECT (overlay, "buffer without timestamp, discarding %" GST_PTR_FORMAT"", buffer);
+     gst_buffer_unref (buffer);
+     return GST_FLOW_OK;
+   }
