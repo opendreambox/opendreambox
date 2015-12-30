@@ -1118,25 +1118,22 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
  
        obj->crop_x = GST_READ_UINT16_BE (payload);
        obj->crop_y = GST_READ_UINT16_BE (payload + 2);
-@@ -482,23 +511,35 @@
+@@ -482,23 +511,31 @@
      state->pgs.palette[i].A = 0;
    for (i = 0; i < n_entries; i++) {
      guint8 n, Y, U, V, A;
 +    gint R, G, B;
      n = payload[0];
      Y = payload[1];
--    U = payload[2];
--    V = payload[3];
-+    V = payload[2];
-+    U = payload[3];
+     V = payload[2];
+     U = payload[3];
      A = payload[4];
  
- #if DUMP_FULL_PALETTE
-     PGS_DUMP ("Entry %3d: Y %3d U %3d V %3d A %3d  ", n, Y, U, V, A);
+-#if DUMP_FULL_PALETTE
+-    PGS_DUMP ("Entry %3d: Y %3d U %3d V %3d A %3d  ", n, Y, U, V, A);
 -    if (((i + 1) % 2) == 0)
 -      PGS_DUMP ("\n");
-+#endif
-+
+-#endif
 +    /* Convert to ARGB */
 +    R = (298 * Y + 459 * V - 63514) >> 8;
 +    G = (298 * Y - 55 * U - 136 * V + 19681) >> 8;
@@ -1145,15 +1142,16 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
 +    R = CLAMP (R, 0, 255);
 +    G = CLAMP (G, 0, 255);
 +    B = CLAMP (B, 0, 255);
-+
-+#if DUMP_FULL_PALETTE
-+    PGS_DUMP ("Entry %3d: A %3d R %3d G %3d B %3d\n", n, A, R, G, B);
- #endif
  
-     /* Premultiply the palette entries by the alpha */
+-    /* Premultiply the palette entries by the alpha */
 -    state->pgs.palette[n].Y = Y * A;
 -    state->pgs.palette[n].U = U * A;
 -    state->pgs.palette[n].V = V * A;
++#if DUMP_FULL_PALETTE
++    PGS_DUMP ("Entry %3d: A %3d R %3d G %3d B %3d\n", n, A, R, G, B);
++ #endif
++ 
++     /* Premultiply the palette entries by the alpha */
      state->pgs.palette[n].A = A;
 +    state->pgs.palette[n].R = R * A / 255;
 +    state->pgs.palette[n].G = G * A / 255;
@@ -1161,7 +1159,7 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
  
      payload += PGS_PALETTE_ENTRY_SIZE;
    }
-@@ -761,7 +802,7 @@
+@@ -761,7 +798,7 @@
  }
  
  void

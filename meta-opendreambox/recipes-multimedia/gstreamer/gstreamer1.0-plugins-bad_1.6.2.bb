@@ -11,12 +11,10 @@ SRC_URI += " \
     file://dvdspu-overlay-composition.patch \
     file://dvdspu-forced-mode-property.patch \
     file://assrender-overlay-caps.patch \
-    file://videoaggregator-glib.patch \
 "
 
-SRC_URI[md5sum] = "111632f8d1d1ba39bbf3665aaafcb28c"
-SRC_URI[sha256sum] = "d8ff26128d4ecd2ffeb28e14843808d2d971b09056b7cee6f08afcae01fc0f49"
-
+SRC_URI[md5sum] = "7c73bec1d389f0e184ebbbbb9e9f883d"
+SRC_URI[sha256sum] = "650855e39ff56a8bb6cb0c192109c5926ce12f536d06e19ebf829de71ef396fe"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 

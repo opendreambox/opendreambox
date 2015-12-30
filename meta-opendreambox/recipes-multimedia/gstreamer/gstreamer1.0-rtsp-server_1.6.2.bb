@@ -6,5 +6,5 @@ SRC_URI += " \
     file://use-automake-1.12.patch \
 "
 
-SRC_URI[md5sum] = "c8162f67c184663c1e1aa3ce872ef1e3"
-SRC_URI[sha256sum] = "1e1526d700ba36df5b30c887ccc37179903255022e57f716afb3ef172fe0746f"
+SRC_URI[md5sum] = "a1cafefb5fc14ac5d7e7d8cdbdfa9694"
+SRC_URI[sha256sum] = "0f51f9879556c0950203c766b09a1b62f1f25b17f9a7d516e01b13ecf93c8858"
