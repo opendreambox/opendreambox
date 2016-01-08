@@ -1,0 +1,10 @@
+[Unit]
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/satipclient
+Restart=on-failure
+NotifyAccess=main
+
+[Install]
+WantedBy=multi-user.target
