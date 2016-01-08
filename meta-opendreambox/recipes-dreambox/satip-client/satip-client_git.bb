@@ -8,7 +8,7 @@ SRC_URI = " \
     file://vtuner.conf \
 "
 
-SRCREV = "7103a891de53fe8ac0ae524a3c1344a829daa88f"
+SRCREV = "f191d63f98f587a57424940f55fd3ffe8765c6db"
 
 S = "${WORKDIR}/git"
 
