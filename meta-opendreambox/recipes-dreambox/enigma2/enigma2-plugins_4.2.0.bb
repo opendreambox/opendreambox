@@ -17,6 +17,7 @@ DEPENDS = " \
         python-youtube-dl \
         smartmontools \
         streamripper \
+        satip-client \
 "
 SRCREV = "${@opendreambox_srcrev('fefe4711bf9b0c198a2ee2ab3a31fd9d3e58fe63', d)}"
 
