@@ -20,9 +20,9 @@ SRCREV = "${@opendreambox_srcrev('5882a1da86fd2eea3169a02a469dff4442965909', d)}
 
 SRC_URI += "file://print.mak"
 
-SCHWERKRAFT_URI_append = ";branch=4.0"
+GITHUB_BRANCH = "4.0"
 
-inherit autotools schwerkraft-git pythonnative
+inherit autotools opendreambox-github pythonnative
 
 export BUILD_SYS
 export HOST_SYS
