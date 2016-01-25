@@ -2,17 +2,16 @@ SUMMARY = "satip client using vtuner"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2c1c00f9d3ed9e24fa69b932b7e7aff2"
 
-SRC_URI = " \
-    git://github.com/oe-alliance/satip-client.git;protocol=git;branch=next \
+GITHUB_ORGANIZATION = "oe-alliance"
+GITHUB_BRANCH = "next"
+SRC_URI += " \
     file://satip-client.service \
     file://vtuner.conf \
 "
 
-SRCREV = "f191d63f98f587a57424940f55fd3ffe8765c6db"
+SRCREV = "1a00c73d0da9f9243d74349d8f66f30efedc9eda"
 
-S = "${WORKDIR}/git"
-
-inherit autotools pkgconfig git-project systemd
+inherit autotools pkgconfig opendreambox-github systemd
 
 SYSTEMD_SERVICE_${PN} = "satip-client.service"
 
