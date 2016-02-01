@@ -1,0 +1,25 @@
+From 0107677ec72356f83180a598840f2cf4660747a1 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Mon, 1 Feb 2016 14:01:36 +0100
+Subject: [PATCH 3/3] its needed to initialize self.immediatePlay before
+ recordtimer init!
+
+---
+ Navigation.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/usr/lib/enigma2/python/Navigation.py b/usr/lib/enigma2/python/Navigation.py
+index 1c7efa6..a223130 100644
+--- a/usr/lib/enigma2/python/Navigation.py
++++ b/usr/lib/enigma2/python/Navigation.py
+@@ -31,6 +31,7 @@ class Navigation:
+ 		self.record_event = [ ]
+ 		self.currentlyPlayingServiceReference = None
+ 		self.currentlyPlayingService = None
++		self.immediatePlay = False
+ 		self.RecordTimer = RecordTimer.RecordTimer()
+ 		self.__wasTimerWakeup = False
+ 		if getFPWasTimerWakeup():
+-- 
+1.9.1
+
