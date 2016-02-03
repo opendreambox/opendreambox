@@ -20,11 +20,11 @@ SRCREV = "93ecd8e1f658d92b9ddc0064a3dc3b76735328f0"
 
 SRC_URI += "file://print.mak"
 
-SCHWERKRAFT_BRANCH = "4.0"
+GITHUB_BRANCH = "4.0"
 
 PE = "1"
 
-inherit autotools schwerkraft-git
+inherit autotools opendreambox-github
 
 EXTRA_OECONF = " \
         BUILD_SYS=${BUILD_SYS} \
