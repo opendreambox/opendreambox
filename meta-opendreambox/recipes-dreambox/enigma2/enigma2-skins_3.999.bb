@@ -4,7 +4,7 @@ SRCREV = "92db49a9d83851fe9f348b8263c1156706c3e21e"
 SCHWERKRAFT_BRANCH = "4.0"
 PE = "1"
 
-inherit allarch autotools schwerkraft-git
+inherit allarch autotools opendreambox-github
 
 PACKAGES_DYNAMIC = "enigma2-skin-*"
 PACKAGES += "${PN}-meta"
