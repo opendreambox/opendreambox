@@ -13,6 +13,7 @@ SUMMARY_enigma2-plugin-systemplugins-satfinder = "Find satellites"
 SUMMARY_enigma2-plugin-systemplugins-skinselector = "Select installed skins"
 SUMMARY_enigma2-plugin-systemplugins-upnp = "UPnP tools based on python-coherence"
 SUMMARY_enigma2-plugin-systemplugins-videomode = "Select custom video modes"
+SUMMARY_enigma2-plugin-systemplugins-hdmicec = "HDMI CEC support"
 
 PACKAGES =+ " \
     enigma2-plugin-extensions-browser \
@@ -28,6 +29,7 @@ PACKAGES =+ " \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-streamserver \
     enigma2-plugin-systemplugins-upnp \
+    enigma2-plugin-systemplugins-hdmicec \
 "
 
 QT_BASE_NAME ?= "${@base_contains('DISTRO_FEATURES', 'x11', 'qt4', 'qt4-embedded', d)}"
@@ -124,6 +126,13 @@ RCONFLICTS_enigma2-plugin-systemplugins-upnp = " \
 "
 RREPLACES_enigma2-plugin-systemplugins-upnp = " \
         enigma2-plugin-systemplugins-minidlnasetup \
+"
+
+RCONFLICTS_enigma2-plugin-systemplugins-hdmicec = " \
+        enigma2-plugin-systemplugins-advhdmi \
+"
+RREPLACES_enigma2-plugin-systemplugins-hdmicec = " \
+        enigma2-plugin-systemplugins-advhdmi \
 "
 
 python populate_packages_prepend() {
