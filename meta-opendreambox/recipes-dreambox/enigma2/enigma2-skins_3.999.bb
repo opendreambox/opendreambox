@@ -1,8 +1,8 @@
 SUMMARY = "Skins for Enigma2"
 LICENSE = "CLOSED"
 SRCREV = "92db49a9d83851fe9f348b8263c1156706c3e21e"
-SCHWERKRAFT_BRANCH = "4.0"
-PE = "1"
+GITHUB_BRANCH = "4.0"
+PE = "2"
 
 inherit allarch autotools opendreambox-github
 
