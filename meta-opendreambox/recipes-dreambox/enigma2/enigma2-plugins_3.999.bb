@@ -22,7 +22,7 @@ SRC_URI += "file://print.mak"
 
 GITHUB_BRANCH = "4.0"
 
-PE = "1"
+PE = "2"
 
 inherit autotools opendreambox-github
 
