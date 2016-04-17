@@ -5,8 +5,8 @@ DEPENDS += " \
     fribidi \
     giflib \
     glib-2.0 \
-    gstreamer \
-    gst-plugins-base \
+    gstreamer1.0 \
+    gstreamer1.0-plugins-base \
     libaio \
     libav \
     libbluray \
