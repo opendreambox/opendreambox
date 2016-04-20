@@ -10,8 +10,8 @@ DEPENDS = " \
         dvdbackup \
         enigma2 \
         enigma2-streamproxy \
-        gst-plugins-bad \
-        gst-plugins-good \
+        gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-good \
         hdparm \
         python-flickrapi \
         python-gdata \
