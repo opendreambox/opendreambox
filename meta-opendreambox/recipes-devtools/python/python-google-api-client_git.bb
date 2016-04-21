@@ -13,4 +13,4 @@ S = "${WORKDIR}/git"
 
 inherit setuptools
 
-
+CLEANBROKEN = "1"
