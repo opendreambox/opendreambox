@@ -15,7 +15,7 @@ IMAGE_INSTALL = " \
         base-passwd \
         busybox \
         devnodes-minimal \
-        dreambox-dvb-modules-lcd \
+        ${@base_contains('MACHINE', 'dm520', '', 'dreambox-dvb-modules-lcd', d)} \
         dropbear \
         e2fsprogs-e2fsck \
         google-dns \

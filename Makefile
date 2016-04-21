@@ -29,7 +29,7 @@
 -include conf/make.conf
 
 # Target platforms:
-# dm500hd, dm500hdv2, dm800se, dm800sev2, dm820,
+# dm500hd, dm500hdv2, dm520, dm800se, dm800sev2, dm820,
 # dm7020hd, dm7020hdv2, dm7080, dm8000
 #
 # This only sets the default value. All platforms now use a shared build
@@ -133,7 +133,7 @@ help:
 	@echo
 	@echo "  * Build a firmware image for a different target machine:"
 	@echo "      $$ $(MAKE) image MACHINE=dm800sev2"
-	@echo "    [Valid values: dm500hd, dm500hdv2, dm800se, dm800sev2, dm820, dm7020hd, dm7020hdv2, dm7080, dm8000]"
+	@echo "    [Valid values: dm500hd, dm500hdv2, dm520, dm800se, dm800sev2, dm820, dm7020hd, dm7020hdv2, dm7080, dm8000]"
 	@echo
 	@echo "  * Download all source files at once:"
 	@echo "      $$ $(MAKE) download"
