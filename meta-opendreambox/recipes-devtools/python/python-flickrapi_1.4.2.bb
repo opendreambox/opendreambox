@@ -20,7 +20,6 @@ DISTUTILS_INSTALL_ARGS += "--install-data=${D}/${docdir}/${PN}"
 # NOTE: requires python-misc for webbrowser and subprocess as missing dependency of the webbrowser
 RDEPENDS_${PN} = "\
   python-core \
-  python-elementtree \
   python-logging \
   python-misc \
   python-netclient \
