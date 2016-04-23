@@ -15,6 +15,9 @@ do_install_append() {
     if [ -f ${D}/lib/modules/${DM_LOCALVERSION}/extra/lcd.ko ]; then
         echo lcd > ${D}${sysconfdir}/modules-load.d/01-${BPN}-lcd.conf
         chmod 0644 ${D}${sysconfdir}/modules-load.d/01-${BPN}-lcd.conf
+    else
+        echo stb-core > ${D}${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf
+        chmod 0644 ${D}${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf
     fi
     for module in ${SOC_FAMILY} dreambox_keyboard; do
         if [ -f ${D}/lib/modules/${DM_LOCALVERSION}/extra/$module.ko ]; then
@@ -36,7 +39,8 @@ FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
 FILES_${PN}-lcd = "${sysconfdir}/modules-load.d/01-${BPN}-lcd.conf \
                    /lib/modules/${DM_LOCALVERSION}/extra/lcd.ko"
 
-FILES_${PN}-stb-core = "/lib/modules/${DM_LOCALVERSION}/extra/stb-core.ko"
+FILES_${PN}-stb-core = "${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf \
+                        /lib/modules/${DM_LOCALVERSION}/extra/stb-core.ko"
 
 # We don't use KERNEL_VERSION in this recipe, because the
 # precompiled modules depend on a specific version.
