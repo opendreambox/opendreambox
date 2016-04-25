@@ -2,7 +2,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " \
         file://fix_pthread_site.patch \
-        file://ctypes-error-handling-fix.patch \
 "
 
 EXTRA_OECONF += " \
