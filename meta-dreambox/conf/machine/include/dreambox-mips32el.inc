@@ -1,6 +1,5 @@
 # dreambox-mips32el.inc
 
-LINUXLIBCVERSION = "3.4.3"
 OLDEST_KERNEL = "3.2"
 
 TARGET_ARCH = "mipsel"
