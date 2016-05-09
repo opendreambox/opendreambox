@@ -1,20 +1,18 @@
-SUMMARY = "DVD navigation multimeda library"
+SUMMARY = "DVD navigation multimedia library"
 SECTION = "libs/multimedia"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://README;beginline=42;endline=43;md5=3f2e6972567beedaa901b809725027ff \
                     file://src/dvdnav.c;beginline=1;endline=19;md5=8270661e7e05a78e14714e0fb3048b12"
 DEPENDS = "libdvdread"
-PV = "4.2.0+svnr${SRCPV}"
+SRCREV = "7348aa30bca2d86d69f642b7a0347f42863f5743"
+PV = "4.2.0+git${SRCPV}"
 
-SRC_URI = "svn://svn.mplayerhq.hu/dvdnav/trunk;module=${PN} \
-           file://0001-dvdnavmini.pc-link-against-libdvdnavmini.patch"
+SRC_URI = "git://git.videolan.org/libdvdnav.git \
+           file://0001-dvdnavmini.pc-link-against-libdvdnavmini-and-drop-DV.patch"
 
-SRCREV = "1243"
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/git"
 
 inherit autotools lib_package binconfig pkgconfig
-
-FILES_${PN} = "${libdir}/${PN}${SOLIB}"
 
 python populate_packages_prepend() {
     description = bb.data.expand('${DESCRIPTION}', d)
