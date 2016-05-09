@@ -12,7 +12,8 @@ SRC_URI = " \
         '', \
         'file://0001-xhci-Return-correct-number-of-tranferred-bytes-for-s.patch \
          file://0002-xhci-fix-off-by-one-error-in-TRB-DMA-address-boundar.patch \
-         file://0003-MIPS-Fix-build-with-binutils-2.24.51.patch', d)} \
+         file://0003-MIPS-Fix-build-with-binutils-2.24.51.patch \
+         file://0004-staging-rtl8712-rtl8712-avoid-lots-of-build-warnings.patch', d)} \
 "
 
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
