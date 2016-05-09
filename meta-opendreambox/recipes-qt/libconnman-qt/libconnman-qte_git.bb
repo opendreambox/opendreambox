@@ -20,6 +20,8 @@ do_configure_prepend() {
 }
 do_install() {
     oe_runmake install INSTALL_ROOT=${D}
+    sed -e "s:^prefix=.*:prefix=${prefix}:" \
+        -i ${D}${libdir}/pkgconfig/connman-${QT_DIR_NAME}.pc
 }
 
 PACKAGES =+ "${PN}-plugin ${PN}-plugin-dbg"
