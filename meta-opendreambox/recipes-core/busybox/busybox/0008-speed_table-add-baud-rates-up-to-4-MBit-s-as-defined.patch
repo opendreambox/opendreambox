@@ -1,4 +1,4 @@
-From 37d3c8bd23eded0d81554ccdfc36be6179f246d7 Mon Sep 17 00:00:00 2001
+From 190b09306e1b63f6030660b48c150f6cf67fc598 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 3 Aug 2014 20:30:22 +0200
 Subject: [PATCH 8/9] speed_table: add baud rates up to 4 MBit/s as defined by

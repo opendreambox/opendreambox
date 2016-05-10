@@ -1,4 +1,4 @@
-From f4527a3da0b3670f0249e223b4954a39c4f95fba Mon Sep 17 00:00:00 2001
+From 23a361ca21b0403db8b852b2592d51fc2da0f587 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Fri, 15 Aug 2014 16:39:02 +0200
 Subject: [PATCH 9/9] dd: behave like GNU coreutils with conv=fsync
@@ -12,15 +12,15 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/coreutils/dd.c b/coreutils/dd.c
-index 2838f63..3366e2d 100644
+index 53a843c..5bcabdf 100644
 --- a/coreutils/dd.c
 +++ b/coreutils/dd.c
-@@ -445,17 +445,19 @@ int dd_main(int argc UNUSED_PARAM, char **argv)
+@@ -504,17 +504,19 @@ int dd_main(int argc UNUSED_PARAM, char **argv)
  			if (write_and_stats(ibuf, n, obs, outfile))
  				goto out_status;
  		}
 -
--		if (flags & FLAG_FSYNC) {
+-		if (G.flags & FLAG_FSYNC) {
 -			if (fsync(ofd) < 0)
 -				goto die_outfile;
 -		}
@@ -31,7 +31,7 @@ index 2838f63..3366e2d 100644
  			goto out_status;
  	}
 +
-+	if (flags & FLAG_FSYNC) {
++	if (G.flags & FLAG_FSYNC) {
 +		while (fsync(ofd) != 0)
 +			if (errno != EINTR)
 +				goto die_outfile;

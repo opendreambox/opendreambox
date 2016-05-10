@@ -1,4 +1,4 @@
-From cd4bd59206ae572fb4ce615dd146384a58f0a7fd Mon Sep 17 00:00:00 2001
+From c2151f4f0c8b6c2f889b674d9830f2fdd15c9f7e Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Tue, 15 Jan 2013 17:33:53 +0100
 Subject: [PATCH 4/9] udhcpc: obtain hostname from OS by default
@@ -12,10 +12,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 9 insertions(+)
 
 diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
-index 0de7d6b..840ed54 100644
+index d908ab1..49f4849 100644
 --- a/networking/udhcp/dhcpc.c
 +++ b/networking/udhcp/dhcpc.c
-@@ -1395,6 +1395,15 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+@@ -1403,6 +1403,15 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
  		logmode |= LOGMODE_SYSLOG;
  	}
  

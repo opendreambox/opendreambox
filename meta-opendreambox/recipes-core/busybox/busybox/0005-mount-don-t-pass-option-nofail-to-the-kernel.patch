@@ -1,4 +1,4 @@
-From 0b8d3b55136e99ba2bfa44f7ef62b453fe7fde1e Mon Sep 17 00:00:00 2001
+From 9dda735b0382d271d2b1063dfb0bcb57d1908933 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 20 Mar 2013 14:59:20 +0100
 Subject: [PATCH 5/9] mount: don't pass option "nofail" to the kernel
@@ -12,10 +12,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/util-linux/mount.c b/util-linux/mount.c
-index 62fd41f..624ca06 100644
+index cb40c80..9318729 100644
 --- a/util-linux/mount.c
 +++ b/util-linux/mount.c
-@@ -223,6 +223,7 @@ static const int32_t mount_options[] = {
+@@ -322,6 +322,7 @@ static const int32_t mount_options[] = {
  		/* "defaults" */ 0,
  		/* "quiet" 0 - do not filter out, vfat wants to see it */
  		/* "noauto" */ MOUNT_NOAUTO,
@@ -23,7 +23,7 @@ index 62fd41f..624ca06 100644
  		/* "sw"     */ MOUNT_SWAP,
  		/* "swap"   */ MOUNT_SWAP,
  		IF_DESKTOP(/* "user"  */ MOUNT_USERS,)
-@@ -282,6 +283,7 @@ static const char mount_option_str[] =
+@@ -381,6 +382,7 @@ static const char mount_option_str[] =
  		"defaults\0"
  		// "quiet\0" - do not filter out, vfat wants to see it
  		"noauto\0"

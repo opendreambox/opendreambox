@@ -1,4 +1,4 @@
-From 76906c99a163e1455e618031f2a706a69d942e14 Mon Sep 17 00:00:00 2001
+From 75b5c4b06ac78f89edb12bdcc6ba1255386af102 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 3 Aug 2014 20:27:52 +0200
 Subject: [PATCH 7/9] speed_table: remove hack, which made large baud rates fit

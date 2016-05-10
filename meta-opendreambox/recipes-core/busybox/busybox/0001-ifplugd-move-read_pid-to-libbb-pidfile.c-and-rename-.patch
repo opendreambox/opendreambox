@@ -1,4 +1,4 @@
-From 3e5f3e1caba13364052f34351aea9faef8952303 Mon Sep 17 00:00:00 2001
+From be335f8e0641f481cfa842d81a45d28802fe0c30 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 14 May 2012 16:15:50 +0200
 Subject: [PATCH 1/9] ifplugd: move read_pid to libbb/pidfile.c and rename it
@@ -12,10 +12,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  3 files changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/include/libbb.h b/include/libbb.h
-index 68a7cf0..4fff03c 100644
+index a8ceb44..9f9fbe2 100644
 --- a/include/libbb.h
 +++ b/include/libbb.h
-@@ -1074,10 +1074,12 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+@@ -1111,10 +1111,12 @@ llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
  #if ENABLE_FEATURE_PIDFILE || defined(WANT_PIDFILE)
  /* True only if we created pidfile which is *file*, not /dev/null etc */
  extern smallint wrote_pidfile;
@@ -54,10 +54,10 @@ index a48dfc3..6734a2d 100644
  {
  	int pid_fd;
 diff --git a/networking/ifplugd.c b/networking/ifplugd.c
-index fef7a5a..75632e6 100644
+index f0defb5..cc0dbbc 100644
 --- a/networking/ifplugd.c
 +++ b/networking/ifplugd.c
-@@ -514,22 +514,6 @@ static NOINLINE int check_existence_through_netlink(void)
+@@ -528,22 +528,6 @@ static NOINLINE int check_existence_through_netlink(void)
  	return G.iface_exists;
  }
  
@@ -80,7 +80,7 @@ index fef7a5a..75632e6 100644
  int ifplugd_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
  int ifplugd_main(int argc UNUSED_PARAM, char **argv)
  {
-@@ -556,7 +540,7 @@ int ifplugd_main(int argc UNUSED_PARAM, char **argv)
+@@ -570,7 +554,7 @@ int ifplugd_main(int argc UNUSED_PARAM, char **argv)
  
  #if ENABLE_FEATURE_PIDFILE
  	pidfile_name = xasprintf(CONFIG_PID_FILE_PATH "/ifplugd.%s.pid", G.iface);
