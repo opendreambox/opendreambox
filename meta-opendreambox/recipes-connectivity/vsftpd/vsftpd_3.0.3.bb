@@ -23,8 +23,8 @@ SRC_URI = " \
         file://10-remote-dos.patch \
         file://0001-sysdeputil-allow-login-with-empty-passwords-in-etc-p.patch \
 "
-SRC_URI[md5sum] = "8b00c749719089401315bd3c44dddbb2"
-SRC_URI[sha256sum] = "be46f0e2c5528fe021fafc8dab1ecfea0c1f183063a06977f8537fcd0b195e56"
+SRC_URI[md5sum] = "da119d084bd3f98664636ea05b5bb398"
+SRC_URI[sha256sum] = "9d4d2bf6e6e2884852ba4e69e157a2cecd68c5a7635d66a3a8cf8d898c955ef7"
 
 S = "${WORKDIR}/${BP}"
 
