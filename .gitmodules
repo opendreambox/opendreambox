@@ -14,3 +14,7 @@
 	path = meta-qt5
 	url = git://github.com/opendreambox/meta-qt5
 	branch = obi/daisy
+[submodule "meta-qt4"]
+	path = meta-qt4
+	url = git://git.yoctoproject.org/meta-qt4
+	branch = krogoth
