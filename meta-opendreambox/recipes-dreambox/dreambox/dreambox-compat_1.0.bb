@@ -13,7 +13,7 @@ do_install() {
         install -d ${D}${libdir}
         ln -sf libdvbsi++.so.1 ${D}${libdir}/libdvbsi++.so.0
         ln -sf libgif.so.4 ${D}${libdir}/libungif.so.4
-        ln -sf libjpeg.so.8 ${D}${libdir}/libjpeg.so.62
+        ln -sf libjpeg.so.62 ${D}${libdir}/libjpeg.so.8
         ln -sf libssl.so.0.9.8 ${D}${libdir}/libssl.so.0.9.7
         ln -sf libpython2.7.so.1.0 ${D}${libdir}/libpython2.6.so.1.0
 }
