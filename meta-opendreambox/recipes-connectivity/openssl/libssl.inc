@@ -22,6 +22,7 @@ CFLAG = "${@base_conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_END
 export DIRS = "crypto ssl"
 export EX_LIBS = "-lgcc -ldl"
 export AS = "${CC} -c"
+EXTRA_OEMAKE = "-e MAKEFLAGS="
 
 inherit pkgconfig siteinfo
 
