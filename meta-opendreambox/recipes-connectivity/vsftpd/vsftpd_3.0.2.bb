@@ -42,6 +42,8 @@ LINK = "${TARGET_LDFLAGS}"
 SECURE_CHROOT_DIR = "${datadir}/${BPN}/chroot"
 RSA_CERT_FILE = "${sysconfdir}/ssl/private/${BPN}.pem"
 
+EXTRA_OEMAKE = "-e MAKEFLAGS="
+
 do_configure() {
         rm -f builddefs.h
         touch builddefs.h
