@@ -156,4 +156,4 @@ python dreambox_image_nfo() {
             f.write('%s: %s\n' % (key, value))
 }
 
-do_rootfs[postfuncs] += "dreambox_image_nfo"
+IMAGE_POSTPROCESS_COMMAND += "dreambox_image_nfo;"
