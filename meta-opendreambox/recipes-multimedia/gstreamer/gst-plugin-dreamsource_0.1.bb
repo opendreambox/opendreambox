@@ -3,7 +3,7 @@ SECTION = "multimedia"
 LICENSE = "CC-BY-NC-SA-3.0 | DreamProperty"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1f6263f0928e695084f3f0055be80eb3"
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base"
-SRCREV = "${@opendreambox_srcrev('caac0eb0daa359f2dcaee1033f4b90df22e7eb38', d)}"
+SRCREV = "caac0eb0daa359f2dcaee1033f4b90df22e7eb38"
 
 inherit autotools opendreambox-git
 
