@@ -19,7 +19,9 @@ DEPENDS = " \
         streamripper \
         satip-client \
 "
-SRCREV = "${@opendreambox_srcrev('fefe4711bf9b0c198a2ee2ab3a31fd9d3e58fe63', d)}"
+SRCREV = "${@opendreambox_srcrev('67100fca3d7671eb75eaf692b827167153d09978', d)}"
+
+GITHUB_BRANCH = "4.2"
 
 SRC_URI += "file://print.mak"
 
