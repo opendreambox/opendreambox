@@ -3,6 +3,8 @@ SRC_URI[dm7080.sha256sum] = "17f4a520f1ee88228228a003ed3e524e1491a57796dfd1c651d
 
 require enigma2-bin-4.3.inc
 
+SRC_URI += " file://0001-ServiceInfo-fixed-crash-when-a-skin-with-HasSubtitle.patch"
+
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
