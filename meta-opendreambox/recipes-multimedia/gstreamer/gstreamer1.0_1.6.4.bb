@@ -11,8 +11,8 @@ SRC_URI = " \
     file://GstStreamFlags-forced.patch \
 "
 
-SRC_URI[md5sum] = "b4cdeb2b9cb20dd6ac022a4f417eae0d"
-SRC_URI[sha256sum] = "22f9568d67b87cf700a111f381144bd37cb93790a77e4e331db01fe854a37f24"
+SRC_URI[md5sum] = "fb2fbf42db73ef736bdf39f50d63dd66"
+SRC_URI[sha256sum] = "4ccba88a286b13d6f2d8c1180f78a13dcd49f2fc3cb2b3b3f502b3a23f7c01b5"
 
 S = "${WORKDIR}/gstreamer-${PV}"
 

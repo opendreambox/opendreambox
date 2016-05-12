@@ -9,7 +9,7 @@ SRC_URI += " \
     file://matroska-forced-tracks.patch \
 "
 
-SRC_URI[md5sum] = "a1958df7aa498b42793e2f2048673815"
-SRC_URI[sha256sum] = "24b19db70b2a83461ebddfe20033db432dadfdb5d4b54ffb1dfa0d830134a177"
+SRC_URI[md5sum] = "49faec96efd963483b9b32be10f59841"
+SRC_URI[sha256sum] = "6915335458d0421d30d2545f85cc4d891d10d48f2be8dc1bd8f45e38b8f64a9c"
 
 S = "${WORKDIR}/gst-plugins-good-${PV}"

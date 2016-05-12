@@ -13,8 +13,8 @@ SRC_URI += " \
     file://gsttextoverlay-timestamps.patch \
 "
 
-SRC_URI[md5sum] = "3ddde0ad598ef69f58d6a2e87f8b460f"
-SRC_URI[sha256sum] = "b6154f8fdba4877e95efd94610ef0ada4f0171cd12eb829a3c3c97345d9c7a75"
+SRC_URI[md5sum] = "46aa49cae3d29508f37919817bd1e020"
+SRC_URI[sha256sum] = "7a193e2a66b0d7411160ef2a373184c8aa3cdeaa576fa270be346716220d9606"
 
 S = "${WORKDIR}/gst-plugins-base-${PV}"
 

@@ -7,8 +7,8 @@ SRC_URI += " \
     file://use-automake-1.12.patch \
 "
 
-SRC_URI[md5sum] = "dbd92afb3816cbfa90ab1f197144a2e2"
-SRC_URI[sha256sum] = "2fecf7b7c7882f8f62f1900048f4013f98c214fb3d3303d8d812245bb41fd064"
+SRC_URI[md5sum] = "1acdb29ede2e72bed4e7c6714a6aac5c"
+SRC_URI[sha256sum] = "b470b9bdffb0f81b45a02f2e3c8f42b64acb548d68ad219b7e93296101a4146a"
 
 S = "${WORKDIR}/gst-plugins-ugly-${PV}"
 

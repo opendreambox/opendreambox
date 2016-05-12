@@ -13,8 +13,8 @@ SRC_URI += " \
     file://assrender-overlay-caps.patch \
 "
 
-SRC_URI[md5sum] = "4857adcafe41e4b9b8805cf88303bd55"
-SRC_URI[sha256sum] = "971b29101d6a9c5e3fe94d99d977a227f58f0b2d29b6ca2c7f292052542b3a61"
+SRC_URI[md5sum] = "6768524cb8bcdcaf1345d9c66f3bd7bd"
+SRC_URI[sha256sum] = "2b98df8d4d7784d5186baf2e19f565a6d8f8924119f8470e23c96889aaa603fe"
 
 S = "${WORKDIR}/gst-plugins-bad-${PV}"
 
