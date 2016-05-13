@@ -3,7 +3,12 @@ SRC_URI[dm7080.sha256sum] = "17f4a520f1ee88228228a003ed3e524e1491a57796dfd1c651d
 
 require enigma2-bin-4.3.inc
 
-SRC_URI += " file://0001-ServiceInfo-fixed-crash-when-a-skin-with-HasSubtitle.patch"
+SRC_URI += " \
+	file://0001-ServiceInfo-fixed-crash-when-a-skin-with-HasSubtitle.patch \
+	file://0001-AudioSelection.py-fixed-typo.patch \
+	file://0002-fixed-ServiceInfo-Converter-isMultichannel-check.patch \
+	file://0003-allow-to-call-RecordTimerEntry.calculateFilename-wit.patch \
+"
 
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
