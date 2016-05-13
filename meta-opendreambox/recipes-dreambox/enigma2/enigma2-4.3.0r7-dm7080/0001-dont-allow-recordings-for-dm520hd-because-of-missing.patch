@@ -1,0 +1,86 @@
+From 1744a7cdb19783d553239c12c3d4d0df72cb510e Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Wed, 15 Jun 2016 17:19:11 +0200
+Subject: [PATCH 1/2] =?UTF-8?q?dont=20allow=20recordings=20for=20dm520hd?=
+ =?UTF-8?q?=20because=20of=20missing=20german=20ZP=C3=9C=20license?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ usr/share/enigma2/data/defaults/Dream/settings.520   |  1 +
+ usr/lib/enigma2/python/Components/ActionMap.py |  6 +++++-
+ usr/lib/enigma2/python/Screens/TimerEntry.py   | 13 ++++++++-----
+ mytest.py                          |  1 +
+ 4 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/usr/share/enigma2/defaults/Dream/settings.520 b/usr/share/enigma2/defaults/Dream/settings.520
+index 5521e30..e88b653 100644
+--- a/usr/share/enigma2/defaults/Dream/settings.520
++++ b/usr/share/enigma2/defaults/Dream/settings.520
+@@ -1,3 +1,4 @@
+ config.misc.rcused=2
+ config.skin.primary_skin=Default-HD/skin.xml
+ config.osd.window_animation_default=_-disabled-_
++config.misc.recording_allowed=false
+diff --git a/usr/lib/enigma2/python/Components/ActionMap.py b/usr/lib/enigma2/python/Components/ActionMap.py
+index 56bd85e..edf443e 100644
+--- a/usr/lib/enigma2/python/Components/ActionMap.py
++++ b/usr/lib/enigma2/python/Components/ActionMap.py
+@@ -1,4 +1,5 @@
+ from enigma import eActionMap
++from Components.config import config
+ 
+ class ActionMap:
+ 	def __init__(self, contexts = [ ], actions = { }, prio=0):
+@@ -43,7 +44,10 @@ class ActionMap:
+ 
+ 	def action(self, context, action):
+ 		print " ".join(("action -> ", context, action))
+-		if self.actions.has_key(action):
++		if action in ('instantRecord', 'timeshiftStart') and not config.misc.recording_allowed.value:
++			print "recording / timeshift not allowed with this dreambox!"
++			return 0
++		elif self.actions.has_key(action):
+ 			res = self.actions[action]()
+ 			if res is not None:
+ 				return res
+diff --git a/usr/lib/enigma2/python/Screens/TimerEntry.py b/usr/lib/enigma2/python/Screens/TimerEntry.py
+index f78c0dd..4e69eb9 100644
+--- a/usr/lib/enigma2/python/Screens/TimerEntry.py
++++ b/usr/lib/enigma2/python/Screens/TimerEntry.py
+@@ -96,11 +96,14 @@ class TimerEntry(Screen, ConfigListScreen):
+ 				weekday = (int(strftime("%w", localtime(self.timer.begin))) - 1) % 7
+ 				day[weekday] = 1
+ 
+-			justplay_default = {0: "record", 1: "zap"}[justplay]
+-			tmp_dir = self.timer.dirname or defaultMoviePath()
+-			if not harddiskmanager.inside_mountpoint(tmp_dir):
+-				justplay_default = {0: "record", 1: "zap"}[True]
+-			self.timerentry_justplay = ConfigSelection(choices = [("zap", _("zap")), ("record", _("record"))], default = justplay_default)
++			if not config.misc.recording_allowed.value:
++				self.timerentry_justplay = ConfigSelection(choices = [("zap", _("zap"))], default = "zap")
++			else:
++				tmp_dir = self.timer.dirname or defaultMoviePath()
++				if not harddiskmanager.inside_mountpoint(tmp_dir):
++					justplay = 1
++				justplay_default = {0: "record", 1: "zap"}[justplay]
++				self.timerentry_justplay = ConfigSelection(choices = [("zap", _("zap")), ("record", _("record"))], default = justplay_default)
+ 
+ 			if SystemInfo["DeepstandbySupport"]:
+ 				shutdownString = _("go to standby")
+diff --git a/usr/lib/enigma2/mytest.py b/usr/lib/enigma2/mytest.py
+index c88fc30..764f56c 100644
+--- a/usr/lib/enigma2/python/mytest.py
++++ b/usr/lib/enigma2/python/mytest.py
+@@ -132,6 +132,7 @@ config.misc.prev_wakeup_time = ConfigInteger(default=0)
+ #config.misc.prev_wakeup_time_type is only valid when wakeup_time is not 0
+ config.misc.prev_wakeup_time_type = ConfigInteger(default=0) # 0 = RecordTimer, 1 = SleepTimer, 2 = Plugin
+ config.misc.use_legacy_virtual_subservices_detection = ConfigYesNo(default=False)
++config.misc.recording_allowed = ConfigYesNo(default=True)
+ 
+ #gstreamer User-Agent settings (used by servicemp3)
+ config.mediaplayer = ConfigSubsection()
+-- 
+1.9.1
+
