@@ -1,19 +1,19 @@
 [submodule "openembedded-core"]
 	path = openembedded-core
 	url = git://git.openembedded.org/openembedded-core-contrib
-	branch = obi/dora
+	branch = obi/krogoth
 [submodule "meta-openembedded"]
 	path = meta-openembedded
 	url = git://git.openembedded.org/meta-openembedded-contrib
-	branch = obi/dora
+	branch = obi/krogoth
 [submodule "bitbake"]
 	path = bitbake
 	url = git://git.openembedded.org/bitbake
-	branch = 1.20
+	branch = 1.30
 [submodule "meta-qt5"]
 	path = meta-qt5
-	url = git://github.com/opendreambox/meta-qt5
-	branch = obi/daisy
+	url = git://github.com/meta-qt5/meta-qt5
+	branch = krogoth
 [submodule "meta-qt4"]
 	path = meta-qt4
 	url = git://git.yoctoproject.org/meta-qt4
