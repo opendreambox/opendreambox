@@ -1,5 +1,5 @@
-SRC_URI[mips32el.md5sum] = "c7815af4c5606a85990c19c3b93d0b92"
-SRC_URI[mips32el.sha256sum] = "2885b77f78c19c6b7eaefe31cdeefe5a52b4a1fd29d711efa8d636a45e4b1c18"
+SRC_URI[mips32el.md5sum] = "d9f58eb22f0f5ba9eaf82deaed172d49"
+SRC_URI[mips32el.sha256sum] = "93a0a0ae5b30eb9e1f094bc8d3bceacfd943092372b76121abc03ad8c6ce15f4"
 
 inherit opendreambox-precompiled-binary
 
