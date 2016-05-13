@@ -58,7 +58,7 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-systemplugins-positionersetup \
   enigma2-plugin-systemplugins-satfinder \
   enigma2-plugin-systemplugins-skinselector \
-  enigma2-plugin-systemplugins-streamserver \
+  ${@base_contains('DREAMBOX_FEATURES', 'encoder', 'enigma2-plugin-systemplugins-streamserver', '', d)} \
   enigma2-plugin-systemplugins-upnp \
   enigma2-plugin-systemplugins-wirelesslan \
   ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
