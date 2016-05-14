@@ -3,6 +3,8 @@ SRC_URI[dm7080.sha256sum] = "07e676ba18d974bce8728ee84018f270c3005e5f9f46b125207
 
 require enigma2-bin-4.2.inc
 
+SRC_URI += " file://0001-TimerSanityCheck-fixed-false-positive-Channel-not-in.patch"
+
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
