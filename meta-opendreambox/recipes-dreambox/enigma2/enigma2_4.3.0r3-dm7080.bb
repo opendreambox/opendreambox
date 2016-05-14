@@ -8,6 +8,7 @@ SRC_URI += " \
 	file://0001-AudioSelection.py-fixed-typo.patch \
 	file://0002-fixed-ServiceInfo-Converter-isMultichannel-check.patch \
 	file://0003-allow-to-call-RecordTimerEntry.calculateFilename-wit.patch \
+	file://0001-TimerSanityCheck-fixed-false-positive-Channel-not-in.patch \
 "
 
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
