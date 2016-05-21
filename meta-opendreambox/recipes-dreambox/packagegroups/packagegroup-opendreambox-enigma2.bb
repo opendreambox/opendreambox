@@ -35,7 +35,6 @@ RDEPENDS_${PN} += " \
 
 RRECOMMENDS_${PN} += " \
   aio-grab \
-  enigma2-hbbtv-plugin \
   enigma2-plugin-extensions-audiosync \
   enigma2-plugin-extensions-autotimer \
   enigma2-plugin-extensions-browser \
