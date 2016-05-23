@@ -3,6 +3,8 @@ SRC_URI[dm7080.sha256sum] = "1d6a710713f6e6726524d421f80947e33eb8e8152c7daf42125
 
 require enigma2-bin-4.3.inc
 
+SRC_URI += " file://0001-StreamServerControl-no-need-to-setEncoderService-in-.patch"
+
 COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"

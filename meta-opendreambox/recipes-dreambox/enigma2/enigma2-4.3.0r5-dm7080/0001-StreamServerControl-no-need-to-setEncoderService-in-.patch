@@ -1,0 +1,30 @@
+From 1e7db652358020443ab0f368711a594989b3c436 Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Mon, 23 May 2016 11:13:51 +0200
+Subject: [PATCH] StreamServerControl: no need to setEncoderService in
+ _onUpstreamStateChanged (_onSourceStateChanged does that already)
+
+---
+ lib/python/Components/StreamServerControl.py | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/StreamServerControl.py b/usr/lib/enigma2/python/Components/StreamServerControl.py
+index bb4ff4e..78994df 100644
+--- a/usr/lib/enigma2/python/Components/StreamServerControl.py
++++ b/usr/lib/enigma2/python/Components/StreamServerControl.py
+@@ -140,10 +140,9 @@ class StreamServerControl(object):
+ 
+ 	def _onUpstreamStateChanged(self, state):
+ 		if state > self._streamServer.UPSTREAM_STATE_WAITING and self._currentService and not self._encoderService:
+-			Log.i("Upstream required. Aquiring service")
+-			self.setEncoderService(self._currentService)
++			Log.i("Upstream running.")
+ 		if state <= self._streamServer.UPSTREAM_STATE_WAITING and self._encoderService:
+-			Log.i("Upstream superflous. Freeing service")
++			Log.i("Upstream idle.")
+ 		for fnc in self.onUpstreamStateChanged:
+ 			fnc(state)
+ 
+-- 
+1.9.1
+
