@@ -5,4 +5,4 @@ inherit opendreambox-precompiled-binary
 
 require gstreamer1.0-dreamsinks.inc
 
-COMPATIBLE_MACHINE = "^(dm820|dm7080)$"
+COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
