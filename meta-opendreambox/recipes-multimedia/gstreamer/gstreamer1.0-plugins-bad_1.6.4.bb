@@ -11,6 +11,7 @@ SRC_URI += " \
     file://dvdspu-overlay-composition.patch \
     file://dvdspu-forced-mode-property.patch \
     file://assrender-overlay-caps.patch \
+    file://rtmpsrc-interruption.patch \
 "
 
 SRC_URI[md5sum] = "6768524cb8bcdcaf1345d9c66f3bd7bd"
