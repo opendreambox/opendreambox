@@ -9,6 +9,7 @@ DEPENDS = " \
         python-daap \
         python-flickrapi \
         python-gdata \
+        python-google-api-client \
         python-mutagen \
         python-pycrypto \
         python-pyopenssl \
@@ -23,6 +24,8 @@ SRC_URI += "file://print.mak"
 GITHUB_BRANCH = "4.0"
 
 PE = "2"
+
+PR = "r1"
 
 inherit autotools opendreambox-github
 
