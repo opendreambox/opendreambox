@@ -18,7 +18,7 @@ DEPENDS = " \
         smartmontools \
         streamripper \
 "
-SRCREV = "93ecd8e1f658d92b9ddc0064a3dc3b76735328f0"
+SRCREV = "1f00ebfca80b80ac21deae3d047911e5d898be82"
 
 SRC_URI += "file://print.mak"
 
@@ -26,7 +26,7 @@ GITHUB_BRANCH = "4.0"
 
 PE = "2"
 
-PR = "r1"
+PR = "r2"
 
 inherit autotools opendreambox-github
 
