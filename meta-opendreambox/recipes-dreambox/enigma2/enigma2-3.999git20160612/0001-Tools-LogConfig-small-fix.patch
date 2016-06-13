@@ -1,0 +1,33 @@
+From a5eb5c9a401e34422935c80f52f4227c1bd54781 Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Thu, 27 Mar 2014 13:18:13 +0100
+Subject: [PATCH 1/2] Tools/LogConfig: small fix
+
+(cherry picked from commit b753ac791c0173ca5fc56e4ffd87d8f54ce10ad1)
+---
+ usr/lib/enigma2/python/Tools/LogConfig.py | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/usr/lib/enigma2/python/Tools/LogConfig.py b/usr/lib/enigma2/python/Tools/LogConfig.py
+index 2b9fa1f..95d0a45 100644
+--- a/usr/lib/enigma2/python/Tools/LogConfig.py
++++ b/usr/lib/enigma2/python/Tools/LogConfig.py
+@@ -26,12 +26,15 @@ class LogConfig(object):
+ 
+ 	@staticmethod
+ 	def level():
++		from Components.config import config
+ 		return config.log.level.value
+ 
+ 	@staticmethod
+ 	def verbose():
++		from Components.config import config
+ 		return config.log.verbose.value
+ 
+ 	@staticmethod
+ 	def colored():
++		from Components.config import config
+ 		return config.log.colored.value
+-- 
+1.9.1
+
