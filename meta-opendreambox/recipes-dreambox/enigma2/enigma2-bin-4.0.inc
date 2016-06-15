@@ -12,7 +12,7 @@ DEPENDS = " \
         qt4-embedded \
         ubuntu-font-family \
 "
-INC_PR = "r9"
+INC_PR = "r10"
 
 RDEPENDS_${PN} += " \
         libpagecache \

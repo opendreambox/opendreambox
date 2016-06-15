@@ -91,6 +91,9 @@ RDEPENDS_enigma2-plugin-systemplugins-wirelesslan = " \
         wireless-tools \
         wpa-supplicant \
 "
+RDEPENDS_enigma2-plugin-demoplugins-upnpmediarendererdemo = " \
+        enigma2-plugin-systemplugins-upnp \
+"
 
 python populate_packages_prepend() {
         enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
