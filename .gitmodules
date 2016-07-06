@@ -17,4 +17,4 @@
 [submodule "meta-qt4"]
 	path = meta-qt4
 	url = git://git.yoctoproject.org/meta-qt4
-	branch = krogoth
+	branch = master
