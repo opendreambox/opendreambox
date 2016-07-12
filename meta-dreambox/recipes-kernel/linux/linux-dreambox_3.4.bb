@@ -42,7 +42,7 @@ require linux-rdepends.inc
 
 CMDLINE = "${@base_contains('MACHINE', 'dm520', \
     'bmem=192M@64M console=ttyS0,1000000 ubi.mtd=rootfs root=ubi0:dreambox-rootfs rootfstype=ubifs rw', \
-    'bmem=384M@640M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4', d)} \
+    'bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4', d)} \
 "
 
 COMPATIBLE_MACHINE = "^(bcm7435|bcm73625)$"
