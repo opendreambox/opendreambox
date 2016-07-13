@@ -8,6 +8,7 @@ SRC_URI = " \
         http://users.elis.ugent.be/~mronsse/cdfs/download/${P}.tar.bz2;name=archive \
         http://users.elis.ugent.be/~mronsse/cdfs/download/cdfs-3.3.diff;name=patch \
         file://port-to-kernel-3.11.patch \
+        file://port-to-kernel-3.14.patch \
 "
 SRC_URI[archive.md5sum] = "ac64c014a90e3c488394832ea29605b3"
 SRC_URI[archive.sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345d8d724"
