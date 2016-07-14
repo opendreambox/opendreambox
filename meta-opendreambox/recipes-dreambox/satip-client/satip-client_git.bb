@@ -6,10 +6,9 @@ GITHUB_ORGANIZATION = "oe-alliance"
 GITHUB_BRANCH = "next"
 SRC_URI += " \
     file://satip-client.service \
-    file://vtuner.conf \
 "
 
-SRCREV = "1a00c73d0da9f9243d74349d8f66f30efedc9eda"
+SRCREV = "2dca499073b1f666cb340ff4c83cce1a0a9d988c"
 
 inherit autotools pkgconfig opendreambox-github systemd
 
@@ -18,9 +17,9 @@ SYSTEMD_SERVICE_${PN} = "satip-client.service"
 do_install_append() {
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/satip-client.service ${D}${systemd_unitdir}/system/
-    install -d ${D}${sysconfdir}
-    install -m 0644 ${WORKDIR}/vtuner.conf ${D}${sysconfdir}
 }
+
+CONFFILES_${PN} = "${sysconfdir}/vtuner.conf"
 
 EXTRA_OECONF = " \
     --with-boxtype=${MACHINE} \
