@@ -13,6 +13,7 @@ DEPENDS = " \
         gstreamer1.0-plugins-bad \
         gstreamer1.0-plugins-good \
         hdparm \
+        parted \
         python-flickrapi \
         python-gdata \
         python-google-api-client \
