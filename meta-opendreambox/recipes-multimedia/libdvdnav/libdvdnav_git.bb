@@ -7,7 +7,7 @@ DEPENDS = "libdvdread"
 SRCREV = "7348aa30bca2d86d69f642b7a0347f42863f5743"
 PV = "4.2.0+git${SRCPV}"
 
-SRC_URI = "git://git.videolan.org/libdvdnav.git \
+SRC_URI = "git://code.videolan.org/videolan/libdvdnav.git;protocol=https \
            file://0001-dvdnavmini.pc-link-against-libdvdnavmini-and-drop-DV.patch"
 
 S = "${WORKDIR}/git"
