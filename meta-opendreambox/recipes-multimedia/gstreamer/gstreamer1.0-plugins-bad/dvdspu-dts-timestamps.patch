@@ -1,0 +1,131 @@
+diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
+--- a/gst/dvdspu/gstdvdspu.c	2016-06-14 21:47:55.912508459 +0200
++++ b/gst/dvdspu/gstdvdspu.c	2016-06-14 21:14:27.412539000 +0200
+@@ -837,7 +837,7 @@
+     gst_dvd_spu_negotiate (dvdspu, NULL);
+ 
+   GST_LOG_OBJECT (dvdspu, "video buffer %p with TS %" GST_TIME_FORMAT,
+-      buf, GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
++      buf, GST_TIME_ARGS (GST_BUFFER_DTS_OR_PTS (buf)));
+ 
+   ret = dvdspu_handle_vid_buffer (dvdspu, buf);
+ 
+@@ -870,16 +870,16 @@
+ 
+ #if 0
+     g_print ("Duping frame %" GST_TIME_FORMAT " with new TS %" GST_TIME_FORMAT
+-        "\n", GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)),
++        "\n", GST_TIME_ARGS (GST_BUFFER_DTS_OR_PTS (buf)),
+         GST_TIME_ARGS (next_ts));
+ #endif
+ 
+-    GST_BUFFER_TIMESTAMP (buf) = next_ts;
++    GST_BUFFER_PTS (buf) = next_ts;
+     using_ref = TRUE;
+   }
+ 
+-  if (GST_BUFFER_TIMESTAMP_IS_VALID (buf)) {
+-    dvdspu->video_seg.position = GST_BUFFER_TIMESTAMP (buf);
++  if (GST_BUFFER_PTS_IS_VALID (buf) || GST_BUFFER_DTS_IS_VALID (buf)) {
++    dvdspu->video_seg.position = GST_BUFFER_DTS_OR_PTS (buf);
+   }
+ 
+   new_ts = gst_segment_to_running_time (&dvdspu->video_seg, GST_FORMAT_TIME,
+@@ -923,7 +923,7 @@
+   if (dvdspu->spu_state.flags & SPU_STATE_STILL_FRAME) {
+     GST_DEBUG_OBJECT (dvdspu, "Outputting buffer with TS %" GST_TIME_FORMAT
+         "from chain while in still",
+-        GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
++        GST_TIME_ARGS (GST_BUFFER_DTS_OR_PTS (buf)));
+   }
+ 
+   DVD_SPU_UNLOCK (dvdspu);
+@@ -1126,7 +1126,7 @@
+       GST_LOG_OBJECT (dvdspu, "Redraw due to Still Frame with ref %p",
+           dvdspu->ref_frame);
+       GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
+-      GST_BUFFER_TIMESTAMP (buf) = GST_CLOCK_TIME_NONE;
++      GST_BUFFER_PTS (buf) = GST_CLOCK_TIME_NONE;
+       GST_BUFFER_DURATION (buf) = GST_CLOCK_TIME_NONE;
+ 
+       /* Render the SPU overlay onto the buffer */
+@@ -1138,7 +1138,7 @@
+       GstBuffer *buf = gst_buffer_ref (dvdspu->ref_frame);
+       buf = gst_buffer_make_writable (buf);
+       GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
+-      GST_BUFFER_TIMESTAMP (buf) = GST_CLOCK_TIME_NONE;
++      GST_BUFFER_PTS (buf) = GST_CLOCK_TIME_NONE;
+       GST_BUFFER_DURATION (buf) = GST_CLOCK_TIME_NONE;
+ 
+       GST_DEBUG_OBJECT (dvdspu, "Pushing reference frame at start of still");
+@@ -1289,10 +1289,10 @@
+   GST_DEBUG_OBJECT (dvdspu,
+       "Complete subpicture buffer of %" G_GSIZE_FORMAT " bytes with TS %"
+       GST_TIME_FORMAT, gst_buffer_get_size (buf),
+-      GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
++      GST_TIME_ARGS (GST_BUFFER_DTS_OR_PTS (buf)));
+ 
+   /* Decide whether to pass this buffer through to the rendering code */
+-  ts = GST_BUFFER_TIMESTAMP (buf);
++  ts = GST_BUFFER_DTS_OR_PTS (buf);
+   if (GST_CLOCK_TIME_IS_VALID (ts)) {
+     if (ts < (GstClockTime) dvdspu->subp_seg.start) {
+       GstClockTimeDiff diff = dvdspu->subp_seg.start - ts;
+@@ -1477,28 +1477,28 @@
+ 
+   GST_INFO_OBJECT (dvdspu, "Have subpicture buffer with timestamp %"
+       GST_TIME_FORMAT " and size %" G_GSIZE_FORMAT,
+-      GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)), gst_buffer_get_size (buf));
++      GST_TIME_ARGS (GST_BUFFER_DTS_OR_PTS (buf)), gst_buffer_get_size (buf));
+ 
+   DVD_SPU_LOCK (dvdspu);
+ 
+-  if (GST_BUFFER_TIMESTAMP_IS_VALID (buf)) {
+-    dvdspu->subp_seg.position = GST_BUFFER_TIMESTAMP (buf);
++  if (GST_BUFFER_PTS_IS_VALID (buf) || GST_BUFFER_DTS_IS_VALID (buf)) {
++    dvdspu->subp_seg.position = GST_BUFFER_DTS_OR_PTS (buf);
+   }
+-
++	
+   if (GST_BUFFER_IS_DISCONT (buf) && dvdspu->partial_spu) {
+     gst_buffer_unref (dvdspu->partial_spu);
+     dvdspu->partial_spu = NULL;
+   }
+ 
+   if (dvdspu->partial_spu != NULL) {
+-    if (GST_BUFFER_TIMESTAMP_IS_VALID (buf))
++    if (GST_BUFFER_PTS_IS_VALID (buf) || GST_BUFFER_DTS_IS_VALID (buf))
+       GST_WARNING_OBJECT (dvdspu,
+           "Joining subpicture buffer with timestamp to previous");
+     dvdspu->partial_spu = gst_buffer_append (dvdspu->partial_spu, buf);
+   } else {
+     /* If we don't yet have a buffer, wait for one with a timestamp,
+      * since that will avoid collecting the 2nd half of a partial buf */
+-    if (GST_BUFFER_TIMESTAMP_IS_VALID (buf))
++    if (GST_BUFFER_PTS_IS_VALID (buf) || GST_BUFFER_DTS_IS_VALID(buf))
+       dvdspu->partial_spu = buf;
+     else
+       gst_buffer_unref (buf);
+diff -u a/gst/dvdspu/gstdvdspu.h b/gst/dvdspu/gstdvdspu.h
+--- a/gst/dvdspu/gstdvdspu.h	2016-06-14 21:48:03.416508344 +0200
++++ b/gst/dvdspu/gstdvdspu.h	2016-06-14 21:04:31.512548000 +0200
+@@ -144,6 +144,7 @@
+ 
+ extern GstDVDSPUDebugFlags dvdspu_debug_flags;
+ 
++#define GST_BUFFER_DTS_OR_PTS(buf) (GST_BUFFER_DTS_IS_VALID(buf) ? GST_BUFFER_DTS(buf) : GST_BUFFER_PTS (buf))
+ 
+ G_END_DECLS
+ 
+diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
+--- a/gst/dvdspu/gstspu-pgs.c	2016-06-14 21:48:13.728508187 +0200
++++ b/gst/dvdspu/gstspu-pgs.c	2016-06-14 21:06:16.620546000 +0200
+@@ -742,7 +742,7 @@
+   }
+ 
+   PGS_DUMP ("Begin dumping command buffer of size %u ts %" GST_TIME_FORMAT "\n",
+-      (guint) (end - pos), GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
++      (guint) (end - pos), GST_TIME_ARGS (GST_BUFFER_DTS_OR_PTS (buf)));
+   do {
+     type = *pos++;
+     packet_len = GST_READ_UINT16_BE (pos);

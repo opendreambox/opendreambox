@@ -10,6 +10,7 @@ SRC_URI += " \
     file://use-automake-1.12.patch \
     file://dvdspu-overlay-composition.patch \
     file://dvdspu-forced-mode-property.patch \
+    file://dvdspu-dts-timestamps.patch \
     file://assrender-overlay-caps.patch \
     file://rtmpsrc-interruption.patch \
 "
