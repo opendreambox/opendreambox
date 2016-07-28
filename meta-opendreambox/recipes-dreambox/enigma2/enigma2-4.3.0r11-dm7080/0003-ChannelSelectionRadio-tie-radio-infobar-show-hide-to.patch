@@ -1,0 +1,26 @@
+From f966400ab09879622651186ae87c3cba37160413 Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Sun, 7 Aug 2016 21:04:14 +0200
+Subject: [PATCH 3/4] ChannelSelectionRadio: tie radio infobar show/hide to
+ ChannelSelectionRadio show/hide
+
+---
+ usr/lib/enigma2/python/Screens/ChannelSelection.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/usr/lib/enigma2/python/Screens/ChannelSelection.py b/usr/lib/enigma2/python/Screens/ChannelSelection.py
+index c2860f5..e514dda 100644
+--- a/usr/lib/enigma2/python/Screens/ChannelSelection.py
++++ b/usr/lib/enigma2/python/Screens/ChannelSelection.py
+@@ -1564,6 +1564,8 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
+ 		self["RdsActions"].setEnabled(False)
+ 		infobar.rds_display.onRassInteractivePossibilityChanged.append(self.RassInteractivePossibilityChanged)
+ 		self.onClose.append(self.__onClose)
++		self.onShow.append(self.info.show)
++		self.onHide.append(self.info.hide)
+ 
+ 	def __onClose(self):
+ 		del self.info["RdsDecoder"]
+-- 
+2.1.4
+

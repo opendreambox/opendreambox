@@ -1,0 +1,88 @@
+From a9c3bdde60a454f489e1e72ac236878a98a40c1e Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Sat, 6 Aug 2016 20:02:30 +0200
+Subject: [PATCH 1/4] picon resolver change: firstly check if a cached picon
+ name exists for this service when not check if a png with appended
+ servicereference path exists.. when still try without path when still not
+ then try with replace 4097_ by 1_ when still not use cached name for default
+ picon or lookup default picon at the end we update the namecache for this
+ servicereference We do not lookup progressed servicereferences again before
+ cacheflush!
+
+---
+ usr/lib/enigma2/python/Components/Renderer/Picon.py |  1 -
+ usr/lib/enigma2/python/Tools/PiconResolver.py       | 42 ++++++++++++++-------------------
+ 2 files changed, 18 insertions(+), 25 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/Renderer/Picon.py b/usr/lib/enigma2/python/Components/Renderer/Picon.py
+index 9f7d660..63ebbdb 100644
+--- a/usr/lib/enigma2/python/Components/Renderer/Picon.py
++++ b/usr/lib/enigma2/python/Components/Renderer/Picon.py
+@@ -40,7 +40,6 @@ class Picon(Renderer):
+ 			sname = self.source.text
+ 			if what[0] != self.CHANGED_CLEAR:
+ 				pngname = PiconResolver.getPngName(sname, self.nameCache, self.findPicon)
+-				self.nameCache[sname] = pngname
+ 			if pngname == "": # no picon for service found, resolve skin default picon
+ 				tmp = resolveFilename(SCOPE_CURRENT_SKIN, "picon_default.png")
+ 				if fileExists(tmp):
+diff --git a/usr/lib/enigma2/python/Tools/PiconResolver.py b/usr/lib/enigma2/python/Tools/PiconResolver.py
+index 87a51a7..bd676d2 100644
+--- a/usr/lib/enigma2/python/Tools/PiconResolver.py
++++ b/usr/lib/enigma2/python/Tools/PiconResolver.py
+@@ -1,31 +1,27 @@
+-from re import compile
+-
+ class PiconResolver(object):
+-	partnerbox = compile('1:0:[0-9a-fA-F]+:[1-9a-fA-F]+[0-9a-fA-F]*:[1-9a-fA-F]+[0-9a-fA-F]*:[1-9a-fA-F]+[0-9a-fA-F]*:[1-9a-fA-F]+[0-9a-fA-F]*:[0-9a-fA-F]+:[0-9a-fA-F]+:[0-9a-fA-F]+:http')
+-	@staticmethod
+-	def getPiconName(ref):
+-		pos = ref.rfind(':')
+-		pos2 = ref.rfind(':', 0, pos)
+-		if pos - pos2 == 1 or PiconResolver.partnerbox.match(ref) is not None or ref.startswith("4097"):
+-			basename = ref[:pos2].replace(':', '_')
+-		else:
+-			basename = ref[:pos].replace(':', '_')
+-		if basename.startswith("4097"):
+-			basename = "1%s" %(basename[4:])
+-		return basename
+-
+ 	@staticmethod
+ 	def getPngName(ref, nameCache, findPicon):
+-		name = PiconResolver.getPiconName(ref)
++		x = ref.split(':')
++		if len(x) < 11: # skip invalid service references
++			return ""
++		del x[x[10] and 11 or 10:] # remove name and empty path
++		x[1]='0' #replace flags field
++		name = '_'.join(x).strip('_')
+ 		pngname = nameCache.get(name, "")
+ 		if pngname == "":
+ 			pngname = findPicon(name)
+-			if pngname != "":
+-				nameCache[name] = pngname
+-			else: # no picon for service found
+-				pngname = nameCache.get("default", "")
+-				if pngname == "": # no default yet in cache..
+-					pngname = findPicon("picon_default")
+-					if pngname != "":
+-						nameCache["default"] = pngname
++			if pngname == "":
++				# lookup without path
++				pngname = findPicon('_'.join(x[:10]))
++				if pngname == "" and x[0] == '4097':
++					# lookup 1_* instead of 4097_*
++					pngname = findPicon('1_'+'_'.join(x[1:10]))
++					if pngname == "": # no picon for service found
++						pngname = nameCache.get("default", "")
++						if pngname == "": # no default yet in cache..
++							pngname = findPicon("picon_default")
++							if pngname != "":
++								nameCache["default"] = pngname
++		if pngname != "":
++			nameCache[name] = pngname
+ 		return pngname
+\ No newline at end of file
+-- 
+2.1.4
+
