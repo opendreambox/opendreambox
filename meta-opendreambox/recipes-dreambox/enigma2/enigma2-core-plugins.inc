@@ -27,7 +27,7 @@ PACKAGES =+ " \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-networkmanager \
     enigma2-plugin-systemplugins-softwaremanager \
-    enigma2-plugin-systemplugins-streamserver \
+    ${@base_contains('DREAMBOX_FEATURES', 'encoder', 'enigma2-plugin-systemplugins-streamserver', '', d)} \
     enigma2-plugin-systemplugins-upnp \
     enigma2-plugin-systemplugins-hdmicec \
 "
