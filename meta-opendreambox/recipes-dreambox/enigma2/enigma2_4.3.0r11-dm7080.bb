@@ -13,4 +13,5 @@ SRC_URI += " \
 	file://0002-MediaCenter-fix-crash-in-MediaBrowserFile.patch \
 	file://0003-ChannelSelectionRadio-tie-radio-infobar-show-hide-to.patch \
 	file://0004-RdsInfoDisplay-don-t-be-fullscreen.patch \
+	file://0005-Fixed-endless-recursion-crashes-caused-by-summary-sc.patch \
 "
