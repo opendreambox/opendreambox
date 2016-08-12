@@ -17,6 +17,7 @@ RDEPENDS_${PN} += " \
   gstreamer1.0-plugins-bad-mpegpsdemux \
   gstreamer1.0-plugins-bad-mpegtsdemux \
   gstreamer1.0-plugins-bad-smoothstreaming \
+  gstreamer1.0-plugins-bad-videoparsersbad \
   gstreamer1.0-plugins-base-alsa \
   gstreamer1.0-plugins-base-app \
   gstreamer1.0-plugins-base-audioconvert \
