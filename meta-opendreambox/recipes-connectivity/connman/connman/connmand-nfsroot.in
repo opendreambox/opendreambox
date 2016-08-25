@@ -1,0 +1,84 @@
+#!/bin/sh
+#
+# Copyright (c) 2016 Dream Property GmbH, Germany
+#                    http://www.dream-multimedia-tv.de/
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+parse_cmdline() {
+	local ip=
+	local nfsroot=
+	local root=
+	local options=
+
+	set -- $(cat /proc/cmdline)
+	for arg do
+		key=${arg%%=*}
+		if [ "$arg" = "$key" ]; then
+			val=
+		else
+			val=${arg#*=}
+		fi
+		case "$key" in
+			ip)
+				ip=${val%%:*}
+				;;
+			nfsroot)
+				nfsroot=$val
+				;;
+			root)
+				root=$val
+				;;
+		esac
+	done
+
+	if [ "$root" = "/dev/nfs" -o -n "$nfsroot" -a -n "$ip" ]; then
+		set -- $(ip -4 -o addr show | awk '{print $2}')
+		for dev do
+			if ip -o link show $dev | awk '{print $3}' | grep -qvw -e 'LOOPBACK' -e 'NO-CARRIER'; then
+				case "$ip" in
+					any|bootp|both|dhcp|on|rarp)
+						options="-I $dev $options"
+						;;
+					*)
+						for dev_addr in $(ip -4 -o addr show dev $dev | awk '{print $4}' | grep -o '^[0-9.]\+'); do
+							if [ "$ip" = "$dev_addr" ]; then
+								options="-I $dev"
+								break
+							fi
+						done
+						;;
+				esac
+			fi
+		done
+	fi
+
+	echo "$options"
+}
+
+nfsroot_options() {
+	if [ ! -f /run/connman/nfsroot.env ]; then
+		mkdir -p /run/connman
+		parse_cmdline >/run/connman/nfsroot.env
+	fi
+
+	cat /run/connman/nfsroot.env
+}
+
+exec "@sbindir@/connmand.real" "$@" $(nfsroot_options)

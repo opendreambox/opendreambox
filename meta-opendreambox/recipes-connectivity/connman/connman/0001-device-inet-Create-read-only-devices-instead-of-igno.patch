@@ -1,7 +1,7 @@
-From 614e217f39cf3c4a1ecdfaa7025e6899400c5d02 Mon Sep 17 00:00:00 2001
+From cd7e1a841d50f0a975e7c2c3af9bfec08823f6f4 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 29 Oct 2014 21:19:25 +0100
-Subject: [PATCH 1/2] device/inet: Create read-only devices instead of ignoring
+Subject: [PATCH] device/inet: Create read-only devices instead of ignoring
  completely
 
 Booting an nfsroot with connman requires passing -I eth0 to ignore
@@ -28,10 +28,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  6 files changed, 178 insertions(+), 36 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index bc3c695..9c7ea95 100644
+index fb7c74e..90cae75 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -217,6 +217,7 @@ src_connmand_CFLAGS = @DBUS_CFLAGS@ @GLIB_CFLAGS@ @XTABLES_CFLAGS@ \
+@@ -227,6 +227,7 @@ src_connmand_CFLAGS = @DBUS_CFLAGS@ @GLIB_CFLAGS@ @XTABLES_CFLAGS@ \
  				-DSTORAGEDIR=\""$(storagedir)\"" \
  				-DVPN_STORAGEDIR=\""$(vpn_storagedir)\"" \
  				-DCONFIGDIR=\""$(configdir)\"" \
@@ -40,10 +40,10 @@ index bc3c695..9c7ea95 100644
  
  EXTRA_DIST = src/genbuiltin src/connman-dbus.conf src/connman-polkit.conf \
 diff --git a/include/device.h b/include/device.h
-index 57b925c..3c9615f 100644
+index 9ac800a..62753db 100644
 --- a/include/device.h
 +++ b/include/device.h
-@@ -93,6 +93,9 @@ int connman_device_set_string(struct connman_device *device,
+@@ -89,6 +89,9 @@ int connman_device_set_string(struct connman_device *device,
  					const char *key, const char *value);
  const char *connman_device_get_string(struct connman_device *device,
  							const char *key);
@@ -54,18 +54,18 @@ index 57b925c..3c9615f 100644
  int connman_device_add_network(struct connman_device *device,
  					struct connman_network *network);
 diff --git a/src/device.c b/src/device.c
-index c0683ab..301e850 100644
+index 188106c..3e00001 100644
 --- a/src/device.c
 +++ b/src/device.c
-@@ -54,6 +54,7 @@ struct connman_device {
+@@ -53,6 +53,7 @@ struct connman_device {
+ 							 */
  	bool powered;
  	bool scanning;
- 	bool disconnected;
 +	bool readonly;
  	char *name;
  	char *node;
  	char *address;
-@@ -782,6 +783,32 @@ bool connman_device_get_disconnected(struct connman_device *device)
+@@ -747,6 +748,32 @@ int connman_device_set_scanning(struct connman_device *device,
  }
  
  /**
@@ -98,7 +98,7 @@ index c0683ab..301e850 100644
   * connman_device_set_string:
   * @device: device structure
   * @key: unique identifier
-@@ -1246,12 +1273,6 @@ struct connman_device *connman_device_create_from_index(int index)
+@@ -1211,12 +1238,6 @@ struct connman_device *connman_device_create_from_index(int index)
  	if (!devname)
  		return NULL;
  
@@ -111,7 +111,7 @@ index c0683ab..301e850 100644
  	type = __connman_rtnl_get_device_type(index);
  
  	switch (type) {
-@@ -1305,6 +1326,7 @@ struct connman_device *connman_device_create_from_index(int index)
+@@ -1270,6 +1291,7 @@ struct connman_device *connman_device_create_from_index(int index)
  	}
  
  	connman_device_set_string(device, "Address", addr);
@@ -120,7 +120,7 @@ index c0683ab..301e850 100644
  done:
  	g_free(devname);
 diff --git a/src/inet.c b/src/inet.c
-index cd220ff..ac646c9 100644
+index dc788ea..d72605f 100644
 --- a/src/inet.c
 +++ b/src/inet.c
 @@ -55,6 +55,21 @@
@@ -424,7 +424,7 @@ index cd220ff..ac646c9 100644
  	sk = socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0);
  	if (sk < 0)
  		return sk;
-@@ -2812,6 +2922,12 @@ static int iproute_default_modify(int cmd, uint32_t table_id, int ifindex,
+@@ -2809,6 +2919,12 @@ static int iproute_default_modify(int cmd, uint32_t table_id, int ifindex,
  	if (ret <= 0)
  		return -EINVAL;
  
@@ -438,10 +438,10 @@ index cd220ff..ac646c9 100644
  
  	rth.req.n.nlmsg_len = NLMSG_LENGTH(sizeof(struct rtmsg));
 diff --git a/src/ipconfig.c b/src/ipconfig.c
-index f8c148b..3ecabfc 100644
+index 0dc702b..64866ba 100644
 --- a/src/ipconfig.c
 +++ b/src/ipconfig.c
-@@ -90,6 +90,17 @@ static GHashTable *ipdevice_hash = NULL;
+@@ -89,6 +89,17 @@ static GHashTable *ipdevice_hash = NULL;
  static GList *ipconfig_list = NULL;
  static bool is_ipv6_supported = false;
  
@@ -459,7 +459,7 @@ index f8c148b..3ecabfc 100644
  void __connman_ipconfig_clear_address(struct connman_ipconfig *ipconfig)
  {
  	if (!ipconfig)
-@@ -210,6 +221,8 @@ static void set_ipv6_state(gchar *ifname, bool enable)
+@@ -209,6 +220,8 @@ static void set_ipv6_state(gchar *ifname, bool enable)
  
  	if (!ifname)
  		path = g_strdup("/proc/sys/net/ipv6/conf/all/disable_ipv6");
@@ -468,7 +468,7 @@ index f8c148b..3ecabfc 100644
  	else
  		path = g_strdup_printf(
  			"/proc/sys/net/ipv6/conf/%s/disable_ipv6", ifname);
-@@ -273,6 +286,9 @@ static void set_ipv6_privacy(gchar *ifname, int value)
+@@ -272,6 +285,9 @@ static void set_ipv6_privacy(gchar *ifname, int value)
  	if (!ifname)
  		return;
  
@@ -516,6 +516,3 @@ index d1b851f..82e97dc 100644
  
  	filename = g_strdup_printf("/sys/class/net/%s/uevent", name);
  
--- 
-1.9.1
-
