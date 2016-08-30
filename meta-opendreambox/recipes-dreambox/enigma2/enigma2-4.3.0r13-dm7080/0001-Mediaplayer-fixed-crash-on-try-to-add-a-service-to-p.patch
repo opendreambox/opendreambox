@@ -1,0 +1,24 @@
+From b73c3a7dd1969dc633fb106469bdc370c5df6268 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Tue, 30 Aug 2016 19:55:34 +0200
+Subject: [PATCH] Mediaplayer: fixed crash on try to add a service to playlist
+
+---
+ usr/lib/enigma2/python/Plugins/Extensions/MediaPlayer/plugin.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Plugins/Extensions/MediaPlayer/plugin.py b/usr/lib/enigma2/python/Plugins/Extensions/MediaPlayer/plugin.py
+index 6e84c5b..074e738 100644
+--- a/usr/lib/enigma2/python/Plugins/Extensions/MediaPlayer/plugin.py
++++ b/usr/lib/enigma2/python/Plugins/Extensions/MediaPlayer/plugin.py
+@@ -1,6 +1,6 @@
+ from os import path as os_path, remove as os_remove, listdir as os_listdir
+ from time import strftime
+-from enigma import iPlayableService, eTimer, eServiceCenter, iServiceInformation, ePicLoad, eServiceMP3
++from enigma import iPlayableService, eTimer, eServiceCenter, iServiceInformation, ePicLoad, eServiceMP3, eServiceReference
+ from ServiceReference import ServiceReference
+ from Screens.Screen import Screen
+ from Screens.HelpMenu import HelpableScreen
+-- 
+2.1.4
+

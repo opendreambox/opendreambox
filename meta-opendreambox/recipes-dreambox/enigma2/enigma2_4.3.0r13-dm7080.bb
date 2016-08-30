@@ -3,7 +3,10 @@ SRC_URI[dm7080.sha256sum] = "dc396999c2b78e04f3ecb3043b69fd8b30be7e0a1cf4c46cf68
 
 require enigma2-bin-4.3.inc
 
-SRC_URI += " file://0001-Components.Ipkg-fix-installation-of-non-local-packag.patch"
+SRC_URI += " \
+	file://0001-Components.Ipkg-fix-installation-of-non-local-packag.patch \
+	file://0001-Mediaplayer-fixed-crash-on-try-to-add-a-service-to-p.patch \
+"
 
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
 
