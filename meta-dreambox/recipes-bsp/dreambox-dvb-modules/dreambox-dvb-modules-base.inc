@@ -1,7 +1,7 @@
 SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
 LICENSE = "CLOSED"
-DEPENDS += "virtual/kernel"
+DEPENDS += "virtual/kernel dreambox-dvb-modules-systemd"
 PRIORITY = "required"
 
 inherit module-base
@@ -31,7 +31,7 @@ PACKAGES =+ "${PN}-lcd ${PN}-stb-core"
 
 RDEPENDS_${PN} = "${PN}-stb-core"
 RDEPENDS_${PN}-lcd = "${PN}-stb-core"
-RRECOMMENDS_${PN} = "${PN}-lcd ${PN}-systemd"
+RRECOMMENDS_${PN} = "${PN}-lcd dreambox-dvb-modules-systemd"
 
 FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
                /lib/modules/${DM_LOCALVERSION}/extra/"
