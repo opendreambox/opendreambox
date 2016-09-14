@@ -44,6 +44,9 @@ RDEPENDS_${PN} = " \
 RDEPENDS_${PN}_append_bcm7435 = " \
     ${EMMCRDEPENDS_recovery} \
 "
+RDEPENDS_${PN}_append_bcm7439 = " \
+    ${EMMCRDEPENDS_recovery} \
+"
 RDEPENDS_${PN}_append_bcm73625 = " \
     ${NANDRDEPENDS_recovery} \
 "
@@ -54,6 +57,9 @@ RDEPENDS_flash-scripts = " \
 RDEPENDS_flash-scripts_append_bcm7435 = " \
     ${EMMCRDEPENDS_flash-scripts} \
     ${FASTBOOTRDEPENDS_flash-scripts} \
+"
+RDEPENDS_flash-scripts_append_bcm7439 = " \
+    ${EMMCRDEPENDS_flash-scripts} \
 "
 RDEPENDS_flash-scripts_append_bcm73625 = " \
     ${NANDRDEPENDS_flash-scripts} \
