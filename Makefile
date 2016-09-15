@@ -216,7 +216,7 @@ console-image: init
 
 rescue-image: init
 	@echo '[*] Building $@ for $(USER_MACHINE)'
-	@$(BITBAKE) linux-dreambox-rescue
+	@$(BITBAKE) linux-dreambox
 
 download: init
 	@echo '[*] Downloading sources'
