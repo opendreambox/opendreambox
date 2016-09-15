@@ -39,6 +39,7 @@ RDEPENDS_${PN} = " \
     flash-scripts \
     gpgv \
     pigz \
+    util-linux-blkid \
     util-linux-mount \
 "
 RDEPENDS_${PN}_append_bcm7435 = " \
