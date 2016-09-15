@@ -14,7 +14,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 EMMCRDEPENDS_recovery = " \
     e2fsprogs-mke2fs \
-    parted \
+    gptfdisk-sgdisk \
 "
 EMMCRDEPENDS_flash-scripts = " \
     util-linux-sfdisk \
