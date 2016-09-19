@@ -1,0 +1,63 @@
+From 2d78c921ebdc2e8823d062acd775c69a2557cda7 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 18 Aug 2014 01:35:17 +0200
+Subject: [PATCH] stat_cache: fix reading block devices
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ src/network_write_no_mmap.c |  6 ++++++
+ src/stat_cache.c            | 10 ++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/src/network_write_no_mmap.c b/src/network_write_no_mmap.c
+index f5f50ce..0d14178 100644
+--- a/src/network_write_no_mmap.c
++++ b/src/network_write_no_mmap.c
+@@ -11,6 +11,7 @@
+ #include <stdlib.h>
+ 
+ #include <fcntl.h>
++#include <sys/mount.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+ 
+@@ -50,6 +51,11 @@ int network_open_file_chunk(server *srv, connection *con, chunkqueue *cq) {
+ 			return -1;
+ 		}
+ 		file_size = st.st_size;
++		if (S_ISBLK(st.st_mode)) {
++			uint64_t size;
++			if (ioctl(c->file.fd, BLKGETSIZE64, &size) == 0)
++				file_size = size;
++		}
+ 	}
+ 
+ 	if (offset > file_size || toSend > file_size || offset > file_size - toSend) {
+diff --git a/src/stat_cache.c b/src/stat_cache.c
+index 8aab29d..ba2d901 100644
+--- a/src/stat_cache.c
++++ b/src/stat_cache.c
+@@ -5,6 +5,7 @@
+ 
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/mount.h>
+ 
+ #include <stdlib.h>
+ #include <string.h>
+@@ -627,6 +628,15 @@ handler_t stat_cache_get_entry(server *srv, connection *con, buffer *name, stat_
+ 		etag_create(sce->etag, &(sce->st), con->etag_flags);
+ 	} else if (S_ISDIR(st.st_mode)) {
+ 		etag_create(sce->etag, &(sce->st), con->etag_flags);
++	} else if (S_ISBLK(st.st_mode)) {
++		/* set size for block devices */
++		fd = open(name->ptr, O_RDONLY);
++		if (fd >= 0) {
++			uint64_t size;
++			if (ioctl(fd, BLKGETSIZE64, &size) == 0)
++				sce->st.st_size = size;
++			close(fd);
++		}
+ 	}
+ 
+ #ifdef HAVE_FAM_H
