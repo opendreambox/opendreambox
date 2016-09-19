@@ -47,3 +47,4 @@ fi
 
 INITRAMFS_IMAGE = "dreambox-rescue-image"
 INITRAMFS_IMAGE_BUNDLE = "1"
+INITRAMFS_BASE_NAME = "rescue-${PV}-${PR}-${MACHINE}-${DATETIME}"
