@@ -21,12 +21,6 @@ require linux-dreambox.inc
 
 S = "${WORKDIR}/linux-3.4"
 
-do_configure_prepend() {
-        sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
-}
-
-require linux-rdepends.inc
-
 CMDLINE = "bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
 
 COMPATIBLE_MACHINE = "^(bcm7435)$"
@@ -35,19 +29,6 @@ DEFCONFIG = "${MACHINE}"
 
 BRCM_PATCHLEVEL = "3.5"
 
-KERNEL_VERSION = "3.4-${BRCM_PATCHLEVEL}-${MACHINE}"
+LINUX_VERSION = "3.4-${BRCM_PATCHLEVEL}-${MACHINE}"
 KERNEL_IMAGETYPE = "vmlinux.bin"
 KERNEL_IMAGETYPES = "vmlinux.gz"
-KERNEL_ENABLE_CGROUPS = "1"
-
-RDEPENDS_kernel-image = "flash-scripts"
-
-pkg_postinst_kernel-image () {
-if [ -z "$D" ]; then
-    flash-kernel /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
-fi
-}
-
-INITRAMFS_IMAGE = "dreambox-rescue-image"
-INITRAMFS_IMAGE_BUNDLE = "1"
-INITRAMFS_BASE_NAME = "rescue-${PV}-${PR}-${MACHINE}-${DATETIME}"
