@@ -18,21 +18,27 @@ PKG_kernel-image = "kernel-image"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION_PKG_NAME}"
 
 python __anonymous() {
-    imagetypes = [x.lower() for x in (d.getVar('KERNEL_IMAGETYPES', True) or "").split()]
-    for t in imagetypes:
-        d.setVar('PKG_kernel-image-%s' % t, 'kernel-image-%s' % t)
-        d.setVar('RPROVIDES_kernel-image-%s' % t, 'kernel-image-%s-${KERNEL_VERSION_PKG_NAME}' % t)
+    type = d.getVar('KERNEL_IMAGETYPE', True) or ""
+    alttype = d.getVar('KERNEL_ALT_IMAGETYPE', True) or ""
+    types = d.getVar('KERNEL_IMAGETYPES', True) or ""
+    types = ('%s %s %s' % (type, types, alttype)).split()
 
-    imagetype = (d.getVar('KERNEL_IMAGETYPE', True) or imagetypes[0]).lower()
-    d.setVar('RDEPENDS_kernel-image', 'kernel-image-%s' % imagetype)
+    for imagetype in set(types):
+        d.setVar('PKG_kernel-image-%s' % imagetype.lower(), 'kernel-image-%s' % imagetype.lower())
+        d.setVar('RPROVIDES_kernel-image-%s' % imagetype.lower(), 'kernel-image-%s-${KERNEL_VERSION_PKG_NAME}' % imagetype.lower())
+        d.appendVar('PACKAGES', ' rescue-image-%s' % imagetype.lower())
+        d.setVar('FILES_rescue-image-%s' % imagetype.lower(), '/boot/%s-initramfs-${MACHINE}.bin' % imagetype)
 
-    postinst = d.getVar('pkg_postinst_kernel-image-%s' % imagetype, True)
+    imagetype = types[0]
+    d.setVar('RDEPENDS_kernel-image', 'kernel-image-%s' % imagetype.lower())
+
+    postinst = d.getVar('pkg_postinst_kernel-image-%s' % imagetype.lower(), True)
     if not postinst:
         postinst = '#!/bin/sh\n'
     postinst += '[ -n "$D" ] || flash-kernel /${KERNEL_IMAGEDEST}/%s-${KERNEL_VERSION_NAME}\n' % imagetype
-    d.setVar('pkg_postinst_kernel-image-%s' % imagetype, postinst)
+    d.setVar('pkg_postinst_kernel-image-%s' % imagetype.lower(), postinst)
 
-    d.appendVar('RDEPENDS_kernel-image-%s' % imagetype, ' flash-scripts')
+    d.appendVar('RDEPENDS_kernel-image-%s' % imagetype.lower(), ' flash-scripts')
 }
 
 INITRAMFS_IMAGE = "dreambox-rescue-image"
