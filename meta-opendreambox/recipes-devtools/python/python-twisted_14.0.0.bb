@@ -49,19 +49,20 @@ RDEPENDS_${PN} = "\
     ${PN}-words \
 "
 
-RDEPENDS_${PN}-core = "python-compression python-contextlib python-core python-numbers python-zopeinterface"
+RDEPENDS_${PN}-core = "python-compression python-contextlib python-core python-numbers python-pyopenssl python-zopeinterface"
+RRECOMMENDS_${PN}-core = "python-service-identity"
 
 RDEPENDS_${PN}-conch = "${PN}-core python-pycrypto python-pyasn1"
 RDEPENDS_${PN}-flow  = "${PN}-core"
 RDEPENDS_${PN}-lore = "${PN}-web"
-RDEPENDS_${PN}-mail = "${PN}-core python-pyopenssl"
+RDEPENDS_${PN}-mail = "${PN}-core"
 RDEPENDS_${PN}-names = "${PN}-core"
 RDEPENDS_${PN}-news = "${PN}-core"
 RDEPENDS_${PN}-pair = "${PN}-core"
 RDEPENDS_${PN}-positioning = "${PN}-core"
 RDEPENDS_${PN}-runner = "${PN}-core"
 RDEPENDS_${PN}-web = "${PN}-core"
-RDEPENDS_${PN}-words = "${PN}-core python-pyopenssl"
+RDEPENDS_${PN}-words = "${PN}-core"
 
 ALLOW_EMPTY_${PN} = "1"
 FILES_${PN} = ""
