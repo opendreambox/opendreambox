@@ -1,0 +1,2251 @@
+From cf42ee639e70ecc785e752862dc364bbc9c7ae2c Mon Sep 17 00:00:00 2001
+From: Stephan Reichholf <reichi@opendreambox.org>
+Date: Tue, 24 May 2016 10:53:14 +0200
+Subject: [PATCH 5/5] import a bunch of hbbtv patches
+
+Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
+---
+ Source/WebCore/bindings/js/JSDOMWindowCustom.cpp   |  12 +-
+ .../bindings/js/JSPluginElementFunctions.cpp       |  58 +++++-
+ Source/WebCore/css/CSSComputedStyleDeclaration.cpp |  25 +++
+ Source/WebCore/css/CSSGrammar.y.in                 |  30 +++-
+ Source/WebCore/css/CSSParser.cpp                   |  34 ++++
+ Source/WebCore/css/CSSParserValues.cpp             |   3 +
+ Source/WebCore/css/CSSPrimitiveValue.cpp           |  18 ++
+ Source/WebCore/css/CSSPrimitiveValue.h             |   4 +
+ Source/WebCore/css/DeprecatedStyleBuilder.cpp      |  25 +++
+ Source/WebCore/css/StyleResolver.cpp               |  29 +++
+ Source/WebCore/css/StyleResolver.h                 |   9 +
+ Source/WebCore/dom/DOMImplementation.cpp           |  15 +-
+ Source/WebCore/dom/EventNames.h                    |   5 +-
+ Source/WebCore/dom/KeyboardEvent.cpp               |  14 ++
+ Source/WebCore/dom/MutationObserver.cpp            |   2 +-
+ .../WebCore/dom/MutationObserverRegistration.cpp   |   6 +
+ Source/WebCore/dom/MutationObserverRegistration.h  |   1 +
+ Source/WebCore/dom/ProcessingInstruction.cpp       |  10 +-
+ Source/WebCore/html/HTMLBodyElement.h              |   4 +
+ Source/WebCore/html/HTMLBodyElement.idl            |   1 +
+ Source/WebCore/html/HTMLObjectElement.cpp          |  34 ++++
+ Source/WebCore/html/HTMLObjectElement.h            |   4 +
+ Source/WebCore/html/HTMLObjectElement.idl          |   4 +
+ Source/WebCore/html/HTMLViewSourceDocument.cpp     |   6 +-
+ Source/WebCore/loader/FrameLoader.cpp              |   6 +-
+ .../WebCore/loader/cache/CachedResourceLoader.cpp  |  10 ++
+ .../WebCore/loader/cache/CachedXSLStyleSheet.cpp   |   6 +-
+ Source/WebCore/loader/icon/IconController.cpp      |  13 +-
+ Source/WebCore/page/DOMWindow.cpp                  |  27 +++
+ Source/WebCore/page/DOMWindow.h                    |   4 +
+ Source/WebCore/page/DOMWindow.idl                  |   4 +
+ Source/WebCore/page/EventHandler.cpp               |  41 ++++-
+ Source/WebCore/page/FocusController.cpp            |  86 +++++++++
+ Source/WebCore/page/FocusController.h              |   3 +
+ Source/WebCore/page/FrameView.cpp                  |  21 ++-
+ Source/WebCore/page/FrameView.h                    |   1 +
+ Source/WebCore/page/NavigatorBase.cpp              |  15 +-
+ Source/WebCore/page/SecurityOrigin.cpp             |   6 +-
+ Source/WebCore/platform/MIMETypeRegistry.cpp       |  13 +-
+ Source/WebCore/platform/PlatformHbbTVKeyCodes.h    | 196 +++++++++++++++++++++
+ Source/WebCore/platform/PlatformKeyboardEvent.h    |   4 +
+ .../WebCore/platform/RuntimeApplicationChecks.cpp  |  50 ++++++
+ Source/WebCore/platform/RuntimeApplicationChecks.h |  22 +++
+ Source/WebCore/platform/SchemeRegistry.cpp         |   4 +
+ .../coordinated/CoordinatedGraphicsScene.cpp       |  12 ++
+ .../texmap/coordinated/CoordinatedGraphicsScene.h  |   3 +
+ .../platform/network/ResourceResponseBase.cpp      |  11 ++
+ .../platform/network/ResourceResponseBase.h        |   3 +
+ Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp  |   8 +-
+ .../platform/qt/PlatformKeyboardEventQt.cpp        |  34 ++++
+ Source/WebCore/rendering/RenderEmbeddedObject.cpp  |   5 +
+ Source/WebCore/rendering/RenderLayerCompositor.cpp |  21 +++
+ Source/WebCore/rendering/RenderObject.cpp          |   4 +
+ Source/WebCore/rendering/style/RenderStyle.h       |  19 ++
+ .../WebCore/rendering/style/StyleNavigationData.h  |  42 +++++
+ .../WebCore/rendering/style/StyleNavigationValue.h |  42 +++++
+ .../rendering/style/StyleRareNonInheritedData.cpp  |   9 +
+ .../rendering/style/StyleRareNonInheritedData.h    |   6 +
+ Source/WebCore/xml/XMLHttpRequest.cpp              |  37 ++++
+ .../xml/parser/XMLDocumentParserLibxml2.cpp        |   3 +
+ Source/WebCore/xml/parser/XMLDocumentParserQt.cpp  |   4 +-
+ Tools/qmake/mkspecs/features/features.pri          |   1 +
+ 62 files changed, 1121 insertions(+), 28 deletions(-)
+ create mode 100644 Source/WebCore/platform/PlatformHbbTVKeyCodes.h
+ create mode 100755 Source/WebCore/rendering/style/StyleNavigationData.h
+ create mode 100755 Source/WebCore/rendering/style/StyleNavigationValue.h
+
+diff --git a/Source/WebCore/bindings/js/JSDOMWindowCustom.cpp b/Source/WebCore/bindings/js/JSDOMWindowCustom.cpp
+index 9b2e54b..bf8fc1a 100644
+--- a/Source/WebCore/bindings/js/JSDOMWindowCustom.cpp
++++ b/Source/WebCore/bindings/js/JSDOMWindowCustom.cpp
+@@ -93,7 +93,17 @@ static JSValue namedItemGetter(ExecState* exec, JSValue slotBase, PropertyName p
+ 
+     ASSERT(BindingSecurity::shouldAllowAccessToDOMWindow(exec, thisObj->impl()));
+     ASSERT(document);
+-    ASSERT(document->isHTMLDocument());
++#ifdef ENABLE_HBBTV
++    String agent = document->userAgent(document->url());
++    if(agent.contains("HbbTV") || agent.contains("OIPF"))
++    {
++        ASSERT(document->isHTMLDocument() || document->isXHTMLDocument());
++    }
++    else
++#endif
++    {
++        ASSERT(document->isHTMLDocument());
++    }
+ 
+     AtomicStringImpl* atomicPropertyName = findAtomicString(propertyName);
+     if (!atomicPropertyName || !toHTMLDocument(document)->windowNamedItemMap().contains(atomicPropertyName))
+diff --git a/Source/WebCore/bindings/js/JSPluginElementFunctions.cpp b/Source/WebCore/bindings/js/JSPluginElementFunctions.cpp
+index 69d3309..6fb77d0 100644
+--- a/Source/WebCore/bindings/js/JSPluginElementFunctions.cpp
++++ b/Source/WebCore/bindings/js/JSPluginElementFunctions.cpp
+@@ -26,6 +26,16 @@
+ #include "JSHTMLElement.h"
+ #include "PluginViewBase.h"
+ 
++#if ENABLE(JS_PLUGIN)
++#include "runtime_root.h"
++#endif
++
++#if ENABLE(HBBTV)
++#include "MutationObserver.h"
++#include <platform/RuntimeApplicationChecks.h>
++#endif
++
++
+ using namespace JSC;
+ 
+ namespace WebCore {
+@@ -86,6 +96,12 @@ JSObject* pluginScriptObject(ExecState* exec, JSHTMLElement* jsHTMLElement)
+ 
+     HTMLPlugInElement* pluginElement = static_cast<HTMLPlugInElement*>(element);
+ 
++#if ENABLE(HBBTV)
++    // Triggers Mutation observer so JavaScript can overide plugin behaviour
++    if (applicationIsHbbTV())
++        WebCore::MutationObserver::deliverAllMutations();
++#endif // ENABLE(HBBTV)
++
+     // First, see if we can ask the plug-in view for its script object.
+     if (JSObject* scriptObject = pluginScriptObjectFromPluginViewBase(pluginElement, jsHTMLElement->globalObject()))
+         return scriptObject;
+@@ -99,7 +115,27 @@ JSObject* pluginScriptObject(ExecState* exec, JSHTMLElement* jsHTMLElement)
+ 
+     return instance->createRuntimeObject(exec);
+ }
+-    
++
++#if ENABLE(JS_PLUGIN)
++JSValue setPluginScriptObject(ExecState* exec, JSHTMLElement* jsHTMLElement, JSObject* object)
++{
++    HTMLElement* element = jsHTMLElement->impl();
++    if (!isPluginElement(element))
++        return jsBoolean(false);
++
++    HTMLPlugInElement* pluginElement = static_cast<HTMLPlugInElement*>(element);
++    if (pluginElement->getInstance())
++        return jsBoolean(false);
++
++    JSLockHolder lock(exec);
++    RefPtr<Bindings::RootObject> rootObject = Bindings::RootObject::create(0, jsHTMLElement->globalObject());
++    RefPtr<JSObjectWrapperInstance> instance = JSObjectWrapperInstance::create(exec->vm(), rootObject.release(), object);
++    pluginElement->setInstance(instance.release());
++
++    return jsBoolean(true);
++}
++#endif
++
+ JSValue runtimeObjectPropertyGetter(ExecState* exec, JSValue slotBase, PropertyName propertyName)
+ {
+     JSHTMLElement* element = jsCast<JSHTMLElement*>(asObject(slotBase));
+@@ -151,6 +187,26 @@ bool runtimeObjectCustomPut(ExecState* exec, PropertyName propertyName, JSValue
+ 
+ static EncodedJSValue JSC_HOST_CALL callPlugin(ExecState* exec)
+ {
++#if ENABLE(JS_PLUGIN)
++    if (!exec->callee()->inherits(&JSHTMLElement::s_info) && exec->hostThisValue().toThisObject(exec)->inherits(&JSHTMLElement::s_info)) {
++        JSHTMLElement* jselement = jsCast<JSHTMLElement*>(exec->hostThisValue().toThisObject(exec));
++        JSObject* scriptObject = pluginScriptObject(exec, jselement);
++        ASSERT(scriptObject);
++
++        CallData callData;
++        CallType callType = getCallData(exec->callee(), callData);
++
++        if (callType != CallTypeHost)
++            return callType;
++
++        // Callee is callbackfunction, let's just replace the
++        // current this by the underlying script object.
++        exec->setThisValue(scriptObject);
++
++        return callData.native.function(exec);
++    }
++#endif
++
+     JSHTMLElement* element = jsCast<JSHTMLElement*>(exec->callee());
+ 
+     // Get the plug-in script object.
+diff --git a/Source/WebCore/css/CSSComputedStyleDeclaration.cpp b/Source/WebCore/css/CSSComputedStyleDeclaration.cpp
+index f645ace..4adbdb0 100644
+--- a/Source/WebCore/css/CSSComputedStyleDeclaration.cpp
++++ b/Source/WebCore/css/CSSComputedStyleDeclaration.cpp
+@@ -163,6 +163,12 @@ static const CSSPropertyID computedProperties[] = {
+     CSSPropertyMaxWidth,
+     CSSPropertyMinHeight,
+     CSSPropertyMinWidth,
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    CSSPropertyNavDown,
++    CSSPropertyNavLeft,
++    CSSPropertyNavRight,
++    CSSPropertyNavUp,
++#endif
+     CSSPropertyOpacity,
+     CSSPropertyOrphans,
+     CSSPropertyOutlineColor,
+@@ -1443,7 +1449,16 @@ static PassRefPtr<CSSValue> counterToCSSValue(const RenderStyle* style, CSSPrope
+     }
+     return list.release();
+ }
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++static PassRefPtr<CSSValue> navDirToCSSValue(const StyleNavigationValue& navValue)
++{
++    RefPtr<CSSValueList> list = CSSValueList::createSpaceSeparated();
++    list->append(cssValuePool().createValue(navValue.id().string(), CSSPrimitiveValue::CSS_STRING));
++    list->append(cssValuePool().createValue(navValue.target().string(), CSSPrimitiveValue::CSS_STRING));
+ 
++    return list.release();
++}
++#endif
+ static void logUnimplementedPropertyID(CSSPropertyID propertyID)
+ {
+     DEFINE_STATIC_LOCAL(HashSet<CSSPropertyID>, propertyIDSet, ());
+@@ -2177,6 +2192,16 @@ PassRefPtr<CSSValue> ComputedStyleExtractor::propertyValue(CSSPropertyID propert
+             if (style->minWidth().isAuto())
+                 return zoomAdjustedPixelValue(0, style.get());
+             return zoomAdjustedPixelValueForLength(style->minWidth(), style.get());
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++        case CSSPropertyNavDown:
++            return navDirToCSSValue(style->navDown());
++        case CSSPropertyNavLeft:
++            return navDirToCSSValue(style->navLeft());
++        case CSSPropertyNavRight:
++            return navDirToCSSValue(style->navRight());
++        case CSSPropertyNavUp:
++            return navDirToCSSValue(style->navUp());
++#endif
+         case CSSPropertyOpacity:
+             return cssValuePool().createValue(style->opacity(), CSSPrimitiveValue::CSS_NUMBER);
+         case CSSPropertyOrphans:
+diff --git a/Source/WebCore/css/CSSGrammar.y.in b/Source/WebCore/css/CSSGrammar.y.in
+index d43d3c9..a3c6847 100644
+--- a/Source/WebCore/css/CSSGrammar.y.in
++++ b/Source/WebCore/css/CSSGrammar.y.in
+@@ -67,6 +67,9 @@ static inline bool isCSSTokenAString(int yytype)
+     case STRING:
+     case NTH:
+     case HEX:
++#if ENABLE_HBBTV && ENABLE_CSS_NAVIGATION
++    case IDNAV:
++#endif
+     case IDSEL:
+     case DIMEN:
+     case INVALIDDIMEN:
+@@ -87,13 +90,23 @@ static inline bool isCSSTokenAString(int yytype)
+ 
+ %}
+ 
++#if ENABLE_HBBTV && ENABLE_CSS_NAVIGATION
++
++#if ENABLE_SHADOW_DOM
++%expect 33
++#else
++%expect 32
++#endif
++
++#else // ENABLE_HBBTV && ENABLE_CSS_NAVIGATION
++
+ #if ENABLE_SHADOW_DOM
+ %expect 32
+ #else
+ %expect 31
+ #endif
+ 
+-%nonassoc LOWEST_PREC
++#endif // ENABLE_HBBTV && ENABLE_CSS_NAVIGATION
+ 
+ %left UNIMPORTANT_TOK
+ 
+@@ -106,6 +119,9 @@ static inline bool isCSSTokenAString(int yytype)
+ %token ENDSWITH
+ %token CONTAINS
+ 
++#if ENABLE_HBBTV && ENABLE_CSS_NAVIGATION
++%token <string> IDNAV
++#endif
+ %token <string> STRING
+ %right <string> IDENT
+ %token <string> NTH
+@@ -1319,6 +1335,15 @@ specifier:
+             $1.lower();
+         $$->setValue($1);
+     }
++#if ENABLE_HBBTV && ENABLE_CSS_NAVIGATION
++  | IDNAV {
++        $$ = parser->createFloatingSelector();
++        $$->setMatch(CSSSelector::Id);
++        if (parser->m_context.mode == CSSQuirksMode)
++            $1.lower();
++        $$->setValue($1);
++    }
++#endif
+   | HEX {
+         if ($1[0] >= '0' && $1[0] <= '9') {
+             $$ = 0;
+@@ -1691,6 +1716,9 @@ term:
+   | unary_operator DIMEN maybe_space { $$.id = CSSValueInvalid; $$.string = $2; $$.unit = CSSPrimitiveValue::CSS_DIMENSION; }
+   | URI maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_URI; }
+   | UNICODERANGE maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_UNICODE_RANGE; }
++#if ENABLE_HBBTV && ENABLE_CSS_NAVIGATION
++  | IDNAV maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_NAVID; }
++#endif
+   | HEX maybe_space { $$.id = CSSValueInvalid; $$.string = $1; $$.unit = CSSPrimitiveValue::CSS_PARSER_HEXCOLOR; }
+   | '#' maybe_space { $$.id = CSSValueInvalid; $$.string = CSSParserString(); $$.unit = CSSPrimitiveValue::CSS_PARSER_HEXCOLOR; } /* Handle error case: "color: #;" */
+   | VARFUNCTION maybe_space IDENT closing_parenthesis maybe_space {
+diff --git a/Source/WebCore/css/CSSParser.cpp b/Source/WebCore/css/CSSParser.cpp
+index 54fd5e2..c7711d0 100644
+--- a/Source/WebCore/css/CSSParser.cpp
++++ b/Source/WebCore/css/CSSParser.cpp
+@@ -115,6 +115,10 @@
+ #include "DashboardRegion.h"
+ #endif
+ 
++#if ENABLE(HBBTV)
++#include <platform/RuntimeApplicationChecks.h>
++#endif
++
+ #define YYDEBUG 0
+ 
+ #if YYDEBUG > 0
+@@ -2733,6 +2737,26 @@ bool CSSParser::parseValue(CSSPropertyID propId, bool important)
+             validPrimitive = validUnit(value, FLength | FNonNeg, CSSStrictMode) && value->fValue;
+         break;
+     // End of CSS3 properties
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    case CSSPropertyNavDown: // auto | <id> targetframe | inherit.
++    case CSSPropertyNavLeft:
++    case CSSPropertyNavRight:
++    case CSSPropertyNavUp:
++        if (id == CSSValueAuto
++            || (num == 1 && (value->unit == CSSPrimitiveValue::CSS_NAVID || value->unit == CSSPrimitiveValue::CSS_PARSER_HEXCOLOR))) {
++            value->unit = CSSPrimitiveValue::CSS_STRING;
++            validPrimitive = true;
++        } else if (num == 2) {
++            RefPtr<CSSValueList> list = CSSValueList::createSpaceSeparated();
++            while (value) {
++                list->append(cssValuePool().createValue(value->string, CSSPrimitiveValue::CSS_STRING));
++                value = m_valueList->next();
++            }
++            parsedValue = list.release();
++        } else
++            return false;
++        break;
++#endif
+ 
+     // Apple specific properties.  These will never be standardized and are purely to
+     // support custom WebKit-based Apple applications.
+@@ -11156,6 +11180,11 @@ restartAfterComment:
+             yylval->string.init(start, currentCharacter<SrcCharacterType>() - start);
+         } else if (isIdentifierStart<SrcCharacterType>()) {
+             m_token = IDSEL;
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++            // Change the token to IDNAV for HbbTV apllications
++            if (applicationIsHbbTV())
++                m_token = IDNAV;
++#endif
+             parseIdentifier(result, yylval->string, hasEscape);
+             if (!hasEscape) {
+                 // Check whether the identifier is also a valid hex number.
+@@ -11164,6 +11193,11 @@ restartAfterComment:
+                 do {
+                     if (!isASCIIHexDigit(*current)) {
+                         m_token = IDSEL;
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++                        // Change the token to IDNAV for HbbTV apllications
++                        if (applicationIsHbbTV())
++                            m_token = IDNAV;
++#endif
+                         break;
+                     }
+                     ++current;
+diff --git a/Source/WebCore/css/CSSParserValues.cpp b/Source/WebCore/css/CSSParserValues.cpp
+index 7d5fc85..7140733 100644
+--- a/Source/WebCore/css/CSSParserValues.cpp
++++ b/Source/WebCore/css/CSSParserValues.cpp
+@@ -88,6 +88,9 @@ PassRefPtr<CSSValue> CSSParserValue::createCSSValue()
+     case CSSPrimitiveValue::CSS_NUMBER:
+         return CSSPrimitiveValue::create(fValue, isInt ? CSSPrimitiveValue::CSS_PARSER_INTEGER : CSSPrimitiveValue::CSS_NUMBER);
+     case CSSPrimitiveValue::CSS_STRING:
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    case CSSPrimitiveValue::CSS_NAVID:
++#endif
+     case CSSPrimitiveValue::CSS_URI:
+ #if ENABLE(CSS_VARIABLES)
+     case CSSPrimitiveValue::CSS_VARIABLE_NAME:
+diff --git a/Source/WebCore/css/CSSPrimitiveValue.cpp b/Source/WebCore/css/CSSPrimitiveValue.cpp
+index f3902c7..f308cc1 100644
+--- a/Source/WebCore/css/CSSPrimitiveValue.cpp
++++ b/Source/WebCore/css/CSSPrimitiveValue.cpp
+@@ -119,6 +119,9 @@ static inline bool isValidCSSUnitTypeForDoubleConversion(CSSPrimitiveValue::Unit
+     case CSSPrimitiveValue::CSS_RGBCOLOR:
+     case CSSPrimitiveValue::CSS_SHAPE:
+     case CSSPrimitiveValue::CSS_STRING:
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    case CSSPrimitiveValue::CSS_NAVID:
++#endif
+     case CSSPrimitiveValue::CSS_UNICODE_RANGE:
+     case CSSPrimitiveValue::CSS_UNKNOWN:
+     case CSSPrimitiveValue::CSS_URI:
+@@ -407,6 +410,9 @@ void CSSPrimitiveValue::cleanup()
+ {
+     switch (static_cast<UnitTypes>(m_primitiveUnitType)) {
+     case CSS_STRING:
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    case CSS_NAVID:
++#endif
+     case CSS_URI:
+     case CSS_ATTR:
+     case CSS_COUNTER_NAME:
+@@ -791,6 +797,9 @@ String CSSPrimitiveValue::getStringValue(ExceptionCode& ec) const
+     ec = 0;
+     switch (m_primitiveUnitType) {
+         case CSS_STRING:
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++        case CSS_NAVID:
++#endif
+         case CSS_ATTR:
+         case CSS_URI:
+ #if ENABLE(CSS_VARIABLES)
+@@ -813,6 +822,9 @@ String CSSPrimitiveValue::getStringValue() const
+ {
+     switch (m_primitiveUnitType) {
+         case CSS_STRING:
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++        case CSS_NAVID:
++#endif
+         case CSS_ATTR:
+         case CSS_URI:
+ #if ENABLE(CSS_VARIABLES)
+@@ -1232,6 +1244,9 @@ PassRefPtr<CSSPrimitiveValue> CSSPrimitiveValue::cloneForCSSOM() const
+ 
+     switch (m_primitiveUnitType) {
+     case CSS_STRING:
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    case CSS_NAVID:
++#endif
+     case CSS_URI:
+     case CSS_ATTR:
+     case CSS_COUNTER_NAME:
+@@ -1362,6 +1377,9 @@ bool CSSPrimitiveValue::equals(const CSSPrimitiveValue& other) const
+     case CSS_VALUE_ID:
+         return valueName(m_value.valueID) == valueName(other.m_value.valueID);
+     case CSS_STRING:
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    case CSS_NAVID:
++#endif
+     case CSS_URI:
+     case CSS_ATTR:
+     case CSS_COUNTER_NAME:
+diff --git a/Source/WebCore/css/CSSPrimitiveValue.h b/Source/WebCore/css/CSSPrimitiveValue.h
+index 28ae4e8..cfc7068 100644
+--- a/Source/WebCore/css/CSSPrimitiveValue.h
++++ b/Source/WebCore/css/CSSPrimitiveValue.h
+@@ -138,6 +138,10 @@ public:
+ #endif
+         CSS_PROPERTY_ID = 117,
+         CSS_VALUE_ID = 118
++
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++        CSS_NAVID = 119
++#endif
+     };
+ 
+     // This enum follows the CSSParser::Units enum augmented with UNIT_FREQUENCY for frequencies.
+diff --git a/Source/WebCore/css/DeprecatedStyleBuilder.cpp b/Source/WebCore/css/DeprecatedStyleBuilder.cpp
+index 68bb3bc..5653814 100644
+--- a/Source/WebCore/css/DeprecatedStyleBuilder.cpp
++++ b/Source/WebCore/css/DeprecatedStyleBuilder.cpp
+@@ -1863,6 +1863,31 @@ public:
+     }
+ };
+ 
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++template <typename T, T (RenderStyle::*getterFunction)() const, void (RenderStyle::*setterFunction)(T), T (*initialFunction)()>
++class ApplyPropertyNavDirection {
++public:
++    static void applyValue(CSSPropertyID, StyleResolver* styleResolver, CSSValue* value)
++    {
++        if (value->isPrimitiveValue()) {
++            CSSPrimitiveValue* primitiveValue = static_cast<CSSPrimitiveValue*>(value);
++            if (primitiveValue->getValueID() == CSSValueAuto)
++                (styleResolver->style()->*setterFunction)((*initialFunction)());
++            else if (primitiveValue->primitiveType() == CSSPrimitiveValue::CSS_STRING
++                || primitiveValue->primitiveType() == CSSPrimitiveValue::CSS_PARSER_HEXCOLOR)
++                (styleResolver->style()->*setterFunction)(styleResolver->getStyleNavigationValue(value));
++        } else if (value->isValueList())
++            (styleResolver->style()->*setterFunction)(styleResolver->getStyleNavigationValue(value));
++    }
++
++    static PropertyHandler createHandler()
++    {
++        PropertyHandler handler = ApplyPropertyDefaultBase<T, getterFunction, T, setterFunction, T, initialFunction>::createHandler();
++        return PropertyHandler(handler.inheritFunction(), handler.initialFunction(), &applyValue);
++    }
++};
++#endif
++
+ class ApplyPropertyDisplay {
+ private:
+     static inline bool isValidDisplayValue(StyleResolver* styleResolver, EDisplay displayPropertyValue)
+diff --git a/Source/WebCore/css/StyleResolver.cpp b/Source/WebCore/css/StyleResolver.cpp
+index 2a09d30..2f119ae 100644
+--- a/Source/WebCore/css/StyleResolver.cpp
++++ b/Source/WebCore/css/StyleResolver.cpp
+@@ -3128,6 +3128,12 @@ void StyleResolver::applyProperty(CSSPropertyID id, CSSValue* value)
+     case CSSPropertyOrientation:
+     case CSSPropertyUserZoom:
+ #endif
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    case CSSPropertyNavDown:
++    case CSSPropertyNavLeft:
++    case CSSPropertyNavRight:
++    case CSSPropertyNavUp:
++#endif
+         ASSERT_NOT_REACHED();
+         return;
+     default:
+@@ -3196,6 +3202,29 @@ PassRefPtr<StyleImage> StyleResolver::cursorOrPendingFromValue(CSSPropertyID pro
+     return image.release();
+ }
+ 
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++StyleNavigationValue StyleResolver::getStyleNavigationValue(CSSValue* value)
++{
++    if (value->isValueList()) {
++        CSSValueList* list = static_cast<CSSValueList*>(value);
++        String listValues[2];
++
++        for (size_t i = 0; i < 2; i++) {
++            CSSValue* item = list->item(i);
++            if (!item || !item->isPrimitiveValue())
++                continue;
++            CSSPrimitiveValue* primitiveValue = static_cast<CSSPrimitiveValue*>(item);
++            if (primitiveValue->primitiveType() == CSSPrimitiveValue::CSS_STRING)
++                listValues[i] = primitiveValue->getStringValue();
++        }
++
++        return StyleNavigationValue(AtomicString(listValues[0]), AtomicString(listValues[1]));
++    }
++
++    return StyleNavigationValue(AtomicString(static_cast<CSSPrimitiveValue*>(value)->getStringValue()));
++}
++#endif
++
+ void StyleResolver::checkForZoomChange(RenderStyle* style, RenderStyle* parentStyle)
+ {
+     if (style->effectiveZoom() == parentStyle->effectiveZoom())
+diff --git a/Source/WebCore/css/StyleResolver.h b/Source/WebCore/css/StyleResolver.h
+index ae08045..068cd11 100644
+--- a/Source/WebCore/css/StyleResolver.h
++++ b/Source/WebCore/css/StyleResolver.h
+@@ -93,6 +93,9 @@ class StyleCustomFilterProgramCache;
+ class StyleScopeResolver;
+ class StyleImage;
+ class StyleKeyframe;
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++class StyleNavigationValue;
++#endif
+ class StylePendingImage;
+ class StylePropertySet;
+ class StyleRule;
+@@ -324,6 +327,9 @@ public:
+     void loadPendingSVGDocuments();
+ #endif
+ #endif // ENABLE(CSS_FILTERS)
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    StyleNavigationValue getStyleNavigationValue(CSSValue*);
++#endif
+ 
+     void loadPendingResources();
+ 
+@@ -499,6 +505,9 @@ public:
+         void setTextOrientation(TextOrientation textOrientation) { m_fontDirty |= m_style->setTextOrientation(textOrientation); }
+ 
+         bool useSVGZoomRules() const { return m_element && m_element->isSVGElement(); }
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++        StyleNavigationValue getStyleNavigationValue(CSSValue*);
++#endif
+ 
+     private:
+         // FIXME(bug 108563): to make it easier to review, these member
+diff --git a/Source/WebCore/dom/DOMImplementation.cpp b/Source/WebCore/dom/DOMImplementation.cpp
+index cc5f57c..4176d58 100644
+--- a/Source/WebCore/dom/DOMImplementation.cpp
++++ b/Source/WebCore/dom/DOMImplementation.cpp
+@@ -342,10 +342,16 @@ static inline bool isValidXMLMIMETypeChar(UChar c)
+ 
+ bool DOMImplementation::isXMLMIMEType(const String& mimeType)
+ {
+-    if (mimeType == "text/xml" || mimeType == "application/xml" || mimeType == "text/xsl"
+-        || "application/vnd.hbbtv.xhtml+xml" || mimeType == "application/ce-html+xml" || mimeType == "application/x-ce-html+xml")
++    if (mimeType == "text/xml" || mimeType == "application/xml" || mimeType == "text/xsl")
+         return true;
+ 
++#if ENABLE(HBBTV)
++    if (mimeType == "application/vnd.hbbtv.xhtml+xml"
++        || mimeType == "application/vnd.oipf.xhtml+xml"
++        || mimeType == "application/ce-html+xml")
++        return true;
++#endif
++
+     if (!mimeType.endsWith("+xml"))
+         return false;
+ 
+@@ -395,9 +401,12 @@ PassRefPtr<Document> DOMImplementation::createDocument(const String& type, Frame
+     if (type == "text/html")
+         return HTMLDocument::create(frame, url);
+     if (type == "application/xhtml+xml"
++#if ENABLE(HBBTV)
+         || type == "application/ce-html+xml"
+         || type == "application/vnd.hbbtv.xhtml+xml"
+-        || type == "application/vnd.oipf.xhtml+xml")
++        || type == "application/vnd.oipf.xhtml+xml"
++#endif // ENABLE(HBBTV)
++        )
+         return Document::createXHTML(frame, url);
+ 
+ #if ENABLE(FTPDIR)
+diff --git a/Source/WebCore/dom/EventNames.h b/Source/WebCore/dom/EventNames.h
+index c1d65ca..8fcd33e 100644
+--- a/Source/WebCore/dom/EventNames.h
++++ b/Source/WebCore/dom/EventNames.h
+@@ -256,7 +256,10 @@ namespace WebCore {
+     \
+     macro(securitypolicyviolation) \
+     \
+-
++    /* ENABLE(HBBTV) */\
++    macro(webkitobjectadded) \
++    macro(webkitobjectparamadded) \
++    /* End of ENABLE(HBBTV) */\
+ // end of DOM_EVENT_NAMES_FOR_EACH
+ 
+     class EventNames {
+diff --git a/Source/WebCore/dom/KeyboardEvent.cpp b/Source/WebCore/dom/KeyboardEvent.cpp
+index 0aa861a..9319a5e 100644
+--- a/Source/WebCore/dom/KeyboardEvent.cpp
++++ b/Source/WebCore/dom/KeyboardEvent.cpp
+@@ -33,6 +33,11 @@
+ #include "Settings.h"
+ #include "WindowsKeyboardCodes.h"
+ 
++#if ENABLE(HBBTV)
++#include "PlatformHbbTVKeyCodes.h"
++#include <platform/RuntimeApplicationChecks.h>
++#endif // ENABLE(HBBTV)
++
+ namespace WebCore {
+ 
+ static inline const AtomicString& eventTypeForKeyboardEventType(PlatformEvent::Type type)
+@@ -162,6 +167,15 @@ bool KeyboardEvent::getModifierState(const String& keyIdentifier) const
+ 
+ int KeyboardEvent::keyCode() const
+ {
++#if ENABLE(HBBTV)
++    if (applicationIsHbbTV()) {
++        // If the native keycode was an HBBTV key, then send the correct keyCode.
++        int val = m_keyEvent->nativeVirtualKeyCode();
++        if (val & KEYEVENT_VK_RANGE_MASK && !(val & 0x0001F000))
++            return val & ~KEYEVENT_VK_RANGE_MASK;
++    }
++#endif // ENABLE(HBBTV)
++
+     // IE: virtual key code for keyup/keydown, character code for keypress
+     // Firefox: virtual key code for keyup/keydown, zero for keypress
+     // We match IE.
+diff --git a/Source/WebCore/dom/MutationObserver.cpp b/Source/WebCore/dom/MutationObserver.cpp
+index d4a6e6e..da80013 100644
+--- a/Source/WebCore/dom/MutationObserver.cpp
++++ b/Source/WebCore/dom/MutationObserver.cpp
+@@ -129,7 +129,7 @@ void MutationObserver::disconnect()
+     m_records.clear();
+     HashSet<MutationObserverRegistration*> registrations(m_registrations);
+     for (HashSet<MutationObserverRegistration*>::iterator iter = registrations.begin(); iter != registrations.end(); ++iter)
+-        MutationObserverRegistration::unregisterAndDelete(*iter);
++        (*iter)->unregister();
+ }
+ 
+ void MutationObserver::observationStarted(MutationObserverRegistration* registration)
+diff --git a/Source/WebCore/dom/MutationObserverRegistration.cpp b/Source/WebCore/dom/MutationObserverRegistration.cpp
+index 4f81ad6..9bcfdd1 100644
+--- a/Source/WebCore/dom/MutationObserverRegistration.cpp
++++ b/Source/WebCore/dom/MutationObserverRegistration.cpp
+@@ -98,6 +98,12 @@ void MutationObserverRegistration::clearTransientRegistrations()
+     m_registrationNodeKeepAlive = 0; // Balanced in observeSubtreeNodeWillDetach.
+ }
+ 
++void MutationObserverRegistration::unregister()
++{
++    m_registrationNode->unregisterMutationObserver(this);
++    // The above line will cause this object to be deleted, so don't do any more in this function.
++}
++
+ void MutationObserverRegistration::unregisterAndDelete(MutationObserverRegistration* registry)
+ {
+     RefPtr<Node> registrationNode(registry->m_registrationNode);
+diff --git a/Source/WebCore/dom/MutationObserverRegistration.h b/Source/WebCore/dom/MutationObserverRegistration.h
+index 5a14a59..930d8c9 100644
+--- a/Source/WebCore/dom/MutationObserverRegistration.h
++++ b/Source/WebCore/dom/MutationObserverRegistration.h
+@@ -48,6 +48,7 @@ public:
+     void resetObservation(MutationObserverOptions, const HashSet<AtomicString>& attributeFilter);
+     void observedSubtreeNodeWillDetach(Node*);
+     void clearTransientRegistrations();
++    void unregister();
+     bool hasTransientRegistrations() const { return m_transientRegistrationNodes && !m_transientRegistrationNodes->isEmpty(); }
+     static void unregisterAndDelete(MutationObserverRegistration*);
+ 
+diff --git a/Source/WebCore/dom/ProcessingInstruction.cpp b/Source/WebCore/dom/ProcessingInstruction.cpp
+index 0a5b878..bfb953e 100644
+--- a/Source/WebCore/dom/ProcessingInstruction.cpp
++++ b/Source/WebCore/dom/ProcessingInstruction.cpp
+@@ -123,9 +123,13 @@ void ProcessingInstruction::checkStyleSheet()
+ 
+         m_isCSS = type.isEmpty() || type == "text/css";
+ #if ENABLE(XSLT)
+-        m_isXSL = (type == "text/xml" || type == "text/xsl" || type == "application/xml" ||
+-                   type == "application/xhtml+xml" || type == "application/rss+xml" || type == "application/atom+xml" ||
+-                   type == "application/vnd.hbbtv.xhtml+xml" || type == "application/ce-html+xml" || type == "application/x-ce-html+xml");
++        m_isXSL = (type == "text/xml" || type == "text/xsl" || type == "application/xml"
++#if ENABLE(HBBTV)
++            || type == "application/vnd.hbbtv.xhtml+xml"
++            || type == "application/vnd.oipf.xhtml+xml"
++            || type == "application/ce-html+xml"
++#endif // ENABLE(HBBTV)
++            || type == "application/xhtml+xml" || type == "application/rss+xml" || type == "application/atom+xml");
+         if (!m_isCSS && !m_isXSL)
+ #else
+         if (!m_isCSS)
+diff --git a/Source/WebCore/html/HTMLBodyElement.h b/Source/WebCore/html/HTMLBodyElement.h
+index f89ce7a..0a6218d 100644
+--- a/Source/WebCore/html/HTMLBodyElement.h
++++ b/Source/WebCore/html/HTMLBodyElement.h
+@@ -47,6 +47,10 @@ public:
+     String vLink() const;
+     void setVLink(const String&);
+ 
++#if ENABLE(HBBTV)
++    DEFINE_ATTRIBUTE_EVENT_LISTENER(webkitobjectadded);
++#endif // ENABLE(HBBTV)
++
+     // Declared virtual in Element
+     DEFINE_WINDOW_ATTRIBUTE_EVENT_LISTENER(blur);
+     DEFINE_WINDOW_ATTRIBUTE_EVENT_LISTENER(error);
+diff --git a/Source/WebCore/html/HTMLBodyElement.idl b/Source/WebCore/html/HTMLBodyElement.idl
+index a07e7e7..1990d4e 100644
+--- a/Source/WebCore/html/HTMLBodyElement.idl
++++ b/Source/WebCore/html/HTMLBodyElement.idl
+@@ -38,6 +38,7 @@ interface HTMLBodyElement : HTMLElement {
+     [NotEnumerable, JSWindowEventListener] attribute EventListener onstorage;
+     [NotEnumerable, JSWindowEventListener] attribute EventListener onunload;
+ 
++    [Conditional=HBBTV, NotEnumerable, JSWindowEventListener] attribute EventListener onwebkitobjectadded;
+     [Conditional=ORIENTATION_EVENTS, NotEnumerable, JSWindowEventListener] attribute EventListener onorientationchange;
+ 
+     // Overrides of Element attributes (with different implementation in bindings).
+diff --git a/Source/WebCore/html/HTMLObjectElement.cpp b/Source/WebCore/html/HTMLObjectElement.cpp
+index 2723940..4f4059e 100644
+--- a/Source/WebCore/html/HTMLObjectElement.cpp
++++ b/Source/WebCore/html/HTMLObjectElement.cpp
+@@ -53,6 +53,15 @@
+ #include "Text.h"
+ #include "Widget.h"
+ 
++#if ENABLE(HBBTV)
++#include "BridgeJSC.h"
++#include "Event.h"
++#include "EventDispatchMediator.h"
++#include "EventDispatcher.h"
++#include "HTMLBodyElement.h"
++#include <platform/RuntimeApplicationChecks.h>
++#endif // ENABLE(HBBTV)
++
+ namespace WebCore {
+ 
+ using namespace HTMLNames;
+@@ -341,6 +350,18 @@ bool HTMLObjectElement::rendererIsNeeded(const NodeRenderingContext& context)
+ 
+ Node::InsertionNotificationRequest HTMLObjectElement::insertedInto(ContainerNode* insertionPoint)
+ {
++#if ENABLE(HBBTV)
++    if (applicationIsHbbTV()) {
++        RefPtr<Event> event = Event::create(eventNames().webkitobjectaddedEvent, false, false);
++
++        // Setting different target and currentTarget allows to
++        // have access to the object inside a body's event handler.
++        event->setTarget(this);
++        event->setCurrentTarget(document()->body());
++
++        EventDispatcher::dispatchEvent(this, EventDispatchMediator::create(event.release()));
++    }
++#endif // ENABLE(HBBTV)
+     HTMLPlugInImageElement::insertedInto(insertionPoint);
+     FormAssociatedElement::insertedInto(insertionPoint);
+     return InsertionDone;
+@@ -359,6 +380,19 @@ void HTMLObjectElement::childrenChanged(bool changedByParser, Node* beforeChange
+         setNeedsWidgetUpdate(true);
+         setNeedsStyleRecalc();
+     }
++#if ENABLE(HBBTV)
++    if (applicationIsHbbTV()) {
++        if (beforeChange) {
++            Node* changed = beforeChange->nextSibling();
++            if (changed && changed->hasTagName(paramTag) && getInstance()) {
++                RefPtr<Event> event = Event::create(eventNames().webkitobjectparamaddedEvent, false, false);
++                event->setTarget(this);
++                EventDispatcher::dispatchEvent(this, EventDispatchMediator::create(event.release()));
++            }
++        }
++    }
++#endif // ENABLE(HBBTV)
++
+     HTMLPlugInImageElement::childrenChanged(changedByParser, beforeChange, afterChange, childCountDelta);
+ }
+ 
+diff --git a/Source/WebCore/html/HTMLObjectElement.h b/Source/WebCore/html/HTMLObjectElement.h
+index d11420b..aeb9def 100644
+--- a/Source/WebCore/html/HTMLObjectElement.h
++++ b/Source/WebCore/html/HTMLObjectElement.h
+@@ -63,6 +63,10 @@ public:
+ 
+     virtual bool canContainRangeEndPoint() const { return useFallbackContent(); }
+ 
++#if ENABLE(HBBTV)
++    DEFINE_ATTRIBUTE_EVENT_LISTENER(webkitobjectparamadded);
++#endif // ENABLE(HBBTV)
++
+ private:
+     HTMLObjectElement(const QualifiedName&, Document*, HTMLFormElement*, bool createdByParser);
+ 
+diff --git a/Source/WebCore/html/HTMLObjectElement.idl b/Source/WebCore/html/HTMLObjectElement.idl
+index fb1c3f4..55be71e 100644
+--- a/Source/WebCore/html/HTMLObjectElement.idl
++++ b/Source/WebCore/html/HTMLObjectElement.idl
+@@ -46,6 +46,8 @@
+     boolean checkValidity();
+     void setCustomValidity([TreatNullAs=NullString, TreatUndefinedAs=NullString] DOMString error);
+ 
++//    [Conditional=JS_PLUGIN, Custom] boolean webkitSetInternalObject(any impl)
++
+     // Introduced in DOM Level 2:
+     [CheckSecurityForNode] readonly attribute Document contentDocument;
+ 
+@@ -59,5 +61,7 @@
+     // Objective-C extension:
+     readonly attribute URL absoluteImageURL;
+ #endif
++
++    [Conditional=HBBTV, NotEnumerable] attribute EventListener onwebkitobjectparamadded;
+ };
+ 
+diff --git a/Source/WebCore/html/HTMLViewSourceDocument.cpp b/Source/WebCore/html/HTMLViewSourceDocument.cpp
+index e5cd64b..5f88e7f 100644
+--- a/Source/WebCore/html/HTMLViewSourceDocument.cpp
++++ b/Source/WebCore/html/HTMLViewSourceDocument.cpp
+@@ -62,7 +62,11 @@ HTMLViewSourceDocument::HTMLViewSourceDocument(Frame* frame, const KURL& url, co
+ 
+ PassRefPtr<DocumentParser> HTMLViewSourceDocument::createParser()
+ {
+-    if (m_type == "text/html" || m_type == "application/xhtml+xml" || m_type == "image/svg+xml" || DOMImplementation::isXMLMIMEType(m_type))
++    if (m_type == "text/html" || m_type == "application/xhtml+xml" || m_type == "image/svg+xml" || DOMImplementation::isXMLMIMEType(m_type)
++#if ENABLE(HBBTV)
++        || m_type == "application/vnd.hbbtv.xhtml+xml" || m_type == "application/ce-html+xml" || m_type == "application/vnd.oipf.xhtml+xml"
++#endif // ENABLE(HBBTV)
++    )
+         return HTMLViewSourceParser::create(this);
+ 
+     return TextViewSourceParser::create(this);
+diff --git a/Source/WebCore/loader/FrameLoader.cpp b/Source/WebCore/loader/FrameLoader.cpp
+index 7520091..cca34eb 100644
+--- a/Source/WebCore/loader/FrameLoader.cpp
++++ b/Source/WebCore/loader/FrameLoader.cpp
+@@ -139,7 +139,11 @@ using namespace HTMLNames;
+ using namespace SVGNames;
+ #endif
+ 
+-static const char defaultAcceptHeader[] = "application/vnd.hbbtv.xhtml+xml,application/ce-html+xml,application/x-ce-html+xml,application/vnd.wap.xhtml+xml,application/xhtml+xml;profile='http://www.wapforum.org/xhtml',text/html,application/xml;q=0.9,*/*;q=0.8";
++static const char defaultAcceptHeader[] = "text/html,application/xhtml+xml,application/xml"
++#if ENABLE(HBBTV)
++    ",application/vnd.hbbtv.xhtml+xml,application/ce-html+xml,application/vnd.oipf.xhtml+xml"
++#endif // ENABLE(HBBTV)
++    ";q=0.9,*/*;q=0.8";
+ static double storedTimeOfLastCompletedLoad;
+ 
+ bool isBackForwardLoadType(FrameLoadType type)
+diff --git a/Source/WebCore/loader/cache/CachedResourceLoader.cpp b/Source/WebCore/loader/cache/CachedResourceLoader.cpp
+index 0735fc8..2b27d6f 100644
+--- a/Source/WebCore/loader/cache/CachedResourceLoader.cpp
++++ b/Source/WebCore/loader/cache/CachedResourceLoader.cpp
+@@ -60,6 +60,10 @@
+ #include <wtf/text/CString.h>
+ #include <wtf/text/WTFString.h>
+ 
++#if ENABLE(HBBTV)
++#include <platform/RuntimeApplicationChecks.h>
++#endif
++
+ #if ENABLE(VIDEO_TRACK)
+ #include "CachedTextTrack.h"
+ #endif
+@@ -582,6 +586,12 @@ CachedResourceLoader::RevalidationPolicy CachedResourceLoader::determineRevalida
+     if (!existingResource)
+         return Load;
+ 
++#if ENABLE(HBBTV)
++    // Always reload dvb protocol for HbbTV applications.
++    if (applicationIsHbbTV() && request.url().protocolIs("dvb"))
++        return Reload;
++#endif
++
+     // We already have a preload going for this URL.
+     if (forPreload && existingResource->isPreloaded())
+         return Use;
+diff --git a/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp b/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp
+index 7b99f6f..01f355f 100644
+--- a/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp
++++ b/Source/WebCore/loader/cache/CachedXSLStyleSheet.cpp
+@@ -43,7 +43,11 @@ CachedXSLStyleSheet::CachedXSLStyleSheet(const ResourceRequest& resourceRequest)
+ {
+     // It's XML we want.
+     // FIXME: This should accept more general xml formats */*+xml, image/svg+xml for example.
+-    setAccept("text/xml, application/xml, application/xhtml+xml, text/xsl, application/rss+xml, application/atom+xml, application/vnd.hbbtv.xhtml+xml, application/ce-html+xml, application/x-ce-html+xml");
++    setAccept("text/xml, application/xml, application/xhtml+xml, text/xsl, application/rss+xml, application/atom+xml"
++#if ENABLE(HBBTV)
++        ", application/ce-html+xml, application/vnd.hbbtv.xhtml+xml, application/vnd.oipf.xhtml+xml"
++#endif // ENABLE(HBBTV)
++        );
+ }
+ 
+ void CachedXSLStyleSheet::didAddClient(CachedResourceClient* c)
+diff --git a/Source/WebCore/loader/icon/IconController.cpp b/Source/WebCore/loader/icon/IconController.cpp
+index a808352..2600db7 100644
+--- a/Source/WebCore/loader/icon/IconController.cpp
++++ b/Source/WebCore/loader/icon/IconController.cpp
+@@ -48,6 +48,12 @@
+ #include "Page.h"
+ #include "Settings.h"
+ 
++#include <wtf/text/CString.h>
++
++#if ENABLE(HBBTV)
++#include <platform/RuntimeApplicationChecks.h>
++#endif
++
+ namespace WebCore {
+ 
+ IconController::IconController(Frame* frame)
+@@ -85,7 +91,12 @@ IconURLs IconController::urlsForTypes(int iconTypesMask)
+     if (m_frame->tree() && m_frame->tree()->parent())
+         return iconURLs;
+         
+-    if (iconTypesMask & Favicon && !appendToIconURLs(Favicon, &iconURLs))
++    if (iconTypesMask & Favicon
++#if ENABLE(HBBTV)
++        && !applicationIsHbbTV()
++#endif // ENABLE(HBBTV)
++        && !appendToIconURLs(Favicon, &iconURLs)
++        )
+         iconURLs.append(defaultURL(Favicon));
+ 
+ #if ENABLE(TOUCH_ICON_LOADING)
+diff --git a/Source/WebCore/page/DOMWindow.cpp b/Source/WebCore/page/DOMWindow.cpp
+index 670191f..5dfdaa7 100644
+--- a/Source/WebCore/page/DOMWindow.cpp
++++ b/Source/WebCore/page/DOMWindow.cpp
+@@ -82,6 +82,9 @@
+ #include "PageTransitionEvent.h"
+ #include "Performance.h"
+ #include "PlatformScreen.h"
++#if ENABLE(HBBTV)
++#include "RuntimeApplicationChecks.h"
++#endif
+ #include "RuntimeEnabledFeatures.h"
+ #include "ScheduledAction.h"
+ #include "Screen.h"
+@@ -909,6 +912,29 @@ DOMSelection* DOMWindow::getSelection()
+     return m_frame->document()->getSelection();
+ }
+ 
++#if ENABLE(HBBTV)
++Element* DOMWindow::frameElement(ExceptionCode& exceptionCode) const
++{
++    if (!m_frame)
++        return 0;
++
++    Element* element = m_frame->ownerElement();
++    if (element) {
++        Document* document = element->document();
++        // Check frame can access its parent's properties. In HbbTV this must result in a
++        // SecurityError exception to be thrown.
++        if (document && !m_frame->document()->securityOrigin()->canAccess(document->securityOrigin())) {
++            if (!applicationIsHbbTV()) // For non HBBTV applications just return 0 as default behaviour.
++                return 0;
++
++            exceptionCode = SECURITY_ERR;
++            return 0;
++        }
++    }
++
++    return element;
++}
++#else
+ Element* DOMWindow::frameElement() const
+ {
+     if (!m_frame)
+@@ -916,6 +942,7 @@ Element* DOMWindow::frameElement() const
+ 
+     return m_frame->ownerElement();
+ }
++#endif
+ 
+ void DOMWindow::focus(ScriptExecutionContext* context)
+ {
+diff --git a/Source/WebCore/page/DOMWindow.h b/Source/WebCore/page/DOMWindow.h
+index 38f0782..b09394f 100644
+--- a/Source/WebCore/page/DOMWindow.h
++++ b/Source/WebCore/page/DOMWindow.h
+@@ -149,7 +149,11 @@ namespace WebCore {
+ 
+         DOMSelection* getSelection();
+ 
++#if ENABLE(HBBTV)
++        Element* frameElement(ExceptionCode&) const;
++#else
+         Element* frameElement() const;
++#endif
+ 
+         void focus(ScriptExecutionContext* = 0);
+         void blur();
+diff --git a/Source/WebCore/page/DOMWindow.idl b/Source/WebCore/page/DOMWindow.idl
+index c64482a..b5e6f80 100644
+--- a/Source/WebCore/page/DOMWindow.idl
++++ b/Source/WebCore/page/DOMWindow.idl
+@@ -58,7 +58,11 @@
+ 
+     DOMSelection getSelection();
+ 
++#ifdef ENABLE_HBBTV
++    [GetterRaisesException] readonly attribute Element frameElement;
++#else
+     [CheckSecurityForNode] readonly attribute Element frameElement;
++#endif
+ 
+     [DoNotCheckSecurity, CallWith=ScriptExecutionContext] void focus();
+     [DoNotCheckSecurity] void blur();
+diff --git a/Source/WebCore/page/EventHandler.cpp b/Source/WebCore/page/EventHandler.cpp
+index 746ed04..b18942a 100644
+--- a/Source/WebCore/page/EventHandler.cpp
++++ b/Source/WebCore/page/EventHandler.cpp
+@@ -90,6 +90,12 @@
+ #include <wtf/CurrentTime.h>
+ #include <wtf/StdLibExtras.h>
+ #include <wtf/TemporaryChange.h>
++#include <wtf/text/CString.h>
++
++#if ENABLE(HBBTV)
++#include "PlatformHbbTVKeyCodes.h"
++#include <platform/RuntimeApplicationChecks.h>
++#endif
+ 
+ #if ENABLE(GESTURE_EVENTS)
+ #include "PlatformGestureEvent.h"
+@@ -3250,11 +3256,28 @@ bool EventHandler::keyEvent(const PlatformKeyboardEvent& initialKeyEvent)
+     }
+ 
+     node->dispatchEvent(keydown, IGNORE_EXCEPTION);
++
++#if ENABLE(HBBTV)
++    bool bHbbTVKey = false;
++    if (applicationIsHbbTV()) {
++        int keyval = initialKeyEvent.nativeVirtualKeyCode();
++        if ((keyval & KEYEVENT_VK_RANGE_MASK) == KEYEVENT_VK_RANGE_MASK)
++            bHbbTVKey = true;
++    }
++#endif // ENABLE(HBBTV)
++
+     // If frame changed as a result of keydown dispatch, then return early to avoid sending a subsequent keypress message to the new frame.
+     bool changedFocusedFrame = m_frame->page() && m_frame != m_frame->page()->focusController()->focusedOrMainFrame();
+     bool keydownResult = keydown->defaultHandled() || keydown->defaultPrevented() || changedFocusedFrame;
+-    if (handledByInputMethod || (keydownResult && !backwardCompatibilityMode))
+-        return keydownResult;
++
++#if ENABLE(HBBTV)
++    if (!bHbbTVKey) {
++#endif // ENABLE(HBBTV)
++        if (handledByInputMethod || (keydownResult && !backwardCompatibilityMode))
++            return keydownResult;
++#if ENABLE(HBBTV)
++    }
++#endif // ENABLE(HBBTV)
+     
+     // Focus may have changed during keydown handling, so refetch node.
+     // But if we are dispatching a fake backward compatibility keypress, then we pretend that the keypress happened on the original node.
+@@ -3267,6 +3290,15 @@ bool EventHandler::keyEvent(const PlatformKeyboardEvent& initialKeyEvent)
+     PlatformKeyboardEvent keyPressEvent = initialKeyEvent;
+     keyPressEvent.disambiguateKeyDownEvent(PlatformEvent::Char, backwardCompatibilityMode);
+ 
++#if ENABLE(HBBTV)
++    if (!bHbbTVKey) {
++#endif // ENABLE(HBBTV)
++        if (keyPressEvent.text().isEmpty())
++            return keydownResult;
++#if ENABLE(HBBTV)
++    }
++#endif // ENABLE(HBBTV)
++
+     RefPtr<KeyboardEvent> keypress = KeyboardEvent::create(keyPressEvent, m_frame->document()->defaultView());
+     keypress->setTarget(node);
+     if (keydownResult)
+@@ -3354,6 +3386,11 @@ void EventHandler::defaultKeyboardEventHandler(KeyboardEvent* event)
+         else {
+             FocusDirection direction = focusDirectionForKey(event->keyIdentifier());
+             if (direction != FocusDirectionNone)
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++                Page* page = m_frame->page();
++                if (page && page->focusController()->handleCSSFocusNavigation(direction))
++                    return;
++#endif
+                 defaultArrowEventHandler(direction, event);
+         }
+ 
+diff --git a/Source/WebCore/page/FocusController.cpp b/Source/WebCore/page/FocusController.cpp
+index bc83e7f..fa051b8 100644
+--- a/Source/WebCore/page/FocusController.cpp
++++ b/Source/WebCore/page/FocusController.cpp
+@@ -280,6 +280,92 @@ bool FocusController::advanceFocus(FocusDirection direction, KeyboardEvent* even
+     return false;
+ }
+ 
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++bool FocusController::handleCSSFocusNavigation(FocusDirection direction)
++{
++    DEFINE_STATIC_LOCAL(AtomicString, Current, ("current"));
++    DEFINE_STATIC_LOCAL(AtomicString, Root, ("root"));
++
++    Frame* frame = focusedOrMainFrame();
++    ASSERT(frame);
++
++    Document* document = frame->document();
++    if (!document)
++        return false;
++
++    if (document->isDocumentNode())
++        document->updateLayoutIgnorePendingStylesheets();
++
++    Node* currentNode = document->focusedElement();
++    RenderObject* renderer = currentNode ? currentNode->renderer() : 0;
++    if (!renderer)
++        return false;
++
++    StyleNavigationValue value;
++    switch (direction) {
++    case FocusDirectionForward:
++    case FocusDirectionBackward:
++        return false;
++    case FocusDirectionUp:
++        value = renderer->style()->navUp();
++        break;
++    case FocusDirectionDown:
++        value = renderer->style()->navDown();
++        break;
++    case FocusDirectionLeft:
++        value = renderer->style()->navLeft();
++        break;
++    case FocusDirectionRight:
++        value = renderer->style()->navRight();
++        break;
++    case FocusDirectionNone:
++    default:
++        ASSERT_NOT_REACHED();
++        break;
++    }
++
++    if (value.id().isNull() || value.isAuto())
++        return false;
++
++    const AtomicString& target = value.target();
++    Frame* targetFrame = 0;
++
++    // If we were in the autoscroll/panScroll mode we want to stop it.
++    frame->eventHandler()->stopAutoscrollTimer();
++
++    if (target == Current)
++        targetFrame = frame;
++    else if (target == Root)
++        targetFrame = frame->tree()->top();
++    else
++        targetFrame = frame->tree()->find(target);
++
++    if (!targetFrame)
++        return false;
++
++    Element* targetNode = targetFrame->document()->findAnchor(value.id().string());
++    if (!targetNode)
++        return false;
++
++    // If it's same with the current focused, it should be consumed.
++    if (currentNode == targetNode)
++        return true;
++
++    Document* newDocument = targetNode->document();
++    if (newDocument != document)
++        document->setFocusedElement(0);
++
++    if (newDocument)
++        setFocusedFrame(newDocument->frame());
++
++    if (hasOffscreenRect(targetNode))
++        targetNode->scrollIntoViewIfNeeded(false);
++
++    targetNode->focus(false, direction);
++    return true;
++}
++#endif
++
+ bool FocusController::advanceFocusInDocumentOrder(FocusDirection direction, KeyboardEvent* event, bool initialFocus)
+ {
+     Frame* frame = focusedOrMainFrame();
+diff --git a/Source/WebCore/page/FocusController.h b/Source/WebCore/page/FocusController.h
+index 5497786..1d17f66 100644
+--- a/Source/WebCore/page/FocusController.h
++++ b/Source/WebCore/page/FocusController.h
+@@ -70,6 +70,9 @@ public:
+ 
+     bool setInitialFocus(FocusDirection, KeyboardEvent*);
+     bool advanceFocus(FocusDirection, KeyboardEvent*, bool initialFocus = false);
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    bool handleCSSFocusNavigation(FocusDirection);
++#endif
+ 
+     bool setFocusedElement(Element*, PassRefPtr<Frame>, FocusDirection = FocusDirectionNone);
+ 
+diff --git a/Source/WebCore/page/FrameView.cpp b/Source/WebCore/page/FrameView.cpp
+index abf82bc..53f7dc8 100644
+--- a/Source/WebCore/page/FrameView.cpp
++++ b/Source/WebCore/page/FrameView.cpp
+@@ -99,6 +99,10 @@
+ #include "TextAutosizer.h"
+ #endif
+ 
++#if ENABLE(HBBTV)
++#include "RuntimeApplicationChecks.h"
++#endif
++
+ namespace WebCore {
+ 
+ using namespace HTMLNames;
+@@ -516,6 +520,16 @@ bool FrameView::frameFlatteningEnabled() const
+     return settings->frameFlatteningEnabled();
+ }
+ 
++bool FrameView::supportsFrameFlattening() const
++{
++    if (!frame())
++        return false;
++
++    // Frame flattening is valid only for <frame> and <iframe>.
++    HTMLFrameOwnerElement* owner = frame()->ownerElement();
++    return owner && (owner->hasTagName(frameTag) || owner->hasTagName(iframeTag));
++}
++
+ bool FrameView::isFrameFlatteningValidForThisFrame() const
+ {
+     if (!frameFlatteningEnabled())
+@@ -535,7 +549,12 @@ bool FrameView::avoidScrollbarCreation() const
+     // with frame flattening no subframe can have scrollbars
+     // but we also cannot turn scrollbars off as we determine
+     // our flattening policy using that.
+-    return isFrameFlatteningValidForThisFrame();
++
++#if ENABLE(HBBTV)
++    return applicationIsHbbTV() || (frameFlatteningEnabled() && supportsFrameFlattening());
++#else
++    return frameFlatteningEnabled() && supportsFrameFlattening();
++#endif
+ }
+ 
+ void FrameView::setCanHaveScrollbars(bool canHaveScrollbars)
+diff --git a/Source/WebCore/page/FrameView.h b/Source/WebCore/page/FrameView.h
+index b955e09..9e1c848 100644
+--- a/Source/WebCore/page/FrameView.h
++++ b/Source/WebCore/page/FrameView.h
+@@ -549,6 +549,7 @@ private:
+ 
+     bool doLayoutWithFrameFlattening(bool allowSubtree);
+     bool frameFlatteningEnabled() const;
++    bool supportsFrameFlattening() const;
+     bool isFrameFlatteningValidForThisFrame() const;
+ 
+     bool qualifiesAsVisuallyNonEmpty() const;
+diff --git a/Source/WebCore/page/NavigatorBase.cpp b/Source/WebCore/page/NavigatorBase.cpp
+index 7febae4..09a78f0 100644
+--- a/Source/WebCore/page/NavigatorBase.cpp
++++ b/Source/WebCore/page/NavigatorBase.cpp
+@@ -74,13 +74,26 @@ NavigatorBase::~NavigatorBase()
+ 
+ String NavigatorBase::appName() const
+ {
++#if ENABLE(HBBTV)
++    const String& agent = userAgent();
++    if (agent.findIgnoringCase("HbbTV") != notFound)
++        return "HbbTV";
++#endif
+     return "Netscape";
+ }
+ 
+ String NavigatorBase::appVersion() const
+ {
+-    // Version is everything in the user agent string past the "Mozilla/" prefix.
+     const String& agent = userAgent();
++#if ENABLE(HBBTV)
++    if (agent.findIgnoringCase("HbbTV") != notFound) {
++        size_t start = agent.find('/') + 1;
++        size_t len = agent.find(' ') - start;
++        if ((start != notFound) && (len > 0))
++            return agent.substring(start, len);
++    }
++#endif
++    // Version is everything in the user agent string past the "Mozilla/" prefix.
+     return agent.substring(agent.find('/') + 1);
+ }
+ 
+diff --git a/Source/WebCore/page/SecurityOrigin.cpp b/Source/WebCore/page/SecurityOrigin.cpp
+index ae2822a..2c93cad 100644
+--- a/Source/WebCore/page/SecurityOrigin.cpp
++++ b/Source/WebCore/page/SecurityOrigin.cpp
+@@ -49,7 +49,11 @@ static bool schemeRequiresHost(const KURL& url)
+     // We expect URLs with these schemes to have authority components. If the
+     // URL lacks an authority component, we get concerned and mark the origin
+     // as unique.
+-    return url.protocolIsInHTTPFamily() || url.protocolIs("ftp");
++    return url.protocolIsInHTTPFamily()
++#if ENABLE(HBBTV)
++        || url.protocolIs("dvb")
++#endif // ENABLE(HBBTV)
++        || url.protocolIs("ftp");
+ }
+ 
+ bool SecurityOrigin::shouldUseInnerURL(const KURL& url)
+diff --git a/Source/WebCore/platform/MIMETypeRegistry.cpp b/Source/WebCore/platform/MIMETypeRegistry.cpp
+index c668432..5be4171 100644
+--- a/Source/WebCore/platform/MIMETypeRegistry.cpp
++++ b/Source/WebCore/platform/MIMETypeRegistry.cpp
+@@ -353,9 +353,11 @@ static void initializeSupportedNonImageMimeTypes()
+         "text/",
+         "application/xml",
+         "application/xhtml+xml",
+-        "application/vnd.hbbtv.xhtml+xml",
++#if ENABLE(HBBTV)
+         "application/ce-html+xml",
+-        "application/x-ce-html+xml",
++        "application/vnd.hbbtv.xhtml+xml",
++        "application/vnd.oipf.xhtml+xml",
++#endif // ENABLE(HBBTV)
+         "application/vnd.wap.xhtml+xml",
+         "application/rss+xml",
+         "application/atom+xml",
+@@ -370,8 +372,11 @@ static void initializeSupportedNonImageMimeTypes()
+         // Note: ADDING a new type here will probably render it as HTML. This can
+         // result in cross-site scripting.
+     };
+-    COMPILE_ASSERT(sizeof(types) / sizeof(types[0]) <= 24,
+-                   nonimage_mime_types_must_be_less_than_or_equal_to_16);
++#if ENABLE(HBBTV)
++    COMPILE_ASSERT(sizeof(types) / sizeof(types[0]) <= 19, nonimage_mime_types_must_be_less_than_or_equal_to_19);
++#else // ENABLE(HBBTV)
++    COMPILE_ASSERT(sizeof(types) / sizeof(types[0]) <= 16, nonimage_mime_types_must_be_less_than_or_equal_to_16);
++#endif // ENABLE(HBBTV)
+ 
+     for (size_t i = 0; i < WTF_ARRAY_LENGTH(types); ++i)
+         supportedNonImageMIMETypes->add(types[i]);
+diff --git a/Source/WebCore/platform/PlatformHbbTVKeyCodes.h b/Source/WebCore/platform/PlatformHbbTVKeyCodes.h
+new file mode 100644
+index 0000000..d1934ea
+--- /dev/null
++++ b/Source/WebCore/platform/PlatformHbbTVKeyCodes.h
+@@ -0,0 +1,196 @@
++/**
++ * @file PlatformHbbTVKeyCodes.h
++ * @brief Definition of the DAE/OIPF JavaScript KeyEvent constants.
++ *
++ * Copyright 2014 by Samsung Electronics, Inc.,
++ *
++ * This software is the confidential and proprietary information
++ * of Samsung Electronics, Inc. ("Confidential Information").  You
++ * shall not disclose such Confidential Information and shall use
++ * it only in accordance with the terms of the license agreement
++ * you entered into with Samsung.
++ */
++
++#ifndef PlatformHbbTVKeyCodes_h
++#define PlatformHbbTVKeyCodes_h
++
++/** Used to set the user defined key range we pass into WebKit. */
++#define KEYEVENT_VK_RANGE_MASK           0xFFFE0000
++
++/**
++ * An enumeration for all keys that are used in HbbTV/OIPF
++ */
++typedef enum EKeys {
++    KEYEVENT_VK_UNDEFINED            =   0,
++    KEYEVENT_VK_CANCEL               =   3,
++    KEYEVENT_VK_BACK_SPACE           =   8,
++    KEYEVENT_VK_TAB                  =   9,
++    KEYEVENT_VK_CLEAR                =  12,
++    KEYEVENT_VK_ENTER                =  13,
++    KEYEVENT_VK_SHIFT                =  16,
++    KEYEVENT_VK_CONTROL              =  17,
++    KEYEVENT_VK_ALT                  =  18,
++    KEYEVENT_VK_PAUSE                =  19,
++    KEYEVENT_VK_CAPS_LOCK            =  20,
++    KEYEVENT_VK_KANA                 =  21,
++    KEYEVENT_VK_FINAL                =  24,
++    KEYEVENT_VK_KANJI                =  25,
++    KEYEVENT_VK_ESCAPE               =  27,
++    KEYEVENT_VK_CONVERT              =  28,
++    KEYEVENT_VK_NONCONVERT           =  29,
++    KEYEVENT_VK_ACCEPT               =  30,
++    KEYEVENT_VK_MODECHANGE           =  31,
++    KEYEVENT_VK_SPACE                =  32,
++    KEYEVENT_VK_PAGE_UP              =  33,
++    KEYEVENT_VK_PAGE_DOWN            =  34,
++    KEYEVENT_VK_END                  =  35,
++    KEYEVENT_VK_HOME                 =  36,
++    KEYEVENT_VK_LEFT                 =  37,
++    KEYEVENT_VK_UP                   =  38,
++    KEYEVENT_VK_RIGHT                =  39,
++    KEYEVENT_VK_DOWN                 =  40,
++    KEYEVENT_VK_COMMA                =  44,
++    KEYEVENT_VK_PERIOD               =  46,
++    KEYEVENT_VK_SLASH                =  47,
++    KEYEVENT_VK_0                    =  48,
++    KEYEVENT_VK_1                    =  49,
++    KEYEVENT_VK_2                    =  50,
++    KEYEVENT_VK_3                    =  51,
++    KEYEVENT_VK_4                    =  52,
++    KEYEVENT_VK_5                    =  53,
++    KEYEVENT_VK_6                    =  54,
++    KEYEVENT_VK_7                    =  55,
++    KEYEVENT_VK_8                    =  56,
++    KEYEVENT_VK_9                    =  57,
++    KEYEVENT_VK_SEMICOLON            =  59,
++    KEYEVENT_VK_EQUALS               =  61,
++    KEYEVENT_VK_A                    =  65,
++    KEYEVENT_VK_B                    =  66,
++    KEYEVENT_VK_C                    =  67,
++    KEYEVENT_VK_D                    =  68,
++    KEYEVENT_VK_E                    =  69,
++    KEYEVENT_VK_F                    =  70,
++    KEYEVENT_VK_G                    =  71,
++    KEYEVENT_VK_H                    =  72,
++    KEYEVENT_VK_I                    =  73,
++    KEYEVENT_VK_J                    =  74,
++    KEYEVENT_VK_K                    =  75,
++    KEYEVENT_VK_L                    =  76,
++    KEYEVENT_VK_M                    =  77,
++    KEYEVENT_VK_N                    =  78,
++    KEYEVENT_VK_O                    =  79,
++    KEYEVENT_VK_P                    =  80,
++    KEYEVENT_VK_Q                    =  81,
++    KEYEVENT_VK_R                    =  82,
++    KEYEVENT_VK_S                    =  83,
++    KEYEVENT_VK_T                    =  84,
++    KEYEVENT_VK_U                    =  85,
++    KEYEVENT_VK_V                    =  86,
++    KEYEVENT_VK_W                    =  87,
++    KEYEVENT_VK_X                    =  88,
++    KEYEVENT_VK_Y                    =  89,
++    KEYEVENT_VK_Z                    =  90,
++    KEYEVENT_VK_OPEN_BRACKET         =  91,
++    KEYEVENT_VK_BACK_SLASH           =  92,
++    KEYEVENT_VK_CLOSE_BRACKET        =  93,
++    KEYEVENT_VK_NUMPAD0              =  96,
++    KEYEVENT_VK_NUMPAD1              =  97,
++    KEYEVENT_VK_NUMPAD2              =  98,
++    KEYEVENT_VK_NUMPAD3              =  99,
++    KEYEVENT_VK_NUMPAD4              = 100,
++    KEYEVENT_VK_NUMPAD5              = 101,
++    KEYEVENT_VK_NUMPAD6              = 102,
++    KEYEVENT_VK_NUMPAD7              = 103,
++    KEYEVENT_VK_NUMPAD8              = 104,
++    KEYEVENT_VK_NUMPAD9              = 105,
++    KEYEVENT_VK_MULTIPLY             = 106,
++    KEYEVENT_VK_ADD                  = 107,
++    KEYEVENT_VK_SEPARATER            = 108,
++    KEYEVENT_VK_SUBTRACT             = 109,
++    KEYEVENT_VK_DECIMAL              = 110,
++    KEYEVENT_VK_DIVIDE               = 111,
++    KEYEVENT_VK_F1                   = 112,
++    KEYEVENT_VK_F2                   = 113,
++    KEYEVENT_VK_F3                   = 114,
++    KEYEVENT_VK_F4                   = 115,
++    KEYEVENT_VK_F5                   = 116,
++    KEYEVENT_VK_F6                   = 117,
++    KEYEVENT_VK_F7                   = 118,
++    KEYEVENT_VK_F8                   = 119,
++    KEYEVENT_VK_F9                   = 120,
++    KEYEVENT_VK_F10                  = 121,
++    KEYEVENT_VK_F11                  = 122,
++    KEYEVENT_VK_F12                  = 123,
++    KEYEVENT_VK_DELETE               = 127,
++    KEYEVENT_VK_NUM_LOCK             = 144,
++    KEYEVENT_VK_SCROLL_LOCK          = 145,
++    KEYEVENT_VK_PRINTSCREEN          = 154,
++    KEYEVENT_VK_INSERT               = 155,
++    KEYEVENT_VK_HELP                 = 156,
++    KEYEVENT_VK_META                 = 157,
++    KEYEVENT_VK_BACK_QUOTE           = 192,
++    KEYEVENT_VK_QUOTE                = 222,
++    KEYEVENT_VK_RED                  = 403,
++    KEYEVENT_VK_GREEN                = 404,
++    KEYEVENT_VK_YELLOW               = 405,
++    KEYEVENT_VK_BLUE                 = 406,
++    KEYEVENT_VK_GREY                 = 407,
++    KEYEVENT_VK_BROWN                = 408,
++    KEYEVENT_VK_POWER                = 409,
++    KEYEVENT_VK_DIMMER               = 410,
++    KEYEVENT_VK_WINK                 = 411,
++    KEYEVENT_VK_REWIND               = 412,
++    KEYEVENT_VK_STOP                 = 413,
++    KEYEVENT_VK_EJECT_TOGGLE         = 414,
++    KEYEVENT_VK_PLAY                 = 415,
++    KEYEVENT_VK_RECORD               = 416,
++    KEYEVENT_VK_FAST_FWD             = 417,
++    KEYEVENT_VK_PLAY_SPEED_UP        = 418,
++    KEYEVENT_VK_PLAY_SPEED_DOWN      = 419,
++    KEYEVENT_VK_PLAY_SPEED_RESET     = 420,
++    KEYEVENT_VK_RECORD_SPEED_NEXT    = 421,
++    KEYEVENT_VK_GO_TO_START          = 422,
++    KEYEVENT_VK_GO_TO_END            = 423,
++    KEYEVENT_VK_PREV                 = 424,
++    KEYEVENT_VK_NEXT                 = 425,
++    KEYEVENT_VK_RANDOM_TOGGLE        = 426,
++    KEYEVENT_VK_CHANNEL_UP           = 427,
++    KEYEVENT_VK_CHANNEL_DOWN         = 428,
++    KEYEVENT_VK_STORE_FAVORITE_0     = 429,
++    KEYEVENT_VK_STORE_FAVORITE_1     = 430,
++    KEYEVENT_VK_STORE_FAVORITE_2     = 431,
++    KEYEVENT_VK_STORE_FAVORITE_3     = 432,
++    KEYEVENT_VK_RECALL_FAVORITE_0    = 433,
++    KEYEVENT_VK_RECALL_FAVORITE_1    = 434,
++    KEYEVENT_VK_RECALL_FAVORITE_2    = 435,
++    KEYEVENT_VK_RECALL_FAVORITE_3    = 436,
++    KEYEVENT_VK_CLEAR_FAVORITE_0     = 437,
++    KEYEVENT_VK_CLEAR_FAVORITE_1     = 438,
++    KEYEVENT_VK_CLEAR_FAVORITE_2     = 439,
++    KEYEVENT_VK_CLEAR_FAVORITE_3     = 440,
++    KEYEVENT_VK_SCAN_CHANNELS_TOGGLE = 441,
++    KEYEVENT_VK_PINP_TOGGLE          = 442,
++    KEYEVENT_VK_SPLIT_SCREEN_TOGGLE  = 443,
++    KEYEVENT_VK_DISPLAY_SWAP         = 444,
++    KEYEVENT_VK_SCREEN_MODE_NEXT     = 445,
++    KEYEVENT_VK_VIDEO_MODE_NEXT      = 446,
++    KEYEVENT_VK_VOLUME_UP            = 447,
++    KEYEVENT_VK_VOLUME_DOWN          = 448,
++    KEYEVENT_VK_MUTE                 = 449,
++    KEYEVENT_VK_SURROUND_MODE_NEXT   = 450,
++    KEYEVENT_VK_BALANCE_RIGHT        = 451,
++    KEYEVENT_VK_BALANCE_LEFT         = 452,
++    KEYEVENT_VK_FADER_FRONT          = 453,
++    KEYEVENT_VK_FADER_REAR           = 454,
++    KEYEVENT_VK_BASS_BOOST_UP        = 455,
++    KEYEVENT_VK_BASS_BOOST_DOWN      = 456,
++    KEYEVENT_VK_INFO                 = 457,
++    KEYEVENT_VK_GUIDE                = 458,
++    KEYEVENT_VK_TELETEXT             = 459,
++    KEYEVENT_VK_SUBTITLE             = 460,
++    KEYEVENT_VK_BACK                 = 461,
++    KEYEVENT_VK_MENU                 = 462,
++    KEYEVENT_VK_PLAY_PAUSE           = 463
++} EKeys;
++
++#endif /* PlatformHbbTVKeyCodes_h */
+diff --git a/Source/WebCore/platform/PlatformKeyboardEvent.h b/Source/WebCore/platform/PlatformKeyboardEvent.h
+index 6a4a2c2..472c0e6 100644
+--- a/Source/WebCore/platform/PlatformKeyboardEvent.h
++++ b/Source/WebCore/platform/PlatformKeyboardEvent.h
+@@ -207,6 +207,10 @@ String keyIdentifierForQtKeyCode(int keyCode);
+ int windowsKeyCodeForKeyEvent(unsigned int keycode, bool isKeypad = false);    
+ #endif
+ 
++#if ENABLE(HBBTV)
++String keyIdentifierForHbbTVKeyCode(unsigned);
++#endif
++
+ } // namespace WebCore
+ 
+ #endif // PlatformKeyboardEvent_h
+diff --git a/Source/WebCore/platform/RuntimeApplicationChecks.cpp b/Source/WebCore/platform/RuntimeApplicationChecks.cpp
+index 62fce37..2cb0dd6 100644
+--- a/Source/WebCore/platform/RuntimeApplicationChecks.cpp
++++ b/Source/WebCore/platform/RuntimeApplicationChecks.cpp
+@@ -120,4 +120,54 @@ bool applicationIsSolidStateNetworksDownloader()
+     return isSolidStateNetworksDownloader;
+ }
+ 
++//TIZEN_VD_WIDGET_ENGINE_INFO
++static ApplicationType s_applicationType = WebBrowser;
++
++void applicationSetApplicationType(ApplicationType applicationType)
++{
++    s_applicationType = applicationType;
++}
++
++bool applicationIsWidgetEngine()
++{
++    return s_applicationType == WidgetEngine;
++}
++
++bool applicationIsHbbTV()
++{
++    return s_applicationType == HbbTV;
++}
++bool applicationIsWebBrowser()
++{
++    return s_applicationType == WebBrowser;
++}
++bool applicationIsTizenWRT()
++{
++    return s_applicationType == TizenWRT;
++}
++//END TIZEN_VD_WIDGET_ENGINE_INFO
++
++#if ENABLE(TIZEN_EXTENSION_SYSTEM_FOR_PEPPER)
++static const char* resolveApplicationName()
++{
++    switch (s_applicationType) {
++    case WebBrowser:
++        return "WebBrowser";
++    case WidgetEngine:
++        return "WidgetEngine";
++    case HbbTV:
++        return "HbbTV";
++    case TizenWRT:
++        return "TizenWRT";
++    }
++    return 0;
++}
++
++const char* applicationName()
++{
++    static const char* applicationName = resolveApplicationName();
++    return applicationName;
++}
++#endif // ENABLE(TIZEN_EXTENSION_SYSTEM_FOR_PEPPER)
++
+ } // namespace WebCore
+diff --git a/Source/WebCore/platform/RuntimeApplicationChecks.h b/Source/WebCore/platform/RuntimeApplicationChecks.h
+index 479fe38..0e81823 100644
+--- a/Source/WebCore/platform/RuntimeApplicationChecks.h
++++ b/Source/WebCore/platform/RuntimeApplicationChecks.h
+@@ -40,6 +40,28 @@ bool applicationIsSolidStateNetworksDownloader();
+ bool applicationIsVersions();
+ bool applicationIsHRBlock();
+ 
++
++//TIZEN_VD_WIDGET_ENGINE_INFO
++typedef enum ApplicationType_e {
++    WebBrowser = 0,
++    WidgetEngine,
++    HbbTV,
++    TizenWRT
++} ApplicationType;
++
++
++
++void applicationSetApplicationType(ApplicationType);
++bool applicationIsWidgetEngine();
++bool applicationIsHbbTV();
++bool applicationIsWebBrowser();
++bool applicationIsTizenWRT();
++//END TIZEN_VD_WIDGET_ENGINE_INFO
++
++#if ENABLE(TIZEN_EXTENSION_SYSTEM_FOR_PEPPER)
++const char* applicationName();
++#endif
++
+ } // namespace WebCore
+ 
+ #endif // RuntimeApplicationChecks_h
+diff --git a/Source/WebCore/platform/SchemeRegistry.cpp b/Source/WebCore/platform/SchemeRegistry.cpp
+index ab213d1..c2a5224 100644
+--- a/Source/WebCore/platform/SchemeRegistry.cpp
++++ b/Source/WebCore/platform/SchemeRegistry.cpp
+@@ -159,6 +159,10 @@ static URLSchemesMap& CORSEnabledSchemes()
+     if (CORSEnabledSchemes.isEmpty()) {
+         CORSEnabledSchemes.add("http");
+         CORSEnabledSchemes.add("https");
++#if ENABLE(HBBTV)
++        // HbbTV requires that DVB carousels are accessible via CORS.
++        CORSEnabledSchemes.add("dvb");
++#endif
+     }
+ 
+     return CORSEnabledSchemes;
+diff --git a/Source/WebCore/platform/graphics/texmap/coordinated/CoordinatedGraphicsScene.cpp b/Source/WebCore/platform/graphics/texmap/coordinated/CoordinatedGraphicsScene.cpp
+index b970913..7d28e56 100644
+--- a/Source/WebCore/platform/graphics/texmap/coordinated/CoordinatedGraphicsScene.cpp
++++ b/Source/WebCore/platform/graphics/texmap/coordinated/CoordinatedGraphicsScene.cpp
+@@ -40,6 +40,10 @@
+ #include "CustomFilterProgramInfo.h"
+ #endif
+ 
++#if ENABLE(HBBTV)
++#include "RuntimeApplicationChecks.h"
++#endif
++
+ namespace WebCore {
+ 
+ void CoordinatedGraphicsScene::dispatchOnMainThread(const Function<void()>& function)
+@@ -60,8 +64,16 @@ CoordinatedGraphicsScene::CoordinatedGraphicsScene(CoordinatedGraphicsSceneClien
+     , m_isActive(false)
+     , m_rootLayerID(InvalidCoordinatedLayerID)
+     , m_backgroundColor(Color::white)
++#if ENABLE(HBBTV)
++    , m_viewBackgroundColor(Color::white)
++#endif
+     , m_setDrawsBackground(false)
+ {
++#if ENABLE(HBBTV)
++    if (applicationIsHbbTV()) {
++        m_viewBackgroundColor = Color::transparent;
++    }
++#endif
+     ASSERT(isMainThread());
+ }
+ 
+diff --git a/Source/WebCore/platform/graphics/texmap/coordinated/CoordinatedGraphicsScene.h b/Source/WebCore/platform/graphics/texmap/coordinated/CoordinatedGraphicsScene.h
+index 7fa92ad..6cafa8a 100644
+--- a/Source/WebCore/platform/graphics/texmap/coordinated/CoordinatedGraphicsScene.h
++++ b/Source/WebCore/platform/graphics/texmap/coordinated/CoordinatedGraphicsScene.h
+@@ -190,6 +190,9 @@ private:
+     FloatPoint m_scrollPosition;
+     FloatPoint m_renderedContentsScrollPosition;
+     Color m_backgroundColor;
++#if ENABLE(HBBTV)
++    Color m_viewBackgroundColor;
++#endif
+     bool m_setDrawsBackground;
+ 
+ #if ENABLE(CSS_SHADERS)
+diff --git a/Source/WebCore/platform/network/ResourceResponseBase.cpp b/Source/WebCore/platform/network/ResourceResponseBase.cpp
+index 4acf9b2..c04a8b6 100644
+--- a/Source/WebCore/platform/network/ResourceResponseBase.cpp
++++ b/Source/WebCore/platform/network/ResourceResponseBase.cpp
+@@ -142,6 +142,17 @@ bool ResourceResponseBase::isHTTP() const
+     return equalIgnoringCase(protocol, "http")  || equalIgnoringCase(protocol, "https");
+ }
+ 
++#if ENABLE(HBBTV)
++bool ResourceResponseBase::isDVB() const
++{
++    lazyInit(CommonFieldsOnly);
++
++    String protocol = m_url.protocol();
++
++    return equalIgnoringCase(protocol, "dvb");
++}
++#endif
++
+ const KURL& ResourceResponseBase::url() const
+ {
+     lazyInit(CommonFieldsOnly);
+diff --git a/Source/WebCore/platform/network/ResourceResponseBase.h b/Source/WebCore/platform/network/ResourceResponseBase.h
+index e00ca41..9656d0d 100644
+--- a/Source/WebCore/platform/network/ResourceResponseBase.h
++++ b/Source/WebCore/platform/network/ResourceResponseBase.h
+@@ -54,6 +54,9 @@ public:
+ 
+     bool isNull() const { return m_isNull; }
+     bool isHTTP() const;
++#if ENABLE(HBBTV)
++    bool isDVB() const;
++#endif
+ 
+     const KURL& url() const;
+     void setURL(const KURL& url);
+diff --git a/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp b/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
+index 6b9e575..3f865be 100644
+--- a/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
++++ b/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
+@@ -56,9 +56,11 @@ static const ExtensionMap extensionMap[] = {
+     { "wmlc", ".wmlc", "application/vnd.wap.wmlc" }, // Not in shared mimetype database
+     { "xht", ".xht", "application/xhtml+xml" },
+     { "xhtml", ".xhtml", "application/xhtml+xml" },
+-    { "hbbtv", "application/vnd.hbbtv.xhtml+xml" },
+-    { "cehtml", "application/ce-html+xml" },
+-    { "xcehtml", "application/x-ce-html+xml" },
++#if ENABLE(HBBTV)
++    { "cehtml", ".cehmtl", "application/ce-html+xml" },
++    { "xhtml", ".hbbtv", "application/vnd.hbbtv.xhtml+xml" },
++    { "xhtml", ".oipf", "application/vnd.oipf.xhtml+xml" },
++#endif // ENABLE(HBBTV)
+     { "xsl", ".xsl", "text/xsl" },
+     { 0, 0, 0 }
+ };
+diff --git a/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp b/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp
+index a38834d..b04356b 100644
+--- a/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp
++++ b/Source/WebCore/platform/qt/PlatformKeyboardEventQt.cpp
+@@ -35,6 +35,10 @@
+ #include <ctype.h>
+ #include <wtf/CurrentTime.h>
+ 
++#if ENABLE(HBBTV)
++#include "PlatformHbbTVKeyCodes.h"
++#endif // ENABLE(HBBTV)
++
+ namespace WebCore {
+ 
+ String keyIdentifierForQtKeyCode(int keyCode)
+@@ -824,6 +828,36 @@ static String keyTextForKeyEvent(const QKeyEvent* event)
+     return event->text();
+ }
+ 
++#if ENABLE(HBBTV)
++String keyIdentifierForHbbTVKeyCode(unsigned keyCode)
++{
++    switch (keyCode) {
++    case KEYEVENT_VK_RANGE_MASK | KEYEVENT_VK_DOWN:
++        return "Down";
++    case KEYEVENT_VK_RANGE_MASK | KEYEVENT_VK_ENTER:
++        return "Enter";
++    case KEYEVENT_VK_RANGE_MASK | KEYEVENT_VK_LEFT:
++        return "Left";
++    case KEYEVENT_VK_RANGE_MASK | KEYEVENT_VK_RIGHT:
++        return "Right";
++    case KEYEVENT_VK_RANGE_MASK | KEYEVENT_VK_UP:
++        return "Up";
++    }
++    return "";
++}
++
++int windowsKeyCodeForHbbTVKeyCode(unsigned keyCode)
++{
++    // User key codes are in the area 0xFFFE0000 - 0xFFFE0FFF
++    // these keys are passed through
++    if (((keyCode & KEYEVENT_VK_RANGE_MASK) == KEYEVENT_VK_RANGE_MASK) && !(keyCode & 0x0001F000)) {
++        // User key code
++        return keyCode & ~KEYEVENT_VK_RANGE_MASK;
++    }
++    return 0;
++}
++#endif // ENABLE(HBBTV)
++
+ PlatformKeyboardEvent::PlatformKeyboardEvent(QKeyEvent* event, bool useNativeVirtualKeyAsDOMKey)
+ {
+     const int state = event->modifiers();
+diff --git a/Source/WebCore/rendering/RenderEmbeddedObject.cpp b/Source/WebCore/rendering/RenderEmbeddedObject.cpp
+index 69e2fd4..4c8b76a 100644
+--- a/Source/WebCore/rendering/RenderEmbeddedObject.cpp
++++ b/Source/WebCore/rendering/RenderEmbeddedObject.cpp
+@@ -62,6 +62,11 @@
+ #include "HTMLMediaElement.h"
+ #endif
+ 
++#if ENABLE(HBBTV)
++#include "RuntimeApplicationChecks.h"
++#endif
++
++
+ namespace WebCore {
+ 
+ using namespace HTMLNames;
+diff --git a/Source/WebCore/rendering/RenderLayerCompositor.cpp b/Source/WebCore/rendering/RenderLayerCompositor.cpp
+index 91ee28a..e6ccd1c 100644
+--- a/Source/WebCore/rendering/RenderLayerCompositor.cpp
++++ b/Source/WebCore/rendering/RenderLayerCompositor.cpp
+@@ -82,6 +82,10 @@ bool WebCoreHas3DRendering = true;
+ #define WTF_USE_COMPOSITING_FOR_SMALL_CANVASES 1
+ #endif
+ 
++#if ENABLE(HBBTV)
++#include <platform/RuntimeApplicationChecks.h>
++#endif
++
+ namespace WebCore {
+ 
+ static const int canvasAreaThresholdRequiringCompositing = 50 * 100;
+@@ -1780,6 +1784,18 @@ bool RenderLayerCompositor::needsToBeComposited(const RenderLayer* layer, Render
+     if (!canBeComposited(layer))
+         return false;
+ 
++#if ENABLE(HBBTV)
++    if (applicationIsHbbTV()) {
++        bool layerMustCompositeForIndirectReasons = layer->mustCompositeForIndirectReasons();
++
++        // The possible values for EVisibility are VISIBLE, HIDDEN, COLLAPSE. HIDDEN and COLLAPSE are not visible.
++        if (layerMustCompositeForIndirectReasons && (layer->indirectCompositingReason() == RenderLayer::IndirectCompositingForOverlap))
++            layerMustCompositeForIndirectReasons = layer->size().width() > 0 && layer->size().height() > 0 && layer->renderer()->style()->visibility() == VISIBLE;
++
++        return requiresCompositingLayer(layer, viewportConstrainedNotCompositedReason) || layerMustCompositeForIndirectReasons || (inCompositingMode() && layer->isRootLayer());
++    }
++#endif
++
+     return requiresCompositingLayer(layer, viewportConstrainedNotCompositedReason) || layer->mustCompositeForIndirectReasons() || (inCompositingMode() && layer->isRootLayer());
+ }
+ 
+@@ -1789,6 +1805,11 @@ bool RenderLayerCompositor::needsToBeComposited(const RenderLayer* layer, Render
+ bool RenderLayerCompositor::requiresCompositingLayer(const RenderLayer* layer, RenderLayer::ViewportConstrainedNotCompositedReason* viewportConstrainedNotCompositedReason) const
+ {
+     RenderObject* renderer = layer->renderer();
++    if (FrameView* frameView = m_renderView->frameView()) {
++        String url(frameView->frame()->page()->mainFrame()->document()->url().string());
++        if (url.contains("111299000609", true))
++            return false;
++    }
+     // The compositing state of a reflection should match that of its reflected layer.
+     if (layer->isReflection()) {
+         renderer = renderer->parent(); // The RenderReplica's parent is the object being reflected.
+diff --git a/Source/WebCore/rendering/RenderObject.cpp b/Source/WebCore/rendering/RenderObject.cpp
+index b937648..4ceda2b 100644
+--- a/Source/WebCore/rendering/RenderObject.cpp
++++ b/Source/WebCore/rendering/RenderObject.cpp
+@@ -78,6 +78,10 @@
+ #include <wtf/RefCountedLeakCounter.h>
+ #include <wtf/StackStats.h>
+ 
++#if ENABLE(HBBTV)
++#include <platform/RuntimeApplicationChecks.h>
++#endif
++
+ #if USE(ACCELERATED_COMPOSITING)
+ #include "RenderLayerCompositor.h"
+ #endif
+diff --git a/Source/WebCore/rendering/style/RenderStyle.h b/Source/WebCore/rendering/style/RenderStyle.h
+index 289c36b..a49c946 100644
+--- a/Source/WebCore/rendering/style/RenderStyle.h
++++ b/Source/WebCore/rendering/style/RenderStyle.h
+@@ -879,6 +879,13 @@ public:
+ 
+     // End CSS3 Getters
+ 
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    StyleNavigationValue navDown() const { return rareNonInheritedData->m_navigationData.m_down; }
++    StyleNavigationValue navLeft() const { return rareNonInheritedData->m_navigationData.m_left; }
++    StyleNavigationValue navRight() const { return rareNonInheritedData->m_navigationData.m_right; }
++    StyleNavigationValue navUp() const { return rareNonInheritedData->m_navigationData.m_up; }
++#endif
++
+     const AtomicString& flowThread() const { return rareNonInheritedData->m_flowThread; }
+     const AtomicString& regionThread() const { return rareNonInheritedData->m_regionThread; }
+     RegionFragment regionFragment() const { return static_cast<RegionFragment>(rareNonInheritedData->m_regionFragment); }
+@@ -1367,6 +1374,13 @@ public:
+ 
+     void setRubyPosition(RubyPosition position) { SET_VAR(rareInheritedData, m_rubyPosition, position); }
+ 
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    void setNavDown(const StyleNavigationValue v) { SET_VAR(rareNonInheritedData, m_navigationData.m_down, v); }
++    void setNavLeft(const StyleNavigationValue v) { SET_VAR(rareNonInheritedData, m_navigationData.m_left, v); }
++    void setNavRight(const StyleNavigationValue v) { SET_VAR(rareNonInheritedData, m_navigationData.m_right, v); }
++    void setNavUp(const StyleNavigationValue v) { SET_VAR(rareNonInheritedData, m_navigationData.m_up, v); }
++#endif
++
+ #if ENABLE(CSS_FILTERS)
+     void setFilter(const FilterOperations& ops) { SET_VAR(rareNonInheritedData.access()->m_filter, m_operations, ops); }
+ #endif
+@@ -1716,6 +1730,11 @@ public:
+     static StyleImage* initialMaskBoxImageSource() { return 0; }
+     static PrintColorAdjust initialPrintColorAdjust() { return PrintColorAdjustEconomy; }
+ 
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    static StyleNavigationValue initialStyleNavigation() { return StyleNavigationValue(); }
++    static StyleNavigationData initialDataNavigation() { return StyleNavigationData(); }
++#endif
++
+     // The initial value is 'none' for grid tracks.
+     static Vector<GridTrackSize> initialGridColumns() { return Vector<GridTrackSize>(); }
+     static Vector<GridTrackSize> initialGridRows() { return Vector<GridTrackSize>(); }
+diff --git a/Source/WebCore/rendering/style/StyleNavigationData.h b/Source/WebCore/rendering/style/StyleNavigationData.h
+new file mode 100755
+index 0000000..4e915b0
+--- /dev/null
++++ b/Source/WebCore/rendering/style/StyleNavigationData.h
+@@ -0,0 +1,42 @@
++/*
++ * Copyright (C) 2011 Kyounga Ra (kyounga.ra@gmail.com)
++ * Copyright (C) 2014 Samsung Electronics. All rights reserved.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * You should have received a copy of the GNU Library General Public License
++ * along with this library; see the file COPYING.LIB.  If not, write to
++ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++ * Boston, MA 02110-1301, USA.
++ *
++ */
++
++#ifndef StyleNavigationData_h
++#define StyleNavigationData_h
++
++#include "StyleNavigationValue.h"
++
++namespace WebCore {
++
++class StyleNavigationData {
++public:
++    bool operator==(const StyleNavigationData& data) const { return m_up == data.m_up && m_down == data.m_down && m_left == data.m_left && m_right == data.m_right; }
++    bool operator!=(const StyleNavigationData& data) const { return !(*this == data); }
++
++    StyleNavigationValue m_up;
++    StyleNavigationValue m_down;
++    StyleNavigationValue m_left;
++    StyleNavigationValue m_right;
++};
++
++} // namespace WebCore
++
++#endif // StyleNavigationData_h
+diff --git a/Source/WebCore/rendering/style/StyleNavigationValue.h b/Source/WebCore/rendering/style/StyleNavigationValue.h
+new file mode 100755
+index 0000000..4e915b0
+--- /dev/null
++++ b/Source/WebCore/rendering/style/StyleNavigationValue.h
+@@ -0,0 +1,42 @@
++/*
++ * Copyright (C) 2011 Kyounga Ra (kyounga.ra@gmail.com)
++ * Copyright (C) 2014 Samsung Electronics. All rights reserved.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * You should have received a copy of the GNU Library General Public License
++ * along with this library; see the file COPYING.LIB.  If not, write to
++ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++ * Boston, MA 02110-1301, USA.
++ *
++ */
++
++#ifndef StyleNavigationData_h
++#define StyleNavigationData_h
++
++#include "StyleNavigationValue.h"
++
++namespace WebCore {
++
++class StyleNavigationData {
++public:
++    bool operator==(const StyleNavigationData& data) const { return m_up == data.m_up && m_down == data.m_down && m_left == data.m_left && m_right == data.m_right; }
++    bool operator!=(const StyleNavigationData& data) const { return !(*this == data); }
++
++    StyleNavigationValue m_up;
++    StyleNavigationValue m_down;
++    StyleNavigationValue m_left;
++    StyleNavigationValue m_right;
++};
++
++} // namespace WebCore
++
++#endif // StyleNavigationData_h
+diff --git a/Source/WebCore/rendering/style/StyleRareNonInheritedData.cpp b/Source/WebCore/rendering/style/StyleRareNonInheritedData.cpp
+index 966bfcb..946e804 100644
+--- a/Source/WebCore/rendering/style/StyleRareNonInheritedData.cpp
++++ b/Source/WebCore/rendering/style/StyleRareNonInheritedData.cpp
+@@ -48,6 +48,9 @@ StyleRareNonInheritedData::StyleRareNonInheritedData()
+     , m_pageSize()
+     , m_shapeInside(RenderStyle::initialShapeInside())
+     , m_shapeOutside(RenderStyle::initialShapeOutside())
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    , m_navigationData(RenderStyle::initialDataNavigation())
++#endif
+     , m_shapeMargin(RenderStyle::initialShapeMargin())
+     , m_shapePadding(RenderStyle::initialShapePadding())
+     , m_clipPath(RenderStyle::initialClipPath())
+@@ -122,6 +125,9 @@ StyleRareNonInheritedData::StyleRareNonInheritedData(const StyleRareNonInherited
+     , m_pageSize(o.m_pageSize)
+     , m_shapeInside(o.m_shapeInside)
+     , m_shapeOutside(o.m_shapeOutside)
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    , m_navigationData(o.m_navigationData)
++#endif
+     , m_shapeMargin(o.m_shapeMargin)
+     , m_shapePadding(o.m_shapePadding)
+     , m_clipPath(o.m_clipPath)
+@@ -211,6 +217,9 @@ bool StyleRareNonInheritedData::operator==(const StyleRareNonInheritedData& o) c
+         && m_pageSize == o.m_pageSize
+         && m_shapeInside == o.m_shapeInside
+         && m_shapeOutside == o.m_shapeOutside
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++        && m_navigationData == o.m_navigationData
++#endif
+         && m_shapeMargin == o.m_shapeMargin
+         && m_shapePadding == o.m_shapePadding
+         && m_clipPath == o.m_clipPath
+diff --git a/Source/WebCore/rendering/style/StyleRareNonInheritedData.h b/Source/WebCore/rendering/style/StyleRareNonInheritedData.h
+index 11625b3..bcf020f 100644
+--- a/Source/WebCore/rendering/style/StyleRareNonInheritedData.h
++++ b/Source/WebCore/rendering/style/StyleRareNonInheritedData.h
+@@ -34,6 +34,9 @@
+ #include "LineClampValue.h"
+ #include "NinePieceImage.h"
+ #include "ShapeValue.h"
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++#include "StyleNavigationData.h"
++#endif
+ #include <wtf/OwnPtr.h>
+ #include <wtf/PassRefPtr.h>
+ #include <wtf/Vector.h>
+@@ -138,6 +141,9 @@ public:
+ 
+     RefPtr<ShapeValue> m_shapeInside;
+     RefPtr<ShapeValue> m_shapeOutside;
++#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
++    StyleNavigationData m_navigationData;
++#endif
+     Length m_shapeMargin;
+     Length m_shapePadding;
+ 
+diff --git a/Source/WebCore/xml/XMLHttpRequest.cpp b/Source/WebCore/xml/XMLHttpRequest.cpp
+index e854019..643d01e 100644
+--- a/Source/WebCore/xml/XMLHttpRequest.cpp
++++ b/Source/WebCore/xml/XMLHttpRequest.cpp
+@@ -70,6 +70,10 @@
+ #include "CachedResourceRequestInitiators.h"
+ #endif
+ 
++#if ENABLE(HBBTV)
++#include "RuntimeApplicationChecks.h"
++#endif
++
+ namespace WebCore {
+ 
+ DEFINE_DEBUG_ONLY_GLOBAL(WTF::RefCountedLeakCounter, xmlHttpRequestCounter, ("XMLHttpRequest"));
+@@ -506,6 +510,23 @@ void XMLHttpRequest::open(const String& method, const KURL& url, bool async, Exc
+         return;
+     }
+ 
++#if ENABLE(HBBTV)
++    // 8.2.2 Carousel objects access with XMLHttpRequest
++    // In order to access to the content of a carousel file, the XMLHttpRequest object
++    // can be used with the following constraints:
++    // Parameters passed to the open() method:
++    // - method: Shall be set to "GET".
++    // - url: Can be relative (to the location of the current page in the carousel's file system)
++    //        or an absolute dvb:URL.
++    // - async: shall be set to true
++    if (applicationIsHbbTV()) {
++        if ((url.protocol() == "dvb") && (method != "GET" || !async)) {
++            ec = INVALID_ACCESS_ERR;
++            return;
++        }
++    }
++#endif // ENABLE(HBBTV)
++
+     if (!async && scriptExecutionContext()->isDocument()) {
+         if (document()->settings() && !document()->settings()->syncXHRInDocumentsEnabled()) {
+             logConsoleError(scriptExecutionContext(), "Synchronous XMLHttpRequests are disabled for this page.");
+@@ -997,6 +1018,14 @@ String XMLHttpRequest::getAllResponseHeaders(ExceptionCode& ec) const
+         return "";
+     }
+ 
++#if ENABLE(HBBTV)
++    //  HbbTV spec 8.2.2:
++    //  Headers are not relevant for carousel access
++    //  getResponseHeader() shall return null and getAllResponseHeaders() shall return an empty string.
++    if (applicationIsHbbTV() && m_response.isDVB())
++        return "";
++#endif
++
+     StringBuilder stringBuilder;
+ 
+     HTTPHeaderSet accessControlExposeHeaderSet;
+@@ -1033,6 +1062,14 @@ String XMLHttpRequest::getResponseHeader(const AtomicString& name, ExceptionCode
+         return String();
+     }
+ 
++#if ENABLE(HBBTV)
++    //  HbbTV spec 8.2.2:
++    //  Headers are not relevant for carousel access
++    //  getResponseHeader() shall return null and getAllResponseHeaders() shall return an empty string.
++    if (applicationIsHbbTV() && m_response.isDVB())
++        return String();
++#endif
++
+     // See comment in getAllResponseHeaders above.
+     if (isSetCookieHeader(name) && !securityOrigin()->canLoadLocalResources()) {
+         logConsoleError(scriptExecutionContext(), "Refused to get unsafe header \"" + name + "\"");
+diff --git a/Source/WebCore/xml/parser/XMLDocumentParserLibxml2.cpp b/Source/WebCore/xml/parser/XMLDocumentParserLibxml2.cpp
+index 8b8786b..ea9c7e3 100644
+--- a/Source/WebCore/xml/parser/XMLDocumentParserLibxml2.cpp
++++ b/Source/WebCore/xml/parser/XMLDocumentParserLibxml2.cpp
+@@ -1293,6 +1293,9 @@ static void externalSubsetHandler(void* closure, const xmlChar*, const xmlChar*
+ {
+     String extId = toString(externalId);
+     if ((extId == "-//W3C//DTD XHTML 1.0 Transitional//EN")
++#if ENABLE(HBBTV)
++        || (extId == "-//HbbTV//1.1.1//EN")
++#endif // ENABLE(HBBTV)
+         || (extId == "-//W3C//DTD XHTML 1.1//EN")
+         || (extId == "-//W3C//DTD XHTML 1.0 Strict//EN")
+         || (extId == "-//W3C//DTD XHTML 1.0 Frameset//EN")
+diff --git a/Source/WebCore/xml/parser/XMLDocumentParserQt.cpp b/Source/WebCore/xml/parser/XMLDocumentParserQt.cpp
+index f846fb4..cfad374 100644
+--- a/Source/WebCore/xml/parser/XMLDocumentParserQt.cpp
++++ b/Source/WebCore/xml/parser/XMLDocumentParserQt.cpp
+@@ -639,6 +639,9 @@ void XMLDocumentParser::parseDtd()
+ 
+     //qDebug() << dtd << name << publicId << systemId;
+     if ((publicId == QLatin1String("-//W3C//DTD XHTML 1.0 Transitional//EN"))
++#if ENABLE(HBBTV)
++        || (publicId == QLatin1String("-//HbbTV//1.1.1//EN"))
++#endif // ENABLE(HBBTV)
+         || (publicId == QLatin1String("-//W3C//DTD XHTML 1.1//EN"))
+         || (publicId == QLatin1String("-//W3C//DTD XHTML 1.0 Strict//EN"))
+         || (publicId == QLatin1String("-//W3C//DTD XHTML 1.0 Frameset//EN"))
+@@ -648,7 +651,6 @@ void XMLDocumentParser::parseDtd()
+         || (publicId == QLatin1String("-//WAPFORUM//DTD XHTML Mobile 1.0//EN"))
+         || (publicId == QLatin1String("-//WAPFORUM//DTD XHTML Mobile 1.1//EN"))
+         || (publicId == QLatin1String("-//WAPFORUM//DTD XHTML Mobile 1.2//EN"))
+-        || (publicId == QLatin1String("-//HbbTV//1.1.1//EN"))
+        )
+         setIsXHTMLDocument(true); // controls if we replace entities or not.
+     if (!m_parsingFragment)
+diff --git a/Tools/qmake/mkspecs/features/features.pri b/Tools/qmake/mkspecs/features/features.pri
+index 9bb659c..b81f9df 100644
+--- a/Tools/qmake/mkspecs/features/features.pri
++++ b/Tools/qmake/mkspecs/features/features.pri
+@@ -87,6 +87,7 @@ FEATURE_DEFAULTS = \
+     ENABLE_MOUSE_CURSOR_SCALE=0 \
+     ENABLE_NAVIGATOR_CONTENT_UTILS=0 \
+     ENABLE_NETSCAPE_PLUGIN_API=1 \
++    ENABLE_HBBTV=1 \
+     ENABLE_NETWORK_INFO=0 \
+     ENABLE_NOSNIFF=0 \
+     ENABLE_NOTIFICATIONS=1 \
+-- 
+2.7.4
+
