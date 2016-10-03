@@ -58,8 +58,8 @@ RDEPENDS_enigma2-plugin-extensions-dvdburn = " \
         mjpegtools \
         python-xml \
         python-imaging \
-        ${@base_conditional('OPENDREAMBOX_GST_VERSION', '0.10', 'gst-plugins-bad-mpegtsmux', 'gstreamer1.0-plugins-bad-mpegtsmux', d)} \
-        ${@base_conditional('OPENDREAMBOX_GST_VERSION', '0.10', 'gst-plugins-bad-videoparsersbad', 'gstreamer1.0-plugins-bad-videoparsersbad', d)} \
+        gstreamer1.0-plugins-bad-mpegtsmux \
+        gstreamer1.0-plugins-bad-videoparsersbad \
 "
 RDEPENDS_enigma2-plugin-extensions-dvdplayer = " \
         packagegroup-opendreambox-dvdplayer \

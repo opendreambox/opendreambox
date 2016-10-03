@@ -28,7 +28,7 @@ RDEPENDS_${PN} += " \
   enigma2-skins-meta \
   enigma2-streamproxy \
   libpassthrough \
-  packagegroup-opendreambox-gstreamer-${OPENDREAMBOX_GST_VERSION} \
+  packagegroup-opendreambox-gstreamer-1.0 \
   packagegroup-opendreambox-systemlocales \
 "
 

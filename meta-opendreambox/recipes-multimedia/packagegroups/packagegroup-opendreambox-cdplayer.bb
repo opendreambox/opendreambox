@@ -12,6 +12,6 @@ SUMMARY_${PN} = "OpenDreambox: CD-Player Support"
 RDEPENDS_${PN} = "\
  cdfs \
  cdtextinfo \
- ${@base_conditional('OPENDREAMBOX_GST_VERSION', '0.10', 'gst-plugins-ugly-cdio', 'gstreamer1.0-plugins-ugly-cdio', d)} \
+ gstreamer1.0-plugins-ugly-cdio \
 "
 
