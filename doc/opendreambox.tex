@@ -44,7 +44,7 @@
 \begin{document}
 \title{opendreambox}
 \author{Andreas Oberritter \shell{<obi@opendreambox.org>}}
-\date{September 2014}
+\date{October 2016}
 \maketitle
 %\thispagestyle{empty}
 %\pagestyle{empty}
@@ -60,8 +60,8 @@
     uses BitBake to transform build instructions into
     distributable firmare images and software packages.
 
-    The current version, OpenDreambox 2.2, is based on the \href{https://www.yoctoproject.org/}{Yocto Project}, release 
-    1.5.1 "Dora", an umbrella project for OpenEmbedded and related tools.
+    The current version, OpenDreambox 2.5, is based on the \href{https://www.yoctoproject.org/}{Yocto Project}, release 
+    2.1 "Krogoth", an umbrella project for OpenEmbedded and related tools.
   \end{flushleft}
 
   \subsection{Target audience}
@@ -135,7 +135,7 @@ THE SOFTWARE.
     To initially download the source into the current directory, issue the
     following command:
 
-    \shell{git clone -b dora git://git.opendreambox.org/git/opendreambox.git}
+    \shell{git clone -b krogoth git://git.opendreambox.org/git/opendreambox.git}
 
     The Git repository can be viewed online at:
 
@@ -153,19 +153,19 @@ THE SOFTWARE.
     This meta data is used by BitBake to download and compile source code
     and to assemble installable software packages and firmware images.
 
-    Currently, these layers are used, ordered by priority from highest to
-    lowest:
+    Currently, these layers are used:
 
     \begin{itemize}
       \item \shell{meta-dreambox}
       \item \shell{meta-opendreambox}
-      \item \shell{meta-qt5}
-      \item \shell{meta-openembedded/meta-oe}
       \item \shell{meta-openembedded/meta-filesystems}
-      \item \shell{meta-openembedded/meta-initramfs}
       \item \shell{meta-openembedded/meta-multimedia}
       \item \shell{meta-openembedded/meta-networking}
+      \item \shell{meta-openembedded/meta-oe}
+      \item \shell{meta-openembedded/meta-python}
       \item \shell{meta-openembedded/meta-ruby}
+      \item \shell{meta-openembedded/meta-webserver}
+      \item \shell{meta-qt5}
       \item \shell{openembedded-core/meta}
     \end{itemize}
 
@@ -176,7 +176,8 @@ THE SOFTWARE.
     For example, if \shell{libmad\_0.15.1b.bb} existed in both
     \shell{meta-openembedded} and \shell{openembedded-core}, the recipe in
     \shell{meta-openembedded} would be used, because \shell{openembedded-core}
-    has lower priority.
+    has lower priority. Priority values are determined by the variable \shell{BBFILE\_PRIORITY}
+    in \shell{conf/layer.conf} of each layer.
 
     \textbf{NOTE:} This would still be true even if the version of \shell{libmad} in
     \shell{openembeded-core} was higher than the version in \shell{meta-openembedded},
@@ -194,9 +195,9 @@ THE SOFTWARE.
 
        The latest changes to these Git repositories can be seen at:
 
-       \url{http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/dora}
+       \url{http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/krogoth}
 
-       \url{http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/dora}
+       \url{http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/krogoth}
 
     \subsubsection{meta-opendreambox}
       This directory contains:
@@ -223,7 +224,7 @@ THE SOFTWARE.
 \section{Further readings}
       \begin{itemize}
         \item The Yocto Project Reference Manual:
-              \url{https://www.yoctoproject.org/docs/1.5.1/ref-manual/ref-manual.html}
+              \url{https://www.yoctoproject.org/docs/2.1/ref-manual/ref-manual.html}
       \end{itemize}
 
 \section{Prerequisites}
@@ -244,8 +245,8 @@ THE SOFTWARE.
    include:
 
    \begin{itemize}
-     \item Debian 7.6 "Wheezy" [i386, amd64]
-     \item Ubuntu 14.04.1 LTS "Trusty Tahr" [amd64]
+     \item Debian 8.6 "Jessie" [amd64]
+     \item Ubuntu 16.04.1 LTS "Xenial Xerus" [amd64]
    \end{itemize}
 
 \pagebreak
@@ -267,7 +268,7 @@ THE SOFTWARE.
 
   \subsection{Changes since release 2.0}
     \begin{itemize}
-      \item Added support for DM7080.
+      \item Added support for DM520, DM525, DM820 and DM7080.
       \item If a recipe changes, the corresponding packages will be rebuilt automatically,
             in contrast to required manual PR bumps in the past.
       \item Each machine uses its own tmp directory again, like before 2.0. However,
@@ -279,6 +280,13 @@ THE SOFTWARE.
       \item Default package format switched from ipk (opkg) to deb (dpkg + apt).
       \item \shell{dreambox-image} was renamed to include the package format (\shell{dreambox-image-deb}).
     \end{itemize}
+
+   \subsection{Changes since release 2.2}
+     \begin{itemize}
+       \item Added support for DM900.
+       \item Support for machines with low memory was dropped (DM500HD, DM800SE).
+       \item Switched from Qt4 to Qt5.
+     \end{itemize}
 
 \section{Known Issues}
 
@@ -382,10 +390,6 @@ THE SOFTWARE.
        Always build the latest versions of OpenDreambox-related projects from Git:
 
        \shell{INHERIT += "opendreambox-autorev"}
-
-       Remove temporary files of previous versions of a recipe before a newer version gets built:
-
-       \shell{INHERIT += "rm\_old\_work"}
 
   \subsection{Setting up a build directory}
      To set up a build directory for e.g. \textbf{DM 7080} run \shell{make MACHINE=dm7080}. If
