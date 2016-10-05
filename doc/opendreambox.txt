@@ -1,7 +1,7 @@
 opendreambox
 
    Andreas Oberritter <obi@opendreambox.org>
-   September 2014
+   October 2016
 
   Contents
 
@@ -21,6 +21,7 @@ opendreambox
    4 Major changes since previous public releases
     4.1 Changes since release 1.6
     4.2 Changes since release 2.0
+    4.3 Changes since release 2.2
    5 Known Issues
    6 Building OpenDreambox
     6.1 Makefile targets
@@ -51,8 +52,8 @@ opendreambox
    to transform build instructions into distributable firmare images and software
    packages.
 
-   The current version, OpenDreambox 2.2, is based on the Yocto Project, release
-   1.5.1 "Dora", an umbrella project for OpenEmbedded and related tools.
+   The current version, OpenDreambox 2.5, is based on the Yocto Project, release
+   2.1 ”Krogoth”, an umbrella project for OpenEmbedded and related tools.
 
     1.1 Target audience
 
@@ -68,6 +69,7 @@ opendreambox
    |Product name              |Environment variable                              |
    |  ----------------------  |  ----------------------------------------------  |
    |DM 500 HD V2              |MACHINE=dm500hdv2                                 |
+   |DM 520 HD                 |MACHINE=dm520                                     |
    |DM 800 HD SE V2           |MACHINE=dm800sev2                                 |
    |DM 820 HD                 |MACHINE=dm820                                     |
    |DM 7020 HD                |MACHINE=dm7020hd                                  |
@@ -115,12 +117,12 @@ opendreambox
     1.4 Obtaining the source code
 
    OpenDreambox uses the Git version control system. To obtain the source code, it
-   is required to install Git. See http://git-scm.com/.
+   is required to install Git. See http://git-_scm.com/.
 
    To initially download the source into the current directory, issue the
    following command:
 
-   git clone -b dora git://git.opendreambox.org/git/opendreambox.git
+   git clone -b krogoth git://git.opendreambox.org/git/opendreambox.git
 
    The Git repository can be viewed online at:
 
@@ -140,16 +142,17 @@ opendreambox
    meta data is used by BitBake to download and compile source code and to
    assemble installable software packages and firmware images.
 
-   Currently, these layers are used, ordered by priority from highest to lowest:
+   Currently, these layers are used:
      * meta-dreambox
      * meta-opendreambox
-     * meta-qt5
-     * meta-openembedded/meta-oe
      * meta-openembedded/meta-filesystems
-     * meta-openembedded/meta-initramfs
      * meta-openembedded/meta-multimedia
      * meta-openembedded/meta-networking
+     * meta-openembedded/meta-oe
+     * meta-openembedded/meta-python
      * meta-openembedded/meta-ruby
+     * meta-openembedded/meta-webserver
+     * meta-qt5
      * openembedded-core/meta
 
    If a recipe for the same package exists in multiple layers, then the higher
@@ -157,7 +160,8 @@ opendreambox
 
    For example, if libmad_0.15.1b.bb existed in both meta-openembedded and
    openembedded-core, the recipe in meta-openembedded would be used, because
-   openembedded-core has lower priority.
+   openembedded-core has lower priority. Priority values are determined by the
+   variable BBFILE_PRIORITY in conf/layer.conf of each layer.
 
    NOTE: This would still be true even if the version of libmad in
    openembeded-core was higher than the version in meta-openembedded, unless
@@ -176,9 +180,9 @@ opendreambox
 
    The latest changes to these Git repositories can be seen at:
 
-   http://git.openembedded.org/openembedded-core-contrib/log/?h=obi/dora
+   http://git.openembedded.org/openembedded-_core-_contrib/log/?h=obi/krogoth
 
-   http://git.openembedded.org/meta-openembedded-contrib/log/?h=obi/dora
+   http://git.openembedded.org/meta-_openembedded-_contrib/log/?h=obi/krogoth
 
       1.6.2 meta-opendreambox
 
@@ -201,7 +205,7 @@ opendreambox
   2 Further readings
 
      * The Yocto Project Reference Manual:
-       https://www.yoctoproject.org/docs/1.5.1/ref-manual/ref-manual.html
+       https://www.yoctoproject.org/docs/2.1/ref-_manual/ref-_manual.html
 
   3 Prerequisites
 
@@ -214,8 +218,8 @@ opendreambox
    It is highly recommended to use Linux to build OpenDreambox. In theory, any
    recent distribution will do, but not many distributions have been verified to
    build OpenDreambox without errors. Tested distributions include:
-     * Debian 7.6 "Wheezy" [i386, amd64]
-     * Ubuntu 14.04.1 LTS "Trusty Tahr" [amd64]
+     * Debian 8.6 ”Jessie” [amd64]
+     * Ubuntu 16.04.1 LTS ”Xenial Xerus” [amd64]
 
   4 Major changes since previous public releases
 
@@ -233,7 +237,7 @@ opendreambox
 
     4.2 Changes since release 2.0
 
-     * Added support for DM7080.
+     * Added support for DM520, DM525, DM820 and DM7080.
      * If a recipe changes, the corresponding packages will be rebuilt
        automatically, in contrast to required manual PR bumps in the past.
      * Each machine uses its own tmp directory again, like before 2.0. However,
@@ -246,6 +250,12 @@ opendreambox
      * Default package format switched from ipk (opkg) to deb (dpkg + apt).
      * dreambox-image was renamed to include the package format
        (dreambox-image-deb).
+
+    4.3 Changes since release 2.2
+
+     * Added support for DM900.
+     * Support for machines with low memory was dropped (DM500HD, DM800SE).
+     * Switched from Qt4 to Qt5.
 
   5 Known Issues
 
@@ -349,11 +359,6 @@ opendreambox
 
    INHERIT += "opendreambox-autorev"
 
-   Remove temporary files of previous versions of a recipe before a newer version
-   gets built:
-
-   INHERIT += "rm_old_work"
-
     6.5 Setting up a build directory
 
    To set up a build directory for e.g. DM 7080 run make MACHINE=dm7080. If
@@ -375,7 +380,7 @@ opendreambox
 
    source bitbake.env
 
-   BitBake must be run from the machine's build directory. For DM 7080 run:
+   BitBake must be run from the machine’s build directory. For DM 7080 run:
 
    cd build/dm7080
 
@@ -390,7 +395,7 @@ opendreambox
    OpenDreambox provides a script called cross-compile.env. Once run, the script
    will create the following commands (shell aliases), aiming to ease
    cross-compilation of external source trees:
-     * oe_autoreconf - Calls OE's version of autoreconf. Useful for projects based
+     * oe_autoreconf - Calls OE’s version of autoreconf. Useful for projects based
        on GNU autotools.
      * oe_runconf - Calls ./configure with parameters suitable for OE. Useful for
        projects based on GNU autotools.
