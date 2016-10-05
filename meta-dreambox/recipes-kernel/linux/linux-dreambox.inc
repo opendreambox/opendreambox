@@ -44,3 +44,4 @@ python __anonymous() {
 INITRAMFS_IMAGE = "dreambox-rescue-image"
 INITRAMFS_IMAGE_BUNDLE = "1"
 INITRAMFS_BASE_NAME = "rescue-${PV}-${PR}-${MACHINE}-${DATETIME}"
+INITRAMFS_BASE_NAME[vardepsexclude] = "DATETIME"
