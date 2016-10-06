@@ -18,6 +18,6 @@ RPROVIDES_${PN} = "recovery-ui"
 
 COMPATIBLE_MACHINE = "^(dm520|dm900)$"
 
-INITSCRIPT_NAME = "${BPN}"
+INITSCRIPT_NAME = "recovery-ui"
 
 PRECOMPILED_NAME = "recovery-ui"
