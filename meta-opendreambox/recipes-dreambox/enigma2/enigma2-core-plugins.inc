@@ -32,20 +32,13 @@ PACKAGES =+ " \
     enigma2-plugin-systemplugins-hdmicec \
 "
 
-QT_BASE_NAME ?= "${@base_contains('DISTRO_FEATURES', 'x11', 'qt4', 'qt4-embedded', d)}"
-QT_IMAGEFORMATS ?= "${QT_BASE_NAME}-plugin-imageformat-gif \
-                    ${QT_BASE_NAME}-plugin-imageformat-ico \
-                    ${QT_BASE_NAME}-plugin-imageformat-jpeg \
-                    ${QT_BASE_NAME}-plugin-imageformat-svg \
-                    ${QT_BASE_NAME}-plugin-imageformat-tiff"
-
 RDEPENDS_enigma2-plugin-extensions-browser = " \
         ca-certificates \
         python-email \
         python-sqlite3 \
         python-xml \
+        qtbase-plugins \
         ubuntu-font-family \
-        ${QT_IMAGEFORMATS} \
 "
 RDEPENDS_enigma2-plugin-extensions-cutlisteditor = " \
         aio-grab \

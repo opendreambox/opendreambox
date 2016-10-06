@@ -11,7 +11,7 @@ DEPENDS += " \
     libaio \
     libav \
     libbluray \
-    libconnman-qte \
+    libconnman-qt5 \
     libdlsym \
     libdreamdvd \
     libdvbsi++ \
@@ -20,11 +20,12 @@ DEPENDS += " \
     libjpeg-turbo \
     libpng \
     libsigc++-2.0 \
+    libunwind \
     libxml2 \
     openssl \
     python \
-    qt4-embedded \
-    qxmpp-e \
+    qtbase \
+    qtwebkit \
     sqlite3 \
     systemd \
     zlib \
@@ -35,8 +36,6 @@ inherit opendreambox-precompiled-binary
 RDEPENDS_${PN} += " \
     libegl \
     libgles2 \
-    qnullscreen \
-    qt4-embedded-plugin-sqldriver-sqlite \
 "
 
 require enigma2-common.inc
