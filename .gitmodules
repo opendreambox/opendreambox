@@ -12,5 +12,5 @@
 	branch = 1.30
 [submodule "meta-qt5"]
 	path = meta-qt5
-	url = git://github.com/meta-qt5/meta-qt5
+	url = git://github.com/opendreambox/meta-qt5
 	branch = krogoth
