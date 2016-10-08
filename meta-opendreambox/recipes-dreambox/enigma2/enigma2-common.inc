@@ -13,6 +13,7 @@ do_install_append() {
 PACKAGES += "${PN}-meta"
 
 RDEPENDS_${PN} += " \
+        cdfs \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
         enigma2-autofs \
