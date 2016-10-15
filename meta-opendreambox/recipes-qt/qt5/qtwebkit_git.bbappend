@@ -4,6 +4,7 @@ SRC_URI += " \
         file://0003-always-emit-keypress-event-with-keycode.patch \
         file://0004-Enable-NPAPI-for-Qt-without-X11.patch \
         file://0005-import-a-bunch-of-hbbtv-patches.patch \
+        file://0006-ANGLE-remove-EGL-GLES2-KHR-headers.patch \
 "
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/qtwebkit-git:"
