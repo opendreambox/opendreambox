@@ -20,6 +20,9 @@ RDEPENDS_${PN} += " \
 RRECOMMENDS_${PN} += " \
   autofs \
   avahi-daemon \
+  bash \
+  bash-completion \
+  bash-completion-extra \
   dccamd \
   dreambox-compat \
   e2fsprogs-e2fsck \
