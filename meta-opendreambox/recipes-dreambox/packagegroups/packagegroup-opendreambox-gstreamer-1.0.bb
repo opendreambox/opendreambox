@@ -49,3 +49,5 @@ RDEPENDS_${PN} += " \
   gstreamer1.0-plugins-ugly-dvdsub \
   gstreamer1.0-plugins-ugly-mad \
 "
+
+RRECOMMENDS_${PN} = "gstreamer1.0-bash-completion"
