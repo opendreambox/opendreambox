@@ -7,4 +7,8 @@ RDEPENDS_${PN} = " \
 # for CIFS shares.
 RDEPENDS_${PN} += "cifs-utils nfs-utils-mount"
 
+RRECOMMENDS_${PN} = "kmod-bash-completion \
+                     systemd-bash-completion \
+                     util-linux-bash-completion"
+
 require packagegroup-boot.inc
