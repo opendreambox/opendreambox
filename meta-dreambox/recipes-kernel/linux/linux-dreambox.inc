@@ -14,8 +14,8 @@ PKG_kernel = "kernel"
 RPROVIDES_kernel = "kernel-${KERNEL_VERSION_PKG_NAME}"
 PKG_kernel-base = "kernel-base"
 RPROVIDES_kernel-base = "kernel-base-${KERNEL_VERSION_PKG_NAME}"
-PKG_kernel-image = "kernel-image"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION_PKG_NAME}"
+RDEPENDS_kernel-base = ""
+PACKAGES_remove = "kernel-image"
 
 python __anonymous() {
     type = d.getVar('KERNEL_IMAGETYPE', True) or ""
@@ -38,7 +38,10 @@ python __anonymous() {
     postinst += '[ -n "$D" ] || flash-kernel /${KERNEL_IMAGEDEST}/%s-${KERNEL_VERSION_NAME}\n' % imagetype
     d.setVar('pkg_postinst_kernel-image-%s' % imagetype.lower(), postinst)
 
+    d.setVar('PKG_kernel-image-%s' % imagetype.lower(), 'kernel-image')
+    d.appendVar('RPROVIDES_kernel-image-%s' % imagetype.lower(), ' kernel-image-${KERNEL_VERSION_PKG_NAME}')
     d.appendVar('RDEPENDS_kernel-image-%s' % imagetype.lower(), ' flash-scripts')
+    d.setVar('RDEPENDS_kernel-base', 'kernel-image-%s' % imagetype.lower())
 }
 
 INITRAMFS_IMAGE = "dreambox-rescue-image"
