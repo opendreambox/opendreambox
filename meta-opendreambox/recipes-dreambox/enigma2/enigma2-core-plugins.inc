@@ -2,7 +2,6 @@ SUMMARY_enigma2-plugin-extensions-browser = "Browse the web"
 SUMMARY_enigma2-plugin-extensions-cutlisteditor = "Cut movies"
 SUMMARY_enigma2-plugin-extensions-graphmultiepg = "Graphical program guide"
 SUMMARY_engima2-plugin-extensions-hbbtv = "HbbTV functionality for your Dreambox (beta)"
-SUMMARY_enigma2-plugin-extensions-modem = "Connect to the internet by modem"
 SUMMARY_enigma2-plugin-extensions-pictureplayer = "Show photos"
 SUMMARY_enigma2-plugin-systemplugins-cleanupwizard = "Detect low flash memory"
 SUMMARY_enigma2-plugin-systemplugins-crashlogautosubmit = "Send crash logs to Dream Multimedia"
@@ -21,7 +20,6 @@ PACKAGES =+ " \
     enigma2-plugin-extensions-dvdburn \
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-hbbtv \
-    enigma2-plugin-extensions-modem \
     enigma2-plugin-systemplugins-commoninterfaceassignment \
     enigma2-plugin-systemplugins-crashlogautosubmit \
     enigma2-plugin-systemplugins-hotplug \
@@ -74,15 +72,6 @@ RDEPENDS_enigma2-plugin-systemplugins-crashlogautosubmit = " \
 RDEPENDS_enigma2-plugin-systemplugins-hotplug = " \
         python-fcntl \
         python-threading \
-"
-RDEPENDS_enigma2-plugin-extensions-modem = " \
-        dreambox-modem-ppp-scripts \
-        ppp \
-"
-RRECOMMENDS_enigma2-plugin-extensions-modem = " \
-        kernel-module-ppp-async \
-        kernel-module-ppp-deflate \
-        kernel-module-ppp-generic \
 "
 RDEPENDS_enigma2-plugin-systemplugins-networkmanager = " \
         packagegroup-net-connman \
