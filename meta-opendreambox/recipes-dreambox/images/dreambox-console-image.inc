@@ -15,14 +15,11 @@ python __anonymous() {
         raise bb.parse.SkipPackage("Unable to build %s without %s packages" % (pn, pkgtype))
 }
 
-BAD_RECOMMENDATIONS += "${@base_conditional('VIRTUAL-RUNTIME_init_manager', 'systemd', 'busybox-syslog', '', d)}"
-BAD_RECOMMENDATIONS += "libnss-mdns udev-hwdb wpa-supplicant-passphrase xinetd"
-
-VIRTUAL-RUNTIME_init_manager ?= "systemd"
+BAD_RECOMMENDATIONS += "busybox-syslog libnss-mdns udev-hwdb wpa-supplicant-passphrase xinetd"
 
 # packages to drag into the image
 IMAGE_INSTALL = " \
-    packagegroup-boot-${VIRTUAL-RUNTIME_init_manager} \
+    packagegroup-boot-systemd \
     packagegroup-net-connman \
     packagegroup-pkg-deb \
     packagegroup-opendreambox-base \
