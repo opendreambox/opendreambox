@@ -27,6 +27,7 @@ RRECOMMENDS_${PN} += " \
   dreambox-compat \
   e2fsprogs-e2fsck \
   joe \
+  less \
   mc \
   samba-base \
   zeroconf \
