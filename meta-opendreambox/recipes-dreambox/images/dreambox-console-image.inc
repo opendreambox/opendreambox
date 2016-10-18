@@ -15,7 +15,18 @@ python __anonymous() {
         raise bb.parse.SkipPackage("Unable to build %s without %s packages" % (pn, pkgtype))
 }
 
-BAD_RECOMMENDATIONS += "busybox-syslog libnss-mdns udev-hwdb wpa-supplicant-passphrase xinetd"
+BAD_RECOMMENDATIONS += " \
+    busybox-syslog \
+    libconnman-qt5-qmlplugins \
+    libnss-mdns \
+    qtbase-plugins \
+    qtdeclarative-plugins \
+    qtdeclarative-qmlplugins \
+    qtwebkit-qmlplugins \
+    udev-hwdb \
+    wpa-supplicant-passphrase \
+    xinetd \
+"
 
 # packages to drag into the image
 IMAGE_INSTALL = " \
