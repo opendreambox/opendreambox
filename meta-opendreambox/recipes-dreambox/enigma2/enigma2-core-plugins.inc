@@ -35,7 +35,9 @@ RDEPENDS_enigma2-plugin-extensions-browser = " \
         python-email \
         python-sqlite3 \
         python-xml \
-        qtbase-plugins \
+        qtbase-plugin-imageformats-qjpeg \
+        qtbase-plugin-imageformats-qgif \
+        qtbase-plugin-imageformats-qico \
         ubuntu-font-family \
 "
 RDEPENDS_enigma2-plugin-extensions-cutlisteditor = " \
