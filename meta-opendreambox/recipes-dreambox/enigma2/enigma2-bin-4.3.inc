@@ -36,6 +36,7 @@ inherit opendreambox-precompiled-binary
 RDEPENDS_${PN} += " \
     libegl \
     libgles2 \
+    qtbase-plugin-platforms-qoffscreen \
 "
 
 require enigma2-common.inc
