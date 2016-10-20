@@ -4,7 +4,7 @@ SECTION = "console/network"
 LICENSE = "GPL-2.0-with-OpenSSL-exception"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271"
 DEPENDS = "libcap openssl"
-DEPENDS += "${@base_contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
 SRC_URI = " \
         https://security.appspot.com/downloads/${BP}.tar.gz \
@@ -32,10 +32,10 @@ inherit systemd useradd xinetd
 
 CFLAGS = "${TARGET_CFLAGS}"
 CFLAGS += "-DVSF_BUILD_SSL=1"
-CFLAGS += "${@base_contains('DISTRO_FEATURES', 'pam', '-DVSF_BUILD_PAM=1', '', d)}"
+CFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', '-DVSF_BUILD_PAM=1', '', d)}"
 
 LIBS = "-lcap -lcrypt -lssl -lcrypto"
-LIBS += "${@base_contains('DISTRO_FEATURES', 'pam', '-lpam', '', d)}"
+LIBS += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', '-lpam', '', d)}"
 
 LINK = "${TARGET_LDFLAGS}"
 
@@ -88,7 +88,7 @@ do_install() {
         install -d ${D}${mandir}/man5
         install -m 644 vsftpd.conf.5 ${D}${mandir}/man5/vsftpd.conf.5
         install -d ${D}${SECURE_CHROOT_DIR}
-        if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
                 install -d ${D}${systemd_unitdir}/system
                 ln -sf /dev/null ${D}${systemd_unitdir}/system/vsftpd.service
                 install -m644 ${WORKDIR}/vsftpd@.service ${D}${systemd_unitdir}/system

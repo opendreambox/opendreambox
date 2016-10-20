@@ -7,9 +7,9 @@ SRC_URI += "file://0001-configure.ac-force-enable-sendfile-when-cross-compil.pat
             file://lighttpd.conf.in"
 
 PACKAGECONFIG ?= "mmap pcre zlib \
-    ${@base_contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)} \
-    ${@base_contains('DISTRO_FEATURES', 'largefile', 'lfs', '', d)} \
-    ${@base_contains('DISTRO_FEATURES', 'xattr', 'attr', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'lfs', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'attr', '', d)} \
 "
 
 SED = "sed -e 's,@localstatedir@,${localstatedir},g' \

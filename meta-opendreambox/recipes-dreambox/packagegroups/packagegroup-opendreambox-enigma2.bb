@@ -16,11 +16,11 @@ RDEPENDS_${PN} += " \
   enigma2-meta \
   enigma2-plugin-extensions-genuinedreambox \
   enigma2-plugin-extensions-mediascanner \
-  ${@base_contains('DREAMBOX_FEATURES', 'ci', 'enigma2-plugin-systemplugins-commoninterfaceassignment', '', d)} \
-  ${@base_contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
+  ${@bb.utils.contains('DREAMBOX_FEATURES', 'ci', 'enigma2-plugin-systemplugins-commoninterfaceassignment', '', d)} \
+  ${@bb.utils.contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
   enigma2-plugin-systemplugins-hotplug \
   enigma2-plugin-systemplugins-softwaremanager \
-  ${@base_contains('DREAMBOX_FEATURES', 'fan', 'enigma2-plugin-systemplugins-tempfancontrol', '', d)} \
+  ${@bb.utils.contains('DREAMBOX_FEATURES', 'fan', 'enigma2-plugin-systemplugins-tempfancontrol', '', d)} \
   enigma2-plugin-systemplugins-videomode \
   enigma2-plugin-systemplugins-videotune \
   enigma2-plugins-meta \
@@ -56,15 +56,15 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-systemplugins-positionersetup \
   enigma2-plugin-systemplugins-satfinder \
   enigma2-plugin-systemplugins-skinselector \
-  ${@base_contains('DREAMBOX_FEATURES', 'encoder', 'enigma2-plugin-systemplugins-streamserver', '', d)} \
+  ${@bb.utils.contains('DREAMBOX_FEATURES', 'encoder', 'enigma2-plugin-systemplugins-streamserver', '', d)} \
   enigma2-plugin-systemplugins-upnp \
   enigma2-plugin-systemplugins-wirelesslan \
-  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
-  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
-  ${@base_contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \
+  ${@bb.utils.contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
+  ${@bb.utils.contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
+  ${@bb.utils.contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \
   glib-networking \
 "
 
 RRECOMMENDS_${PN}_append_mipsel = " \
-  ${@base_contains('MACHINE_FEATURES', 'wifi', 'packagegroup-opendreambox-wlan', '', d)} \
+  ${@bb.utils.contains('MACHINE_FEATURES', 'wifi', 'packagegroup-opendreambox-wlan', '', d)} \
 "

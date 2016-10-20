@@ -10,7 +10,7 @@ SRC_URI = "file://streamproxy.xinetd.in \
 inherit autotools opendreambox-git systemd xinetd
 
 do_install_append() {
-        if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
                 install -d ${D}${systemd_unitdir}/system
                 ln -sf /dev/null ${D}${systemd_unitdir}/system/streamproxy.service
                 install -m644 ${WORKDIR}/streamproxy@.service ${D}${systemd_unitdir}/system
