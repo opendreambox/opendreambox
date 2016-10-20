@@ -5,12 +5,12 @@ FILES_${PN}-carl9170 = " \
   /lib/firmware/carl9170-1.fw \
 "
 
-LICENSE_${PN}-rt2800usb = "Firmware:LICENCE.ralink-firmware.txt"
+LICENSE_${PN}-rt2800usb = "Firmware-ralink-firmware"
 FILES_${PN}-rt2800usb = " \
   /lib/firmware/rt2870.bin \
 "
 
-LICENSE_${PN}-rt73usb = "Firmware:LICENCE.ralink-firmware.txt"
+LICENSE_${PN}-rt73usb = "Firmware-ralink-firmware"
 FILES_${PN}-rt73usb = " \
   /lib/firmware/rt73.bin \
 "
