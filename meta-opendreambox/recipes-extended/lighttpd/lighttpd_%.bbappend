@@ -2,7 +2,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 
 SRC_URI += "file://0001-configure.ac-force-enable-sendfile-when-cross-compil.patch \
             file://0002-stat_cache-fix-reading-block-devices.patch \
-            file://0003-build-use-CC_FOR_BUILD-for-lemon-when-cross-compilin.patch \
             file://include-conf-enabled.sh.in \
             file://lighttpd.conf.in"
 

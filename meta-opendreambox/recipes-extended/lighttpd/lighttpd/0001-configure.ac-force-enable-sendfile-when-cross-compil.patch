@@ -1,4 +1,4 @@
-From 2fa1fa820c327b26ec38d6d786be26b54c0ef3eb Mon Sep 17 00:00:00 2001
+From 65b70971d51701f58c4c26da697542c1e6068b8f Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Sun, 17 Aug 2014 22:08:41 +0200
 Subject: [PATCH] configure.ac: force enable sendfile when cross-compiling
@@ -9,10 +9,10 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 25e6b71..34f42f4 100644
+index 90a03be..4a3b50f 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -631,8 +631,7 @@ if test "x$ac_cv_func_sendfile" = xyes; then
+@@ -820,8 +820,7 @@ if test "x$ac_cv_func_sendfile" = xyes; then
  		    [ AC_MSG_RESULT(no)
  		    AC_DEFINE([HAVE_SENDFILE_BROKEN], [1], [broken sendfile]) ] )
  	else
