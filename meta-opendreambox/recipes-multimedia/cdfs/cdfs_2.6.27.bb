@@ -17,12 +17,5 @@ SRC_URI[patch.sha256sum] = "dcf9ab712fb1e7c96d88d6d4dae6e7a99f76c2ffee8b5f289c6f
 
 inherit module
 
-do_compile() {
-        unset CC CFLAGS CPP CPPFLAGS CXX CXXFLAGS CCLD LDFLAGS
-        oe_runmake -C "${STAGING_KERNEL_DIR}" SUBDIRS="${S}" V=1 modules
-}
-
-do_install() {
-        unset CC CFLAGS CPP CPPFLAGS CXX CXXFLAGS CCLD LDFLAGS
-        oe_runmake -C "${STAGING_KERNEL_DIR}" SUBDIRS="${S}" DEPMOD=echo INSTALL_MOD_PATH="${D}" modules_install
-}
+EXTRA_OEMAKE = "-C '${STAGING_KERNEL_DIR}' SUBDIRS='${S}'"
+MAKE_TARGETS = "modules"
