@@ -55,6 +55,7 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-systemplugins-networkwizard \
   enigma2-plugin-systemplugins-positionersetup \
   enigma2-plugin-systemplugins-satfinder \
+  enigma2-plugin-systemplugins-setpasswd \
   enigma2-plugin-systemplugins-skinselector \
   ${@bb.utils.contains('DREAMBOX_FEATURES', 'encoder', 'enigma2-plugin-systemplugins-streamserver', '', d)} \
   enigma2-plugin-systemplugins-upnp \
