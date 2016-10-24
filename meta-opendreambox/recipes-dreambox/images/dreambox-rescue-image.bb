@@ -42,7 +42,6 @@ ISSUE_TEXT .= "\n"
 
 tweak_initramfs() {
         touch ${IMAGE_ROOTFS}${sysconfdir}/initrd-release
-        sed -e '/enigma2/d' -i ${IMAGE_ROOTFS}${sysconfdir}/inittab
         printf "${ISSUE_TEXT}" >> ${IMAGE_ROOTFS}${sysconfdir}/issue
         printf "${ISSUE_TEXT}" >> ${IMAGE_ROOTFS}${sysconfdir}/issue.net
 }
