@@ -26,8 +26,6 @@ python __anonymous() {
     for imagetype in set(types):
         d.setVar('PKG_kernel-image-%s' % imagetype.lower(), 'kernel-image-%s' % imagetype.lower())
         d.setVar('RPROVIDES_kernel-image-%s' % imagetype.lower(), 'kernel-image-%s-${KERNEL_VERSION_PKG_NAME}' % imagetype.lower())
-        d.appendVar('PACKAGES', ' rescue-image-%s' % imagetype.lower())
-        d.setVar('FILES_rescue-image-%s' % imagetype.lower(), '/boot/%s-initramfs-${MACHINE}.bin' % imagetype)
 
     imagetype = types[0]
     d.setVar('RDEPENDS_kernel-image', 'kernel-image-%s' % imagetype.lower())
@@ -47,4 +45,3 @@ python __anonymous() {
 INITRAMFS_IMAGE = "dreambox-rescue-image"
 INITRAMFS_IMAGE_BUNDLE = "1"
 INITRAMFS_BASE_NAME = "rescue-${PV}-${PR}-${MACHINE}-${DATETIME}"
-INITRAMFS_BASE_NAME[vardepsexclude] = "DATETIME"
