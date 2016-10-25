@@ -4,7 +4,7 @@ SRCREV = "${@opendreambox_srcrev('0884ec3e4a3fc216c8a827ff776594a0c3d1c58d', d)}
 
 inherit allarch autotools-brokensep opendreambox-github
 
-PACKAGES_DYNAMIC = "enigma2-skin-*"
+PACKAGES_DYNAMIC = "^enigma2-skin-.*"
 PACKAGES += "${PN}-meta"
 
 FILES_${PN} = ""
