@@ -1,6 +1,5 @@
 SUMMARY = "Skins for Enigma2"
 LICENSE = "CLOSED"
-DEPENDS = "enigma2-plugins"
 SRCREV = "${@opendreambox_srcrev('0884ec3e4a3fc216c8a827ff776594a0c3d1c58d', d)}"
 
 inherit allarch autotools-brokensep opendreambox-github
@@ -43,3 +42,7 @@ python enigma2_skins_split_packages() {
 }
 
 PACKAGESPLITFUNCS_prepend = "enigma2_skins_split_packages "
+
+# No package will be generated for ${PN}, and enigma2-plugins doesn't exist as
+# a package either, but it's enough to avoid a direct build dependency.
+RDEPENDS_${PN} = "enigma2-plugins"
