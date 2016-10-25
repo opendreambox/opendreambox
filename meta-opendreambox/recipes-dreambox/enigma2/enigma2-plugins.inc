@@ -1,33 +1,7 @@
 SUMMARY = "Additional plugins for Enigma2"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
-DEPENDS = " \
-        aio-grab \
-        avahi \
-        cdrkit \
-        cdtextinfo \
-        dbttcd \
-        dvdbackup \
-        enigma2 \
-        enigma2-streamproxy \
-        gstreamer1.0-plugins-bad \
-        gstreamer1.0-plugins-good \
-        hdparm \
-        parted \
-        python-flickrapi \
-        python-gdata \
-        python-google-api-client \
-        python-mutagen \
-        python-pycrypto \
-        python-pyopenssl \
-        python-simplejson \
-        python-transmissionrpc \
-        python-twisted \
-        python-youtube-dl \
-        smartmontools \
-        streamripper \
-        satip-client \
-"
+DEPENDS = "enigma2 gstreamer1.0 openssl"
 
 SRC_URI += "file://print.mak"
 
@@ -116,3 +90,63 @@ INSTALL_DESTDIR = "${INSTALL_ROOTDIR}/destdir"
 INSTALL_METADIR = "${INSTALL_DESTDIR}${datadir}/meta"
 INSTALL_PODIR = "${INSTALL_DESTDIR}${datadir}/enigma2/po"
 INSTALL_PLUGINSDIR = "${INSTALL_DESTDIR}${libdir}/enigma2/python/Plugins"
+
+# This list of packages is compiled from all 'Depends' fields in all control
+# files found in the enigma2-plugins repository. If a dependency gets added
+# there, add it here, too. This allows to keep build dependencies minimal
+# while making sure that all runtime dependencies are available.
+# As ${PN} doesn't contain any files and ALLOW_EMPTY isn't set, this list
+# actually has no impact on any generated packages.
+RDEPENDS_${PN} = " \
+        aio-grab \
+        avahi-daemon \
+        cdrkit \
+        cdtextinfo \
+        dbttcd \
+        dvdbackup \
+        enigma2-streamproxy \
+        gstreamer1.0-plugins-bad-faad \
+        gstreamer1.0-plugins-bad-fragmented \
+        gstreamer1.0-plugins-good-flv \
+        gstreamer1.0-plugins-good-icydemux \
+        gstreamer1.0-plugins-good-spectrum \
+        hdparm \
+        parted \
+        python-codecs \
+        python-compression \
+        python-crypt \
+        python-difflib \
+        python-email \
+        python-flickrapi \
+        python-gdata \
+        python-google-api-client \
+        python-html \
+        python-io \
+        python-json \
+        python-lang \
+        python-misc \
+        python-mutagen \
+        python-netclient \
+        python-pycrypto \
+        python-pyopenssl \
+        python-re \
+        python-shell \
+        python-simplejson \
+        python-sqlite3 \
+        python-subprocess \
+        python-textutils \
+        python-threading \
+        python-transmissionrpc \
+        python-twisted-core \
+        python-twisted-mail \
+        python-twisted-names \
+        python-twisted-protocols \
+        python-twisted-web \
+        python-xml \
+        python-xmlrpc \
+        python-youtube-dl \
+        python-zlib \
+        satip-client \
+        smartmontools \
+        streamripper \
+"
