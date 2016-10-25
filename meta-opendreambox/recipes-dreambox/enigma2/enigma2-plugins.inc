@@ -70,25 +70,25 @@ python enigma2_plugins_split_packages() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)', 'enigma2-plugin-%s', '%s', recursive=True, extra_depends='enigma2', match_path=True)
 
-    def parseControlFile(dir, d, package):
-        filename = os.path.join(dir, package.split('-')[-1] + "/CONTROL/control")
+    def parseControlFile(package, dir):
+        filename = os.path.join(dir, 'CONTROL/control')
         if os.path.exists(filename):
             with open(filename) as f:
                 for line in f.read().splitlines():
                     try:
                         name, value = line.strip().split(': ', 1)
                         if name == 'Description':
-                            d.setVar('DESCRIPTION_' + package, value)
+                            d.setVar('DESCRIPTION_%s' % package, value)
                         elif name == 'Depends':
-                            d.appendVar('RDEPENDS_' + package, ' ' + ' '.join(value.split(', ')))
+                            d.appendVar('RDEPENDS_%s' % package, ' ' + ' '.join(value.split(', ')))
                         elif name == 'Replaces':
-                            d.setVar('RREPLACES_' + package, ' '.join(value.split(', ')))
+                            d.setVar('RREPLACES_%s' % package, ' '.join(value.split(', ')))
                         elif name == 'Conflicts':
-                            d.setVar('RCONFLICTS_' + package, ' '.join(value.split(', ')))
+                            d.setVar('RCONFLICTS_%s' % package, ' '.join(value.split(', ')))
                     except:
                         bb.fatal("Error parsing control file for package %s" % package)
 
-    def parseFileList(dir, d, package):
+    def parseFileList(package, dir):
         filename = os.path.join(dir, package)
         if os.path.exists(filename):
             varname = 'FILES_%s' % package
@@ -101,10 +101,12 @@ python enigma2_plugins_split_packages() {
 
     tempdir = d.getVar('INSTALL_ROOTDIR', True)
     srcdir = d.getVar('S', True)
-    for package in d.getVar('PACKAGES', True).split():
+    packages = d.getVar('PACKAGES', True).split()
+    for package in packages:
         if package.startswith('enigma2-plugin-'):
-            parseFileList(tempdir, d, package)
-            parseControlFile(srcdir, d, package)
+            subdir = package.split('-')[-1]
+            parseFileList(package, tempdir)
+            parseControlFile(package, os.path.join(srcdir, subdir))
 }
 
 PACKAGESPLITFUNCS_prepend = "enigma2_plugins_split_packages "
