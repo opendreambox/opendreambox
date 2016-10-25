@@ -49,63 +49,65 @@ do_install_append() {
                 NAME=`echo $SUBDIR | tr '[:upper:]' '[:lower:]'`
                 PKG="enigma2-plugin-$CATEGORY-$NAME"
                 rm -rf ${INSTALL_METADIR} ${INSTALL_PODIR} ${INSTALL_PLUGINSDIR}
-                find ${INSTALL_DESTDIR} -type f -name "*.la" -delete -fprintf ${INSTALL_ROOTDIR}/$PKG-dev '/%P\n'
-                [ -s ${INSTALL_ROOTDIR}/$PKG-dev ] || rm ${INSTALL_ROOTDIR}/$PKG-dev
-                find ${INSTALL_DESTDIR} -type f -name "*.a" -delete -fprintf ${INSTALL_ROOTDIR}/$PKG-staticdev '/%P\n'
-                [ -s ${INSTALL_ROOTDIR}/$PKG-staticdev ] || rm ${INSTALL_ROOTDIR}/$PKG-staticdev
+                find ${INSTALL_DESTDIR} -type f -name "*.la" -delete
                 find ${INSTALL_DESTDIR} -type f -fprintf ${INSTALL_ROOTDIR}/$PKG '/%P\n'
                 [ -s ${INSTALL_ROOTDIR}/$PKG ] || rm ${INSTALL_ROOTDIR}/$PKG
                 rm -rf ${INSTALL_DESTDIR}
         done
+
+        # delete unwanted files
+        find ${D} -type f -name "*.la" -delete
 }
 
 PACKAGES_DYNAMIC = "enigma2-plugin-*"
-PACKAGES += "${PN}-meta"
-PACKAGES =+ "${PN}-po"
+PACKAGES += "${PN}-meta ${PN}-po"
 
-FILES_${PN} += "${datadir}/enigma2 ${datadir}/fonts"
+FILES_${PN} = ""
 FILES_${PN}-meta = "${datadir}/meta"
 FILES_${PN}-po = "${datadir}/enigma2/po"
 
-python populate_packages_prepend() {
+python enigma2_plugins_split_packages() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+).*/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+).*/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+).*/\.debug/', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)', 'enigma2-plugin-%s', '%s', recursive=True, extra_depends='enigma2', match_path=True)
+
     def parseControlFile(dir, d, package):
-        src = open(dir + "/" + package.split('-')[-1] + "/CONTROL/control").read()
-        for line in src.splitlines():
-            try:
-                name, value = line.strip().split(': ', 1)
-                if name == 'Description':
-                    d.setVar('DESCRIPTION_' + package, value)
-                elif name == 'Depends':
-                    d.setVar('RDEPENDS_' + package, ' '.join(value.split(', ')))
-                elif name == 'Replaces':
-                    d.setVar('RREPLACES_' + package, ' '.join(value.split(', ')))
-                elif name == 'Conflicts':
-                    d.setVar('RCONFLICTS_' + package, ' '.join(value.split(', ')))
-            except:
-                bb.fatal("Error parsing control file for package %s" % package)
+        filename = os.path.join(dir, package.split('-')[-1] + "/CONTROL/control")
+        if os.path.exists(filename):
+            with open(filename) as f:
+                for line in f.read().splitlines():
+                    try:
+                        name, value = line.strip().split(': ', 1)
+                        if name == 'Description':
+                            d.setVar('DESCRIPTION_' + package, value)
+                        elif name == 'Depends':
+                            d.appendVar('RDEPENDS_' + package, ' ' + ' '.join(value.split(', ')))
+                        elif name == 'Replaces':
+                            d.setVar('RREPLACES_' + package, ' '.join(value.split(', ')))
+                        elif name == 'Conflicts':
+                            d.setVar('RCONFLICTS_' + package, ' '.join(value.split(', ')))
+                    except:
+                        bb.fatal("Error parsing control file for package %s" % package)
+
     def parseFileList(dir, d, package):
         filename = os.path.join(dir, package)
         if os.path.exists(filename):
             varname = 'FILES_%s' % package
             files = (d.getVar(varname, True) or "").split()
-            src = open(filename).read()
-            for line in src.splitlines():
-                if not line in files:
-                    files.append(line)
+            with open(filename) as f:
+                for line in f.read().splitlines():
+                    if not line in files:
+                        files.append(line)
             d.setVar(varname, ' '.join(files))
+
     tempdir = d.getVar('INSTALL_ROOTDIR', True)
     srcdir = d.getVar('S', True)
     for package in d.getVar('PACKAGES', True).split():
         if package.startswith('enigma2-plugin-'):
             parseFileList(tempdir, d, package)
-            if not package.endswith('-dev') and not package.endswith('-dbg') and not package.endswith('-staticdev'):
-                parseControlFile(srcdir, d, package)
+            parseControlFile(srcdir, d, package)
 }
+
+PACKAGESPLITFUNCS_prepend = "enigma2_plugins_split_packages "
 
 INSTALL_ROOTDIR = "${WORKDIR}/${PN}-packaging-tempdir"
 INSTALL_DESTDIR = "${INSTALL_ROOTDIR}/destdir"
