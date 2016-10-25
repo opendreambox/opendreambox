@@ -33,7 +33,7 @@ do_install_append() {
         find ${D} -type f -name "*.la" -delete
 }
 
-PACKAGES_DYNAMIC = "enigma2-plugin-*"
+PACKAGES_DYNAMIC = "^enigma2-plugin-(extensions|skincomponents|systemplugins)-.*"
 PACKAGES += "${PN}-meta ${PN}-po"
 
 FILES_${PN} = ""
