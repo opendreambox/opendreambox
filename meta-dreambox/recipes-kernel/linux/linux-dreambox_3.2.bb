@@ -56,8 +56,6 @@ do_configure_prepend() {
 
 require linux.inc
 
-PACKAGES_DYNAMIC = "kernel-*"
-
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
