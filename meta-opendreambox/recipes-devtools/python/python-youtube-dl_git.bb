@@ -4,8 +4,8 @@ SECTION = "devel/python"
 LICENSE = "Unlicense"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2"
-SRCREV = "a9cbab173584c716219b348ff36ccd5274f75249"
-PV = "2015.04.03+git${SRCPV}"
+SRCREV = "94e08950e325c120be4f5be24eda9021cc222297"
+PV = "2016.10.25+git${SRCPV}"
 
 SRC_URI = "git://github.com/rg3/youtube-dl.git"
 
@@ -17,6 +17,6 @@ do_install_append() {
     mv ${D}${datadir}/etc ${D}${sysconfdir}
 }
 
-RDEPENDS_${PN} = "python-unixadmin python-subprocess python-email"
+RDEPENDS_${PN} = "python-unixadmin python-subprocess python-email python-argparse"
 
 FILES_${PN} += "${sysconfdir}"
