@@ -361,7 +361,7 @@ CROSS_COMPILE_ENV_HASH := $(call hash, \
 	@test -d $(TOPDIR) || (echo 'The directory "$(TOPDIR)" does not exist. Is "$(MACHINE)" a valid machine? Try running "make MACHINE=$(MACHINE)" first.' && exit 1)
 	@echo '[*] Generating $@'
 	@echo '# Automatically generated file. Do not edit!' > $@
-	@($(BITBAKE) -e | grep '^\(export\s\)\?[a-zA-Z0-9_]\+=".*"$$' | sed -e 's,^export\s,,' | grep -v $(foreach v,$(CROSS_COMPILE_ENV_BLACKLIST),-e ^$(v)=) | sed -e 's,^,local ,' | sort) >> $@ || ($(RM) $@ && exit 1)
+	@($(BITBAKE) -e | grep '^\(export\s\)\?[a-zA-Z0-9_]\+=".*"$$' | sed -e 's,^export\s,,' | grep -v $(foreach v,$(CROSS_COMPILE_ENV_BLACKLIST),-e ^$(v)=) | sed -e 's,^,local ,' | sort) >> $@.tmp && mv $@.tmp $@ || ($(RM) $@.tmp && exit 1)
 
 $(CONFDEPS):
 	@test -d $(@D) || mkdir -p $(@D)
