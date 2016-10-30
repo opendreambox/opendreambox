@@ -76,6 +76,8 @@ BBLAYERS ?= \
 CONFFILES_AUTO = \
 	bitbake.env \
 	conf/opendreambox.conf \
+	$(TOPDIR)/Makefile \
+	$(TOPDIR)/bitbake.env \
 	$(TOPDIR)/conf/bblayers.conf \
 	$(TOPDIR)/conf/local.conf
 
@@ -334,6 +336,14 @@ $(TOPDIR)/conf/bblayers.conf: $(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CON
 	@echo 'BBLAYERS = "$(BBLAYERS)"' >> $@
 	@echo 'include $(DISTRO_INCLUDE_CONF)' >> $@
 	@echo 'include $(MACHINE_INCLUDE_CONF)' >> $@
+
+$(TOPDIR)/Makefile:
+	@echo '[*] Generating $@'
+	@printf '%%::\n\tMACHINE=$(MACHINE) $$(MAKE) -C ../.. $$(MAKECMDGOALS)\n' > $@
+
+$(TOPDIR)/bitbake.env:
+	@echo '[*] Generating $@'
+	@echo '. ../../bitbake.env' > $@
 
 CROSS_COMPILE_ENV_BLACKLIST = \
 	HOME LOGNAME PWD SHELL SSH_AGENT_PID SSH_AUTH_SOCK TERM USER
