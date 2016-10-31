@@ -4,8 +4,8 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=3f7c147addd67ce1d53239c68a6b7022"
 DEPENDS = "libxml2"
-SRCREV = "${@opendreambox_srcrev('117c16df8fbb73a8be5f75282902be8123ea5cf9', d)}"
-PV = "0.6.12"
+SRCREV = "${@opendreambox_srcrev('74621eca66b24511c92d11deb7ff927c324add88', d)}"
+PV = "0.7.0"
 GITHUB_BRANCH = "develop"
 
 inherit setuptools opendreambox-github
