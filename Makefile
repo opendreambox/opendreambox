@@ -339,10 +339,12 @@ $(TOPDIR)/conf/bblayers.conf: $(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CON
 
 $(TOPDIR)/Makefile:
 	@echo '[*] Generating $@'
+	@test -d $(@D) || mkdir -p $(@D)
 	@printf '%%::\n\tMACHINE=$(MACHINE) $$(MAKE) -C ../.. $$(MAKECMDGOALS)\n' > $@
 
 $(TOPDIR)/bitbake.env:
 	@echo '[*] Generating $@'
+	@test -d $(@D) || mkdir -p $(@D)
 	@echo '. ../../bitbake.env' > $@
 
 CROSS_COMPILE_ENV_BLACKLIST = \
