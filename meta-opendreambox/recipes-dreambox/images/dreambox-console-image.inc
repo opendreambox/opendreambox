@@ -9,9 +9,9 @@ DEPENDS = " \
 "
 
 python __anonymous() {
-    pkgtype = d.getVar('IMAGE_PKGTYPE', d)
+    pkgtype = d.getVar('IMAGE_PKGTYPE', True)
     if not oe.utils.inherits(d, 'package_%s' % pkgtype):
-        pn = d.getVar('PN', d)
+        pn = d.getVar('PN', True)
         raise bb.parse.SkipPackage("Unable to build %s without %s packages" % (pn, pkgtype))
 }
 
