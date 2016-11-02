@@ -1,0 +1,30 @@
+From 25d215403b4ac8213e677ee9a1e18125cb0f1f2a Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Tue, 1 Nov 2016 23:16:56 +0100
+Subject: [PATCH] nfs: fail early on nfsvers=4.1
+
+NFS 4.1 is broken in this kernel, so we disable it. However,
+mount.nfs hangs trying nfsvers=4.1, which we try to avoid herewith.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ fs/nfs/super.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index c252161..56fad25 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1124,10 +1124,12 @@ static int nfs_parse_version_string(char *string,
+ 		mnt->version = 4;
+ 		mnt->minorversion = 0;
+ 		break;
++#ifdef CONFIG_NFS_V4_1
+ 	case Opt_vers_4_1:
+ 		mnt->version = 4;
+ 		mnt->minorversion = 1;
+ 		break;
++#endif
+ 	default:
+ 		return 0;
+ 	}

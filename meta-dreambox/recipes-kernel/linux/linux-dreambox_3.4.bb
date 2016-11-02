@@ -9,6 +9,7 @@ SRC_URI = " \
     file://0002-xhci-fix-off-by-one-error-in-TRB-DMA-address-boundar.patch \
     file://0003-MIPS-Fix-build-with-binutils-2.24.51.patch \
     file://0004-staging-rtl8712-rtl8712-avoid-lots-of-build-warnings.patch \
+    file://0005-nfs-fail-early-on-nfsvers-4.1.patch \
 "
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
