@@ -1,3 +1,5 @@
+server.bind = "0.0.0.0"
 server.document-root = "@localstatedir@/www/html"
 server.port = 80
+$SERVER["socket"] == "[::]:80" { }
 include_shell "@pkgdatadir@/include-conf-enabled.sh"
