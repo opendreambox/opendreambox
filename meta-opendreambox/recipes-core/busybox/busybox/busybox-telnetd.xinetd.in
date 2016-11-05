@@ -1,6 +1,7 @@
 service telnet
 {
 	socket_type = stream
+	flags = IPv6
 	user = root
 	server = @SBINDIR@/telnetd
 	wait = no
