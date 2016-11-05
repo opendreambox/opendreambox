@@ -1,6 +1,7 @@
 service ftp
 {
 	socket_type = stream
+	flags = IPv6
 	user = root
 	server = @SBINDIR@/vsftpd
 	wait = no
