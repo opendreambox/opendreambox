@@ -19,7 +19,7 @@ S = "${WORKDIR}/linux-${PV}"
 
 EXTRA_OEMAKE_append = " EXTRA_CFLAGS=-Wno-date-time"
 
-CMDLINE = "bmem=512M@512M bmem=523M@2048M console=ttyS0,1000000 root=/dev/mmcblk0p2 rootwait rootfstype=ext4"
+CMDLINE = "bmem=640M@384M bmem=384M@2048M console=ttyS0,1000000 root=/dev/mmcblk0p2 rootwait rootfstype=ext4"
 
 COMPATIBLE_MACHINE = "^(bcm7439)$"
 
