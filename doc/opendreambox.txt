@@ -65,18 +65,17 @@ opendreambox
    The current version includes support for the following products:
 
    +-----------------------------------------------------------------------------+
-   |  ----------------------  |  ----------------------------------------------  |
-   |Product name              |Environment variable                              |
-   |  ----------------------  |  ----------------------------------------------  |
-   |DM 500 HD V2              |MACHINE=dm500hdv2                                 |
-   |DM 520 HD                 |MACHINE=dm520                                     |
-   |DM 800 HD SE V2           |MACHINE=dm800sev2                                 |
-   |DM 820 HD                 |MACHINE=dm820                                     |
-   |DM 7020 HD                |MACHINE=dm7020hd                                  |
-   |DM 7020 HD V2             |MACHINE=dm7020hdv2                                |
-   |DM 7080 HD                |MACHINE=dm7080                                    |
-   |DM 8000 HD PVR            |MACHINE=dm8000                                    |
-   |  ----------------------  |  ----------------------------------------------  |
+   |  --------------------------  |  ------------------------------------------  |
+   |Product name                  |Environment variable                          |
+   |  --------------------------  |  ------------------------------------------  |
+   |DM900 UHD                     |MACHINE=dm900                                 |
+   |DM525 S2 CI-Slot              |MACHINE=dm520                                 |
+   |DM525 C/T2 CI-Slot            |MACHINE=dm520                                 |
+   |DM520 S2                      |MACHINE=dm520                                 |
+   |DM520 C/T2                    |MACHINE=dm520                                 |
+   |DM7080 HD                     |MACHINE=dm7080                                |
+   |DM820 HD                      |MACHINE=dm820                                 |
+   |  --------------------------  |  ------------------------------------------  |
    +-----------------------------------------------------------------------------+
 
    Note, that not all of these platforms offer enough internal storage to actually
@@ -85,15 +84,8 @@ opendreambox
 
     1.3 License
 
-   Copyright (c) 2010-2014 Dream Property GmbH, Germany
-                           http://www.dream-multimedia-tv.de/
-   Authors:
-     Andreas Frisch <fraxinas@opendreambox.org>
-     Andreas Monzner <ghost@opendreambox.org>
-     Andreas Oberritter <obi@opendreambox.org>
-     Mladen Horvat <acid-burn@opendreambox.org>
-     Stefan Pluecken <thedoc@opendreambox.org>
-     Stephan Reichholf <reichi@opendreambox.org>
+   Copyright (c) 2016 Dream Property GmbH, Germany
+                      https://dreambox.de/
 
    Permission is hereby granted, free of charge, to any person obtaining a copy
    of this software and associated documentation files (the "Software"), to deal
@@ -362,15 +354,15 @@ opendreambox
     6.5 Setting up a build directory
 
    To set up a build directory for e.g. DM 7080 run make MACHINE=dm7080. If
-   MACHINE=dm7080 has been set in conf/make.conf (default), you can simply run
-   make with no arguments instead. This will create and initialize the directory
-   build/dm7080.
+   MACHINE=dm7080 has been set in conf/make.conf (default: dm900), you can simply
+   run make with no arguments instead. This will create and initialize the
+   directory build/dm7080.
 
     6.6 Building a firmware image
 
    To build a firmware image for e.g. DM 7080 run make MACHINE=dm7080 image. If
-   MACHINE=dm7080 has been set in conf/make.conf (default), you can simply run
-   make image instead.
+   MACHINE=dm7080 has been set in conf/make.conf (default: dm900), you can simply
+   run make image instead.
 
     6.7 Building a package
 

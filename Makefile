@@ -1,8 +1,8 @@
 #!/usr/bin/make -f
 #
-# Copyright (c) 2010-2014 Dream Property GmbH, Germany
-#                         http://www.dream-multimedia-tv.de/
-# Authors:
+# Copyright (c) 2016 Dream Property GmbH, Germany
+#                    https://dreambox.de/
+# Author:
 #   Andreas Oberritter <obi@opendreambox.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,12 +29,11 @@
 -include conf/make.conf
 
 # Target platforms:
-# dm500hdv2, dm520, dm800sev2, dm820,
-# dm7020hd, dm7020hdv2, dm7080, dm8000
+# dm520, dm820, dm900, dm7080
 #
 # This only sets the default value. All platforms now use a shared build
-# directory. Run "MACHINE=dm800sev2 bitbake dreambox-image" to build an image
-# for the dm800sev2, if it is not the default.
+# directory. Run "MACHINE=dm820 bitbake dreambox-image" to build an image
+# for the dm820, if it is not the default.
 MACHINE ?= dm900
 
 USER_MACHINE := $(MACHINE)
@@ -128,15 +127,15 @@ help:
 	@echo "      $$ view doc/opendreambox.txt"
 	@echo
 	@echo "  * Select a new target machine:"
-	@echo "      $$ echo MACHINE=dm800sev2 >> conf/make.conf"
-	@echo "    [Valid values: dm500hdv2, dm800sev2, dm820, dm7020hd, dm7020hdv2, dm7080, dm8000]"
+	@echo "      $$ echo MACHINE=dm820 >> conf/make.conf"
+	@echo "    [Valid values: dm520, dm820, dm900, dm7080]"
 	@echo
 	@echo "  * Build a firmware image for the selected target machine:"
 	@echo "      $$ $(MAKE) image"
 	@echo
 	@echo "  * Build a firmware image for a different target machine:"
-	@echo "      $$ $(MAKE) image MACHINE=dm800sev2"
-	@echo "    [Valid values: dm500hdv2, dm520, dm800sev2, dm820, dm7020hd, dm7020hdv2, dm7080, dm8000]"
+	@echo "      $$ $(MAKE) image MACHINE=dm820"
+	@echo "    [Valid values: dm520, dm820, dm900, dm7080]"
 	@echo
 	@echo "  * Download all source files at once:"
 	@echo "      $$ $(MAKE) download"
