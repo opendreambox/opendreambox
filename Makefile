@@ -35,7 +35,7 @@
 # This only sets the default value. All platforms now use a shared build
 # directory. Run "MACHINE=dm800sev2 bitbake dreambox-image" to build an image
 # for the dm800sev2, if it is not the default.
-MACHINE ?= dm7080
+MACHINE ?= dm900
 
 USER_MACHINE := $(MACHINE)
 
