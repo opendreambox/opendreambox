@@ -101,8 +101,8 @@ CONFFILES_BITBAKE = \
 
 GIT ?= git
 GIT_REMOTE := $(shell $(GIT) remote)
-GIT_USER_NAME := $(shell $(GIT) config user.name)
-GIT_USER_EMAIL := $(shell $(GIT) config user.email)
+GIT_AUTHOR_NAME ?= $(shell $(GIT) config user.name)
+GIT_AUTHOR_EMAIL ?= $(shell $(GIT) config user.email)
 
 hash = $(shell echo $(1) | $(XSUM) | awk '{print $$1}')
 
@@ -155,14 +155,14 @@ help:
 	@echo "Trouble finding a recipe? Try ./scripts/drepo grep 'search string'"
 	@echo "or ./scripts/drepo find -name \"*recipe*\"."
 	@echo
-	@if [ -z "$(GIT_USER_NAME)" -o -z "$(GIT_USER_EMAIL)" ]; then \
+	@if [ -z "$(GIT_AUTHOR_NAME)" -o -z "$(GIT_AUTHOR_EMAIL)" ]; then \
 		echo "Before doing any commits, please configure your name and email"; \
 		echo "address using the following commands:"; \
 		echo; \
 		echo "  $$ $(GIT) config user.name \"Your Name\""; \
 		echo "  $$ $(GIT) config user.email \"mail@example.com\""; \
 	else \
-		echo "Git has been configured for $(GIT_USER_NAME) <$(GIT_USER_EMAIL)>."; \
+		echo "Git has been configured for $(GIT_AUTHOR_NAME) <$(GIT_AUTHOR_EMAIL)>."; \
 		echo "Please submit patches to <enigma2-devel@lists.elitedvb.net>."; \
 	fi
 
