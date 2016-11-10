@@ -25,6 +25,7 @@ RDEPENDS_${PN} += " \
         python-ctypes \
         python-fcntl \
         python-lang \
+        python-monotonic \
         python-netaddr \
         python-netclient \
         python-netserver \
