@@ -30,7 +30,7 @@ python __anonymous() {
     imagetype = types[0]
     d.setVar('RDEPENDS_kernel-image', 'kernel-image-%s' % imagetype.lower())
 
-    postinst = d.getVar('pkg_postinst_kernel-image-%s' % imagetype.lower(), True)
+    postinst = d.getVar('pkg_postinst_kernel-image-%s' % imagetype.lower(), False)
     if not postinst:
         postinst = '#!/bin/sh\n'
     postinst += '[ -n "$D" ] || flash-kernel /${KERNEL_IMAGEDEST}/%s-${KERNEL_VERSION_NAME}\n' % imagetype
