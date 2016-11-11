@@ -15,6 +15,7 @@ SRC_URI[dream-patch.md5sum] = "a8106704c80622ec2ce6b00871872fde"
 SRC_URI[dream-patch.sha256sum] = "19e1fd79bedbbea73faae8d8fb4ae48efe984e5404e6e53c350a7f6e3bfbe772"
 
 require linux-dreambox.inc
+require recipes-kernel/linux/linux-dtb.inc
 
 S = "${WORKDIR}/linux-${PV}"
 
@@ -28,3 +29,4 @@ BRCM_PATCHLEVEL = "1.10"
 
 LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINE}"
 KERNEL_IMAGETYPE = "zImage"
+KERNEL_DEVICETREE = "dreambox-${MACHINE}.dtb"

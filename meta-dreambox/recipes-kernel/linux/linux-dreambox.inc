@@ -22,10 +22,13 @@ python __anonymous() {
     alttype = d.getVar('KERNEL_ALT_IMAGETYPE', True) or ""
     types = d.getVar('KERNEL_IMAGETYPES', True) or ""
     types = ('%s %s %s' % (type, types, alttype)).split()
+    devicetree = d.getVar('KERNEL_DEVICETREE', False)
 
     for imagetype in set(types):
         d.setVar('PKG_kernel-image-%s' % imagetype.lower(), 'kernel-image-%s' % imagetype.lower())
         d.setVar('RPROVIDES_kernel-image-%s' % imagetype.lower(), 'kernel-image-%s-${KERNEL_VERSION_PKG_NAME}' % imagetype.lower())
+        if devicetree:
+            d.appendVar('RDEPENDS_kernel-image-%s' % imagetype.lower(), ' kernel-devicetree')
 
     imagetype = types[0]
     d.setVar('RDEPENDS_kernel-image', 'kernel-image-%s' % imagetype.lower())
