@@ -3,8 +3,8 @@ require recovery-web.inc
 SRCREV = "${@opendreambox_srcrev('5d68fcde19886c1fdf4987ec18ceaa346a40c68a', d)}"
 SRCREV_dm520 = "${@opendreambox_srcrev('d4bed10e5e569c6347db59144256437e9d793180', d)}"
 SRCREV_dm820 = "${SRCREV_dm7080}"
-SRCREV_dm900 = "${@opendreambox_srcrev('c2480db72fe4f88abdda3bddfd064ce694478af2', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('855746a9c38316d7ab2bd7670fe4793ba217d6f0', d)}"
+SRCREV_dm900 = "${@opendreambox_srcrev('b7638bc3f83a61997fce4161c469780d1bec5bb2', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('41a3e041e42025c2999a510af6abd4c5433ad05c', d)}"
 
 inherit opendreambox-git
 
