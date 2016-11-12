@@ -1,10 +1,10 @@
 require recovery.inc
 
 SRCREV = "${@opendreambox_srcrev('f6d9de6dc38272d83f19f63afe874e1cb58a8c61', d)}"
-SRCREV_dm520 = "${@opendreambox_srcrev('465ab0601a290079fbd3ecc3cabd25f84b5efb06', d)}"
-SRCREV_dm820 = "${@opendreambox_srcrev('9919a65aeb1c7e6f54f6b6df21cb94354f611901', d)}"
-SRCREV_dm900 = "${@opendreambox_srcrev('1d3612fde23b782839a88fe36370b315dfb13ea5', d)}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('d04ef152c73dac9460a56503d81708eb4f6dcff2', d)}"
+SRCREV_dm520 = "${@opendreambox_srcrev('9e0deacb417ed58541d4707df8b52f341d1ac335', d)}"
+SRCREV_dm820 = "${@opendreambox_srcrev('b0f903a8442556c3c514af51eb074180e66c459e', d)}"
+SRCREV_dm900 = "${@opendreambox_srcrev('60a9a8fd2e43323ed3cdf15a659592887c094b64', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('8a3e07eedb016857db676991ead88498977287cb', d)}"
 
 inherit opendreambox-git
 
