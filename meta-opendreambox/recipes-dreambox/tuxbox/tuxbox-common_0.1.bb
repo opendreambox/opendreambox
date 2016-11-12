@@ -1,6 +1,6 @@
 SUMMARY = "Tuxbox common files"
 LICENSE = "CLOSED"
-SRCREV = "${@opendreambox_srcrev('2c88742ab048d5aa91b454a564c74917d7085c65', d)}"
+SRCREV = "${@opendreambox_srcrev('3e4f92b8c337c1cdf4c78fc40141a90032d2083c', d)}"
 
 inherit opendreambox-git
 
