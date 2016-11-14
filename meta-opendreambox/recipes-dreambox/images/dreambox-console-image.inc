@@ -48,14 +48,15 @@ IMAGE_ROOTFS_SIZE_ext4 = "524288"
 
 inherit image
 
+DREAMBOX_IMAGE_DATE = "${@d.getVar('DATETIME', True)[:-2]}"
+DREAMBOX_IMAGE_DATE[vardepsexclude] = "DATETIME"
+# 0: Release, 1: Experimental
+DREAMBOX_IMAGE_TYPE ?= "1"
+# e.g. 400 for release 4.0.0, if IMAGE_TYPE=0
+DREAMBOX_IMAGE_VERSION ?= "000"
+
 opendreambox_rootfs_postprocess() {
-    # generate /etc/image-version
-    IMAGE_DATE=`date +%Y%m%d%H%M`
-    # 0: Release, 1: Experimental
-    IMAGE_TYPE="1"
-    # e.g. 400 for release 4.0.0, if IMAGE_TYPE=0
-    IMAGE_VERSION="000"
-    echo "version=${IMAGE_TYPE}${IMAGE_VERSION}${IMAGE_DATE}" > ${IMAGE_ROOTFS}/etc/image-version
+    echo "version=${DREAMBOX_IMAGE_TYPE}${DREAMBOX_IMAGE_VERSION}${DREAMBOX_IMAGE_DATE}" > ${IMAGE_ROOTFS}${sysconfdir}/image-version
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "opendreambox_rootfs_postprocess; "
