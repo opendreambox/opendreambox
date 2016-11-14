@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=8f242b441da515e30c7b
 inherit packagegroup
 
 RDEPENDS_${PN} += "connman"
-RRECOMMENDS_${PN} += "connman-client"
+RRECOMMENDS_${PN} += "connman-client connman-wait-online"
 
 RPROVIDES_${PN} += "packagegroup-net"
 RCONFLICTS_${PN} += "packagegroup-net"
