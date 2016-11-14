@@ -5,4 +5,5 @@ SRC_URI[mips32el.sha256sum] = "66a4dfec49bb46c76ea07470c1155eb905287bb0daa80deaa
 
 require enigma2-bin-4.3.inc
 
-SRC_URI += " file://0001-Harddisk.py-fixed-dm520-dm900-friendly-usb-port-name.patch"
+SRC_URI += "file://0001-Harddisk.py-fixed-dm520-dm900-friendly-usb-port-name.patch \
+            file://0002-About-always-show-image-version-if-it-s-different-fr.patch"

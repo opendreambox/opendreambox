@@ -1,0 +1,28 @@
+From 6b5047cfaa0bb9997b1bce6ef7109e5e4ab1b8fb Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Mon, 14 Nov 2016 23:25:31 +0100
+Subject: [PATCH] About: always show image version if it's different from 0.0.0
+
+---
+ usr/lib/enigma2/python/Components/About.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/About.py b/usr/lib/enigma2/python/Components/About.py
+index baaa3f0..479d8f9 100644
+--- a/usr/lib/enigma2/python/Components/About.py
++++ b/usr/lib/enigma2/python/Components/About.py
+@@ -30,10 +30,12 @@ class About:
+ 					date = '-'.join((year, month, day))
+ 					if image_type == '0':
+ 						image_type = "Release"
+-						version = '.'.join((major, minor, revision))
+-						return ' '.join((image_type, version, date))
+ 					else:
+ 						image_type = "Experimental"
++					version = '.'.join((major, minor, revision))
++					if version != '0.0.0':
++						return ' '.join((image_type, version, date))
++					else:
+ 						return ' '.join((image_type, date))
+ 			file.close()
+ 		except IOError:
