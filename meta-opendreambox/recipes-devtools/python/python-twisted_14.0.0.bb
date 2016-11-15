@@ -8,7 +8,8 @@ SECTION = "console/network"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=872e64ea61a612636eeec7a18af1323b"
 
-SRC_URI = "https://pypi.python.org/packages/source/T/Twisted/Twisted-${PV}.tar.bz2"
+SRC_URI = "https://pypi.python.org/packages/source/T/Twisted/Twisted-${PV}.tar.bz2 \
+           file://0001-Merge-rhel6-broken-so-reuseport-7159-RHEL6-defines-S.patch"
 SRC_URI[md5sum] = "9625c094e0a18da77faa4627b98c9815"
 SRC_URI[sha256sum] = "bdfd961ac2216f5c65b07f2c3a5e5116f6713b8c1cf076c40010c64810d26963"
 

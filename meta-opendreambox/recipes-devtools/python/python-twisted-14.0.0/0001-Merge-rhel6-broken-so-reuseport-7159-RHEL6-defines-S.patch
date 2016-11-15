@@ -1,0 +1,73 @@
+From 172a47820b609797ecfa65c3ddd797d2f88cf532 Mon Sep 17 00:00:00 2001
+From: tomprince <tomprince@bbbe8e31-12d6-0310-92fd-ac37d47ddeeb>
+Date: Wed, 16 Apr 2014 14:16:43 +0000
+Subject: [PATCH] Merge rhel6-broken-so-reuseport-7159: RHEL6 defines
+ SO_REUSEPORT but it doesn't work.
+
+Author: tom.prince
+Reviewer: exarkun
+Fixes: #7159
+
+twisted.internet.interfaces.IReactorMulticast.listenMultiple no longer fails
+in that case.
+
+git-svn-id: svn://svn.twistedmatrix.com/svn/Twisted/trunk@42368 bbbe8e31-12d6-0310-92fd-ac37d47ddeeb
+(cherry picked from commit a2e902684761d8a71d455bd43e74022a1f4d6996)
+---
+ twisted/internet/tcp.py      |  2 --
+ twisted/internet/udp.py      | 11 ++++++++++-
+ twisted/topfiles/7159.bugfix |  1 +
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+ create mode 100644 twisted/topfiles/7159.bugfix
+
+diff --git a/twisted/internet/tcp.py b/twisted/internet/tcp.py
+index 508fcb0..313e8d1 100644
+--- a/twisted/internet/tcp.py
++++ b/twisted/internet/tcp.py
+@@ -1178,5 +1178,3 @@ class Connector(base.BaseConnector):
+         @see: L{twisted.internet.interfaces.IConnector.getDestination}.
+         """
+         return self._addressType('TCP', self.host, self.port)
+-
+-
+diff --git a/twisted/internet/udp.py b/twisted/internet/udp.py
+index 63328a7..a17841e 100644
+--- a/twisted/internet/udp.py
++++ b/twisted/internet/udp.py
+@@ -31,6 +31,7 @@ if platformType == 'win32':
+     from errno import WSAEINTR, WSAEMSGSIZE, WSAETIMEDOUT
+     from errno import WSAECONNREFUSED, WSAECONNRESET, WSAENETRESET
+     from errno import WSAEINPROGRESS
++    from errno import WSAENOPROTOOPT as ENOPROTOOPT
+ 
+     # Classify read and write errors
+     _sockErrReadIgnore = [WSAEINTR, WSAEWOULDBLOCK, WSAEMSGSIZE, WSAEINPROGRESS]
+@@ -44,6 +45,7 @@ if platformType == 'win32':
+     EINTR = WSAEINTR
+ else:
+     from errno import EWOULDBLOCK, EINTR, EMSGSIZE, ECONNREFUSED, EAGAIN
++    from errno import ENOPROTOOPT
+     _sockErrReadIgnore = [EAGAIN, EINTR, EWOULDBLOCK]
+     _sockErrReadRefuse = [ECONNREFUSED]
+ 
+@@ -494,5 +496,12 @@ class MulticastPort(MulticastMixin, Port):
+         if self.listenMultiple:
+             skt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+             if hasattr(socket, "SO_REUSEPORT"):
+-                skt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
++                try:
++                    skt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
++                except socket.error as le:
++                    # RHEL6 defines SO_REUSEPORT but it doesn't work
++                    if le.errno == ENOPROTOOPT:
++                        pass
++                    else:
++                        raise
+         return skt
+diff --git a/twisted/topfiles/7159.bugfix b/twisted/topfiles/7159.bugfix
+new file mode 100644
+index 0000000..ac4649f
+--- /dev/null
++++ b/twisted/topfiles/7159.bugfix
+@@ -0,0 +1 @@
++twisted.internet.interfaces.IReactorMulticast.listenMultiple works again RHEL 6's python 2.6.
