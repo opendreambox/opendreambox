@@ -1,4 +1,4 @@
-SRCREV = "${@opendreambox_srcrev('57438d10a4d0b1fafc0da8501691b81632426d15', d)}"
+SRCREV = "${@opendreambox_srcrev('f8f18c187dac6c50a3252ebe9e5924c65b2611c0', d)}"
 
 inherit opendreambox-git
 
