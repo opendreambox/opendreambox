@@ -1,10 +1,11 @@
-From cf42ee639e70ecc785e752862dc364bbc9c7ae2c Mon Sep 17 00:00:00 2001
+From 89b4e8d5606266ee6d658a414cbc0070b2aac889 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Tue, 24 May 2016 10:53:14 +0200
 Subject: [PATCH 5/5] import a bunch of hbbtv patches
 
 Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
 ---
+ Source/WebCore/Target.pri                          |   6 +
  Source/WebCore/bindings/js/JSDOMWindowCustom.cpp   |  12 +-
  .../bindings/js/JSPluginElementFunctions.cpp       |  58 +++++-
  Source/WebCore/css/CSSComputedStyleDeclaration.cpp |  25 +++
@@ -12,7 +13,8 @@ Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
  Source/WebCore/css/CSSParser.cpp                   |  34 ++++
  Source/WebCore/css/CSSParserValues.cpp             |   3 +
  Source/WebCore/css/CSSPrimitiveValue.cpp           |  18 ++
- Source/WebCore/css/CSSPrimitiveValue.h             |   4 +
+ Source/WebCore/css/CSSPrimitiveValue.h             |   6 +-
+ Source/WebCore/css/CSSPropertyNames.in             |  36 ++++
  Source/WebCore/css/DeprecatedStyleBuilder.cpp      |  25 +++
  Source/WebCore/css/StyleResolver.cpp               |  29 +++
  Source/WebCore/css/StyleResolver.h                 |   9 +
@@ -36,7 +38,7 @@ Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
  Source/WebCore/page/DOMWindow.cpp                  |  27 +++
  Source/WebCore/page/DOMWindow.h                    |   4 +
  Source/WebCore/page/DOMWindow.idl                  |   4 +
- Source/WebCore/page/EventHandler.cpp               |  41 ++++-
+ Source/WebCore/page/EventHandler.cpp               |  40 ++++-
  Source/WebCore/page/FocusController.cpp            |  86 +++++++++
  Source/WebCore/page/FocusController.h              |   3 +
  Source/WebCore/page/FrameView.cpp                  |  21 ++-
@@ -46,7 +48,7 @@ Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
  Source/WebCore/platform/MIMETypeRegistry.cpp       |  13 +-
  Source/WebCore/platform/PlatformHbbTVKeyCodes.h    | 196 +++++++++++++++++++++
  Source/WebCore/platform/PlatformKeyboardEvent.h    |   4 +
- .../WebCore/platform/RuntimeApplicationChecks.cpp  |  50 ++++++
+ .../WebCore/platform/RuntimeApplicationChecks.cpp  |  54 ++++++
  Source/WebCore/platform/RuntimeApplicationChecks.h |  22 +++
  Source/WebCore/platform/SchemeRegistry.cpp         |   4 +
  .../coordinated/CoordinatedGraphicsScene.cpp       |  12 ++
@@ -60,18 +62,35 @@ Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
  Source/WebCore/rendering/RenderObject.cpp          |   4 +
  Source/WebCore/rendering/style/RenderStyle.h       |  19 ++
  .../WebCore/rendering/style/StyleNavigationData.h  |  42 +++++
- .../WebCore/rendering/style/StyleNavigationValue.h |  42 +++++
+ .../WebCore/rendering/style/StyleNavigationValue.h |  63 +++++++
  .../rendering/style/StyleRareNonInheritedData.cpp  |   9 +
  .../rendering/style/StyleRareNonInheritedData.h    |   6 +
  Source/WebCore/xml/XMLHttpRequest.cpp              |  37 ++++
  .../xml/parser/XMLDocumentParserLibxml2.cpp        |   3 +
  Source/WebCore/xml/parser/XMLDocumentParserQt.cpp  |   4 +-
- Tools/qmake/mkspecs/features/features.pri          |   1 +
- 62 files changed, 1121 insertions(+), 28 deletions(-)
+ Tools/qmake/mkspecs/features/features.pri          |   2 +
+ 64 files changed, 1189 insertions(+), 29 deletions(-)
  create mode 100644 Source/WebCore/platform/PlatformHbbTVKeyCodes.h
  create mode 100755 Source/WebCore/rendering/style/StyleNavigationData.h
  create mode 100755 Source/WebCore/rendering/style/StyleNavigationValue.h
 
+diff --git a/Source/WebCore/Target.pri b/Source/WebCore/Target.pri
+index e525aa1..0518eb3 100644
+--- a/Source/WebCore/Target.pri
++++ b/Source/WebCore/Target.pri
+@@ -3031,6 +3031,12 @@ enable?(NETSCAPE_PLUGIN_API) {
+         plugins/PluginViewNone.cpp
+ }
+ 
++enable?(CSS_NAVIGATION) {
++    HEADERS += \
++        rendering/style/StyleNavigationData.h \
++        rendering/style/StyleNavigationValue.h
++}
++
+ use?(PLUGIN_BACKEND_XLIB) {
+     SOURCES += plugins/qt/QtX11ImageConversion.cpp
+     HEADERS += plugins/qt/QtX11ImageConversion.h
 diff --git a/Source/WebCore/bindings/js/JSDOMWindowCustom.cpp b/Source/WebCore/bindings/js/JSDOMWindowCustom.cpp
 index 9b2e54b..bf8fc1a 100644
 --- a/Source/WebCore/bindings/js/JSDOMWindowCustom.cpp
@@ -456,13 +475,15 @@ index f3902c7..f308cc1 100644
      case CSS_ATTR:
      case CSS_COUNTER_NAME:
 diff --git a/Source/WebCore/css/CSSPrimitiveValue.h b/Source/WebCore/css/CSSPrimitiveValue.h
-index 28ae4e8..cfc7068 100644
+index 28ae4e8..d843c0d 100644
 --- a/Source/WebCore/css/CSSPrimitiveValue.h
 +++ b/Source/WebCore/css/CSSPrimitiveValue.h
-@@ -138,6 +138,10 @@ public:
+@@ -137,7 +137,11 @@ public:
+         CSS_VARIABLE_NAME = 116,
  #endif
          CSS_PROPERTY_ID = 117,
-         CSS_VALUE_ID = 118
+-        CSS_VALUE_ID = 118
++        CSS_VALUE_ID = 118,
 +
 +#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
 +        CSS_NAVID = 119
@@ -470,6 +491,81 @@ index 28ae4e8..cfc7068 100644
      };
  
      // This enum follows the CSSParser::Units enum augmented with UNIT_FREQUENCY for frequencies.
+diff --git a/Source/WebCore/css/CSSPropertyNames.in b/Source/WebCore/css/CSSPropertyNames.in
+index 358ee2c..dbb2697 100644
+--- a/Source/WebCore/css/CSSPropertyNames.in
++++ b/Source/WebCore/css/CSSPropertyNames.in
+@@ -135,6 +135,12 @@ min-width
+ mix
+ parameters
+ #endif
++#if defined(ENABLE_CSS_NAVIGATION) && ENABLE_CSS_NAVIGATION
++nav-down
++nav-left
++nav-right
++nav-up
++#endif
+ opacity
+ // Honor -webkit-opacity as a synonym for opacity. This was the only syntax that worked in Safari 1.1,
+ // and may be in use on some websites and widgets.
+@@ -288,16 +294,27 @@ z-index
+ -webkit-filter
+ #endif
+ -webkit-align-content
++align-content = -webkit-align-content
+ -webkit-align-items
++align-items = -webkit-align-items
+ -webkit-align-self
++align-self = -webkit-align-self
+ -webkit-flex
++flex = -webkit-flex
+ -webkit-flex-basis
++flex-basis = -webkit-flex-basis
+ -webkit-flex-direction
++flex-direction = -webkit-flex-direction
+ -webkit-flex-flow
++flex-flow = -webkit-flex-flow
+ -webkit-flex-grow
++flex-grow = -webkit-flex-grow
+ -webkit-flex-shrink
++flex-shrink = -webkit-flex-shrink
+ -webkit-flex-wrap
++flex-wrap = -webkit-flex-wrap
+ -webkit-justify-content
++justify-content = -webkit-justify-content
+ -webkit-font-size-delta
+ -webkit-grid-auto-columns
+ -webkit-grid-auto-rows
+@@ -364,6 +381,7 @@ z-index
+ -webkit-min-logical-height
+ -webkit-nbsp-mode
+ -webkit-order
++order = -webkit-order
+ -webkit-padding-after
+ -webkit-padding-before
+ -webkit-padding-end
+@@ -448,3 +466,21 @@ user-zoom
+ #if defined(ENABLE_ACCELERATED_OVERFLOW_SCROLLING) && ENABLE_ACCELERATED_OVERFLOW_SCROLLING
+ -webkit-overflow-scrolling
+ #endif
++#if defined(ENABLE_TIZEN_CSS_ALIASES) && ENABLE_TIZEN_CSS_ALIASES
++backface-visibility = -webkit-backface-visibility
++perspective = -webkit-perspective
++perspective-origin = -webkit-perspective-origin
++perspective-origin-x = -webkit-perspective-origin-x
++perspective-origin-y = -webkit-perspective-origin-y
++transform = -webkit-transform
++transform-origin = -webkit-transform-origin
++transform-origin-x = -webkit-transform-origin-x
++transform-origin-y = -webkit-transform-origin-y
++transform-origin-z = -webkit-transform-origin-z
++transform-style = -webkit-transform-style
++transition = -webkit-transition
++transition-delay = -webkit-transition-delay
++transition-duration = -webkit-transition-duration
++transition-property = -webkit-transition-property
++transition-timing-function = -webkit-transition-timing-function
++#endif
 diff --git a/Source/WebCore/css/DeprecatedStyleBuilder.cpp b/Source/WebCore/css/DeprecatedStyleBuilder.cpp
 index 68bb3bc..5653814 100644
 --- a/Source/WebCore/css/DeprecatedStyleBuilder.cpp
@@ -1052,7 +1148,7 @@ index c64482a..b5e6f80 100644
      [DoNotCheckSecurity, CallWith=ScriptExecutionContext] void focus();
      [DoNotCheckSecurity] void blur();
 diff --git a/Source/WebCore/page/EventHandler.cpp b/Source/WebCore/page/EventHandler.cpp
-index 746ed04..b18942a 100644
+index 746ed04..2e803f0 100644
 --- a/Source/WebCore/page/EventHandler.cpp
 +++ b/Source/WebCore/page/EventHandler.cpp
 @@ -90,6 +90,12 @@
@@ -1115,13 +1211,12 @@ index 746ed04..b18942a 100644
      RefPtr<KeyboardEvent> keypress = KeyboardEvent::create(keyPressEvent, m_frame->document()->defaultView());
      keypress->setTarget(node);
      if (keydownResult)
-@@ -3354,6 +3386,11 @@ void EventHandler::defaultKeyboardEventHandler(KeyboardEvent* event)
+@@ -3354,6 +3386,10 @@ void EventHandler::defaultKeyboardEventHandler(KeyboardEvent* event)
          else {
              FocusDirection direction = focusDirectionForKey(event->keyIdentifier());
              if (direction != FocusDirectionNone)
 +#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
-+                Page* page = m_frame->page();
-+                if (page && page->focusController()->handleCSSFocusNavigation(direction))
++                if (m_frame->page() && m_frame->page()->focusController()->handleCSSFocusNavigation(direction))
 +                    return;
 +#endif
                  defaultArrowEventHandler(direction, event);
@@ -1595,15 +1690,19 @@ index 6a4a2c2..472c0e6 100644
  
  #endif // PlatformKeyboardEvent_h
 diff --git a/Source/WebCore/platform/RuntimeApplicationChecks.cpp b/Source/WebCore/platform/RuntimeApplicationChecks.cpp
-index 62fce37..2cb0dd6 100644
+index 62fce37..748668c 100644
 --- a/Source/WebCore/platform/RuntimeApplicationChecks.cpp
 +++ b/Source/WebCore/platform/RuntimeApplicationChecks.cpp
-@@ -120,4 +120,54 @@ bool applicationIsSolidStateNetworksDownloader()
+@@ -120,4 +120,58 @@ bool applicationIsSolidStateNetworksDownloader()
      return isSolidStateNetworksDownloader;
  }
  
 +//TIZEN_VD_WIDGET_ENGINE_INFO
++#if ENABLE(HBBTV)
++static ApplicationType s_applicationType = HbbTV;
++#else
 +static ApplicationType s_applicationType = WebBrowser;
++#endif
 +
 +void applicationSetApplicationType(ApplicationType applicationType)
 +{
@@ -2025,10 +2124,10 @@ index 0000000..4e915b0
 +#endif // StyleNavigationData_h
 diff --git a/Source/WebCore/rendering/style/StyleNavigationValue.h b/Source/WebCore/rendering/style/StyleNavigationValue.h
 new file mode 100755
-index 0000000..4e915b0
+index 0000000..9c5ffa6
 --- /dev/null
 +++ b/Source/WebCore/rendering/style/StyleNavigationValue.h
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,63 @@
 +/*
 + * Copyright (C) 2011 Kyounga Ra (kyounga.ra@gmail.com)
 + * Copyright (C) 2014 Samsung Electronics. All rights reserved.
@@ -2050,27 +2149,48 @@ index 0000000..4e915b0
 + *
 + */
 +
-+#ifndef StyleNavigationData_h
-+#define StyleNavigationData_h
++#ifndef StyleNavigationValue_h
++#define StyleNavigationValue_h
 +
-+#include "StyleNavigationValue.h"
++#include <wtf/text/AtomicString.h>
 +
 +namespace WebCore {
 +
-+class StyleNavigationData {
++class StyleNavigationValue {
 +public:
-+    bool operator==(const StyleNavigationData& data) const { return m_up == data.m_up && m_down == data.m_down && m_left == data.m_left && m_right == data.m_right; }
-+    bool operator!=(const StyleNavigationData& data) const { return !(*this == data); }
++    StyleNavigationValue()
++        : m_id(AtomicString("auto"))
++        , m_target(AtomicString("current"))
++    {
++    }
 +
-+    StyleNavigationValue m_up;
-+    StyleNavigationValue m_down;
-+    StyleNavigationValue m_left;
-+    StyleNavigationValue m_right;
++    StyleNavigationValue(const char* id, const char* target)
++        : m_id(AtomicString(id))
++        , m_target(AtomicString(target))
++    {
++    }
++
++    StyleNavigationValue(const AtomicString& id, const AtomicString& target = AtomicString("current"))
++        : m_id(id)
++        , m_target(target)
++    {
++    }
++
++    bool isAuto() const { return m_id == "auto"; }
++    const AtomicString& id() const { return m_id; }
++    const AtomicString& target() const { return m_target; }
++
++    bool operator==(const StyleNavigationValue& value) const { return m_id == value.m_id && m_target == value.m_target; }
++    bool operator!=(const StyleNavigationValue& value) const { return !(*this == value); }
++
++private:
++    AtomicString m_id;
++    AtomicString m_target;
 +};
 +
 +} // namespace WebCore
 +
-+#endif // StyleNavigationData_h
++#endif // StyleNavigationValue_h
 diff --git a/Source/WebCore/rendering/style/StyleRareNonInheritedData.cpp b/Source/WebCore/rendering/style/StyleRareNonInheritedData.cpp
 index 966bfcb..946e804 100644
 --- a/Source/WebCore/rendering/style/StyleRareNonInheritedData.cpp
@@ -2235,10 +2355,18 @@ index f846fb4..cfad374 100644
          setIsXHTMLDocument(true); // controls if we replace entities or not.
      if (!m_parsingFragment)
 diff --git a/Tools/qmake/mkspecs/features/features.pri b/Tools/qmake/mkspecs/features/features.pri
-index 9bb659c..b81f9df 100644
+index 9bb659c..86c12ae 100644
 --- a/Tools/qmake/mkspecs/features/features.pri
 +++ b/Tools/qmake/mkspecs/features/features.pri
-@@ -87,6 +87,7 @@ FEATURE_DEFAULTS = \
+@@ -30,6 +30,7 @@ FEATURE_DEFAULTS = \
+     ENABLE_CSS_IMAGE_ORIENTATION=0 \
+     ENABLE_CSS_IMAGE_RESOLUTION=0 \
+     ENABLE_CSS_IMAGE_SET=1 \
++    ENABLE_CSS_NAVIGATION=1 \
+     ENABLE_CSS_REGIONS=1 \
+     ENABLE_CSS_SHADERS=0 \
+     ENABLE_CSS_SHAPES=1 \
+@@ -87,6 +88,7 @@ FEATURE_DEFAULTS = \
      ENABLE_MOUSE_CURSOR_SCALE=0 \
      ENABLE_NAVIGATOR_CONTENT_UTILS=0 \
      ENABLE_NETSCAPE_PLUGIN_API=1 \
