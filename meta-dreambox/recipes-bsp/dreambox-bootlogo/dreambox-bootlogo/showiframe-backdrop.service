@@ -1,0 +1,12 @@
+[Unit]
+Description=Dreambox Bootlogo
+Requires=dev-dvb-adapter0-video0.device
+After=dev-dvb-adapter0-video0.device
+DefaultDependencies=no
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/showiframe /usr/share/dreambox-bootlogo/backdrop.mvi
+
+[Install]
+WantedBy=graphical.target

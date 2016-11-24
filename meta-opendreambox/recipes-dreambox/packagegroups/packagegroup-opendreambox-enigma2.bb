@@ -35,6 +35,7 @@ RDEPENDS_${PN} += " \
 
 RRECOMMENDS_${PN} += " \
   aio-grab \
+  dreambox-bootlogo \
   enigma2-hbbtv-plugin \
   enigma2-plugin-extensions-audiosync \
   enigma2-plugin-extensions-autotimer \
