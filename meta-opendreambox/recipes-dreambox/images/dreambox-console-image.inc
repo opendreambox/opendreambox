@@ -65,17 +65,20 @@ python dreambox_image_nfo() {
     def parse_status_file(filename, package):
         kv = dict()
         found = 0
-        with open(filename, 'r') as f:
-            for line in f.read().splitlines():
-                try:
-                    key, value = line.split(': ', 1)
-                    if found == 0 and key == 'Package' and value == package:
-                        found = 1
-                    if found == 1:
-                        kv[key] = value
-                except:
-                    if found == 1:
-                        break
+        try:
+            with open(filename, 'r') as f:
+                for line in f.read().splitlines():
+                    try:
+                        key, value = line.split(': ', 1)
+                        if found == 0 and key == 'Package' and value == package:
+                            found = 1
+                        if found == 1:
+                            kv[key] = value
+                    except:
+                        if found == 1:
+                            break
+        except IOError:
+            pass
         return kv
 
     def hash_image(filename, algorithm):
