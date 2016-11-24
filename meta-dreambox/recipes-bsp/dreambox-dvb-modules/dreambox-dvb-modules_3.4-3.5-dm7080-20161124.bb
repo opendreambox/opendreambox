@@ -1,7 +1,7 @@
 require dreambox-dvb-modules.inc
 
-SRC_URI[dm7080.md5sum] = "6d7a94a9e9fce44caaaadb3971eb981e"
-SRC_URI[dm7080.sha256sum] = "b5ebf1851d53473d005d34863fa8a8bf26a754301861f0e652edf1eab57b6304"
+SRC_URI[dm7080.md5sum] = "036a2e9589797cfedc1f016dff67cd00"
+SRC_URI[dm7080.sha256sum] = "634131560086a001efe70ed71afa9ee208f829ba378bbb62c0a1aa0d750b4dd2"
 
 COMPATIBLE_MACHINE = "^(dm7080)$"
 
