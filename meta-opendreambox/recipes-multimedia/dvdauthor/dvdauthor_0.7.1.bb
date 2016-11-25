@@ -15,3 +15,5 @@ SRC_URI[sha256sum] = "501fb11b09c6eb9c5a229dcb400bd81e408cc78d34eab6749970685023
 S = "${WORKDIR}/${PN}"
 
 inherit autotools gettext pkgconfig
+
+PARALLEL_MAKE = ""
