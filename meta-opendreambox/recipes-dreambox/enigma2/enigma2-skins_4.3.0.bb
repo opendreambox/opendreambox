@@ -35,7 +35,7 @@ python enigma2_skins_split_packages() {
 
     srcdir = os.path.join(d.getVar('S', True), 'skins')
     packages = d.getVar('PACKAGES', True).split()
-    for subdir in os.walk(srcdir).next()[1]:
+    for subdir in next(os.walk(srcdir))[1]:
         package = output_pattern % legitimize_package_name(subdir)
         if package in packages:
             parseControlFile(package, os.path.join(srcdir, subdir))
