@@ -46,7 +46,7 @@ index 819ef2c..0c4fa6e 100644
 -
 -AC_SUBST(MAGICK_CPPFLAGS)
 -AC_SUBST(MAGICK_LIBS)
-+PKG_CHECK_MODULES([MAGICK], [MagickCore >= 5.5.7], [AC_DEFINE(HAVE_MAGICK, 1, [Whether the ImageMagick libraries are available])],
++PKG_CHECK_MODULES([MAGICK], [MagickCore-6.Q16], [AC_DEFINE(HAVE_MAGICK, 1, [Whether the ImageMagick libraries are available])],
 +    PKG_CHECK_MODULES([MAGICK], [GraphicsMagick], [AC_DEFINE(HAVE_GMAGICK, 1, [whether the GraphicsMagick libraries are available])],
 +        MAGICK_CFLAGS="$LIBPNG_CFLAGS"
 +        MAGICK_LIBS="$LIBPNG_LIBS"

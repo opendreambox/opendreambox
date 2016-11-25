@@ -2,7 +2,7 @@ SUMMARY = "create DVD-Video file system"
 SECTION = "console/multimedia"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
-DEPENDS = "freetype imagemagick libdvdread libfribidi libpng libxml2 zlib"
+DEPENDS = "freetype imagemagick6 libdvdread libfribidi libpng libxml2 zlib"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${PN}/${P}.tar.gz \
            file://0001-GraphicsMagick-CFLAGS-detection.patch \
