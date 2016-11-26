@@ -1,19 +1,19 @@
 [submodule "openembedded-core"]
 	path = openembedded-core
 	url = git://git.openembedded.org/openembedded-core-contrib
-	branch = obi/krogoth
+	branch = obi/pyro
 [submodule "meta-openembedded"]
 	path = meta-openembedded
 	url = git://git.openembedded.org/meta-openembedded-contrib
-	branch = obi/krogoth
+	branch = obi/pyro
 [submodule "bitbake"]
 	path = bitbake
 	url = git://git.openembedded.org/bitbake
-	branch = 1.30
+	branch = 1.34
 [submodule "meta-qt5"]
 	path = meta-qt5
-	url = git://github.com/opendreambox/meta-qt5
-	branch = krogoth
+	url = git://github.com/meta-qt5/meta-qt5
+	branch = pyro
 [submodule "meta-golang"]
 	path = meta-golang
 	url = https://github.com/madisongh/meta-golang
