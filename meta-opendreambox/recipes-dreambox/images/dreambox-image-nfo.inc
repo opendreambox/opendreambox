@@ -21,7 +21,7 @@ python dreambox_image_nfo() {
     def hash_image(filename, algorithm):
         import hashlib
         h = hashlib.new(algorithm)
-        with open(filename, 'r') as f:
+        with open(filename, 'rb') as f:
             while True:
                 buf = f.read(1024 * 1024)
                 if len(buf) == 0:
