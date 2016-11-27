@@ -7,7 +7,7 @@ DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstre
 inherit autotools pkgconfig systemd
 
 RDEPENDS_${PN} = "gst-plugin-dreamsource \
-                  gstreamer1.0-plugins-bad-fragmented \
+                  gstreamer1.0-plugins-bad-hls \
                   gstreamer1.0-plugins-bad-mpegtsmux \
                   gstreamer1.0-plugins-bad-videoparsersbad \
                   gstreamer1.0-plugins-base-app \
