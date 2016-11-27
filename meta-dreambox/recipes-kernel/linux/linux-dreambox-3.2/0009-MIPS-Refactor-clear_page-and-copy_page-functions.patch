@@ -1,7 +1,7 @@
-From 941171421122f9af46ec2389629a71aced248c21 Mon Sep 17 00:00:00 2001
+From 8662f76685b13dc713eaabefe41d3918974f60cf Mon Sep 17 00:00:00 2001
 From: "Steven J. Hill" <sjhill@mips.com>
-Date: Fri, 6 Jul 2012 21:56:01 +0200
-Subject: [PATCH 10/17] MIPS: Refactor 'clear_page' and 'copy_page' functions.
+Date: Thu, 24 May 2012 15:38:24 -0500
+Subject: [PATCH] MIPS: Refactor 'clear_page' and 'copy_page' functions.
 
 Remove usage of the '__attribute__((alias("...")))' hack that aliased
 to integer arrays containing micro-assembled instructions. This hack
@@ -17,10 +17,7 @@ Cc: linux-mips@linux-mips.org
 Patchwork: https://patchwork.linux-mips.org/patch/3866/
 Acked-by: David Daney <david.daney@cavium.com>
 Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
-(cherry picked from commit c022630633624a75b3b58f43dd3c6cc896a56cff)
-
-Conflicts:
-	arch/mips/mm/Makefile
+(cherry picked from commit 22b57d6432f19be7163c94111e2dcd3c7c1c2449)
 ---
  arch/mips/kernel/mips_ksyms.c |  8 +++++-
  arch/mips/mm/Makefile         |  2 +-
@@ -258,6 +255,3 @@ index 36272f7..a22bd40 100644
  
  /*
   * Pad descriptors to cacheline, since each is exclusively owned by a
--- 
-1.8.1.2
-

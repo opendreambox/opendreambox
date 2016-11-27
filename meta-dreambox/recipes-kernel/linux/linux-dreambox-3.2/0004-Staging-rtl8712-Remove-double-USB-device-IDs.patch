@@ -1,7 +1,7 @@
-From 4b651dd8834ab461965c4eb63fe6671bf9d75e6b Mon Sep 17 00:00:00 2001
+From 2ddcc05dd0c5369cd4a55aa89cbd46a342dc12c8 Mon Sep 17 00:00:00 2001
 From: Martin Krause <martin.krause@tqs.de>
 Date: Fri, 2 Mar 2012 13:00:14 +0100
-Subject: [PATCH 14/17] Staging rtl8712: Remove double USB device IDs
+Subject: [PATCH] Staging rtl8712: Remove double USB device IDs
 
 Remove copies of the double USB device IDs:
 
@@ -17,7 +17,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  1 file changed, 2 deletions(-)
 
 diff --git a/drivers/staging/rtl8712/usb_intf.c b/drivers/staging/rtl8712/usb_intf.c
-index 88d1d35..de4db95 100644
+index a74e83d..35a6bf4 100644
 --- a/drivers/staging/rtl8712/usb_intf.c
 +++ b/drivers/staging/rtl8712/usb_intf.c
 @@ -113,7 +113,6 @@ static struct usb_device_id rtl871x_usb_id_tbl[] = {
@@ -36,6 +36,3 @@ index 88d1d35..de4db95 100644
  	/* Belkin */
  	{USB_DEVICE(0x050D, 0x845A)},
  	/* Corega */
--- 
-1.8.1.2
-

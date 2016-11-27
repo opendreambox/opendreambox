@@ -1,7 +1,7 @@
-From c1ca5ac16b4e651558a0c25befba89ff64843e20 Mon Sep 17 00:00:00 2001
+From f5dbf593fa75f2353e6b28031a634cd770ba9f8f Mon Sep 17 00:00:00 2001
 From: Larry Finger <Larry.Finger@lwfinger.net>
 Date: Fri, 2 Mar 2012 21:06:49 -0600
-Subject: [PATCH 16/17] staging: r8712u: Fix Smatch warning
+Subject: [PATCH] staging: r8712u: Fix Smatch warning
 
 The patch 2080913e017a: "staging: r8712u: Fix regression caused by
 commit 8c213fa" from Feb 25, 2012, leads to the following Smatch
@@ -22,10 +22,10 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/staging/rtl8712/usb_intf.c b/drivers/staging/rtl8712/usb_intf.c
-index 3a56fc1..aa82f4a 100644
+index fae9824..738e30c 100644
 --- a/drivers/staging/rtl8712/usb_intf.c
 +++ b/drivers/staging/rtl8712/usb_intf.c
-@@ -625,12 +625,12 @@ static void r871xu_dev_remove(struct usb_interface *pusb_intf)
+@@ -630,12 +630,12 @@ static void r871xu_dev_remove(struct usb_interface *pusb_intf)
  	struct _adapter *padapter = netdev_priv(pnetdev);
  	struct usb_device *udev = interface_to_usbdev(pusb_intf);
  
@@ -42,6 +42,3 @@ index 3a56fc1..aa82f4a 100644
  		if (drvpriv.drv_registered == true)
  			padapter->bSurpriseRemoved = true;
  		if (pnetdev != NULL) {
--- 
-1.8.1.2
-

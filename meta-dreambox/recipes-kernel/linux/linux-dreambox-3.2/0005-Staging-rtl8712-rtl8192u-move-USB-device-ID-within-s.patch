@@ -1,8 +1,8 @@
-From b3c9fb35e160550ef856d507381f4412b9b73075 Mon Sep 17 00:00:00 2001
+From 3be31d3af0773b21649f72380639fe45f2b70afa Mon Sep 17 00:00:00 2001
 From: Martin Krause <martin.krause@tqs.de>
 Date: Fri, 2 Mar 2012 13:01:40 +0100
-Subject: [PATCH 15/17] Staging: rtl8712/rtl8192u: move USB device ID within
- staging drivers.
+Subject: [PATCH] Staging: rtl8712/rtl8192u: move USB device ID within staging
+ drivers.
 
 It seems the USB device ID 0bda:8192 is wrongly assigned to the
 RTL8192SU chip and not to the RTL8191SU chip in the USB database.
@@ -37,7 +37,7 @@ index c09be0a..9c00865 100644
  	/* Corega */
  	{USB_DEVICE(0x07aa, 0x0043)},
 diff --git a/drivers/staging/rtl8712/usb_intf.c b/drivers/staging/rtl8712/usb_intf.c
-index de4db95..3a56fc1 100644
+index 35a6bf4..fae9824 100644
 --- a/drivers/staging/rtl8712/usb_intf.c
 +++ b/drivers/staging/rtl8712/usb_intf.c
 @@ -110,6 +110,7 @@ static struct usb_device_id rtl871x_usb_id_tbl[] = {
@@ -48,6 +48,3 @@ index de4db95..3a56fc1 100644
  	/* Amigo */
  	{USB_DEVICE(0x0EB0, 0x9061)},
  	/* ASUS/EKB */
--- 
-1.8.1.2
-

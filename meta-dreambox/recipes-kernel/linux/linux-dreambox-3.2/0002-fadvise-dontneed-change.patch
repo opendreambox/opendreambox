@@ -1,7 +1,7 @@
-From a557acd2af46640332d1a87682c70571d0c4fa5f Mon Sep 17 00:00:00 2001
+From fbff17d082bb1cfa7bb6ce789e3c2e8f20d9c784 Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Thu, 17 Oct 2013 23:04:43 +0200
-Subject: [PATCH 12/17] fadvise dontneed change
+Subject: [PATCH] fadvise dontneed change
 
 ---
  include/linux/fs.h |  8 ++++++--
@@ -11,10 +11,10 @@ Subject: [PATCH 12/17] fadvise dontneed change
  4 files changed, 51 insertions(+), 19 deletions(-)
 
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index a276817..1a6836d 100644
+index dd74385..65b7343 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2224,8 +2224,12 @@ extern int check_disk_change(struct block_device *);
+@@ -2230,8 +2230,12 @@ extern int check_disk_change(struct block_device *);
  extern int __invalidate_device(struct block_device *, bool);
  extern int invalidate_partition(struct gendisk *, int);
  #endif
@@ -73,10 +73,10 @@ index 35b2bb0..a4e44b3 100644
  		}
  		break;
 diff --git a/mm/swap.c b/mm/swap.c
-index 55b266d..e201d2b 100644
+index a4b9016..46ef0d7 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
-@@ -436,7 +436,7 @@ void add_page_to_unevictable_list(struct page *page)
+@@ -512,7 +512,7 @@ void add_page_to_unevictable_list(struct page *page)
   * 2. active, dirty/writeback page -> inactive, head, PG_reclaim
   * 3. inactive, mapped page -> none
   * 4. inactive, dirty/writeback page -> inactive, head, PG_reclaim
@@ -86,10 +86,10 @@ index 55b266d..e201d2b 100644
   *
   * In 4, why it moves inactive's head, the VM expects the page would
 diff --git a/mm/truncate.c b/mm/truncate.c
-index 00fb58a..74b65cf 100644
+index 143883a..17ba714 100644
 --- a/mm/truncate.c
 +++ b/mm/truncate.c
-@@ -315,20 +315,27 @@ void truncate_inode_pages(struct address_space *mapping, loff_t lstart)
+@@ -316,20 +316,27 @@ void truncate_inode_pages(struct address_space *mapping, loff_t lstart)
  EXPORT_SYMBOL(truncate_inode_pages);
  
  /**
@@ -123,7 +123,7 @@ index 00fb58a..74b65cf 100644
  {
  	struct pagevec pvec;
  	pgoff_t index = start;
-@@ -359,12 +366,26 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
+@@ -360,12 +367,26 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
  			if (!trylock_page(page))
  				continue;
  			WARN_ON(page->index != index);
@@ -154,7 +154,7 @@ index 00fb58a..74b65cf 100644
  			if (!ret)
  				deactivate_page(page);
  			count += ret;
-@@ -376,7 +397,7 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
+@@ -377,7 +398,7 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
  	}
  	return count;
  }
@@ -163,6 +163,3 @@ index 00fb58a..74b65cf 100644
  
  /*
   * This is like invalidate_complete_page(), except it ignores the page's
--- 
-1.8.1.2
-

@@ -1,7 +1,7 @@
-From a81fa57f8cb87fb4415c665d73d7d860a3a6df77 Mon Sep 17 00:00:00 2001
+From 46c09e1c93a12ff3fa558ccd7fd85533a1ff0c91 Mon Sep 17 00:00:00 2001
 From: Andreas Monzner <andreas.monzner@dream-property.net>
 Date: Thu, 17 Oct 2013 23:05:06 +0200
-Subject: [PATCH 13/17] fix proc cputype
+Subject: [PATCH] fix proc cputype
 
 ---
  arch/mips/kernel/cpu-probe.c | 4 ++--
@@ -29,6 +29,3 @@ index e755f8b..32c80b9 100644
  			set_elf_platform(cpu, "bmips4380");
  		} else {
  			c->cputype = CPU_BMIPS4350;
--- 
-1.8.1.2
-

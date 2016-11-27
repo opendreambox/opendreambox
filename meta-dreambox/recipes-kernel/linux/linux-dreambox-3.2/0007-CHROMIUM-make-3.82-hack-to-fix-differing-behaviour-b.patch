@@ -1,8 +1,8 @@
-From 81c7cdcf7746dcb2e7a970b566ff570244b9cff4 Mon Sep 17 00:00:00 2001
+From c0fb4855943231125a11cf60da1840e7aa0c9771 Mon Sep 17 00:00:00 2001
 From: Brian Harring <ferringb@chromium.org>
 Date: Fri, 23 Dec 2011 18:16:15 -0800
-Subject: [PATCH 17/17] CHROMIUM: make-3.82: hack to fix differing behaviour
- between 3.81 and 3.82
+Subject: [PATCH] CHROMIUM: make-3.82: hack to fix differing behaviour between
+ 3.81 and 3.82
 
 BUG=chromium-os:19882
 TEST=emerge make-3.82 via I7d0a6e25, emerge-x86-alex chromeos-kernel
@@ -44,6 +44,3 @@ index 6bf8e87..689204f 100644
  quiet_cmd_install = INSTALL $(subst $(srctree)/,,$@)
        cmd_install = $(INSTALL) -m0644 $< $@
  
--- 
-1.8.1.2
-
