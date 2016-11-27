@@ -34,7 +34,7 @@ python dreambox_image_nfo() {
         dt = datetime.fromtimestamp(os.path.getmtime(filename))
         return dt.isoformat(' ')
 
-    deploy_dir_image = d.getVar('DEPLOY_DIR_IMAGE', True)
+    imgdeploydir = d.getVar('IMGDEPLOYDIR', True)
     distro_feed_uri = d.getVar('DISTRO_FEED_URI', True)
     distro_name = d.getVar('DISTRO_NAME', True)
     distro_version = d.getVar('DISTRO_VERSION', True)
@@ -51,7 +51,7 @@ python dreambox_image_nfo() {
     else:
         raise bb.build.FuncFailed('Invalid IMAGE_FSTYPES')
 
-    image_path = os.path.join(deploy_dir_image, '.'.join((image_name, ext)))
+    image_path = os.path.join(imgdeploydir, '.'.join((image_name, ext)))
 
     attr = dict()
 
@@ -97,7 +97,7 @@ python dreambox_image_nfo() {
     if sha256:
         attr['SHA256'] = sha256
 
-    nfo_path = os.path.join(deploy_dir_image, '%s.nfo' % image_name)
+    nfo_path = os.path.join(imgdeploydir, '%s.nfo' % image_name)
     with open(nfo_path, 'w') as f:
         for key, value in sorted(attr.items()):
             f.write('%s: %s\n' % (key, value))
