@@ -56,7 +56,7 @@ RDEPENDS_${PN} = " \
         enigma2-plugin-skincomponents-weathercomponent \
         enigma2-streamproxy \
         gstreamer1.0-plugins-bad-faad \
-        gstreamer1.0-plugins-bad-fragmented \
+        gstreamer1.0-plugins-bad-hls \
         gstreamer1.0-plugins-good-flv \
         gstreamer1.0-plugins-good-icydemux \
         gstreamer1.0-plugins-good-spectrum \
