@@ -2,8 +2,8 @@ PATCHREV = "a904cb737a1d95034adc4717200cdf1e52ec8549"
 PATCHLEVEL = "110"
 
 SRC_URI = " \
-    ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-3.4.tar.xz;name=kernel \
-    ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-3.4.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
+    ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${PV}.tar.xz;name=kernel \
+    ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://0001-xhci-Return-correct-number-of-tranferred-bytes-for-s.patch \
     file://0002-xhci-fix-off-by-one-error-in-TRB-DMA-address-boundar.patch \
@@ -20,7 +20,7 @@ SRC_URI[dream-patch.sha256sum] = "4e4d40bc4ea6d1425348c6a01aad637686da835378ef78
 
 require linux-dreambox.inc
 
-S = "${WORKDIR}/linux-3.4"
+S = "${WORKDIR}/linux-${PV}"
 
 CMDLINE = "bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
 
@@ -30,6 +30,6 @@ DEFCONFIG = "${MACHINE}"
 
 BRCM_PATCHLEVEL = "3.5"
 
-LINUX_VERSION = "3.4-${BRCM_PATCHLEVEL}-${MACHINE}"
+LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINE}"
 KERNEL_IMAGETYPE = "vmlinux.bin"
 KERNEL_IMAGETYPES = "vmlinux.gz"
