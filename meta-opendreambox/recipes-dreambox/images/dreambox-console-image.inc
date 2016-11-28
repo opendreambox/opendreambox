@@ -23,6 +23,7 @@ BAD_RECOMMENDATIONS += " \
     qtdeclarative-plugins \
     qtdeclarative-qmlplugins \
     qtwebkit-qmlplugins \
+    systemd-extra-utils \
     udev-hwdb \
     wpa-supplicant-passphrase \
     xinetd \
