@@ -30,7 +30,7 @@ RRECOMMENDS_${PN} += " \
   locale-base-pl-pl \
   locale-base-pt-pt \
   locale-base-ru-ru \
-  locale-base-sr-rs+latin \
+  locale-base-sr-rs \
   locale-base-sk-sk \
   locale-base-sl-si \
   locale-base-es-es \
