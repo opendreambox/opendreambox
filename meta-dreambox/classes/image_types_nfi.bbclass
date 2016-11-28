@@ -1,14 +1,21 @@
 inherit image_types
 
-IMAGE_CMD_ubi.nfi = " \
+UBINFI_BOOT = "${WORKDIR}/ubi-nfi/boot"
+UBINFI_ROOT = "${WORKDIR}/ubi-nfi/rootfs"
+
+IMAGE_CMD_ubi-nfi = " \
+	rm -rf ${WORKDIR}/ubi-nfi; \
+	mkdir -p ${UBINFI_ROOT}; \
+	tar --xattrs --xattrs-include='*' -cf - -C ${IMAGE_ROOTFS} --exclude=./boot/* -p . | tar --xattrs --xattrs-include='*' -xf - -C ${UBINFI_ROOT}; \
+	mkdir -p ${UBINFI_BOOT}; \
+	tar --xattrs --xattrs-include='*' -cf - -C ${IMAGE_ROOTFS}/boot -p . | tar --xattrs --xattrs-include='*' -xf - -C ${UBINFI_BOOT}; \
 	mkfs.jffs2 \
-		--root=${IMAGE_ROOTFS}/boot \
+		--root=${UBINFI_BOOT} \
 		--disable-compressor=lzo \
 		--compression-mode=size \
 		--output=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
 		${EXTRA_IMAGECMD}; \
-	rm -rf ${IMAGE_ROOTFS}/boot/*; \
-	printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
+	printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${UBINFI_ROOT}/etc/fstab; \
 	echo \[root\] > ubinize.cfg; \
 	echo mode=ubi >> ubinize.cfg; \
 	echo image=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs >> ubinize.cfg; \
@@ -27,12 +34,12 @@ IMAGE_CMD_ubi.nfi = " \
 			echo vol_name=data >> ubinize.cfg; \
 			echo vol_size=${UBINIZE_DATAVOLSIZE} >> ubinize.cfg; \
 			echo vol_flags=autoresize >> ubinize.cfg; \
-			printf '/dev/ubi0_1\t/data\t\tubifs\trw,nofail\t\t\t\t0 0\n' >> ${IMAGE_ROOTFS}/etc/fstab; \
-			install -d ${IMAGE_ROOTFS}/data; \
+			printf '/dev/ubi0_1\t/data\t\tubifs\trw,nofail\t\t\t\t0 0\n' >> ${UBINFI_ROOT}/etc/fstab; \
+			install -d ${UBINFI_ROOT}/data; \
 		fi; \
 	fi; \
 	mkfs.ubifs \
-		-r ${IMAGE_ROOTFS} \
+		-r ${UBINFI_ROOT} \
 		-o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs \
 		${MKUBIFS_ARGS}; \
 	ubinize -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${UBINIZE_ARGS} ubinize.cfg; \
@@ -43,11 +50,11 @@ IMAGE_CMD_ubi.nfi = " \
 		> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
 "
 
-EXTRA_IMAGECMD_ubi.nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
+EXTRA_IMAGECMD_ubi-nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
 
-IMAGE_DEPENDS_ubi.nfi = "${IMAGE_DEPENDS_ubi} ${IMAGE_DEPENDS_ubifs} dreambox-buildimage-native"
+IMAGE_DEPENDS_ubi-nfi = "${IMAGE_DEPENDS_ubi} ${IMAGE_DEPENDS_ubifs} dreambox-buildimage-native"
 
-IMAGE_TYPES += "ubi.nfi"
+IMAGE_TYPES += "ubi-nfi"
 
 runimagecmd_append() {
     if [ -n "${IMAGE_LINK_NAME}" ]; then
