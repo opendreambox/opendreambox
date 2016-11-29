@@ -1,4 +1,4 @@
-DREAMBOX_DVB_MODULES_MIRROR ?= "http://dreamboxupdate.com/download/${DISTRO}/2.2.0/${PN}"
+DREAMBOX_DVB_MODULES_MIRROR ?= "http://dreamboxupdate.com/download/${DISTRO}/2.0.0/${PN}"
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[-2]}"
 
 SRC_URI = "${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules-${PRECOMPILED_ARCH}-${PV}.tar.bz2;name=modules"
