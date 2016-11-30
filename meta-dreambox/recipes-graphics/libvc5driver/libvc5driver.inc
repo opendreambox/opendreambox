@@ -1,8 +1,6 @@
 SUMMARY = "Broadcom VC5 driver"
 PROVIDES = "virtual/egl virtual/libgles2"
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
 RPROVIDES_${PN} = "libegl libegl1 libgles2 libglesv2-2"
 RPROVIDES_${PN}-dev = "libegl-dev libgles2-dev"
 
