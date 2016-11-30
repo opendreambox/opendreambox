@@ -1,6 +1,5 @@
 SUMMARY = "Dreambox second stage bootloader"
 PROVIDES = "virtual/bootloader"
-PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
 PRECOMPILED_VERSION = "${@d.getVar('PV', True).split('-')[0]}"
 
 SRC_URI[dm820.md5sum] = "597f55dbc5b87133d305690db41c0c8e"
@@ -15,5 +14,3 @@ RDEPENDS_${PN} = "flash-scripts"
 pkg_postinst_${PN}() {
 [ -n "$D" ] || flash-ssbl ${datadir}/${PN}/ssbl.bin
 }
-
-COMPATIBLE_MACHINE = "^(dm820)$"

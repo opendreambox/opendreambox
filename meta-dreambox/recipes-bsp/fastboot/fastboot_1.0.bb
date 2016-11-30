@@ -6,5 +6,3 @@ SRC_URI[dm820.sha256sum] = "7eafd3ede52267a7f2701884e1f4bfb4717493fe4674d54aa6a6
 inherit opendreambox-precompiled-binary
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-COMPATIBLE_MACHINE = "^(dm820)$"
