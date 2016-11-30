@@ -48,17 +48,29 @@ do_postpatch() {
         patch -p1 -i ${WORKDIR}/dm8000-nand-error-hack.patch
 }
 
-EXTRA_OEMAKE = "KERNELPATH=${STAGING_KERNEL_DIR} KERNELRELEASE=${KERNEL_VERSION} TOOLPREFIX=${TARGET_PREFIX}"
+EXTRA_OEMAKE = "KERNELCONF=${STAGING_KERNEL_BUILDDIR}/.config \
+                KERNELPATH=${STAGING_KERNEL_DIR} \
+                KERNELRELEASE=${KERNEL_VERSION} \
+                TOOLPREFIX=${TARGET_PREFIX}"
 
 do_compile() {
-        oe_runmake tools
+        oe_runmake CC="${CC}" CFLAGS="${CFLAGS}" LD="${LD}" LDFLAGS="${LDFLAGS}" svnversion.h
+        oe_runmake CC="${CC}" CFLAGS="${CFLAGS}" LD="${LD}" LDFLAGS="${LDFLAGS}" tools
         unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-        oe_runmake modules
+        oe_runmake -C ${STAGING_KERNEL_DIR} M="${S}" \
+                   CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
+                   AR="${KERNEL_AR}" \
+                   O="${STAGING_KERNEL_BUILDDIR}" \
+                   modules
 }
 do_install() {
         oe_runmake DESTDIR=${D} BINDIR=${sbindir} MANDIR=${mandir} install-tools
         unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-        oe_runmake DESTDIR=${D} BINDIR=${sbindir} MANDIR=${mandir} install-modules
+        oe_runmake -C ${STAGING_KERNEL_DIR} M="${S}" \
+                   DEPMOD="echo" INSTALL_MOD_PATH="${D}" \
+                   CC="${KERNEL_CC}" LD="${KERNEL_LD}" \
+                   O="${STAGING_KERNEL_BUILDDIR}" \
+                   modules_install
         install -d ${D}${includedir}/${BPN}/include
         install -m 644 include/compat.h ${D}${includedir}/${BPN}/include
         install -d ${D}${includedir}/${BPN}/net80211
@@ -71,9 +83,11 @@ do_install() {
 
 PACKAGES =+ "${PN}-modules ${PN}-tools"
 
-RDEPENDS_${PN}-modules = "kernel-module-aes-generic"
+RRECOMMENDS_${PN}-modules = "kernel-module-aes-generic"
 
 FILES_${PN}-modules = "${sysconfdir}/network"
 FILES_${PN}-tools = "${sbindir}/*"
 
 KERNEL_MODULES_META_PACKAGE = "${PN}-modules"
+
+CLEANBROKEN = "1"
