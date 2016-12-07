@@ -44,7 +44,7 @@
 \begin{document}
 \title{opendreambox}
 \author{Andreas Oberritter \shell{<obi@opendreambox.org>}}
-\date{October 2016}
+\date{December 2016}
 \maketitle
 %\thispagestyle{empty}
 %\pagestyle{empty}
@@ -79,9 +79,10 @@
           \hline
           \textbf{Product name} & \textbf{Environment variable} \\ \hline
           & \\
-          DM900 UHD & \shell{MACHINE=dm900} \\
-          DM525 S2 CI-Slot & \shell{MACHINE=dm520} \\
-          DM525 C/T2 CI-Slot & \shell{MACHINE=dm520} \\
+          DM900 ultraHD & \shell{MACHINE=dm900} \\
+          DM525 COMBO & \shell{MACHINE=dm520} \\
+          DM525 S2 CI slot & \shell{MACHINE=dm520} \\
+          DM525 C/T2 CI slot & \shell{MACHINE=dm520} \\
           DM520 S2 & \shell{MACHINE=dm520} \\
           DM520 C/T2 & \shell{MACHINE=dm520} \\
           DM7080 HD & \shell{MACHINE=dm7080} \\
@@ -89,10 +90,6 @@
           & \\
           \hline
         \end{tabular}
-
-      Note, that not all of these platforms offer enough internal
-      storage to actually flash a generated firmware image. It might be possible
-      to boot from external storage or network, though.
     \end{flushleft}
 
   \subsection{License}
@@ -138,7 +135,7 @@ THE SOFTWARE.
 
     \shell{make -C opendreambox image}
 
-    If this command fails, prerequisites my be missing. See section \ref{prerequisites}.
+    If this command fails, prerequisites may be missing. See section \ref{prerequisites}.
 
   \subsection{Directory structure}
     OpenDreambox consists of a set of layers containing build instructions.
@@ -276,13 +273,18 @@ THE SOFTWARE.
    \subsection{Changes since release 2.2}
      \begin{itemize}
        \item Added support for DM900.
-       \item Support for machines with low memory was dropped (DM500HD, DM800SE).
+       \item Machines with low memory were dropped (DM500HD, DM800SE).
        \item Switched from Qt4 to Qt5.
      \end{itemize}
 
 \section{Known Issues}
 
-  None.
+  \begin{itemize}
+    \item Unsupported machines present in meta-dreambox
+          (DM500HDv2, DM800SEv2, DM7020HD, DM7020HDv2, DM8000) are known not to work unless booted
+          with a kernel of release 1.6, which however shows incompatibilities with systemd.
+          Additionally, there appear to be problems rendering the user interface.
+  \end{itemize}
 
 \pagebreak
 
@@ -443,7 +445,7 @@ THE SOFTWARE.
 
 \section{Bug reports and patches}
 
-  Please send bug reports and patches to the Enigma2 development mailing list \shell{<enigma2-devel@lists.elitedvb.net>}.
+  Please send bug reports to \href{mailto:bugs@opendreambox.org}{\textbf{bugs@opendreambox.org}} and patches to \href{mailto:patches@opendreambox.org}{\textbf{patches@opendreambox.org}}.
 
   A comfortable way to create patches is to use \shell{git format-patch}, after all changes have been committed to your
   local copy of the repository.
