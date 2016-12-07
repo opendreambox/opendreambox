@@ -33,3 +33,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
 
 INSANE_SKIP_${PN}_append = " already-stripped"
+
+MIRRORS =+ " \
+http://dreamboxupdate.com/download/${DISTRO}/${DISTRO_VERSION}/	http://dreamboxupdate.com/download/${DISTRO}/2.5.0/ \n \
+"
