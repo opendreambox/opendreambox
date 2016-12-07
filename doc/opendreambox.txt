@@ -1,7 +1,7 @@
 opendreambox
 
    Andreas Oberritter <obi@opendreambox.org>
-   October 2016
+   December 2016
 
   Contents
 
@@ -68,19 +68,16 @@ opendreambox
    |  --------------------------  |  ------------------------------------------  |
    |Product name                  |Environment variable                          |
    |  --------------------------  |  ------------------------------------------  |
-   |DM900 UHD                     |MACHINE=dm900                                 |
-   |DM525 S2 CI-Slot              |MACHINE=dm520                                 |
-   |DM525 C/T2 CI-Slot            |MACHINE=dm520                                 |
+   |DM900 ultraHD                 |MACHINE=dm900                                 |
+   |DM525 COMBO                   |MACHINE=dm520                                 |
+   |DM525 S2 CI slot              |MACHINE=dm520                                 |
+   |DM525 C/T2 CI slot            |MACHINE=dm520                                 |
    |DM520 S2                      |MACHINE=dm520                                 |
    |DM520 C/T2                    |MACHINE=dm520                                 |
    |DM7080 HD                     |MACHINE=dm7080                                |
    |DM820 HD                      |MACHINE=dm820                                 |
    |  --------------------------  |  ------------------------------------------  |
    +-----------------------------------------------------------------------------+
-
-   Note, that not all of these platforms offer enough internal storage to actually
-   flash a generated firmware image. It might be possible to boot from external
-   storage or network, though.
 
     1.3 License
 
@@ -126,7 +123,7 @@ opendreambox
 
    make -C opendreambox image
 
-   If this command fails, prerequisites my be missing. See section 3.
+   If this command fails, prerequisites may be missing. See section 3.
 
     1.6 Directory structure
 
@@ -246,12 +243,15 @@ opendreambox
     4.3 Changes since release 2.2
 
      * Added support for DM900.
-     * Support for machines with low memory was dropped (DM500HD, DM800SE).
+     * Machines with low memory were dropped (DM500HD, DM800SE).
      * Switched from Qt4 to Qt5.
 
   5 Known Issues
 
-   None.
+     * Unsupported machines present in meta-dreambox (DM500HDv2, DM800SEv2,
+       DM7020HD, DM7020HDv2, DM8000) are known not to work unless booted with a
+       kernel of release 1.6, which however shows incompatibilities with systemd.
+       Additionally, there appear to be problems rendering the user interface.
 
   6 Building OpenDreambox
 
@@ -421,8 +421,8 @@ opendreambox
 
   8 Bug reports and patches
 
-   Please send bug reports and patches to the Enigma2 development mailing list
-   <enigma2-devel@lists.elitedvb.net>.
+   Please send bug reports to bugs@opendreambox.org and patches to
+   patches@opendreambox.org.
 
    A comfortable way to create patches is to use git format-patch, after all
    changes have been committed to your local copy of the repository.
