@@ -46,10 +46,10 @@ do_configure () {
 	target="$os-${HOST_ARCH}"
 	case $target in
 	linux-arm)
-		target=linux-armv4
+		target=debian-arm
 		;;
 	linux-armeb)
-		target=linux-elf-armeb
+		target=debian-armeb
 		;;
 	linux-sh3)
 		target=debian-sh3
