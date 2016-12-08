@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=8f242b441da515e30c7b
 DEPENDS = " \
   ${@bb.utils.contains('MACHINE_FEATURES', 'pci', 'madwifi-ng', '',d)} \
   virtual/kernel \
+  ${@base_version_less_or_equal('OLDEST_KERNEL', '3.4', 'r8192c', '',d) } \
 "
-DEPENDS_append_mipsel = " r8192c"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -17,15 +17,17 @@ RDEPENDS_${PN} = " \
   wpa-supplicant \
 "
 
+MODULES_rtl8192 = "${@base_version_less_or_equal('OLDEST_KERNEL', '3.4', 'r8192c', \
+    'kernel-module-rtl8192ce linux-firmware-rtl8192ce kernel-module-rtl8192cu linux-firmware-rtl8192cu', d)}"
+
 RRECOMMENDS_${PN} = " \
-  ${@bb.utils.contains('MACHINE_FEATURES', 'pci', '${WLAN_PCI_MODULES}', '', d)} \
+  ${MODULES_rtl8192} \
   kernel-module-carl9170 \
   kernel-module-r8712u \
   kernel-module-rt2800usb \
   kernel-module-rt73usb \
   kernel-module-zd1211rw \
 "
-RRECOMMENDS_${PN}_append_mipsel = " r8192c"
 
 WLAN_PCI_MODULES = " \
   madwifi-ng-modules \

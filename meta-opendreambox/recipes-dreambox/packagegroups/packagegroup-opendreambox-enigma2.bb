@@ -64,9 +64,6 @@ RRECOMMENDS_${PN} += " \
   ${@bb.utils.contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-cdinfo', '', d)} \
   ${@bb.utils.contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdburn', '', d)} \
   ${@bb.utils.contains('DREAMBOX_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \
-  glib-networking \
-"
-
-RRECOMMENDS_${PN}_append_mipsel = " \
   ${@bb.utils.contains('MACHINE_FEATURES', 'wifi', 'packagegroup-opendreambox-wlan', '', d)} \
+  glib-networking \
 "
