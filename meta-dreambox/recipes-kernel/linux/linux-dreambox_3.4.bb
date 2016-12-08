@@ -14,6 +14,8 @@ SRC_URI[stable-patch.sha256sum] = "d5492eeaadcf12aaad471011066e447907999035c2636
 SRC_URI[dream-patch.md5sum] = "7c8958c638a9cf150ee6e0693518a902"
 SRC_URI[dream-patch.sha256sum] = "7124e4145b5edb8179c679f842cd4349e1d0e7635c369385f246170cad7d6870"
 
+PR = "r1"
+
 require linux-dreambox.inc
 
 S = "${WORKDIR}/linux-${PV}"
