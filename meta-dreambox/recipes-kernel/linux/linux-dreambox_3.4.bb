@@ -6,6 +6,7 @@ SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://0001-Revert-MIPS-Fix-build-with-binutils-2.24.51.patch \
+    file://0001-BRCMSTB-dont-enable-new-i2c-driver-by-default.-it-co.patch \
 "
 
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
