@@ -1,19 +1,18 @@
-PATCHREV = "a9636c0968de426eb8e418b1ecd9fd731eb6397f"
+PATCHREV = "9321e2fc1ab885c955d9134f4c9b5c9b5a4e56b3"
 PATCHLEVEL = "28"
 
 SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${PV}.tar.xz;name=kernel \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
-    file://0001-compiler-gcc-integrate-the-various-compiler-gcc-345-.patch \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
 SRC_URI[kernel.sha256sum] = "61558aa490855f42b6340d1a1596be47454909629327c49a5e4e10268065dffa"
 SRC_URI[stable-patch.md5sum] = "502a4ee34af04e9b9e375e254f7b9a8f"
 SRC_URI[stable-patch.sha256sum] = "e3c79a30ac959c84c329be5461da88a5c79c6463da30d376c27bb103aee79b51"
-SRC_URI[dream-patch.md5sum] = "a8106704c80622ec2ce6b00871872fde"
-SRC_URI[dream-patch.sha256sum] = "19e1fd79bedbbea73faae8d8fb4ae48efe984e5404e6e53c350a7f6e3bfbe772"
+SRC_URI[dream-patch.md5sum] = "93e8592320849b0aa31825ee704c15f4"
+SRC_URI[dream-patch.sha256sum] = "4d3197b9b8e8cdddb99fd2ce3d0429978975c5f38ef757e35b6c020278b1683a"
 
 require linux-dreambox.inc
 require recipes-kernel/linux/linux-dtb.inc
@@ -26,7 +25,7 @@ COMPATIBLE_MACHINE = "^(bcm7439)$"
 
 DEFCONFIG = "${MACHINE}"
 
-BRCM_PATCHLEVEL = "1.10"
+BRCM_PATCHLEVEL = "1.15"
 
 LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINE}"
 KERNEL_IMAGETYPE = "zImage"
