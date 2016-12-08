@@ -3,6 +3,8 @@ SRC_URI[dm7080.sha256sum] = "6485aecc7a4f2b64b02215f02701c5ffa80aa958ba032b92d4f
 
 require enigma2-bin-4.3.inc
 
+SRC_URI += " file://0001-add-libusbtuner.so-to-LD_PRELOAD-when-available.patch"
+
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
 
 PRECOMPILED_ARCH = "${@d.getVar('PV', True).split('-')[1]}"
