@@ -291,7 +291,6 @@ conf/opendreambox.conf: $(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH)
 	@echo 'BBINCLUDELOGS = "yes"' >> $@
 	@echo 'CONF_VERSION = "1"' >> $@
 	@echo 'DISTRO = "opendreambox"' >> $@
-	@echo 'USER_CLASSES = "buildstats"' >> $@
 	@echo 'PATCHRESOLVE = "noop"' >> $@
 	@echo 'PRSERV_HOST = "localhost:0"' >> $@
 
