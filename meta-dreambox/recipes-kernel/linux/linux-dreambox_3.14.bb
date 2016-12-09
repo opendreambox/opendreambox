@@ -6,6 +6,7 @@ SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://0001-dm900-enable-support-for-rtl8192ce-based-usb-wlan-st.patch \
+    file://0001-removed-Abocom-WLAN-USB-stick-0x07b8-0x8188-from-rtl.patch \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
