@@ -1,13 +1,5 @@
 SUMMARY ?= "A Dreambox firmware image for headless systems"
 
-# packages to build for the feed
-DEPENDS = " \
-	gdb \
-	lsof \
-	ltrace \
-	strace \
-"
-
 python __anonymous() {
     pkgtype = d.getVar('IMAGE_PKGTYPE', True)
     if not oe.utils.inherits(d, 'package_%s' % pkgtype):
