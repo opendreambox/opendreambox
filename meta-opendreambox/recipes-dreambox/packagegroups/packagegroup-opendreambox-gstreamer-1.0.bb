@@ -16,6 +16,8 @@ RDEPENDS_${PN} += " \
   gstreamer1.0-plugins-bad-mms \
   gstreamer1.0-plugins-bad-mpegpsdemux \
   gstreamer1.0-plugins-bad-mpegtsdemux \
+  gstreamer1.0-plugins-bad-rawparse \
+  gstreamer1.0-plugins-bad-adpcmdec \
   gstreamer1.0-plugins-bad-smoothstreaming \
   gstreamer1.0-plugins-bad-videoparsersbad \
   gstreamer1.0-plugins-base-alsa \
