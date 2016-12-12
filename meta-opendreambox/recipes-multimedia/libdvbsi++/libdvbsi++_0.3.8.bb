@@ -4,6 +4,6 @@ SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343"
 OPENDREAMBOX_PROJECT = "obi/libdvbsi++"
-SRCREV = "${@opendreambox_srcrev('c4d4597fb8bf77d1fd4b122438c71a762080a245', d)}"
+SRCREV = "${@opendreambox_srcrev('ff57e585c47fd62b484d0a8f96fe4f020f5840e3', d)}"
 
 inherit autotools pkgconfig opendreambox-git
