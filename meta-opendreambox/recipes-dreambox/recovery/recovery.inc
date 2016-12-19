@@ -75,5 +75,6 @@ FILES_flash-scripts = " \
     ${sbindir}/readspi \
     ${sbindir}/select-boot-source \
     ${sbindir}/to-the-rescue \
+    ${sbindir}/update-rescue \
     ${sbindir}/writespi \
 "
