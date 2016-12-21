@@ -9,6 +9,7 @@ SRC_URI = " \
     file://0001-removed-Abocom-WLAN-USB-stick-0x07b8-0x8188-from-rtl.patch \
     file://0001-DVB-dvb_ringbuffer-add-missing-smp-write-barrier.patch \
     file://0001-dreambox-disable-kernel-wake-timer-support-.-it-is-h.patch \
+    file://0001-dm900-update-kernel-config.patch \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
