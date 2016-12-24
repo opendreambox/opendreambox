@@ -4,4 +4,6 @@ SRC_URI[cortexa15hf-neon-vfpv4.sha256sum] = "5bea252b1f6b8303f517f2a20136842783d
 SRC_URI[mips32el.md5sum] = "78eb7dd4cbf393a10d2642f2a039c2d8"
 SRC_URI[mips32el.sha256sum] = "028052d2e1e8cca483fa1e346e2e9c58c1282ccbc0665754d915f8bebfb7198a"
 
+SRC_URI += " file://0001-add-HACK-for-unicable-config-migration-to-new-format.patch"
+
 require enigma2-bin-4.3.inc
