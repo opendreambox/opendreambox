@@ -26,6 +26,7 @@ RRECOMMENDS_${PN} += " \
   dccamd \
   dreambox-compat \
   e2fsprogs-e2fsck \
+  hdstandby \
   joe \
   less \
   mc \
