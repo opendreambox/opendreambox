@@ -1,7 +1,7 @@
 SUMMARY = "Additional plugins for Enigma2"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
-DEPENDS = "enigma2 gstreamer1.0 openssl"
+DEPENDS = "enigma2 gstreamer1.0 libtirpc openssl"
 
 SRC_URI += "file://print.mak"
 
@@ -99,6 +99,7 @@ INSTALL_PLUGINSDIR = "${INSTALL_DESTDIR}${libdir}/enigma2/python/Plugins"
 # actually has no impact on any generated packages.
 RDEPENDS_${PN} = " \
         aio-grab \
+        arp-scan \
         avahi-daemon \
         cdrkit \
         cdtextinfo \
