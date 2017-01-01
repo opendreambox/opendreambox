@@ -1,0 +1,44 @@
+From 02f9eeb101282f974453ca1be02ca3c8c23e80f8 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@saftware.de>
+Date: Sun, 1 Jan 2017 23:30:02 +0100
+Subject: [PATCH] Install libnfs.a and nfsrpc.h, build libnfs with -fPIC
+
+Signed-off-by: Andreas Oberritter <obi@saftware.de>
+---
+ support/include/Makefile.am | 4 +++-
+ support/nfs/Makefile.am     | 3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/support/include/Makefile.am b/support/include/Makefile.am
+index 4b33ee9..dfd70cd 100644
+--- a/support/include/Makefile.am
++++ b/support/include/Makefile.am
+@@ -9,7 +9,6 @@ noinst_HEADERS = \
+ 	nfs_mntent.h \
+ 	nfs_paths.h \
+ 	nfslib.h \
+-	nfsrpc.h \
+ 	nsm.h \
+ 	rpcmisc.h \
+ 	tcpwrapper.h \
+@@ -19,4 +18,7 @@ noinst_HEADERS = \
+ 	xcommon.h \
+ 	conffile.h
+ 
++include_HEADERS = \
++	nfsrpc.h
++
+ MAINTAINERCLEANFILES = Makefile.in
+diff --git a/support/nfs/Makefile.am b/support/nfs/Makefile.am
+index fb9b8c1..e8ebdf9 100644
+--- a/support/nfs/Makefile.am
++++ b/support/nfs/Makefile.am
+@@ -1,6 +1,7 @@
+ ## Process this file with automake to produce Makefile.in
+ 
+-noinst_LIBRARIES = libnfs.a
++lib_LIBRARIES = libnfs.a
++libnfs_a_CFLAGS = -fPIC
+ libnfs_a_SOURCES = exports.c rmtab.c xio.c rpcmisc.c rpcdispatch.c \
+ 		   xlog.c xcommon.c wildmat.c mydaemon.c nfsclient.c \
+ 		   nfsexport.c getfh.c nfsctl.c rpc_socket.c getport.c \
