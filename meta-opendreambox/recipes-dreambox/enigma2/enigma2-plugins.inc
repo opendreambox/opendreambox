@@ -130,6 +130,7 @@ RDEPENDS_${PN} = " \
         python-netclient \
         python-pycrypto \
         python-pyopenssl \
+        python-pysmb \
         python-re \
         python-shell \
         python-simplejson \
