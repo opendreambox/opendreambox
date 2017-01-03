@@ -16,6 +16,7 @@ DEPENDS = " \
         python-mutagen \
         python-pycrypto \
         python-pyopenssl \
+        python-pysmb \
         python-transmissionrpc \
         python-youtube-dl \
         smartmontools \
