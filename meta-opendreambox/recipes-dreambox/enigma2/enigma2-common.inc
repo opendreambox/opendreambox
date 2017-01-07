@@ -25,6 +25,7 @@ RDEPENDS_${PN} += " \
         python-ctypes \
         python-fcntl \
         python-importlib \
+        python-ioctl \
         python-lang \
         python-monotonic \
         python-netaddr \
