@@ -1,0 +1,42 @@
+From bdf4d9b04a9225262460960331b85520ab41aa4c Mon Sep 17 00:00:00 2001
+From: Andreas Schwab <schwab@suse.com>
+Date: Sat, 16 Jan 2016 11:59:09 -0500
+Subject: [PATCH] Fix uninitialised variable usage in nfs_options2pmap
+
+Commit 5bea22e33b7a introduced a regression.  Prior to that commit
+nfs_nfs_version would set *version to 0 if NFS version wasn't specified.
+Since that commit, version.v_mode is set to V_DEFAULT if the NFS version
+isn't specified, but nfs_options2pmap uses version.major without
+checking
+v_mode.  This can lead to incorrect behaviour.
+In particular fall-ack to v3 if server doesn't support v4 can fail.
+
+So test v_mode before using version.major.
+
+URL: https://bugzilla.opensuse.org/show_bug.cgi?id=956743
+Fixes: 5bea22e33b7a ("mount.nfs: Add struct nfs_version and generalize
+version parsing")
+Signed-off-by: NeilBrown <neilb@suse.com>
+Signed-off-by: Steve Dickson <steved@redhat.com>
+
+(cherry picked from commit 58fc4a61147019183b9a760092d84a713bb0aef4)
+---
+ utils/mount/network.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/utils/mount/network.c b/utils/mount/network.c
+index b5ed850..2621400 100644
+--- a/utils/mount/network.c
++++ b/utils/mount/network.c
+@@ -1626,7 +1626,10 @@ int nfs_options2pmap(struct mount_options *options,
+ 		return 0;
+ 	if (!nfs_nfs_version(options, &version))
+ 		return 0;
+-	nfs_pmap->pm_vers = version.major;
++	if (version.v_mode == V_DEFAULT)
++		nfs_pmap->pm_vers = 0;
++	else
++		nfs_pmap->pm_vers = version.major;
+ 	if (!nfs_nfs_protocol(options, &nfs_pmap->pm_prot))
+ 		return 0;
+ 	if (!nfs_nfs_port(options, &nfs_pmap->pm_port))
