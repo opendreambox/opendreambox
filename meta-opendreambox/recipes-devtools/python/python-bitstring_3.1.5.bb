@@ -10,3 +10,5 @@ SRC_URI[sha256sum] = "c163a86fcef377c314690051885d86b47419e3e1770990c212e16723c1
 inherit pypi distutils
 
 PYPI_PACKAGE_EXT = "zip"
+
+RDEPENDS_${PN} += "python-mmap"
