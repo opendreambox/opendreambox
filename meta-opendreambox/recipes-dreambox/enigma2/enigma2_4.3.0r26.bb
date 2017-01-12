@@ -4,3 +4,5 @@ SRC_URI[mips32el.md5sum] = "680caba55f31825921c5ad6611a0d541"
 SRC_URI[mips32el.sha256sum] = "7366dcf7ab6ce0c66f0b5d437d760b7b1104f7211a50d1d5c9c2d0a071bc2663"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += "file://0001-InputDevice-reinstate-import-of-O_RDWR.patch"

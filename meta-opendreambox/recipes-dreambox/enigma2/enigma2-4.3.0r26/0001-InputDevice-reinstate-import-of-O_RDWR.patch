@@ -1,0 +1,25 @@
+From c02bd5beb06e93447911206a83de0ef52d3760ef Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Thu, 12 Jan 2017 20:31:50 +0100
+Subject: [PATCH] InputDevice: reinstate import of O_RDWR
+
+---
+ usr/lib/enigma2/python/Components/InputDevice.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Components/InputDevice.py b/usr/lib/enigma2/python/Components/InputDevice.py
+index 5edc217..4d15860 100644
+--- a/usr/lib/enigma2/python/Components/InputDevice.py
++++ b/usr/lib/enigma2/python/Components/InputDevice.py
+@@ -4,7 +4,7 @@ from config import config, ConfigSlider, ConfigSubsection, ConfigYesNo, ConfigTe
+ import struct
+ from ioctl import ioctl
+ from ioctl.linux import IOC
+-from os import listdir, open as os_open, close as os_close, write as os_write, O_RDONLY
++from os import listdir, open as os_open, close as os_close, write as os_write, O_RDONLY, O_RDWR
+ O_CLOEXEC = 02000000
+ 
+ def EVIOCGNAME(length):
+-- 
+2.7.4
+
