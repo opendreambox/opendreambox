@@ -10,6 +10,7 @@ SRC_URI = " \
     file://0001-DVB-dvb_ringbuffer-add-missing-smp-write-barrier.patch \
     file://0001-dreambox-disable-kernel-wake-timer-support-.-it-is-h.patch \
     file://0001-dm900-update-kernel-config.patch \
+    file://0001-dm900-fixed-shutdown-boot-problems-with-unpowered-mi.patch \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
