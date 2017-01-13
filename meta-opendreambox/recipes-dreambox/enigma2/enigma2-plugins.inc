@@ -145,6 +145,7 @@ RDEPENDS_${PN} = " \
         python-youtube-dl \
         python-zlib \
         satip-client \
+        shellinabox \
         smartmontools \
         streamripper \
 "
