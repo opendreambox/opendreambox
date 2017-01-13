@@ -53,12 +53,8 @@ python enigma2_plugins_split_packages() {
                         name, value = line.strip().split(': ', 1)
                         if name == 'Description':
                             d.setVar('DESCRIPTION_%s' % package, value)
-                        elif name == 'Depends':
-                            d.appendVar('RDEPENDS_%s' % package, ' ' + ' '.join(value.split(', ')))
-                        elif name == 'Replaces':
-                            d.setVar('RREPLACES_%s' % package, ' '.join(value.split(', ')))
-                        elif name == 'Conflicts':
-                            d.setVar('RCONFLICTS_%s' % package, ' '.join(value.split(', ')))
+                        elif name in ('Breaks', 'Conflicts', 'Depends', 'Provides', 'Recommends', 'Replaces', 'Suggests'):
+                            d.appendVar('R%s_%s' % (name.upper(), package), ' ' + ' '.join(value.split(', ')))
                     except:
                         bb.fatal("Error parsing control file for package %s" % package)
 
