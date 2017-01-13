@@ -1,0 +1,10 @@
+[Unit]
+Description=Shell In A Box Daemon
+
+[Service]
+Environment="SHELLINABOXD_ARGS=--disable-ssl --localhost-only"
+EnvironmentFile=-/etc/default/shellinaboxd
+ExecStart=/usr/bin/shellinaboxd $SHELLINABOXD_ARGS
+
+[Install]
+WantedBy=graphical.target
