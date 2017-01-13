@@ -23,6 +23,7 @@ PACKAGES =+ " \
     enigma2-plugin-systemplugins-commoninterfaceassignment \
     enigma2-plugin-systemplugins-crashlogautosubmit \
     enigma2-plugin-systemplugins-hotplug \
+    enigma2-plugin-systemplugins-jsonapi \
     enigma2-plugin-systemplugins-networkmanager \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-streamserver \
@@ -74,6 +75,9 @@ RDEPENDS_enigma2-plugin-systemplugins-crashlogautosubmit = " \
 RDEPENDS_enigma2-plugin-systemplugins-hotplug = " \
         python-fcntl \
         python-threading \
+"
+RDEPENDS_enigma2-plugin-systemplugins-jsonapi = " \
+        python-json \
 "
 RDEPENDS_enigma2-plugin-systemplugins-networkmanager = " \
         packagegroup-net-connman \
