@@ -1,7 +1,7 @@
-From 8cc0ad6d348f5aef6af66e02f9640a7a8c47d933 Mon Sep 17 00:00:00 2001
+From 7e110e1edd70e35fdb03274f19296ff8f14b7b46 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Tue, 17 May 2016 13:52:34 +0200
-Subject: [PATCH 2/5] Add HbbTV Mimetypes
+Subject: [PATCH] Add HbbTV Mimetypes
 
 Change-Id: I57e26cf57288ab157c7957f85b617747e5ee670b
 ---
@@ -104,10 +104,10 @@ index 817f738..c668432 100644
  
      for (size_t i = 0; i < WTF_ARRAY_LENGTH(types); ++i)
 diff --git a/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp b/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
-index 8d167c7..6b9e575 100644
+index aeff0c0..a751222 100644
 --- a/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
 +++ b/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
-@@ -56,6 +56,9 @@ static const ExtensionMap extensionMap[] = {
+@@ -57,6 +57,9 @@ static const ExtensionMap extensionMap[] = {
      { "wmlc", ".wmlc", "application/vnd.wap.wmlc" }, // Not in shared mimetype database
      { "xht", ".xht", "application/xhtml+xml" },
      { "xhtml", ".xhtml", "application/xhtml+xml" },
@@ -129,6 +129,3 @@ index 83fb334..f846fb4 100644
         )
          setIsXHTMLDocument(true); // controls if we replace entities or not.
      if (!m_parsingFragment)
--- 
-2.7.4
-

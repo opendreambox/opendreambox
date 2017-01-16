@@ -1,7 +1,7 @@
-From 89b4e8d5606266ee6d658a414cbc0070b2aac889 Mon Sep 17 00:00:00 2001
+From e6781e2c2b806d75cf9a5358f79fdd85e5ce84af Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Tue, 24 May 2016 10:53:14 +0200
-Subject: [PATCH 5/5] import a bunch of hbbtv patches
+Subject: [PATCH] import a bunch of hbbtv patches
 
 Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
 ---
@@ -14,7 +14,7 @@ Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
  Source/WebCore/css/CSSParserValues.cpp             |   3 +
  Source/WebCore/css/CSSPrimitiveValue.cpp           |  18 ++
  Source/WebCore/css/CSSPrimitiveValue.h             |   6 +-
- Source/WebCore/css/CSSPropertyNames.in             |  36 ++++
+ Source/WebCore/css/CSSPropertyNames.in             |  24 +++
  Source/WebCore/css/DeprecatedStyleBuilder.cpp      |  25 +++
  Source/WebCore/css/StyleResolver.cpp               |  29 +++
  Source/WebCore/css/StyleResolver.h                 |   9 +
@@ -69,13 +69,13 @@ Change-Id: Ie8fefd82a1af9602a44fb315f1391f5d302e3b92
  .../xml/parser/XMLDocumentParserLibxml2.cpp        |   3 +
  Source/WebCore/xml/parser/XMLDocumentParserQt.cpp  |   4 +-
  Tools/qmake/mkspecs/features/features.pri          |   2 +
- 64 files changed, 1189 insertions(+), 29 deletions(-)
+ 64 files changed, 1177 insertions(+), 29 deletions(-)
  create mode 100644 Source/WebCore/platform/PlatformHbbTVKeyCodes.h
  create mode 100755 Source/WebCore/rendering/style/StyleNavigationData.h
  create mode 100755 Source/WebCore/rendering/style/StyleNavigationValue.h
 
 diff --git a/Source/WebCore/Target.pri b/Source/WebCore/Target.pri
-index e525aa1..0518eb3 100644
+index 3255295..3b35b82 100644
 --- a/Source/WebCore/Target.pri
 +++ b/Source/WebCore/Target.pri
 @@ -3031,6 +3031,12 @@ enable?(NETSCAPE_PLUGIN_API) {
@@ -205,7 +205,7 @@ index 69d3309..6fb77d0 100644
  
      // Get the plug-in script object.
 diff --git a/Source/WebCore/css/CSSComputedStyleDeclaration.cpp b/Source/WebCore/css/CSSComputedStyleDeclaration.cpp
-index f645ace..4adbdb0 100644
+index f4c25e4..e1d6f9f 100644
 --- a/Source/WebCore/css/CSSComputedStyleDeclaration.cpp
 +++ b/Source/WebCore/css/CSSComputedStyleDeclaration.cpp
 @@ -163,6 +163,12 @@ static const CSSPropertyID computedProperties[] = {
@@ -331,7 +331,7 @@ index d43d3c9..a3c6847 100644
    | '#' maybe_space { $$.id = CSSValueInvalid; $$.string = CSSParserString(); $$.unit = CSSPrimitiveValue::CSS_PARSER_HEXCOLOR; } /* Handle error case: "color: #;" */
    | VARFUNCTION maybe_space IDENT closing_parenthesis maybe_space {
 diff --git a/Source/WebCore/css/CSSParser.cpp b/Source/WebCore/css/CSSParser.cpp
-index 54fd5e2..c7711d0 100644
+index eabbd50..1148676 100644
 --- a/Source/WebCore/css/CSSParser.cpp
 +++ b/Source/WebCore/css/CSSParser.cpp
 @@ -115,6 +115,10 @@
@@ -345,7 +345,7 @@ index 54fd5e2..c7711d0 100644
  #define YYDEBUG 0
  
  #if YYDEBUG > 0
-@@ -2733,6 +2737,26 @@ bool CSSParser::parseValue(CSSPropertyID propId, bool important)
+@@ -2742,6 +2746,26 @@ bool CSSParser::parseValue(CSSPropertyID propId, bool important)
              validPrimitive = validUnit(value, FLength | FNonNeg, CSSStrictMode) && value->fValue;
          break;
      // End of CSS3 properties
@@ -372,7 +372,7 @@ index 54fd5e2..c7711d0 100644
  
      // Apple specific properties.  These will never be standardized and are purely to
      // support custom WebKit-based Apple applications.
-@@ -11156,6 +11180,11 @@ restartAfterComment:
+@@ -11165,6 +11189,11 @@ restartAfterComment:
              yylval->string.init(start, currentCharacter<SrcCharacterType>() - start);
          } else if (isIdentifierStart<SrcCharacterType>()) {
              m_token = IDSEL;
@@ -384,7 +384,7 @@ index 54fd5e2..c7711d0 100644
              parseIdentifier(result, yylval->string, hasEscape);
              if (!hasEscape) {
                  // Check whether the identifier is also a valid hex number.
-@@ -11164,6 +11193,11 @@ restartAfterComment:
+@@ -11173,6 +11202,11 @@ restartAfterComment:
                  do {
                      if (!isASCIIHexDigit(*current)) {
                          m_token = IDSEL;
@@ -411,7 +411,7 @@ index 7d5fc85..7140733 100644
  #if ENABLE(CSS_VARIABLES)
      case CSSPrimitiveValue::CSS_VARIABLE_NAME:
 diff --git a/Source/WebCore/css/CSSPrimitiveValue.cpp b/Source/WebCore/css/CSSPrimitiveValue.cpp
-index f3902c7..f308cc1 100644
+index 32f0121..37e0a16 100644
 --- a/Source/WebCore/css/CSSPrimitiveValue.cpp
 +++ b/Source/WebCore/css/CSSPrimitiveValue.cpp
 @@ -119,6 +119,9 @@ static inline bool isValidCSSUnitTypeForDoubleConversion(CSSPrimitiveValue::Unit
@@ -424,7 +424,7 @@ index f3902c7..f308cc1 100644
      case CSSPrimitiveValue::CSS_UNICODE_RANGE:
      case CSSPrimitiveValue::CSS_UNKNOWN:
      case CSSPrimitiveValue::CSS_URI:
-@@ -407,6 +410,9 @@ void CSSPrimitiveValue::cleanup()
+@@ -450,6 +453,9 @@ void CSSPrimitiveValue::cleanup()
  {
      switch (static_cast<UnitTypes>(m_primitiveUnitType)) {
      case CSS_STRING:
@@ -434,27 +434,27 @@ index f3902c7..f308cc1 100644
      case CSS_URI:
      case CSS_ATTR:
      case CSS_COUNTER_NAME:
-@@ -791,6 +797,9 @@ String CSSPrimitiveValue::getStringValue(ExceptionCode& ec) const
+@@ -840,6 +846,9 @@ String CSSPrimitiveValue::getStringValue(ExceptionCode& ec) const
      ec = 0;
      switch (m_primitiveUnitType) {
-         case CSS_STRING:
+     case CSS_STRING:
 +#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
-+        case CSS_NAVID:
++    case CSS_NAVID:
 +#endif
-         case CSS_ATTR:
-         case CSS_URI:
+     case CSS_ATTR:
+     case CSS_URI:
  #if ENABLE(CSS_VARIABLES)
-@@ -813,6 +822,9 @@ String CSSPrimitiveValue::getStringValue() const
+@@ -862,6 +871,9 @@ String CSSPrimitiveValue::getStringValue() const
  {
      switch (m_primitiveUnitType) {
-         case CSS_STRING:
+     case CSS_STRING:
 +#if ENABLE(HBBTV) && ENABLE(CSS_NAVIGATION)
-+        case CSS_NAVID:
++    case CSS_NAVID:
 +#endif
-         case CSS_ATTR:
-         case CSS_URI:
+     case CSS_ATTR:
+     case CSS_URI:
  #if ENABLE(CSS_VARIABLES)
-@@ -1232,6 +1244,9 @@ PassRefPtr<CSSPrimitiveValue> CSSPrimitiveValue::cloneForCSSOM() const
+@@ -1281,6 +1293,9 @@ PassRefPtr<CSSPrimitiveValue> CSSPrimitiveValue::cloneForCSSOM() const
  
      switch (m_primitiveUnitType) {
      case CSS_STRING:
@@ -464,7 +464,7 @@ index f3902c7..f308cc1 100644
      case CSS_URI:
      case CSS_ATTR:
      case CSS_COUNTER_NAME:
-@@ -1362,6 +1377,9 @@ bool CSSPrimitiveValue::equals(const CSSPrimitiveValue& other) const
+@@ -1411,6 +1426,9 @@ bool CSSPrimitiveValue::equals(const CSSPrimitiveValue& other) const
      case CSS_VALUE_ID:
          return valueName(m_value.valueID) == valueName(other.m_value.valueID);
      case CSS_STRING:
@@ -475,7 +475,7 @@ index f3902c7..f308cc1 100644
      case CSS_ATTR:
      case CSS_COUNTER_NAME:
 diff --git a/Source/WebCore/css/CSSPrimitiveValue.h b/Source/WebCore/css/CSSPrimitiveValue.h
-index 28ae4e8..d843c0d 100644
+index 9ccb1ee..6ab9e1f 100644
 --- a/Source/WebCore/css/CSSPrimitiveValue.h
 +++ b/Source/WebCore/css/CSSPrimitiveValue.h
 @@ -137,7 +137,11 @@ public:
@@ -492,7 +492,7 @@ index 28ae4e8..d843c0d 100644
  
      // This enum follows the CSSParser::Units enum augmented with UNIT_FREQUENCY for frequencies.
 diff --git a/Source/WebCore/css/CSSPropertyNames.in b/Source/WebCore/css/CSSPropertyNames.in
-index 358ee2c..dbb2697 100644
+index bc6f706..5c1674c 100644
 --- a/Source/WebCore/css/CSSPropertyNames.in
 +++ b/Source/WebCore/css/CSSPropertyNames.in
 @@ -135,6 +135,12 @@ min-width
@@ -508,43 +508,7 @@ index 358ee2c..dbb2697 100644
  opacity
  // Honor -webkit-opacity as a synonym for opacity. This was the only syntax that worked in Safari 1.1,
  // and may be in use on some websites and widgets.
-@@ -288,16 +294,27 @@ z-index
- -webkit-filter
- #endif
- -webkit-align-content
-+align-content = -webkit-align-content
- -webkit-align-items
-+align-items = -webkit-align-items
- -webkit-align-self
-+align-self = -webkit-align-self
- -webkit-flex
-+flex = -webkit-flex
- -webkit-flex-basis
-+flex-basis = -webkit-flex-basis
- -webkit-flex-direction
-+flex-direction = -webkit-flex-direction
- -webkit-flex-flow
-+flex-flow = -webkit-flex-flow
- -webkit-flex-grow
-+flex-grow = -webkit-flex-grow
- -webkit-flex-shrink
-+flex-shrink = -webkit-flex-shrink
- -webkit-flex-wrap
-+flex-wrap = -webkit-flex-wrap
- -webkit-justify-content
-+justify-content = -webkit-justify-content
- -webkit-font-size-delta
- -webkit-grid-auto-columns
- -webkit-grid-auto-rows
-@@ -364,6 +381,7 @@ z-index
- -webkit-min-logical-height
- -webkit-nbsp-mode
- -webkit-order
-+order = -webkit-order
- -webkit-padding-after
- -webkit-padding-before
- -webkit-padding-end
-@@ -448,3 +466,21 @@ user-zoom
+@@ -460,3 +466,21 @@ user-zoom
  #if defined(ENABLE_ACCELERATED_OVERFLOW_SCROLLING) && ENABLE_ACCELERATED_OVERFLOW_SCROLLING
  -webkit-overflow-scrolling
  #endif
@@ -567,10 +531,10 @@ index 358ee2c..dbb2697 100644
 +transition-timing-function = -webkit-transition-timing-function
 +#endif
 diff --git a/Source/WebCore/css/DeprecatedStyleBuilder.cpp b/Source/WebCore/css/DeprecatedStyleBuilder.cpp
-index 68bb3bc..5653814 100644
+index 66c5036..b533510 100644
 --- a/Source/WebCore/css/DeprecatedStyleBuilder.cpp
 +++ b/Source/WebCore/css/DeprecatedStyleBuilder.cpp
-@@ -1863,6 +1863,31 @@ public:
+@@ -1875,6 +1875,31 @@ public:
      }
  };
  
@@ -603,10 +567,10 @@ index 68bb3bc..5653814 100644
  private:
      static inline bool isValidDisplayValue(StyleResolver* styleResolver, EDisplay displayPropertyValue)
 diff --git a/Source/WebCore/css/StyleResolver.cpp b/Source/WebCore/css/StyleResolver.cpp
-index 2a09d30..2f119ae 100644
+index b3f0cd5..5187ea5 100644
 --- a/Source/WebCore/css/StyleResolver.cpp
 +++ b/Source/WebCore/css/StyleResolver.cpp
-@@ -3128,6 +3128,12 @@ void StyleResolver::applyProperty(CSSPropertyID id, CSSValue* value)
+@@ -3130,6 +3130,12 @@ void StyleResolver::applyProperty(CSSPropertyID id, CSSValue* value)
      case CSSPropertyOrientation:
      case CSSPropertyUserZoom:
  #endif
@@ -619,7 +583,7 @@ index 2a09d30..2f119ae 100644
          ASSERT_NOT_REACHED();
          return;
      default:
-@@ -3196,6 +3202,29 @@ PassRefPtr<StyleImage> StyleResolver::cursorOrPendingFromValue(CSSPropertyID pro
+@@ -3198,6 +3204,29 @@ PassRefPtr<StyleImage> StyleResolver::cursorOrPendingFromValue(CSSPropertyID pro
      return image.release();
  }
  
@@ -1883,10 +1847,10 @@ index e00ca41..9656d0d 100644
      const KURL& url() const;
      void setURL(const KURL& url);
 diff --git a/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp b/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
-index 6b9e575..3f865be 100644
+index a751222..a0deb44 100644
 --- a/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
 +++ b/Source/WebCore/platform/qt/MIMETypeRegistryQt.cpp
-@@ -56,9 +56,11 @@ static const ExtensionMap extensionMap[] = {
+@@ -57,9 +57,11 @@ static const ExtensionMap extensionMap[] = {
      { "wmlc", ".wmlc", "application/vnd.wap.wmlc" }, // Not in shared mimetype database
      { "xht", ".xht", "application/xhtml+xml" },
      { "xhtml", ".xhtml", "application/xhtml+xml" },
@@ -2016,7 +1980,7 @@ index 91ee28a..e6ccd1c 100644
      if (layer->isReflection()) {
          renderer = renderer->parent(); // The RenderReplica's parent is the object being reflected.
 diff --git a/Source/WebCore/rendering/RenderObject.cpp b/Source/WebCore/rendering/RenderObject.cpp
-index b937648..4ceda2b 100644
+index 655b791..8af09cd 100644
 --- a/Source/WebCore/rendering/RenderObject.cpp
 +++ b/Source/WebCore/rendering/RenderObject.cpp
 @@ -78,6 +78,10 @@
@@ -2355,7 +2319,7 @@ index f846fb4..cfad374 100644
          setIsXHTMLDocument(true); // controls if we replace entities or not.
      if (!m_parsingFragment)
 diff --git a/Tools/qmake/mkspecs/features/features.pri b/Tools/qmake/mkspecs/features/features.pri
-index 9bb659c..86c12ae 100644
+index 20ca916..69efc9e 100644
 --- a/Tools/qmake/mkspecs/features/features.pri
 +++ b/Tools/qmake/mkspecs/features/features.pri
 @@ -30,6 +30,7 @@ FEATURE_DEFAULTS = \
@@ -2374,6 +2338,3 @@ index 9bb659c..86c12ae 100644
      ENABLE_NETWORK_INFO=0 \
      ENABLE_NOSNIFF=0 \
      ENABLE_NOTIFICATIONS=1 \
--- 
-2.7.4
-

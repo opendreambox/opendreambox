@@ -1,7 +1,7 @@
-From 2996ff282297baa385ca9b5e6eb5b4c549f8477b Mon Sep 17 00:00:00 2001
+From b552fdb1817e8f94fa07e0482109427ee83254c0 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Tue, 17 May 2016 13:53:02 +0200
-Subject: [PATCH 3/5] always emit keypress event with keycode
+Subject: [PATCH] always emit keypress event with keycode
 
 Change-Id: Id015eee8aae55313507d38204313d0d872d0404e
 ---
@@ -60,6 +60,3 @@ index a0e67e4..a38834d 100644
      }
  }
  
--- 
-2.7.4
-

@@ -1,7 +1,7 @@
-From 426da57b92b4a05d3f8edc21a3f3605ef634b13d Mon Sep 17 00:00:00 2001
+From 5dfc9671d8acda689bf3944463cf0b4ecfc26638 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Tue, 17 May 2016 13:53:39 +0200
-Subject: [PATCH 4/5] - Enable NPAPI for Qt without X11
+Subject: [PATCH] - Enable NPAPI for Qt without X11
 
 Change-Id: Iad02f66e8698e0ee5db7b0e485f504c72fb3abd9
 ---
@@ -721,7 +721,7 @@ index de06a2f..4b54e30 100644
  
  #if USE(ACCELERATED_COMPOSITING)
 diff --git a/Tools/qmake/mkspecs/features/features.pri b/Tools/qmake/mkspecs/features/features.pri
-index 1978aa0..9bb659c 100644
+index ba18b35..20ca916 100644
 --- a/Tools/qmake/mkspecs/features/features.pri
 +++ b/Tools/qmake/mkspecs/features/features.pri
 @@ -86,7 +86,7 @@ FEATURE_DEFAULTS = \
@@ -733,6 +733,3 @@ index 1978aa0..9bb659c 100644
      ENABLE_NETWORK_INFO=0 \
      ENABLE_NOSNIFF=0 \
      ENABLE_NOTIFICATIONS=1 \
--- 
-2.7.4
-

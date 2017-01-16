@@ -1,4 +1,4 @@
-From ab3a50fe299a29f14281664cc5ede14c3c5267af Mon Sep 17 00:00:00 2001
+From c84cf00a2b6a3c11bf3ca308ccb0d2c8621da2b6 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@saftware.de>
 Date: Fri, 14 Oct 2016 13:46:31 +0200
 Subject: [PATCH] ANGLE: remove EGL+GLES2+KHR headers
