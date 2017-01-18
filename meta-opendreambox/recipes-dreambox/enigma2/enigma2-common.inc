@@ -24,6 +24,7 @@ RDEPENDS_${PN} += " \
         python-crypt \
         python-ctypes \
         python-fcntl \
+        python-ioctl \
         python-lang \
         python-monotonic \
         python-netaddr \
