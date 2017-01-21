@@ -4,8 +4,8 @@ SECTION = "devel/python"
 LICENSE = "Unlicense"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2"
-SRCREV = "94e08950e325c120be4f5be24eda9021cc222297"
-PV = "2016.10.25+git${SRCPV}"
+SRCREV = "1560baacc677c43c1007acfc89b8190f81a59684"
+PV = "2017.01.18+git${SRCPV}"
 
 SRC_URI = "git://github.com/rg3/youtube-dl.git"
 
@@ -13,8 +13,16 @@ S = "${WORKDIR}/git"
 
 inherit setuptools
 
+EXTRA_OEMAKE = "PYTHON=${PYTHON}"
+
+do_compile_prepend() {
+    oe_runmake lazy-extractors youtube-dl.bash-completion
+}
+
 do_install_append() {
     mv ${D}${datadir}/etc ${D}${sysconfdir}
+    install -m 0755 -d ${D}${sysconfdir}/bash_completion.d
+    install -m 0644 youtube-dl.bash-completion ${D}${sysconfdir}/bash_completion.d
 }
 
 RDEPENDS_${PN} = "python-unixadmin python-subprocess python-email python-argparse"
