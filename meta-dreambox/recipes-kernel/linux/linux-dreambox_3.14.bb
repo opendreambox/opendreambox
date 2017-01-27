@@ -11,6 +11,7 @@ SRC_URI = " \
     file://0001-dreambox-disable-kernel-wake-timer-support-.-it-is-h.patch \
     file://0001-dm900-update-kernel-config.patch \
     file://0001-dm900-workarounds-for-boot-and-shutdown-problems-wit.patch \
+    file://0001-cifs-Allow-directIO-read-write-during-cache-strict.patch \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
