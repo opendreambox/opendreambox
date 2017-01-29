@@ -1,0 +1,12 @@
+diff -Naur gst-plugins-base-1.6.4.orig/ext/alsa/gstalsaplugin.c gst-plugins-base-1.6.4/ext/alsa/gstalsaplugin.c
+--- gst-plugins-base-1.6.4.orig/ext/alsa/gstalsaplugin.c	2017-01-29 12:17:14.056942250 +0100
++++ gst-plugins-base-1.6.4/ext/alsa/gstalsaplugin.c	2017-01-29 12:12:00.456952556 +0100
+@@ -63,7 +63,7 @@
+   if (!gst_element_register (plugin, "alsasrc", GST_RANK_PRIMARY,
+           GST_TYPE_ALSA_SRC))
+     return FALSE;
+-  if (!gst_element_register (plugin, "alsasink", GST_RANK_PRIMARY,
++  if (!gst_element_register (plugin, "alsasink", GST_RANK_PRIMARY-1,
+           GST_TYPE_ALSA_SINK))
+     return FALSE;
+ 
