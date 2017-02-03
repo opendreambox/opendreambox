@@ -4,7 +4,7 @@ DEPENDS = "enigma2"
 
 GITHUB_PROJECT = "enigma2-plugin-stalkerclient"
 
-SRCREV = "${@opendreambox_srcrev('2fbc070eb69f15b7acf57cfc29cfbd8dc88a40d1', d)}"
+SRCREV = "${@opendreambox_srcrev('cbed49093ef4fecea7ccf6e593d3f500e3f5e99b', d)}"
 
 inherit autotools pkgconfig opendreambox-github
 
@@ -13,5 +13,8 @@ RDEPENDS_${PN} = " \
         python-twisted-web \
 "
 
+PACKAGES += "${PN}-meta"
+
 FILES_${PN} += "${libdir}/enigma2"
+FILES_${PN}-meta = "${datadir}/meta"
 
