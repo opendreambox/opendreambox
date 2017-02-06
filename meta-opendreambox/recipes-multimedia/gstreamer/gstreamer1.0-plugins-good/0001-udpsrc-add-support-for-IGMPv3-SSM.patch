@@ -1,0 +1,306 @@
+From 71db76f05b7aa2f45934c3bfee6a1ccaa262b763 Mon Sep 17 00:00:00 2001
+From: Julien Isorce <julien.isorce@gmail.com>
+Date: Fri, 13 Jan 2012 10:53:03 +0100
+Subject: [PATCH] udpsrc: add support for IGMPv3 SSM
+
+New property: 'multicast-source'
+Source Specific Muliticast RFC 4604
+
+Fixes https://bugzilla.gnome.org/show_bug.cgi?id=652711
+---
+ gst/udp/gstudpnetutils.c | 17 +++++++---
+ gst/udp/gstudpnetutils.h |  2 +-
+ gst/udp/gstudpsink.c     |  2 +-
+ gst/udp/gstudpsrc.c      | 82 ++++++++++++++++++++++++++++++++++++++----------
+ gst/udp/gstudpsrc.h      |  2 ++
+ 5 files changed, 82 insertions(+), 23 deletions(-)
+
+diff --git a/gst/udp/gstudpnetutils.c b/gst/udp/gstudpnetutils.c
+index b4dc5ef..c517a8e 100644
+--- a/gst/udp/gstudpnetutils.c
++++ b/gst/udp/gstudpnetutils.c
+@@ -29,7 +29,8 @@
+ #include "gstudpnetutils.h"
+ 
+ gboolean
+-gst_udp_parse_uri (const gchar * uristr, gchar ** host, guint16 * port)
++gst_udp_parse_uri (const gchar * uristr, gchar ** host, guint16 * port,
++    gchar ** source)
+ {
+   gchar *protocol, *location_start;
+   gchar *location, *location_end;
+@@ -49,13 +50,19 @@ gst_udp_parse_uri (const gchar * uristr, gchar ** host, guint16 * port)
+ 
+   GST_DEBUG ("got location '%s'", location_start);
+ 
+-  /* VLC compatibility, strip everything before the @ sign. VLC uses that as the
+-   * remote address. */
++  /* parse source ip for igmpv3 */
+   location = g_strstr_len (location_start, -1, "@");
+-  if (location == NULL)
++  if (location == NULL) {
++    if (source != NULL)
++      *source = NULL;
+     location = location_start;
+-  else
++  } else {
++    if (source != NULL) {
++      *source = g_strndup (location_start, location - location_start);
++      GST_DEBUG ("source ip address set to '%s'", *source);
++    }
+     location += 1;
++  }
+ 
+   if (location[0] == '[') {
+     GST_DEBUG ("parse IPV6 address '%s'", location);
+diff --git a/gst/udp/gstudpnetutils.h b/gst/udp/gstudpnetutils.h
+index a62be56..c5e26c9 100644
+--- a/gst/udp/gstudpnetutils.h
++++ b/gst/udp/gstudpnetutils.h
+@@ -23,7 +23,7 @@
+ #ifndef __GST_UDP_NET_UTILS_H__
+ #define __GST_UDP_NET_UTILS_H__
+ 
+-gboolean     gst_udp_parse_uri            (const gchar *uristr, gchar **host, guint16 *port);
++gboolean     gst_udp_parse_uri            (const gchar *uristr, gchar **host, guint16 *port, gchar **source);
+ 
+ #endif /* __GST_UDP_NET_UTILS_H__*/
+ 
+diff --git a/gst/udp/gstudpsink.c b/gst/udp/gstudpsink.c
+index 224d578..bfc9ee6 100644
+--- a/gst/udp/gstudpsink.c
++++ b/gst/udp/gstudpsink.c
+@@ -130,7 +130,7 @@ gst_udpsink_set_uri (GstUDPSink * sink, const gchar * uri, GError ** error)
+ 
+   gst_multiudpsink_remove (GST_MULTIUDPSINK (sink), sink->host, sink->port);
+ 
+-  if (!gst_udp_parse_uri (uri, &host, &port))
++  if (!gst_udp_parse_uri (uri, &host, &port, NULL))
+     goto wrong_uri;
+ 
+   g_free (sink->host);
+diff --git a/gst/udp/gstudpsrc.c b/gst/udp/gstudpsrc.c
+index da412ba..5f4c070 100644
+--- a/gst/udp/gstudpsrc.c
++++ b/gst/udp/gstudpsrc.c
+@@ -145,6 +145,7 @@ static GstStaticPadTemplate src_template = GST_STATIC_PAD_TEMPLATE ("src",
+ #define UDP_DEFAULT_PORT                5004
+ #define UDP_DEFAULT_MULTICAST_GROUP     "0.0.0.0"
+ #define UDP_DEFAULT_MULTICAST_IFACE     NULL
++#define UDP_DEFAULT_MULTICAST_SOURCE    NULL
+ #define UDP_DEFAULT_URI                 "udp://"UDP_DEFAULT_MULTICAST_GROUP":"G_STRINGIFY(UDP_DEFAULT_PORT)
+ #define UDP_DEFAULT_CAPS                NULL
+ #define UDP_DEFAULT_SOCKET              NULL
+@@ -164,6 +165,7 @@ enum
+   PROP_PORT,
+   PROP_MULTICAST_GROUP,
+   PROP_MULTICAST_IFACE,
++  PROP_MULTICAST_SOURCE,
+   PROP_URI,
+   PROP_CAPS,
+   PROP_SOCKET,
+@@ -237,18 +239,22 @@ gst_udpsrc_class_init (GstUDPSrcClass * klass)
+           "The network interface on which to join the multicast group",
+           UDP_DEFAULT_MULTICAST_IFACE,
+           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++  g_object_class_install_property (gobject_class, PROP_MULTICAST_SOURCE,
++      g_param_spec_string ("multicast-source", "Source Specific Multicast",
++          "The source to receive the stream from. (IGMPv3 SSM RFC 4604)",
++          UDP_DEFAULT_MULTICAST_SOURCE,
++          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+   g_object_class_install_property (gobject_class, PROP_URI,
+       g_param_spec_string ("uri", "URI",
+-          "URI in the form of udp://multicast_group:port", UDP_DEFAULT_URI,
+-          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++          "URI in the form of udp://multicast_group:port or udp://multicast_source@multicast_group:port",
++          UDP_DEFAULT_URI, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+   g_object_class_install_property (gobject_class, PROP_CAPS,
+-      g_param_spec_boxed ("caps", "Caps",
+-          "The caps of the source pad", GST_TYPE_CAPS,
+-          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++      g_param_spec_boxed ("caps", "Caps", "The caps of the source pad",
++          GST_TYPE_CAPS, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+   g_object_class_install_property (gobject_class, PROP_SOCKET,
+       g_param_spec_object ("socket", "Socket",
+-          "Socket to use for UDP reception. (NULL == allocate)",
+-          G_TYPE_SOCKET, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++          "Socket to use for UDP reception. (NULL == allocate)", G_TYPE_SOCKET,
++          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+   g_object_class_install_property (G_OBJECT_CLASS (klass), PROP_BUFFER_SIZE,
+       g_param_spec_int ("buffer-size", "Buffer Size",
+           "Size of the kernel receive buffer in bytes, 0=default", 0, G_MAXINT,
+@@ -318,6 +324,7 @@ gst_udpsrc_init (GstUDPSrc * udpsrc)
+       UDP_DEFAULT_PORT);
+ 
+   udpsrc->address = g_strdup (UDP_DEFAULT_MULTICAST_GROUP);
++  udpsrc->source = g_strdup (UDP_DEFAULT_MULTICAST_SOURCE);
+   udpsrc->port = UDP_DEFAULT_PORT;
+   udpsrc->socket = UDP_DEFAULT_SOCKET;
+   udpsrc->multi_iface = g_strdup (UDP_DEFAULT_MULTICAST_IFACE);
+@@ -330,6 +337,7 @@ gst_udpsrc_init (GstUDPSrc * udpsrc)
+   udpsrc->used_socket = UDP_DEFAULT_USED_SOCKET;
+   udpsrc->reuse = UDP_DEFAULT_REUSE;
+   udpsrc->loop = UDP_DEFAULT_LOOP;
++  udpsrc->src_addr = NULL;
+ 
+   /* configure basesrc to be a live source */
+   gst_base_src_set_live (GST_BASE_SRC (udpsrc), TRUE);
+@@ -693,8 +701,9 @@ gst_udpsrc_set_uri (GstUDPSrc * src, const gchar * uri, GError ** error)
+ {
+   gchar *address;
+   guint16 port;
++  gchar *source;
+ 
+-  if (!gst_udp_parse_uri (uri, &address, &port))
++  if (!gst_udp_parse_uri (uri, &address, &port, &source))
+     goto wrong_uri;
+ 
+   if (port == (guint16) - 1)
+@@ -703,6 +712,8 @@ gst_udpsrc_set_uri (GstUDPSrc * src, const gchar * uri, GError ** error)
+   g_free (src->address);
+   src->address = address;
+   src->port = port;
++  g_free (src->source);
++  src->source = source;
+ 
+   g_free (src->uri);
+   src->uri = g_strdup (uri);
+@@ -733,8 +744,13 @@ gst_udpsrc_set_property (GObject * object, guint prop_id, const GValue * value,
+     case PROP_PORT:
+       udpsrc->port = g_value_get_int (value);
+       g_free (udpsrc->uri);
+-      udpsrc->uri =
+-          g_strdup_printf ("udp://%s:%u", udpsrc->address, udpsrc->port);
++      if (udpsrc->source)
++        udpsrc->uri =
++            g_strdup_printf ("udp://%s@%s:%u", udpsrc->source, udpsrc->address,
++            udpsrc->port);
++      else
++        udpsrc->uri =
++            g_strdup_printf ("udp://%s:%u", udpsrc->address, udpsrc->port);
+       break;
+     case PROP_MULTICAST_GROUP:
+     case PROP_ADDRESS:
+@@ -748,8 +764,13 @@ gst_udpsrc_set_property (GObject * object, guint prop_id, const GValue * value,
+         udpsrc->address = g_strdup (UDP_DEFAULT_MULTICAST_GROUP);
+ 
+       g_free (udpsrc->uri);
+-      udpsrc->uri =
+-          g_strdup_printf ("udp://%s:%u", udpsrc->address, udpsrc->port);
++      if (udpsrc->source)
++        udpsrc->uri =
++            g_strdup_printf ("udp://%s@%s:%u", udpsrc->source, udpsrc->address,
++            udpsrc->port);
++      else
++        udpsrc->uri =
++            g_strdup_printf ("udp://%s:%u", udpsrc->address, udpsrc->port);
+       break;
+     }
+     case PROP_MULTICAST_IFACE:
+@@ -760,6 +781,17 @@ gst_udpsrc_set_property (GObject * object, guint prop_id, const GValue * value,
+       else
+         udpsrc->multi_iface = g_value_dup_string (value);
+       break;
++    case PROP_MULTICAST_SOURCE:
++    {
++      const gchar *source = g_value_get_string (value);
++
++      g_free (udpsrc->source);
++      if (source != NULL)
++        udpsrc->source = g_strdup (source);
++      else
++        udpsrc->source = g_strdup (UDP_DEFAULT_MULTICAST_SOURCE);
++      break;
++    }
+     case PROP_URI:
+       gst_udpsrc_set_uri (udpsrc, g_value_get_string (value), NULL);
+       break;
+@@ -844,6 +876,9 @@ gst_udpsrc_get_property (GObject * object, guint prop_id, GValue * value,
+     case PROP_MULTICAST_IFACE:
+       g_value_set_string (value, udpsrc->multi_iface);
+       break;
++    case PROP_MULTICAST_SOURCE:
++      g_value_set_string (value, udpsrc->source);
++      break;
+     case PROP_URI:
+       g_value_set_string (value, udpsrc->uri);
+       break;
+@@ -929,6 +964,7 @@ static gboolean
+ gst_udpsrc_open (GstUDPSrc * src)
+ {
+   GInetAddress *addr, *bind_addr;
++  GInetAddress *src_addr = NULL;
+   GSocketAddress *bind_saddr;
+   GError *err = NULL;
+ 
+@@ -943,6 +979,13 @@ gst_udpsrc_open (GstUDPSrc * src)
+     if (!addr)
+       goto name_resolve;
+ 
++    if (src->source) {
++      GST_DEBUG_OBJECT (src, "using source specific %s", src->source);
++      src_addr = gst_udpsrc_resolve (src, src->source);
++      if (!src_addr)
++        goto name_resolve;
++    }
++
+     if ((src->used_socket =
+             g_socket_new (g_inet_address_get_family (addr),
+                 G_SOCKET_TYPE_DATAGRAM, G_SOCKET_PROTOCOL_UDP, &err)) == NULL)
+@@ -957,6 +1000,11 @@ gst_udpsrc_open (GstUDPSrc * src)
+     src->addr =
+         G_INET_SOCKET_ADDRESS (g_inet_socket_address_new (addr, src->port));
+ 
++    if (src->src_addr)
++      g_object_unref (src->src_addr);
++    src->src_addr =
++        G_INET_SOCKET_ADDRESS (g_inet_socket_address_new (src_addr, src->port));
++
+     GST_DEBUG_OBJECT (src, "binding on port %d", src->port);
+ 
+     /* On Windows it's not possible to bind to a multicast address
+@@ -1109,9 +1157,10 @@ gst_udpsrc_open (GstUDPSrc * src)
+       g_inet_address_get_is_multicast (g_inet_socket_address_get_address
+           (src->addr))) {
+     GST_DEBUG_OBJECT (src, "joining multicast group %s", src->address);
+-    if (!g_socket_join_multicast_group (src->used_socket,
++    if (!g_socket_join_multicast_group_ssm (src->used_socket,
+             g_inet_socket_address_get_address (src->addr),
+-            FALSE, src->multi_iface, &err))
++            g_inet_socket_address_get_address (src->src_addr),
++            src->multi_iface, &err))
+       goto membership;
+   }
+ 
+@@ -1226,8 +1275,9 @@ gst_udpsrc_close (GstUDPSrc * src)
+ 
+       GST_DEBUG_OBJECT (src, "leaving multicast group %s", src->address);
+ 
+-      if (!g_socket_leave_multicast_group (src->used_socket,
+-              g_inet_socket_address_get_address (src->addr), FALSE,
++      if (!g_socket_leave_multicast_group_ssm (src->used_socket,
++              g_inet_socket_address_get_address (src->addr),
++              g_inet_socket_address_get_address (src->src_addr),
+               src->multi_iface, &err)) {
+         GST_ERROR_OBJECT (src, "Failed to leave multicast group: %s",
+             err->message);
+diff --git a/gst/udp/gstudpsrc.h b/gst/udp/gstudpsrc.h
+index a476483..f77d022 100644
+--- a/gst/udp/gstudpsrc.h
++++ b/gst/udp/gstudpsrc.h
+@@ -49,6 +49,7 @@ struct _GstUDPSrc {
+ 
+   /* properties */
+   gchar     *address;
++  gchar     *source;
+   gint       port;
+   gchar     *multi_iface;
+   gint       ttl;
+@@ -68,6 +69,7 @@ struct _GstUDPSrc {
+   /* our sockets */
+   GSocket   *used_socket;
+   GInetSocketAddress *addr;
++  GInetSocketAddress *src_addr;
+   gboolean   external_socket;
+ 
+   gboolean   made_cancel_fd;
