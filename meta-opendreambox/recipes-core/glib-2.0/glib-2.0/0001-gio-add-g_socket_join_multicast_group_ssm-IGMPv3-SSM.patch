@@ -1,0 +1,205 @@
+From 81bae57eb9b90721ebe1fa0f2c7e769e68e984cb Mon Sep 17 00:00:00 2001
+From: Julien Isorce <julien.isorce@gmail.com>
+Date: Thu, 27 Nov 2014 00:04:25 +0000
+Subject: [PATCH] gio: add g_socket_join_multicast_group_ssm (IGMPv3 SSM)
+
+It adds support for source-specific multicast IGMPv3.
+
+Allow receiving data only from a specified source when joining
+a multicast group.
+
+g_socket_join_multicast_group can be called multiple times
+to allow receiving data from more than one source.
+
+Only support IPv4 for now.
+
+Fixes https://bugzilla.gnome.org/show_bug.cgi?id=740791
+---
+ gio/gsocket.c | 125 +++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ gio/gsocket.h |  12 ++++++
+ 2 files changed, 122 insertions(+), 15 deletions(-)
+
+diff --git a/gio/gsocket.c b/gio/gsocket.c
+index 807a423..c0d565c 100644
+--- a/gio/gsocket.c
++++ b/gio/gsocket.c
+@@ -2011,7 +2011,7 @@ if_nametoindex (const gchar *iface)
+ static gboolean
+ g_socket_multicast_group_operation (GSocket       *socket,
+ 				    GInetAddress  *group,
+-                                    gboolean       source_specific,
++                                    GInetAddress  *source_specific,
+                                     const gchar   *iface,
+ 				    gboolean       join_group,
+ 				    GError       **error)
+@@ -2053,22 +2053,50 @@ g_socket_multicast_group_operation (GSocket       *socket,
+ #endif
+ 
+       if (source_specific)
+-	{
++        {
+ #ifdef IP_ADD_SOURCE_MEMBERSHIP
+-	  optname = join_group ? IP_ADD_SOURCE_MEMBERSHIP : IP_DROP_SOURCE_MEMBERSHIP;
++          struct ip_mreq_source mreq4source;
++          const guint8 *native_src_addr = g_inet_address_to_bytes (source_specific);
++
++          if (g_inet_address_get_family (source_specific) != G_SOCKET_FAMILY_IPV4)
++            {
++              g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                           join_group ?
++                           _("Error joining multicast group: %s") :
++                           _("Error leaving multicast group: %s"),
++                           _("No support for IPv6 source-specific"));
++              return FALSE;
++            }
++
++          memset (&mreq4source, 0, sizeof (mreq4source));
++          memcpy (&mreq4source.imr_multiaddr, native_addr, sizeof (struct in_addr));
++
++#ifdef HAVE_IP_MREQN
++          mreq4source.imr_interface.s_addr = mc_req.imr_address.s_addr;
+ #else
+-	  g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
+-		       join_group ?
+-		       _("Error joining multicast group: %s") :
+-		       _("Error leaving multicast group: %s"),
+-		       _("No support for source-specific multicast"));
+-	  return FALSE;
++          mreq4source.imr_interface.s_addr = mc_req.imr_interface.s_addr;
+ #endif
+-	}
++
++          memcpy (&mreq4source.imr_sourceaddr, native_src_addr, sizeof (struct in_addr));
++
++          optname = join_group ? IP_ADD_SOURCE_MEMBERSHIP : IP_DROP_SOURCE_MEMBERSHIP;
++          result = setsockopt (socket->priv->fd, IPPROTO_IP, optname,
++              &mreq4source, sizeof (mreq4source));
++#else
++          g_set_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                 join_group ?
++                 _("Error joining multicast group: %s") :
++                 _("Error leaving multicast group: %s"),
++                 _("No support for source-specific multicast"));
++          return FALSE;
++#endif
++        }
+       else
+-        optname = join_group ? IP_ADD_MEMBERSHIP : IP_DROP_MEMBERSHIP;
+-      result = setsockopt (socket->priv->fd, IPPROTO_IP, optname,
+-			   &mc_req, sizeof (mc_req));
++        {
++          optname = join_group ? IP_ADD_MEMBERSHIP : IP_DROP_MEMBERSHIP;
++          result = setsockopt (socket->priv->fd, IPPROTO_IP, optname,
++              &mc_req, sizeof (mc_req));
++        }
+     }
+   else if (g_inet_address_get_family (group) == G_SOCKET_FAMILY_IPV6)
+     {
+@@ -2136,7 +2164,7 @@ g_socket_join_multicast_group (GSocket       *socket,
+                                const gchar   *iface,
+ 			       GError       **error)
+ {
+-  return g_socket_multicast_group_operation (socket, group, source_specific, iface, TRUE, error);
++  return g_socket_multicast_group_operation (socket, group, NULL, iface, TRUE, error);
+ }
+ 
+ /**
+@@ -2165,7 +2193,74 @@ g_socket_leave_multicast_group (GSocket       *socket,
+                                 const gchar   *iface,
+ 				GError       **error)
+ {
+-  return g_socket_multicast_group_operation (socket, group, source_specific, iface, FALSE, error);
++  return g_socket_multicast_group_operation (socket, group, NULL, iface, FALSE, error);
++}
++
++/**
++ * g_socket_join_multicast_group_ssm:
++ * @socket: a #GSocket.
++ * @group: a #GInetAddress specifying the group address to join.
++ * @iface: (allow-none): Name of the interface to use, or %NULL
++ * @source_specific: (allow-none): a #GInetAddress specifying the
++ * source-specific multicast address.
++ * @error: #GError for error reporting, or %NULL to ignore.
++ *
++ * Registers @socket to receive multicast messages sent to @group.
++ * @socket must be a %G_SOCKET_TYPE_DATAGRAM socket, and must have
++ * been bound to an appropriate interface and port with
++ * g_socket_bind().
++ *
++ * If @iface is %NULL, the system will automatically pick an interface
++ * to bind to based on @group.
++ *
++ * If @source_specific is not NULL, use source-specific multicast as
++ * defined in RFC 4604 is used. Note that on older platforms this may
++ * fail with a %G_IO_ERROR_NOT_SUPPORTED error.
++ *
++ * Returns: %TRUE on success, %FALSE on error.
++ *
++ * Since: 2.44
++ */
++gboolean
++g_socket_join_multicast_group_ssm (GSocket       *socket,
++                                   GInetAddress  *group,
++                                   GInetAddress  *source_specific,
++                                   const gchar   *iface,
++                                   GError       **error)
++{
++  return g_socket_multicast_group_operation (socket, group, source_specific,
++                                             iface, TRUE, error);
++}
++
++/**
++ * g_socket_leave_multicast_group_ssm:
++ * @socket: a #GSocket.
++ * @group: a #GInetAddress specifying the group address to leave.
++ * @iface: (allow-none): Interface used
++ * @source_specific: (allow-none): a #GInetAddress specifying the
++ * source-specific multicast address.
++ * @error: #GError for error reporting, or %NULL to ignore.
++ *
++ * Removes @socket from the multicast group defined by @group, @iface,
++ * and @source_specific (which must all have the same values they had
++ * when you joined the group).
++ *
++ * @socket remains bound to its address and port, and can still receive
++ * unicast messages after calling this.
++ *
++ * Returns: %TRUE on success, %FALSE on error.
++ *
++ * Since: 2.44
++ */
++gboolean
++g_socket_leave_multicast_group_ssm (GSocket       *socket,
++                                    GInetAddress  *group,
++                                    GInetAddress  *source_specific,
++                                    const gchar   *iface,
++                                    GError       **error)
++{
++  return g_socket_multicast_group_operation (socket, group, source_specific,
++                                             iface, FALSE, error);
+ }
+ 
+ /**
+diff --git a/gio/gsocket.h b/gio/gsocket.h
+index dd866e7..5ba42c8 100644
+--- a/gio/gsocket.h
++++ b/gio/gsocket.h
+@@ -157,6 +157,18 @@ gboolean               g_socket_leave_multicast_group   (GSocket
+                                                          gboolean                 source_specific,
+                                                          const gchar             *iface,
+                                                          GError                 **error);
++GLIB_AVAILABLE_IN_2_44
++gboolean               g_socket_join_multicast_group_ssm   (GSocket                 *socket,
++                                                            GInetAddress            *group,
++                                                            GInetAddress            *source_specific,
++                                                            const gchar             *iface,
++                                                            GError                 **error);
++GLIB_AVAILABLE_IN_2_44
++gboolean               g_socket_leave_multicast_group_ssm   (GSocket                 *socket,
++                                                             GInetAddress            *group,
++                                                             GInetAddress            *source_specific,
++                                                             const gchar             *iface,
++                                                             GError                 **error);
+ GLIB_AVAILABLE_IN_ALL
+ gboolean               g_socket_connect                 (GSocket                 *socket,
+ 							 GSocketAddress          *address,
