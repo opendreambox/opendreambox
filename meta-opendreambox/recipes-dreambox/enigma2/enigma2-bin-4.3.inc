@@ -38,6 +38,7 @@ RDEPENDS_${PN} += " \
     libegl \
     libgles2 \
     qtbase-plugin-platforms-qoffscreen \
+    qtbase-plugin-sqldrivers-qsqlite \
 "
 
 require enigma2-common.inc
