@@ -1,0 +1,20 @@
+diff -Naur zvbi-0.2.35.org/src/packet.c zvbi-0.2.35/src/packet.c
+--- zvbi-0.2.35.org/src/packet.c	2016-11-08 22:45:48.000000000 +0100
++++ zvbi-0.2.35/src/packet.c	2017-02-15 23:55:00.139552225 +0100
+@@ -2271,9 +2271,13 @@
+ 			case PAGE_FUNCTION_GDRCS:
+ 			{
+ 				if (convert_drcs(vtp,
+-						 vtp->data.drcs.lop.raw[1]))
+-					_vbi_cache_put_page (vbi->ca,
+-							     vbi->cn, vtp);
++						 vtp->data.drcs.lop.raw[1])) {
++					cache_page *new_cp;
++
++					new_cp = _vbi_cache_put_page
++						(vbi->ca, vbi->cn, vtp);
++					cache_page_unref (new_cp);
++				}
+ 				break;
+ 			}
+ 
