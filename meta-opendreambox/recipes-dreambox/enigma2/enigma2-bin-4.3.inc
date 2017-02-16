@@ -26,6 +26,7 @@ DEPENDS += " \
     python \
     qtbase \
     qtwebkit \
+    qtsvg \
     sqlite3 \
     systemd \
     zlib \
