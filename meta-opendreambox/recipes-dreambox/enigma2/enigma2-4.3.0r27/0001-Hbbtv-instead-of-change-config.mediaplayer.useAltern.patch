@@ -1,0 +1,31 @@
+From 16a92c89d9b22e3d4abd6d99b991efc7c8cc99ae Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 16 Feb 2017 22:14:23 +0100
+Subject: [PATCH 1/2] Hbbtv: instead of change
+ config.mediaplayer.useAlternateUserAgent use eServiceReference::setUserAgent
+
+---
+ usr/lib/enigma2/python/Plugins/Extensions/HbbTV/HbbTV.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/HbbTV.py b/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/HbbTV.py
+index 22456c2..5e2be30 100644
+--- a/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/HbbTV.py
++++ b/usr/lib/enigma2/python/Plugins/Extensions/HbbTV/HbbTV.py
+@@ -233,10 +233,11 @@ class HbbTV(object):
+ 		self._showVideoIfAvail()
+ 
+ 	def _playStream(self, sref):
+-		config.mediaplayer.useAlternateUserAgent.value = False
+ 		self.eHbbtv.setStreamState(eHbbtv.STREAM_STATE_CONNECTING)
+ 		self.session.nav.stopService()
+-		self.session.nav.playService(eServiceReference(sref))
++		ref = eServiceReference(sref)
++		ref.setUserAgent(HBBTV_USER_AGENT)
++		self.session.nav.playService(ref)
+ 
+ 	def actionPause(self):
+ 		if self.__browser:
+-- 
+2.1.4
+

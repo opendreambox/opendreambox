@@ -4,3 +4,5 @@ SRC_URI[mips32el.md5sum] = "24369f4ae1479bc129e3208a996a56ab"
 SRC_URI[mips32el.sha256sum] = "9922f3f9425757795a7e36f420fef818e56a09e7e3a8828a75a9095e5fb40b1c"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " file://0001-Hbbtv-instead-of-change-config.mediaplayer.useAltern.patch"
