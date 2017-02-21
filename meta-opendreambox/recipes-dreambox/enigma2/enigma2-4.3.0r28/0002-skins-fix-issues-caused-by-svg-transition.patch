@@ -1,0 +1,95 @@
+From 97c471ec14ccc4cc2ead102120b621a9d8a9e355 Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Tue, 21 Feb 2017 19:10:39 +0100
+Subject: [PATCH 2/2] skins: fix issues caused by svg-transition
+
+---
+ usr/share/enigma2/Default-HD/skin.xml                            | 1 +
+ usr/share/enigma2/skin.xml                                       | 6 +++---
+ usr/share/enigma2/skin_default.xml                               | 4 ++--
+ usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py | 4 +++-
+ 4 files changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/usr/share/enigma2/Default-HD/skin.xml b/usr/share/enigma2/Default-HD/skin.xml
+index 532c853..95071a5 100644
+--- a/usr/share/enigma2/Default-HD/skin.xml
++++ b/usr/share/enigma2/Default-HD/skin.xml
+@@ -96,6 +96,7 @@
+ 	</fonts>
+ 	<!-- Components -->
+ 	<components>
++		<component type="MenuPixmap" itemHeight="180" itemWidth="180"/>
+ 		<component type="ConfigList" seperation="400" dividerHeight="1"/>
+ 		<component type="ChoiceList" itemHeight="30" textX="45" textY="0" textWidth="800" textHeight="30" pixmapWidth="35" pixmapHeight="30" fillerCount="200" />
+ 		<component type="FileList" itemHeight="25" textX="35" textY="0" textWidth="1000" textHeight="25" pixmapWidth="20" pixmapHeight="20" />
+diff --git a/usr/share/enigma2/skin.xml b/usr/share/enigma2/skin.xml
+index 0242f20..d4b1b0e 100644
+--- a/usr/share/enigma2/skin.xml
++++ b/usr/share/enigma2/skin.xml
+@@ -417,7 +417,7 @@
+ 	<!-- DVD Player -->
+ 	<screen name="DVDPlayer" position="0,540" size="1280,150" backgroundColor="transparent" flags="wfNoBorder">
+ 		<ePixmap position="0,0" pixmap="skin_default/infobar.png" size="1280,150" zPosition="-1" />
+-		<ePixmap pixmap="menu/dvd_player.png" position="40,60" zPosition="1" size="70,70" alphatest="on"/>
++		<ePixmap pixmap="menu/dvd_player.svg" position="40,60" zPosition="1" size="70,70" alphatest="on"/>
+ 		<ePixmap pixmap="skin_default/icons/icon_event.png" position="120,17" size="20,13" alphatest="on" />
+ 		<widget source="session.CurrentService" render="Label" position="150,9" size="600,27" font="Regular;24" valign="top" noWrap="1" backgroundColor="#263c59" transparent="1">
+ 			<convert type="ServiceName">Name</convert>
+@@ -445,7 +445,7 @@
+ 	</screen>
+ 	<!-- Movieplayer infobar -->
+ 	<screen name="MoviePlayer" position="0,540" size="1280,150" backgroundColor="transparent" flags="wfNoBorder">
+-		<ePixmap pixmap="menu/mediacenter.png" position="40,60" zPosition="1" size="70,70" alphatest="on"/>
++		<ePixmap pixmap="menu/mediacenter.svg" position="40,60" zPosition="1" size="70,70" alphatest="on"/>
+ 		<!-- Background -->
+ 		<ePixmap position="0,0" pixmap="skin_default/infobar.png" size="1280,150" zPosition="-1" />
+ 		<!-- Servicename -->
+@@ -918,7 +918,7 @@
+ 		</widget>
+ 	</screen>
+ 	<screen name="MyTubePlayer" position="0,540" size="1280,150" backgroundColor="transparent" flags="wfNoBorder">
+-		<ePixmap pixmap="menu/mediacenter.png" position="40,60" zPosition="1" size="70,70" alphatest="on"/>
++		<ePixmap pixmap="menu/mediacenter.svg" position="40,60" zPosition="1" size="70,70" alphatest="on"/>
+ 		<ePixmap position="0,0" pixmap="skin_default/infobar.png" size="1280,150" zPosition="-1" />
+ 		<ePixmap pixmap="skin_default/icons/icon_event.png" position="120,17" size="20,13" alphatest="on" />
+ 		<widget source="session.CurrentService" render="Label" position="150,9" size="760,27" font="Regular;24" valign="top" noWrap="1" backgroundColor="#263c59" transparent="1">
+diff --git a/usr/share/enigma2/skin_default.xml b/usr/share/enigma2/skin_default.xml
+index 4b05833..1b1d223 100644
+--- a/usr/share/enigma2/skin_default.xml
++++ b/usr/share/enigma2/skin_default.xml
+@@ -68,7 +68,7 @@
+ 	<!-- About screen -->
+ 	<screen name="About" position="center,120" size="820,520" title="About">
+ 		<ePixmap position="10,5" size="300,500" pixmap="skin_default/menu.png" zPosition="-1"/>
+-		<ePixmap pixmap="menu/info_screen.png" position="65,50" size="192,192" alphatest="on" />
++		<ePixmap pixmap="menu/info_screen.svg" position="65,50" size="192,192" alphatest="on" />
+ 		<ePixmap pixmap="skin_default/buttons/green.png" position="45,370" size="230,40" alphatest="on"/>
+ 		<eLabel font="Regular;20" position="45,370" size="230,40" text="Translation" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" shadowColor="black" shadowOffset="-2,-2"/>
+ 		<widget source="Model" render="Label" position="320,10" size="490,26" font="Regular;24" foregroundColor="grey">
+@@ -615,7 +615,7 @@ self.instance.move(ePoint((1280-wsizex)/2,(720-wsizey)/2))
+ 	<!-- Language selection -->
+ 	<screen name="LanguageSelection" position="center,120" size="720,520" title="Language selection">
+ 		<ePixmap position="10,5" size="300,500" pixmap="skin_default/menu.png" zPosition="-1"/>
+-		<ePixmap pixmap="menu/language_setup.png" position="65,50" size="192,192" alphatest="on" />
++		<ePixmap pixmap="menu/language_setup.svg" position="65,50" size="192,192" alphatest="on" />
+ 		<widget source="languages" render="Listbox" position="320,10" size="390,500" enableWrapAround="1" scrollbarMode="showOnDemand">
+ 			<convert type="TemplatedMultiContent">
+ 				{"template": [
+diff --git a/usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py b/usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py
+index 2b16c57..85ac49c 100644
+--- a/usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py
++++ b/usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py
+@@ -187,7 +187,9 @@ def filescan_open(type, filelist, session, **kwargs):
+ 	session.open(MainMenu, type, playlist)
+ 
+ def getIcon(key):
+-	filename = resolveFilename(SCOPE_CURRENT_SKIN, "menu/mc_%s.png" %key)
++	filename = resolveFilename(SCOPE_CURRENT_SKIN, "menu/mc_%s.svg" %key)
++	if not pathExists(filename):
++		filename = resolveFilename(SCOPE_CURRENT_SKIN, "menu/mc_%s.png" %key)
+ 	if pathExists(filename):
+ 		return filename
+ 	else:
+-- 
+2.1.4
+
