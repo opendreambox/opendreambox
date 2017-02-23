@@ -1,0 +1,29 @@
+From d76820eb7cccec4e501cc4bb22626fafff622b8e Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 22 Feb 2017 16:18:36 +0100
+Subject: [PATCH] LinuxInputDevices: Add KEY_EXIT and KEY_OK
+
+---
+ xbmc/input/linux/LinuxInputDevices.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
+index 3875138..1d546bf 100644
+--- a/xbmc/input/linux/LinuxInputDevices.cpp
++++ b/xbmc/input/linux/LinuxInputDevices.cpp
+@@ -248,6 +248,7 @@ KeyMap keyMap[] = {
+   { KEY_REWIND        , XBMCK_REWIND      },
+   { KEY_PHONE         , XBMCK_PHONE       },
+   { KEY_REFRESH       , XBMCK_SHUFFLE     },
++  { KEY_EXIT          , XBMCK_ESCAPE      },
+   { KEY_SCROLLUP      , XBMCK_PAGEUP      },
+   { KEY_SCROLLDOWN    , XBMCK_PAGEDOWN    },
+   { KEY_PLAY          , XBMCK_PLAY        },
+@@ -267,6 +268,7 @@ KeyMap keyMap[] = {
+   { KEY_MAIL          , XBMCK_LAUNCH_MAIL },
+   { KEY_SEARCH        , XBMCK_BROWSER_SEARCH},
+   { KEY_FILE          , XBMCK_LAUNCH_FILE_BROWSER},
++  { KEY_OK            , XBMCK_RETURN      },
+   { KEY_SELECT        , XBMCK_RETURN      },
+   { KEY_CONFIG        , XBMCK_CONFIG      },
+   { KEY_EPG           , XBMCK_EPG         },
