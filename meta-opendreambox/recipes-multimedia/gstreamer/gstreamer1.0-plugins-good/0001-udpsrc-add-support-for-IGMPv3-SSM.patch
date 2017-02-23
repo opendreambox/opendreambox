@@ -1,4 +1,4 @@
-From 71db76f05b7aa2f45934c3bfee6a1ccaa262b763 Mon Sep 17 00:00:00 2001
+From 2332c22ebf42c4c52e16b3ea5c702de2eb202429 Mon Sep 17 00:00:00 2001
 From: Julien Isorce <julien.isorce@gmail.com>
 Date: Fri, 13 Jan 2012 10:53:03 +0100
 Subject: [PATCH] udpsrc: add support for IGMPv3 SSM
@@ -16,7 +16,7 @@ Fixes https://bugzilla.gnome.org/show_bug.cgi?id=652711
  5 files changed, 82 insertions(+), 23 deletions(-)
 
 diff --git a/gst/udp/gstudpnetutils.c b/gst/udp/gstudpnetutils.c
-index b4dc5ef..c517a8e 100644
+index b4dc5ef..22b1378 100644
 --- a/gst/udp/gstudpnetutils.c
 +++ b/gst/udp/gstudpnetutils.c
 @@ -29,7 +29,8 @@
@@ -44,7 +44,7 @@ index b4dc5ef..c517a8e 100644
      location = location_start;
 -  else
 +  } else {
-+    if (source != NULL) {
++    if (source != NULL && location - location_start > 0) {
 +      *source = g_strndup (location_start, location - location_start);
 +      GST_DEBUG ("source ip address set to '%s'", *source);
 +    }
