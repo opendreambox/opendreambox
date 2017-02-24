@@ -1,0 +1,250 @@
+From 889d4a938c1b7156edd2fa0d686e136c039d6d80 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Fri, 24 Feb 2017 21:58:04 +0100
+Subject: [PATCH] Port to Dreambox
+
+---
+ src/main.cpp                  |   4 ++
+ src/native-state-dreambox.cpp | 108 ++++++++++++++++++++++++++++++++++++++++++
+ src/native-state-dreambox.h   |  45 ++++++++++++++++++
+ src/wscript_build             |   9 ++--
+ wscript                       |   3 +-
+ 5 files changed, 165 insertions(+), 4 deletions(-)
+ create mode 100644 src/native-state-dreambox.cpp
+ create mode 100644 src/native-state-dreambox.h
+
+diff --git a/src/main.cpp b/src/main.cpp
+index b84b827..22705c2 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -42,6 +42,8 @@
+ #include "native-state-mir.h"
+ #elif GLMARK2_USE_WAYLAND
+ #include "native-state-wayland.h"
++#elif GLMARK2_USE_DREAMBOX
++#include "native-state-dreambox.h"
+ #endif
+ 
+ #if GLMARK2_USE_EGL
+@@ -168,6 +170,8 @@ main(int argc, char *argv[])
+     NativeStateMir native_state;
+ #elif GLMARK2_USE_WAYLAND
+     NativeStateWayland native_state;
++#elif GLMARK2_USE_DREAMBOX
++    NativeStateDreambox native_state;
+ #endif
+ 
+ #if GLMARK2_USE_EGL
+diff --git a/src/native-state-dreambox.cpp b/src/native-state-dreambox.cpp
+new file mode 100644
+index 0000000..9d523d0
+--- /dev/null
++++ b/src/native-state-dreambox.cpp
+@@ -0,0 +1,108 @@
++/*
++ * Copyright © 2010-2011 Linaro Limited
++ * Copyright © 2013 Canonical Ltd
++ * Copyright © 2017 Dream Property GmbH
++ *
++ * This file is part of the glmark2 OpenGL (ES) 2.0 benchmark.
++ *
++ * glmark2 is free software: you can redistribute it and/or modify it under the
++ * terms of the GNU General Public License as published by the Free Software
++ * Foundation, either version 3 of the License, or (at your option) any later
++ * version.
++ *
++ * glmark2 is distributed in the hope that it will be useful, but WITHOUT ANY
++ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
++ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
++ * details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * glmark2.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *  Alexandros Frantzis
++ *  Andreas Oberritter
++ */
++
++#include <EGL/egl.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
++#include <linux/fb.h>
++
++#include "native-state-dreambox.h"
++#include "log.h"
++
++/******************
++ * Public methods *
++ ******************/
++
++bool NativeStateDreambox::init_display()
++{
++	return true;
++}
++
++void *NativeStateDreambox::display()
++{
++	return EGL_DEFAULT_DISPLAY;
++}
++
++bool NativeStateDreambox::create_window(WindowProperties const& properties)
++{
++	struct fb_var_screeninfo var;
++	const char fbdev[] = "/dev/fb0";
++	int fd;
++
++	fd = open(fbdev, O_RDWR);
++	if (fd < 0) {
++		perror(fbdev);
++		return false;
++	}
++
++	if (ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0) {
++		perror("FBIOGET_VSCREENINFO");
++		close(fd);
++		return false;
++	}
++
++	if (properties.width != var.xres ||
++	    properties.height != var.yres) {
++		var.xres = properties.width;
++		var.yres = properties.height;
++
++		if (ioctl(fd, FBIOPUT_VSCREENINFO, &var) < 0) {
++			perror("FBIOPUT_VSCREENINFO");
++			close(fd);
++			return false;
++		}
++
++		if (ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0) {
++			perror("FBIOGET_VSCREENINFO");
++			close(fd);
++			return false;
++		}
++	}
++
++	close(fd);
++
++	m_properties = properties;
++	m_properties.width = var.xres;
++	m_properties.height = var.yres;
++
++	return true;
++}
++
++void *NativeStateDreambox::window(WindowProperties &properties)
++{
++	properties = m_properties;
++	return NULL;
++}
++
++void NativeStateDreambox::visible(bool visible)
++{
++}
++
++bool NativeStateDreambox::should_quit()
++{
++	return false;
++}
+diff --git a/src/native-state-dreambox.h b/src/native-state-dreambox.h
+new file mode 100644
+index 0000000..7b8949b
+--- /dev/null
++++ b/src/native-state-dreambox.h
+@@ -0,0 +1,45 @@
++/*
++ * Copyright © 2010-2011 Linaro Limited
++ * Copyright © 2013 Canonical Ltd
++ * Copyright © 2017 Dream Property GmbH
++ *
++ * This file is part of the glmark2 OpenGL (ES) 2.0 benchmark.
++ *
++ * glmark2 is free software: you can redistribute it and/or modify it under the
++ * terms of the GNU General Public License as published by the Free Software
++ * Foundation, either version 3 of the License, or (at your option) any later
++ * version.
++ *
++ * glmark2 is distributed in the hope that it will be useful, but WITHOUT ANY
++ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
++ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
++ * details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * glmark2.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *  Alexandros Frantzis
++ *  Andreas Oberritter
++ */
++#ifndef GLMARK2_NATIVE_STATE_DREAMBOX_H_
++#define GLMARK2_NATIVE_STATE_DREAMBOX_H_
++
++#include "native-state.h"
++
++class NativeStateDreambox : public NativeState
++{
++public:
++    bool init_display();
++    void* display();
++    bool create_window(WindowProperties const& properties);
++    void* window(WindowProperties& properties);
++    void visible(bool v);
++    bool should_quit();
++    void flip() { }
++
++private:
++    WindowProperties m_properties;
++};
++
++#endif /* GLMARK2_NATIVE_STATE_DREAMBOX_H_ */
+diff --git a/src/wscript_build b/src/wscript_build
+index ed0f6ea..5361f0e 100644
+--- a/src/wscript_build
++++ b/src/wscript_build
+@@ -20,7 +20,8 @@ flavor_sources = {
+   'mir-gl' : common_flavor_sources + ['native-state-mir.cpp', 'gl-state-egl.cpp'],
+   'mir-glesv2' : common_flavor_sources + ['native-state-mir.cpp', 'gl-state-egl.cpp'],
+   'wayland-gl' : common_flavor_sources + ['native-state-wayland.cpp', 'gl-state-egl.cpp'],
+-  'wayland-glesv2' : common_flavor_sources + ['native-state-wayland.cpp', 'gl-state-egl.cpp']
++  'wayland-glesv2' : common_flavor_sources + ['native-state-wayland.cpp', 'gl-state-egl.cpp'],
++  'dreambox-glesv2' : common_flavor_sources + ['native-state-dreambox.cpp', 'gl-state-egl.cpp']
+ }
+ flavor_uselibs = {
+   'x11-gl' : ['x11', 'gl', 'matrix-gl', 'common-gl'],
+@@ -30,7 +31,8 @@ flavor_uselibs = {
+   'mir-gl' : ['mirclient', 'egl', 'gl', 'matrix-gl', 'common-gl'],
+   'mir-glesv2' : ['mirclient', 'egl', 'glesv2', 'matrix-glesv2', 'common-glesv2'],
+   'wayland-gl' : ['wayland-client', 'wayland-egl', 'egl', 'gl', 'matrix-gl', 'common-gl'],
+-  'wayland-glesv2' : ['wayland-client', 'wayland-egl', 'egl', 'glesv2', 'matrix-glesv2', 'common-glesv2']
++  'wayland-glesv2' : ['wayland-client', 'wayland-egl', 'egl', 'glesv2', 'matrix-glesv2', 'common-glesv2'],
++  'dreambox-glesv2' : ['egl', 'glesv2', 'matrix-glesv2', 'common-glesv2']
+ }
+ flavor_defines = {
+   'x11-gl' : ['GLMARK2_USE_X11', 'GLMARK2_USE_GL', 'GLMARK2_USE_GLX'],
+@@ -40,7 +42,8 @@ flavor_defines = {
+   'mir-gl' : ['GLMARK2_USE_MIR', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
+   'mir-glesv2' : ['GLMARK2_USE_MIR', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
+   'wayland-gl' : ['GLMARK2_USE_WAYLAND', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
+-  'wayland-glesv2' : ['GLMARK2_USE_WAYLAND', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL']
++  'wayland-glesv2' : ['GLMARK2_USE_WAYLAND', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
++  'dreambox-glesv2' : ['GLMARK2_USE_DREAMBOX', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL']
+ }
+ 
+ includes = ['.', 'scene-ideas', 'scene-terrain']
+diff --git a/wscript b/wscript
+index f9f2a17..b5347bb 100644
+--- a/wscript
++++ b/wscript
+@@ -15,7 +15,8 @@ FLAVORS = {
+     'mir-gl' : 'glmark2-mir',
+     'mir-glesv2' : 'glmark2-es2-mir',
+     'wayland-gl' : 'glmark2-wayland',
+-    'wayland-glesv2' : 'glmark2-es2-wayland'
++    'wayland-glesv2' : 'glmark2-es2-wayland',
++    'dreambox-glesv2' : 'glmark2-es2-dreambox'
+ }
+ FLAVORS_STR = ", ".join(FLAVORS.keys())
+ 
