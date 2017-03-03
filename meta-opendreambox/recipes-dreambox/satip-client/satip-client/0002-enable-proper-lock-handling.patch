@@ -1,16 +1,17 @@
-From e7a35462705e3dc51500df99fc618d582e712813 Mon Sep 17 00:00:00 2001
+From 1234b4e8ec91af2be401e226ed5c228ff1f9058a Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Thu, 9 Feb 2017 21:53:52 +0100
 Subject: [PATCH 2/2] enable proper lock handling
 
 ---
- rtp.cpp    |  2 +-
- vtuner.cpp | 18 ++++++++++--------
+ rtp.cpp    | 13 +++++++++----
+ rtp.h      |  1 +
+ vtuner.cpp | 22 ++++++++++++++--------
  vtuner.h   | 12 +++++++++++-
- 3 files changed, 22 insertions(+), 10 deletions(-)
+ 4 files changed, 35 insertions(+), 13 deletions(-)
 
 diff --git a/rtp.cpp b/rtp.cpp
-index a80f1ae..5b2fe75 100644
+index 95cd3d4..c4d00c0 100644
 --- a/rtp.cpp
 +++ b/rtp.cpp
 @@ -43,7 +43,7 @@ satipRTP::satipRTP(int vtuner_fd)
@@ -22,8 +23,45 @@ index a80f1ae..5b2fe75 100644
  						m_signalStrength(0),
  						m_signalQuality(0),
  						m_openok(false)
+@@ -67,6 +67,13 @@ satipRTP::~satipRTP()
+ 		close(m_rtp_socket);
+ }
+ 
++void satipRTP::unset()
++{
++	m_signalStrength = 0;
++	m_hasLock = false;
++	m_signalQuality = 0;
++}
++
+ int satipRTP::openRTP()
+ {
+ 	int rtp_sock;
+@@ -154,9 +161,7 @@ void satipRTP::parseRtcpAppPayload(char *buffer)
+ 		quality (Signal quality) : Numerical value between 0 and 15
+ 	*/
+ 
+-	m_signalStrength = 0;
+-	m_hasLock = false;
+-	m_signalQuality = 0;
++	unset();
+ 
+ 	char *strp = strstr(buffer, ";tuner=");
+ 	if (strp)
+diff --git a/rtp.h b/rtp.h
+index 7114bc4..8995b38 100644
+--- a/rtp.h
++++ b/rtp.h
+@@ -48,6 +48,7 @@ class satipRTP
+ public:
+ 	satipRTP(int vtuner_fd);
+ 	virtual ~satipRTP();
++	void unset();
+ 	int get_rtp_port() { return m_rtp_port; }
+ 	int get_rtp_socket() { return m_rtp_socket; }
+ 	int get_rtcp_port() { return m_rtcp_port; }
 diff --git a/vtuner.cpp b/vtuner.cpp
-index 1a21288..6ee70c4 100644
+index 5291cb6..b1fcb52 100644
 --- a/vtuner.cpp
 +++ b/vtuner.cpp
 @@ -497,14 +497,10 @@ void satipVtuner::vtunerEvent()
@@ -45,11 +83,15 @@ index 1a21288..6ee70c4 100644
  			break;
  		case MSG_READ_BER:
  			//INFO(MSG_MAIN,"MSG_READ_BER\n");
-@@ -559,6 +555,12 @@ void satipVtuner::vtunerEvent()
+@@ -559,6 +555,16 @@ void satipVtuner::vtunerEvent()
  			DEBUG(MSG_MAIN,"MSG_GET_PROPERTY\n");
  			break;
  
 +		case MSG_GET_TUNE_SETTINGS:
++			DEBUG(MSG_MAIN,"MSG_GET_TUNE_SETTINGS\n");
++			if (m_satip_rtp) {
++				m_satip_rtp->unset();
++			}
 +			msg.body.tune_settings.min_delay_ms = 50; // let linux-tv api ask every 50ms for locked/unlocked state...
 +			msg.body.tune_settings.step_size = 0;
 +			msg.body.tune_settings.max_drift = 0;
