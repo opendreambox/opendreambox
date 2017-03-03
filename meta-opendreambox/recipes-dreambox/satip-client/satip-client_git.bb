@@ -6,6 +6,7 @@ GITHUB_ORGANIZATION = "oe-alliance"
 GITHUB_BRANCH = "next"
 SRC_URI += " \
     file://satip-client.service \
+    file://0001-add-some-pseudo-snr-calculation.patch \
     file://0002-enable-proper-lock-handling.patch \
 "
 
