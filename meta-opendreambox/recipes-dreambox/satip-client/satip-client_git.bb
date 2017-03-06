@@ -8,6 +8,7 @@ SRC_URI += " \
     file://satip-client.service \
     file://0001-add-some-pseudo-snr-calculation.patch \
     file://0002-enable-proper-lock-handling.patch \
+    file://0003-vtuner-send-tune-status-messages.patch \
 "
 
 SRCREV = "2dca499073b1f666cb340ff4c83cce1a0a9d988c"
