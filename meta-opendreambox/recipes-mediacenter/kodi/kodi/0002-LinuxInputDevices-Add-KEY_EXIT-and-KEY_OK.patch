@@ -1,4 +1,4 @@
-From d76820eb7cccec4e501cc4bb22626fafff622b8e Mon Sep 17 00:00:00 2001
+From b83d0d40ebf551521d41facd7ed37f746acdfc78 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 22 Feb 2017 16:18:36 +0100
 Subject: [PATCH] LinuxInputDevices: Add KEY_EXIT and KEY_OK

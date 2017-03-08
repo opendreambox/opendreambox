@@ -1,7 +1,7 @@
-From d9732a897f6e4c85c6f8f8ee77429b27a6cd0538 Mon Sep 17 00:00:00 2001
+From 799250e65c12b957db0014d6602fbb2f8644d149 Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Thu, 16 Feb 2017 21:29:11 +0100
-Subject: [PATCH] EGL: Port to Dreambox DM900
+Subject: [PATCH] EGL: Port to Dreambox
 
 ---
  xbmc/utils/DreamboxUtils.cpp                 | 102 ++++++++++++++
@@ -169,7 +169,7 @@ index 7ec1b21..71d88d7 100644
  ifeq (@USE_LIBAMCODEC@,1)
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
 new file mode 100644
-index 0000000..5febe08
+index 0000000..9ffc351
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
 @@ -0,0 +1,191 @@
@@ -208,7 +208,7 @@ index 0000000..5febe08
 +
 +CEGLNativeTypeDreambox::CEGLNativeTypeDreambox()
 +{
-+	m_nativeWindow = (XBNativeWindowType)0L;
++  m_nativeWindow = (XBNativeWindowType)0L;
 +}
 +
 +CEGLNativeTypeDreambox::~CEGLNativeTypeDreambox()
@@ -219,7 +219,7 @@ index 0000000..5febe08
 +{
 +  std::string name;
 +  SysfsUtils::GetString("/proc/stb/info/model", name);
-+  return name == "dm900";
++  return name == "dm820" || name == "dm900" || name == "dm7080";
 +}
 +
 +void CEGLNativeTypeDreambox::Initialize()
