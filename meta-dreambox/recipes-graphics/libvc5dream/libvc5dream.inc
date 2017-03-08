@@ -1,9 +1,13 @@
-SUMMARY = "Dreambox EGL and GLES2 libraries (VC5)"
+SUMMARY = "Dreambox EGL and GLES2 libraries"
 LICENSE = "CLOSED"
-DEPENDS = "libvc5driver"
+DEPENDS = "${LIBEGL}"
 PROVIDES = "virtual/egl virtual/libgles2"
 
-RDEPENDS_${PN} = "libvc5driver"
+LIBEGL = ""
+LIBEGL_bcm7435 = "libv3ddriver"
+LIBEGL_bcm7439 = "libvc5driver"
+
+RDEPENDS_${PN} = "${LIBEGL}"
 
 RPROVIDES_${PN} = "libegl libegl1 libgles2 libglesv2-2"
 RPROVIDES_${PN}-dev = "libegl-dev libgles2-dev"
