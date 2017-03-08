@@ -1,0 +1,33 @@
+From 5832bfba7bb91d49e42b98c90e315457a4e59d32 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Wed, 8 Mar 2017 18:34:34 +0100
+Subject: [PATCH] build: fix presets for mips, link libatomic
+
+---
+ configure.ac | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 1a60bde..5026dda 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -652,9 +652,6 @@ case $host in
+      CORE_SYSTEM_NAME=linux
+      ARCH="mips"
+      use_arch="mips"
+-     use_gles=no
+-     use_gl=yes
+-     use_sdl=yes
+      USE_STATIC_FFMPEG=1
+      ;;
+   *)
+@@ -826,6 +823,9 @@ elif test "$use_arch" = "arm"; then
+       CXXFLAGS="$CXXFLAGS -mfpu=neon -mvectorize-with-neon-quad"
+     fi
+   fi
++elif test "$use_arch" = "mips"; then
++  # avoid undefined reference to __atomic_load_8
++  LIBS="$LIBS -latomic"
+ fi
+ 
+ use_sse4=no
