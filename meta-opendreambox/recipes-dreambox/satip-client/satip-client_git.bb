@@ -2,16 +2,12 @@ SUMMARY = "satip client using vtuner"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2c1c00f9d3ed9e24fa69b932b7e7aff2"
 
-GITHUB_ORGANIZATION = "oe-alliance"
 GITHUB_BRANCH = "next"
 SRC_URI += " \
     file://satip-client.service \
-    file://0001-add-some-pseudo-snr-calculation.patch \
-    file://0002-enable-proper-lock-handling.patch \
-    file://0003-vtuner-send-tune-status-messages.patch \
 "
 
-SRCREV = "2dca499073b1f666cb340ff4c83cce1a0a9d988c"
+SRCREV = "de95c81d97676b849871935a403136abc3fc2a73"
 
 inherit autotools pkgconfig opendreambox-github systemd
 
