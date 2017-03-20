@@ -14,4 +14,4 @@ EXTRA_OECONF = "--disable-oggtest \
 		--with-ogg=${STAGING_LIBDIR} \
 		--with-vorbis=${STAGING_LIBDIR}"
 
-inherit autotools
+inherit autotools pkgconfig
