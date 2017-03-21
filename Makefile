@@ -83,7 +83,7 @@ CONFFILES_AUTO = \
 	$(TOPDIR)/conf/local.conf
 
 CONFFILES_MANUAL = \
-	.cross-compile-$(MACHINE).env
+	$(wildcard .cross-compile-$(MACHINE)*.env)
 
 CONFDEPS = \
 	$(DEPDIR)/.bitbake.env.$(BITBAKE_ENV_HASH) \
@@ -358,10 +358,10 @@ CROSS_COMPILE_ENV_HASH := $(call hash, \
 	'CROSS_COMPILE_ENV_BLACKLIST = "$(CROSS_COMPILE_ENV_BLACKLIST)"' \
 	)
 
-.cross-compile-$(MACHINE).env: $(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH) $(CONFFILES_BITBAKE)
+.cross-compile-$(MACHINE)-%.env: $(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH) $(CONFFILES_BITBAKE)
 	@test -d $(TOPDIR) || (echo 'The directory "$(TOPDIR)" does not exist. Is "$(MACHINE)" a valid machine? Try running "make MACHINE=$(MACHINE)" first.' && exit 1)
 	@echo '[*] Generating $@'
-	@(BB_SRCREV_POLICY=cache $(BITBAKE) -e | grep '^\(export\s\)\?[a-zA-Z0-9_]\+=".*"$$' | sed -e 's,^export\s,,' | grep -v $(foreach v,$(CROSS_COMPILE_ENV_BLACKLIST),-e ^$(v)=) | sed -e 's,^,local ,' | sort) > $@.tmp && [ -s $@.tmp ] && mv $@.tmp $@ || ($(RM) $@.tmp && echo 'Failed! Please verify that no instance of bitbake is currently running for this machine.' && exit 1)
+	@(BB_SRCREV_POLICY=cache $(BITBAKE) -e $* | grep '^\(export\s\)\?[a-zA-Z0-9_]\+=".*"$$' | sed -e 's,^export\s,,' | grep -v $(foreach v,$(CROSS_COMPILE_ENV_BLACKLIST),-e ^$(v)=) | sed -e 's,^,local ,' | sort) > $@.tmp && [ -s $@.tmp ] && mv $@.tmp $@ || ($(RM) $@.tmp && echo 'Failed! Please verify that no instance of bitbake is currently running for this machine.' && exit 1)
 
 $(CONFDEPS):
 	@test -d $(@D) || mkdir -p $(@D)
