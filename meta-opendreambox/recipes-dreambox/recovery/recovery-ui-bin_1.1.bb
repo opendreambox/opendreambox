@@ -6,10 +6,10 @@ PROVIDES = "recovery-ui"
 
 inherit opendreambox-precompiled-binary update-rc.d
 
-SRC_URI[dm520.md5sum] = "9572ae331926504cdf9dcbd7151b56db"
-SRC_URI[dm520.sha256sum] = "fafeabdcb19fc6af1c47075fe74526d15c693b9cf98b5b97d0afd644700c1df9"
-SRC_URI[dm900.md5sum] = "e3b08dcb53b8f70c7ac9170e84287c38"
-SRC_URI[dm900.sha256sum] = "6465bcbc5aed824fe143807b34590151091dc5bed14b79d97a4064fed08e9520"
+SRC_URI[dm520.md5sum] = "c7a2cca873f7665c9c0023d46263ea78"
+SRC_URI[dm520.sha256sum] = "9436ad03565e970f6efde52969a646c82cf61bb3631e8f9f66fff8de02c7d521"
+SRC_URI[dm900.md5sum] = "b8c5ce8c4047360382609a80fec85d5e"
+SRC_URI[dm900.sha256sum] = "9c75d63d3edebad946c92bab2f72f73513505b24dc95442c82ef04894ff3d12a"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
