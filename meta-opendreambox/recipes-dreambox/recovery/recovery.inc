@@ -1,6 +1,9 @@
 SUMMARY = "Command-line tools to flash and recover your Dreambox"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
+DEPENDS = "udev"
+
+inherit update-rc.d
 
 SRC_URI_append = ";branch=${BRANCH}"
 
@@ -51,6 +54,9 @@ RDEPENDS_${PN}_append_bcm7439 = " \
 RDEPENDS_${PN}_append_bcm73625 = " \
     ${NANDRDEPENDS_recovery} \
 "
+RRECOMMENDS_${PN} = " \
+    recovery-ui \
+"
 
 RDEPENDS_flash-scripts = " \
     coreutils-realpath \
@@ -79,3 +85,5 @@ FILES_flash-scripts = " \
     ${sbindir}/update-rescue \
     ${sbindir}/writespi \
 "
+
+INITSCRIPT_NAME = "autoflashd"
