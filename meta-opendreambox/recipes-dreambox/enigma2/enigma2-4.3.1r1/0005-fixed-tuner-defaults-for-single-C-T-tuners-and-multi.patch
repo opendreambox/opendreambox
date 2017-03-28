@@ -1,0 +1,45 @@
+From 26c85c182fa59cb3388fe22f3a1d034e69ace531 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Tue, 28 Mar 2017 01:14:20 +0200
+Subject: [PATCH 5/9] fixed tuner defaults for single C/T tuners and multitype
+ C/T tuners
+
+---
+ usr/lib/enigma2/python/Components/NimManager.py | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/NimManager.py b/usr/lib/enigma2/python/Components/NimManager.py
+index c28bf9d..7ae7ab0 100644
+--- a/usr/lib/enigma2/python/Components/NimManager.py
++++ b/usr/lib/enigma2/python/Components/NimManager.py
+@@ -1733,11 +1733,8 @@ def InitNimManager(nimmgr, slot_no = None):
+ 			isEmpty = False
+ 			nim.cable = ConfigSubsection()
+ 			nim.cable.configMode = ConfigSelection(
+-				choices = {
+-					"enabled": _("connected"),
+-					"nothing": _("nothing connected"),
+-					},
+-				default = "nothing")
++				choices = [ getConfigModeTuple("enabled"), getConfigModeTuple("nothing") ],
++				default = "enabled" if not slot.isMultiType() or slot.types[nim.multiType.value] == "DVB-C" else "nothing")
+ 			list = [ ]
+ 			n = 0
+ 			for x in nimmgr.cablesList:
+@@ -1781,11 +1778,8 @@ def InitNimManager(nimmgr, slot_no = None):
+ 			isEmpty = False
+ 			nim.terrest = ConfigSubsection()
+ 			nim.terrest.configMode = ConfigSelection(
+-				choices = {
+-					"enabled": NimManager.config_mode_str["enabled"],
+-					"nothing": NimManager.config_mode_str["nothing"],
+-					},
+-				default = "nothing")
++				choices = [ getConfigModeTuple("enabled"), getConfigModeTuple("nothing") ],
++				default = "enabled" if not slot.isMultiType() or slot.types[nim.multiType.value].startswith("DVB-T") else "nothing")
+ 			provider = []
+ 			n = 0
+ 			for x in nimmgr.terrestrialsList:
+-- 
+2.1.4
+

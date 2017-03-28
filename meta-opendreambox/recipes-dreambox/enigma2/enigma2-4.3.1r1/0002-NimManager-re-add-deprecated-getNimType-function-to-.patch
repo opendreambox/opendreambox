@@ -1,0 +1,45 @@
+From 0fcbe90768cc6e22756e49f474c4335069c93076 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Fri, 24 Mar 2017 18:28:33 +0100
+Subject: [PATCH 2/9] NimManager: re-add deprecated getNimType function to NIM
+ and NimManager class
+
+---
+ usr/lib/enigma2/python/Components/NimManager.py | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/usr/lib/enigma2/python/Components/NimManager.py b/usr/lib/enigma2/python/Components/NimManager.py
+index a5fd81d..9beba0e 100644
+--- a/usr/lib/enigma2/python/Components/NimManager.py
++++ b/usr/lib/enigma2/python/Components/NimManager.py
+@@ -548,6 +548,17 @@ class NIM(object):
+ 		return self._types
+ 	types = property(getTypes)
+ 
++	def getType(self):
++		if not self._types:
++			return None
++		type = self._types.values()[0]
++		if len(self._types) > 1:
++			import traceback
++			print "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\nNIM Slot", self.getSlotInputName(), "supports multiple types", self._types, "\nthis function is deprecated and just for backward compatibility it should not be used anymore\nplease report to plugin author... ", type, "is returned for this nim now"
++			traceback.print_stack(limit = 2)
++		return type
++	type = property(getType)
++
+ 	def connectableTo(self):
+ 		connectable = {
+ 				"DVB-S": ("DVB-S", "DVB-S2"),
+@@ -823,6 +834,9 @@ class NimManager:
+ 				return True
+ 		return ret
+ 
++	def getNimType(self, slotid):
++		return self.nim_slots[slotid].type
++
+ 	def getNimTypes(self, slotid):
+ 		return self.nim_slots[slotid].types.values()
+ 
+-- 
+2.1.4
+

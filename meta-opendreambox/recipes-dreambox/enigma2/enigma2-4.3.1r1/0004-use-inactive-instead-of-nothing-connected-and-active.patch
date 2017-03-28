@@ -1,0 +1,29 @@
+From c42fe825465f6724618a953f6b73f7d80a8b9bf8 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Mon, 27 Mar 2017 23:43:37 +0200
+Subject: [PATCH 4/9] use "inactive" instead of "nothing connected" and
+ "active" instead of "connected" for DVB-C/DVB-T(2) tuner configuration
+
+---
+ usr/lib/enigma2/python/Components/NimManager.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/NimManager.py b/usr/lib/enigma2/python/Components/NimManager.py
+index 7f6eda8..c28bf9d 100644
+--- a/usr/lib/enigma2/python/Components/NimManager.py
++++ b/usr/lib/enigma2/python/Components/NimManager.py
+@@ -653,9 +653,9 @@ class NIM(object):
+ 
+ class NimManager:
+ 	config_mode_str = {
+-		"nothing" : _("nothing connected"),
++		"nothing" : _("inactive"),
+ 		"multi" : _("multiple"),
+-		"enabled" : _("connected"),
++		"enabled" : _("active"),
+ 		"simple" : _("simple"),
+ 		"advanced" : _("advanced"),
+ 		"equal" : _("equal to"),
+-- 
+2.1.4
+
