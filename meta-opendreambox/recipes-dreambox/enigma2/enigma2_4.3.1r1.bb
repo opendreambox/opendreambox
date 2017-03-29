@@ -15,4 +15,5 @@ SRC_URI += " \
 	file://0007-dont-allow-to-do-anything-in-manual-automatic-scan-w.patch \
 	file://0008-use-inactive-event-for-disabled-DVB-S-2-tuner.patch \
 	file://0009-ScanSetup-cosmetical-changes.patch \
+	file://0010-ScanSetup-reenable-network-scan-for-everybody.patch \
 "
