@@ -19,3 +19,5 @@ inherit module
 
 EXTRA_OEMAKE = "-C '${STAGING_KERNEL_DIR}' SUBDIRS='${S}'"
 MAKE_TARGETS = "modules"
+
+export KCFLAGS = "-Wno-error=misleading-indentation"
