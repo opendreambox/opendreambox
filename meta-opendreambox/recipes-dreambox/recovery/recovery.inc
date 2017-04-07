@@ -1,7 +1,7 @@
 SUMMARY = "Command-line tools to flash and recover your Dreambox"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
-DEPENDS = "udev"
+DEPENDS = "coreutils-native udev"
 
 inherit update-rc.d
 
