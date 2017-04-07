@@ -1,7 +1,7 @@
 SUMMARY = "Simple user interface for Dreambox rescue mode"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
-DEPENDS = "libmnl libnexus-ui"
+DEPENDS = "libmnl xz libnexus-ui"
 PROVIDES = "recovery-ui"
 
 inherit opendreambox-precompiled-binary update-rc.d

@@ -1,14 +1,14 @@
 SUMMARY = "Simple user interface for Dreambox rescue mode"
 HOMEPAGE = "http://dreamboxupdate.com/"
 LICENSE = "CLOSED"
-DEPENDS = "libmnl"
+DEPENDS = "libmnl xz"
 SRCREV = "${@opendreambox_srcrev('1cd69394b3702a06cadfce078289dd351a07b152', d)}"
 SRCREV_dm820 = "${SRCREV_dm7080}"
 SRCREV_dm7080 = "${@opendreambox_srcrev('6f61849bf4e60266e313f76cbbab2f3278db5296', d)}"
 
 SRC_URI_append = ";branch=${BRANCH}"
 
-inherit opendreambox-git update-rc.d
+inherit opendreambox-git pkgconfig update-rc.d
 
 do_install() {
     oe_runmake install DESTDIR=${D}
