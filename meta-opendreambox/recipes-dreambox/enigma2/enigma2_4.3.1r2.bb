@@ -4,3 +4,5 @@ SRC_URI[mips32el.md5sum] = "62cbb821dd00032311fddc29d8e4295c"
 SRC_URI[mips32el.sha256sum] = "d4bfdf300c59e4bd2a98b824af80438ca1e633a603bdfcb395e28749a3863e76"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " file://0001-added-missing-header-.-needed-for-cpp-plugin-compile.patch"
