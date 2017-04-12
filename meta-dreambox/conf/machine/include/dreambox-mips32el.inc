@@ -1,6 +1,6 @@
 # dreambox-mips32el.inc
 
-OLDEST_KERNEL = "3.2"
+OLDEST_KERNEL = "3.4"
 
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"

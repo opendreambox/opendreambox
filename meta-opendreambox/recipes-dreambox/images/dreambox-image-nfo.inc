@@ -44,9 +44,7 @@ python dreambox_image_nfo() {
     image_rootfs = d.getVar('IMAGE_ROOTFS', True)
     machine = d.getVar('MACHINE', True)
 
-    if oe.utils.inherits(d, 'image_types_nfi'):
-        ext = 'nfi'
-    elif len(image_fstypes) >= 1:
+    if len(image_fstypes) >= 1:
         ext = 'rootfs.%s' % image_fstypes[0]
     else:
         raise bb.build.FuncFailed('Invalid IMAGE_FSTYPES')
