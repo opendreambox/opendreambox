@@ -16,7 +16,7 @@ do_install() {
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "dreambox-dvb-modules-lcd"
+RRECOMMENDS_${PN} = "dreambox-dvb-modules-lcd"
 
 BRANCH = "master"
 BRANCH_dm820 = "${BRANCH_dm7080}"
