@@ -23,7 +23,9 @@ do_install_append() {
             echo $module >> ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf
         fi
     done
-    chmod 0644 ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf
+    if [ -f ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf ]; then
+        chmod 0644 ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf
+    fi
 }
 
 PACKAGES =+ "${PN}-lcd ${PN}-stb-core"
