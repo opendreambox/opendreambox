@@ -20,3 +20,6 @@ RDEPENDS_${PN} = " \
     recovery \
     tpm-ca \
 "
+RRECOMMENDS_${PN} = " \
+    dreambox-dvb-modules-stb-core \
+"
