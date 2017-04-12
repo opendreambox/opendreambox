@@ -15,7 +15,6 @@ IMAGE_INSTALL = " \
         base-passwd \
         busybox \
         devnodes-minimal \
-        dreambox-dvb-modules-stb-core \
         dropbear \
         e2fsprogs-e2fsck \
         google-dns \
