@@ -72,6 +72,9 @@ RDEPENDS_flash-scripts_append_bcm7439 = " \
 RDEPENDS_flash-scripts_append_bcm73625 = " \
     ${NANDRDEPENDS_flash-scripts} \
 "
+RRECOMMENDS_flash-scripts = " \
+    dreambox-dvb-modules-stb-core \
+"
 
 FILES_flash-scripts = " \
     ${sbindir}/flash-fsbl \
