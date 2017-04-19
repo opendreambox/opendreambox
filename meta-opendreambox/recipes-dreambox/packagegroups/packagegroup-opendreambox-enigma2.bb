@@ -28,6 +28,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-extensions-babelzapper-meta \
   enigma2-plugin-extensions-bitrateviewer-meta \
   enigma2-plugin-extensions-infobartunerstate-meta \
+  enigma2-plugin-extensions-merlinmusicplayer-meta \
   enigma2-plugin-extensions-moviecut-meta \
   enigma2-plugin-extensions-partnerbox-meta \
   enigma2-plugin-extensions-permanenttimeshift-meta \
