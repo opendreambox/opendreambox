@@ -10,13 +10,12 @@ SRC_URI = "git://github.com/betonme/e2openplugin-EnhancedMovieCenter.git"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep pythonnative
+inherit autotools-brokensep
 
 RDEPENDS_${PN} = " \
-    enigma2 \
     python-json \
     python-shell \
     python-twisted-web \
 "
 
-FILES_${PN} += "${libdir}/enigma2/python"
+require enigma2-plugin.inc

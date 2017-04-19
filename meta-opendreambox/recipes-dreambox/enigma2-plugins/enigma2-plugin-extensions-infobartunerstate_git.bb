@@ -11,16 +11,12 @@ SRC_URI = "git://github.com/betonme/e2openplugin-InfoBarTunerState.git"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep pythonnative
-
-PACKAGES += "${PN}-meta"
+inherit autotools-brokensep
 
 RDEPENDS_${PN} = " \
-    enigma2 \
     enigma2-plugin-extensions-webinterface \
     python-re \
     python-shell \
 "
 
-FILES_${PN} += "${libdir}/enigma2/python"
-FILES_${PN}-meta = "${datadir}/meta"
+require enigma2-plugin.inc

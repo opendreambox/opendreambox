@@ -11,12 +11,9 @@ SRC_URI = "git://github.com/betonme/e2openplugin-SeriesPlugin.git"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep pythonnative
-
-PACKAGES += "${PN}-meta"
+inherit autotools-brokensep
 
 RDEPENDS_${PN} = " \
-    enigma2 \
     python-difflib \
     python-json \
     python-re \
@@ -24,5 +21,4 @@ RDEPENDS_${PN} = " \
     python-xmlrpc \
 "
 
-FILES_${PN} += "${libdir}/enigma2/python"
-FILES_${PN}-meta = "${datadir}/meta"
+require enigma2-plugin.inc

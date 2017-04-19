@@ -13,8 +13,4 @@ RDEPENDS_${PN} = " \
         python-twisted-web \
 "
 
-PACKAGES += "${PN}-meta"
-
-FILES_${PN} += "${libdir}/enigma2"
-FILES_${PN}-meta = "${datadir}/meta"
-
+require enigma2-plugin.inc
