@@ -1,16 +1,11 @@
 SUMMARY = "Additional plugins for Enigma2"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
-DEPENDS = "enigma2 gettext-native gstreamer1.0 libtirpc nfs-utils openssl"
+DEPENDS = "gettext-native"
 
 SRC_URI += "file://print.mak"
 
-inherit autotools-brokensep pkgconfig pythonnative
-
-export BUILD_SYS
-export HOST_SYS
-export STAGING_INCDIR
-export STAGING_LIBDIR
+inherit autotools-brokensep pythonnative
 
 do_install_append() {
         # create lists of files installed outside of "${libdir}/enigma2/python/Plugins" or "${datadir}/meta"
@@ -95,12 +90,12 @@ INSTALL_PLUGINSDIR = "${INSTALL_DESTDIR}${libdir}/enigma2/python/Plugins"
 # actually has no impact on any generated packages.
 RDEPENDS_${PN} = " \
         aio-grab \
-        arp-scan \
         avahi-daemon \
         cdrkit \
         cdtextinfo \
         dbttcd \
         dvdbackup \
+        enigma2 \
         enigma2-streamproxy \
         gstreamer1.0-plugins-bad-faad \
         gstreamer1.0-plugins-bad-fragmented \
@@ -122,15 +117,11 @@ RDEPENDS_${PN} = " \
         python-json \
         python-lang \
         python-misc \
-        python-mutagen \
         python-netclient \
-        python-pycrypto \
         python-pyopenssl \
-        python-pysmb \
         python-re \
         python-shell \
         python-simplejson \
-        python-sqlite3 \
         python-subprocess \
         python-textutils \
         python-threading \
@@ -141,7 +132,6 @@ RDEPENDS_${PN} = " \
         python-twisted-protocols \
         python-twisted-web \
         python-xml \
-        python-xmlrpc \
         python-youtube-dl \
         python-zlib \
         satip-client \
