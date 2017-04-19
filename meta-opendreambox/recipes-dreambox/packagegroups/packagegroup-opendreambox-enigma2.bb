@@ -30,6 +30,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-extensions-partnerbox-meta \
   enigma2-plugin-extensions-seriesplugin-meta \
   enigma2-plugin-extensions-stalkerclient-meta \
+  enigma2-plugin-extensions-vlcplayer-meta \
   enigma2-skins-meta \
   enigma2-streamproxy \
   libpassthrough \
