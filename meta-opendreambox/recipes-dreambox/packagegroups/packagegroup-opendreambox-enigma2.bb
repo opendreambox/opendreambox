@@ -26,6 +26,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugins-meta \
   enigma2-plugins-po \
   enigma2-plugin-extensions-babelzapper-meta \
+  enigma2-plugin-extensions-bitrateviewer-meta \
   enigma2-plugin-extensions-infobartunerstate-meta \
   enigma2-plugin-extensions-partnerbox-meta \
   enigma2-plugin-extensions-seriesplugin-meta \
