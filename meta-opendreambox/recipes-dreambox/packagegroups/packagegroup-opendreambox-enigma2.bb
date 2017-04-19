@@ -29,6 +29,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-extensions-bitrateviewer-meta \
   enigma2-plugin-extensions-infobartunerstate-meta \
   enigma2-plugin-extensions-partnerbox-meta \
+  enigma2-plugin-extensions-permanenttimeshift-meta \
   enigma2-plugin-extensions-seriesplugin-meta \
   enigma2-plugin-extensions-stalkerclient-meta \
   enigma2-plugin-extensions-vlcplayer-meta \
