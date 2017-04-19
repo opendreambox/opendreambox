@@ -25,6 +25,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-systemplugins-videotune \
   enigma2-plugins-meta \
   enigma2-plugins-po \
+  enigma2-plugin-extensions-babelzapper-meta \
   enigma2-plugin-extensions-infobartunerstate-meta \
   enigma2-plugin-extensions-seriesplugin-meta \
   enigma2-plugin-extensions-stalkerclient-meta \
