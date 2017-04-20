@@ -41,4 +41,4 @@ PACKAGESPLITFUNCS_prepend = "enigma2_skins_split_packages "
 
 # No package will be generated for ${PN}, and enigma2-plugins doesn't exist as
 # a package either, but it's enough to avoid a direct build dependency.
-RDEPENDS_${PN} = "enigma2-plugins"
+RDEPENDS_${PN} = "enigma2 enigma2-plugins"
