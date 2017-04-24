@@ -1,7 +1,7 @@
 SUMMARY = "Remote Timer and Remote TV Player"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://src/plugin.py;beginline=5;endline=18;md5=0502f8225bcc4d079ef25e93c7c0ee20"
-SRCREV = "${@opendreambox_srcrev('d6531d0a288d1590272cb1feac9eefd64c72292a', d)}"
+LIC_FILES_CHKSUM = "file://src/plugin.py;beginline=5;endline=18;md5=3b634f641fb0d4a1a8dbf77b312564d5"
+SRCREV = "${@opendreambox_srcrev('80fe678e3279393b9c669993cdbbdfc83e220a8d', d)}"
 PV = "4.3.1+git${SRCPV}"
 
 inherit autotools-brokensep opendreambox-github
