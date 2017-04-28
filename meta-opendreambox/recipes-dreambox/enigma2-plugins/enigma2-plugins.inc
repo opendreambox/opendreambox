@@ -96,6 +96,7 @@ RDEPENDS_${PN} = " \
         dbttcd \
         dvdbackup \
         enigma2 \
+        enigma2-plugin-skincomponents-weathercomponent \
         enigma2-streamproxy \
         gstreamer1.0-plugins-bad-faad \
         gstreamer1.0-plugins-bad-fragmented \
