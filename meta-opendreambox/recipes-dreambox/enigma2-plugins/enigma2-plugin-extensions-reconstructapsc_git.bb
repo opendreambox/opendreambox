@@ -3,7 +3,7 @@ DESCRIPTION = "Reconstruct missing or corrupt .ap and .sc files of recorded movi
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://src_cc/reconstruct_apsc.cc;endline=12;md5=ee269abb4b18f5f29884937124fb9565"
 SRCREV = "${@opendreambox_srcrev('fc093af527167521f70d1b95e93a92dc8ee84adc', d)}"
-PV = "4.3.1+git${SRCPV}"
+PV = "4.3.2"
 
 inherit autotools opendreambox-github
 
