@@ -39,6 +39,16 @@ python enigma2_skins_split_packages() {
 
 PACKAGESPLITFUNCS_prepend = "enigma2_skins_split_packages "
 
-# No package will be generated for ${PN}, and enigma2-plugins doesn't exist as
-# a package either, but it's enough to avoid a direct build dependency.
-RDEPENDS_${PN} = "enigma2 enigma2-plugins"
+# This list of packages is compiled from all 'Depends' fields in all control
+# files found in the enigma2-skins repository. If a dependency gets added
+# there, add it here, too. This allows to keep build dependencies minimal
+# while making sure that all runtime dependencies are available.
+# As ${PN} doesn't contain any files and ALLOW_EMPTY isn't set, this list
+# actually has no impact on any generated packages.
+RDEPENDS_${PN} = " \
+    enigma2 \
+    enigma2-plugin-skincomponents-channelselectionshorttitle \
+    enigma2-plugin-skincomponents-eventlist \
+    enigma2-plugin-skincomponents-eventposition \
+    enigma2-plugin-skincomponents-reftopiconname \
+"
