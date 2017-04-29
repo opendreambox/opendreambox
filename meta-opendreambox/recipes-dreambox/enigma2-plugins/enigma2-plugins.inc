@@ -29,12 +29,47 @@ python enigma2_plugins_split_packages() {
                     except:
                         bb.fatal("Error parsing control file for package %s" % package)
 
+    def parseMetadata(package, filename):
+        fields = {}
+
+        def set_field(key, value):
+            if value:
+                fields['X-DreamOS-%s' % key] = value
+
+        def set_pkg_var(key, value):
+            if value:
+                d.setVar('%s_%s' % (key, package), value)
+
+        from xml.etree.ElementTree import parse
+        try:
+            tree = parse(filename)
+        except Exception as e:
+            bb.warn("Failed to parse %s for package %s: %s" % (filename, package, repr(e)))
+        else:
+            root = tree.getroot()
+            tags = [tag.get('type', '') for tag in root.findall('./prerequisites/tag')]
+            set_field('Tags', ' '.join(tags))
+            set_field('Author', root.findtext('./info/author'))
+            set_field('Name', root.findtext('./info/name'))
+            screenshot = root.find('./info/screenshot')
+            if screenshot is not None:
+                set_field('Screenshot', screenshot.get('src'))
+            set_pkg_var('SUMMARY', root.findtext('./info/shortdescription'))
+            set_pkg_var('DESCRIPTION', root.findtext('./info/description'))
+
+        for field in ('Author', 'Name', 'Screenshot', 'Tags'):
+            value = d.getVar('PLUGIN_%s_%s' % (field.upper(), package))
+            set_field(field, value)
+
+        d.setVar('PACKAGE_ADD_METADATA_DEB_%s' % package, '\n'.join(['%s: %s' % (key, value) for (key, value) in sorted(fields.items())]))
+
     srcdir = d.getVar('S', True)
     packages = d.getVar('PACKAGES', True).split()
     for package in packages:
         if package.startswith('enigma2-plugin-'):
             subdir = package.split('-')[-1]
             parseControlFile(package, os.path.join(srcdir, subdir))
+            parseMetadata(package, os.path.join(srcdir, subdir, 'meta/plugin_%s.xml' % subdir))
 }
 
 PACKAGESPLITFUNCS_prepend = "enigma2_plugins_split_packages "
