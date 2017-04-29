@@ -3,32 +3,9 @@ LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 DEPENDS = "gettext-native"
 
-SRC_URI += "file://print.mak"
-
 inherit autotools-brokensep pythonnative
 
-do_install_append() {
-        # create lists of files installed outside of "${libdir}/enigma2/python/Plugins" or "${datadir}/meta"
-        rm -rf ${INSTALL_ROOTDIR}
-        install -d ${INSTALL_ROOTDIR}
-        SUBDIRS=`make -f Makefile -f ${WORKDIR}/print.mak print-SUBDIRS`
-        for SUBDIR in $SUBDIRS; do
-                oe_runmake -C $SUBDIR "DESTDIR=${INSTALL_DESTDIR}" install
-                CATEGORY=`ls -1 ${INSTALL_PLUGINSDIR} | head -n1 | tr '[:upper:]' '[:lower:]'`
-                NAME=`echo $SUBDIR | tr '[:upper:]' '[:lower:]'`
-                PKG="enigma2-plugin-$CATEGORY-$NAME"
-                rm -rf ${INSTALL_METADIR} ${INSTALL_PODIR} ${INSTALL_PLUGINSDIR}
-                find ${INSTALL_DESTDIR} -type f -name "*.la" -delete
-                find ${INSTALL_DESTDIR} -type f -fprintf ${INSTALL_ROOTDIR}/$PKG '/%P\n'
-                [ -s ${INSTALL_ROOTDIR}/$PKG ] || rm ${INSTALL_ROOTDIR}/$PKG
-                rm -rf ${INSTALL_DESTDIR}
-        done
-
-        # delete unwanted files
-        find ${D} -type f -name "*.la" -delete
-}
-
-PACKAGES_DYNAMIC = "^enigma2-plugin-(extensions|skincomponents|systemplugins)-.*"
+PACKAGES_DYNAMIC = "^enigma2-plugin-(extensions|systemplugins)-.*"
 PACKAGES += "${PN}-meta ${PN}-po"
 
 FILES_${PN} = ""
@@ -53,34 +30,15 @@ python enigma2_plugins_split_packages() {
                     except:
                         bb.fatal("Error parsing control file for package %s" % package)
 
-    def parseFileList(package, dir):
-        filename = os.path.join(dir, package)
-        if os.path.exists(filename):
-            varname = 'FILES_%s' % package
-            files = (d.getVar(varname, True) or "").split()
-            with open(filename) as f:
-                for line in f.read().splitlines():
-                    if not line in files:
-                        files.append(line)
-            d.setVar(varname, ' '.join(files))
-
-    tempdir = d.getVar('INSTALL_ROOTDIR', True)
     srcdir = d.getVar('S', True)
     packages = d.getVar('PACKAGES', True).split()
     for package in packages:
         if package.startswith('enigma2-plugin-'):
             subdir = package.split('-')[-1]
-            parseFileList(package, tempdir)
             parseControlFile(package, os.path.join(srcdir, subdir))
 }
 
 PACKAGESPLITFUNCS_prepend = "enigma2_plugins_split_packages "
-
-INSTALL_ROOTDIR = "${WORKDIR}/${PN}-packaging-tempdir"
-INSTALL_DESTDIR = "${INSTALL_ROOTDIR}/destdir"
-INSTALL_METADIR = "${INSTALL_DESTDIR}${datadir}/meta"
-INSTALL_PODIR = "${INSTALL_DESTDIR}${datadir}/enigma2/po"
-INSTALL_PLUGINSDIR = "${INSTALL_DESTDIR}${libdir}/enigma2/python/Plugins"
 
 # This list of packages is compiled from all 'Depends' fields in all control
 # files found in the enigma2-plugins repository. If a dependency gets added
