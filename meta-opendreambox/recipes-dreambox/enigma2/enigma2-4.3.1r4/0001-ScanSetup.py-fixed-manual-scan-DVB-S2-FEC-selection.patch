@@ -1,0 +1,26 @@
+From ccae05ffa3a49076025395fab8fadd29cc0fa597 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Wed, 3 May 2017 19:36:14 +0200
+Subject: [PATCH] ScanSetup.py: fixed manual scan DVB-S2 FEC selection
+
+---
+ usr/lib/enigma2/python/Screens/ScanSetup.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/ScanSetup.py b/usr/lib/enigma2/python/Screens/ScanSetup.py
+index 5722be4..3eaad1d 100644
+--- a/usr/lib/enigma2/python/Screens/ScanSetup.py
++++ b/usr/lib/enigma2/python/Screens/ScanSetup.py
+@@ -1330,7 +1330,8 @@ class ScanSetup(ConfigListScreen, Screen, TransponderSearchSupport, CableTranspo
+ 					self.list.append(getConfigListEntry(_("FEC"), self.scan_sat.fec))
+ 				elif self.scan_system.value == "DVB-S2":
+ 					self.modulationEntry = getConfigListEntry(_('Modulation'), nim.can_modulation_auto and self.scan_sat.modulation_auto or self.scan_sat.modulation)
+-					if self.scan_sat.modulation.value == eDVBFrontendParametersSatellite.Modulation_8PSK:
++					mod = self.modulationEntry[1].value
++					if mod == eDVBFrontendParametersSatellite.Modulation_8PSK:
+ 						self.fecEntry = getConfigListEntry(_("FEC"), nim.can_auto_fec_s2 and self.scan_sat.fec_s2_8psk_auto or self.scan_sat.fec_s2_8psk)
+ 					else:
+ 						self.fecEntry = getConfigListEntry(_("FEC"), nim.can_auto_fec_s2 and self.scan_sat.fec_s2_qpsk_auto or self.scan_sat.fec_s2_qpsk)
+-- 
+2.1.4
+

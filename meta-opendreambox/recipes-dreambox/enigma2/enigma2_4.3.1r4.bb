@@ -4,3 +4,6 @@ SRC_URI[mips32el.md5sum] = "68391644403d0263d0b55a6f60140459"
 SRC_URI[mips32el.sha256sum] = "8d8e0a575a69d1153e1dc1a3d46f3ada3e6640188608341375a4e24e47df1d8a"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " \
+	file://0001-ScanSetup.py-fixed-manual-scan-DVB-S2-FEC-selection.patch"
