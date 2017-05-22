@@ -4,3 +4,5 @@ SRC_URI[mips32el.md5sum] = "106b8fc53dada2f1320791130a6f21d4"
 SRC_URI[mips32el.sha256sum] = "66ca79c6ad44ab23f8b344774639f8c59985e22c8272756a17d80b80e3db1e7a"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " file://0001-NimManager-fixed-linked-tuner-handling-broken-since-.patch"
