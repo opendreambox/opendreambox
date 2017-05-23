@@ -7,7 +7,6 @@ SRC_URI += "file://0001-configure.ac-force-enable-sendfile-when-cross-compil.pat
 
 PACKAGECONFIG ?= "mmap pcre zlib \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'ipv6', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'largefile', 'lfs', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'xattr', 'attr', '', d)} \
 "
 
