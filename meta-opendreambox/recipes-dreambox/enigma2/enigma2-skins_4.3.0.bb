@@ -1,6 +1,6 @@
 SUMMARY = "Skins for Enigma2"
 LICENSE = "CLOSED"
-SRCREV = "${@opendreambox_srcrev('b3a46e566b5e6f6904d087d4a930494b094758cd', d)}"
+SRCREV = "${@opendreambox_srcrev('a84ca719a20a44bc61d0151ce161a5e0652f53ea', d)}"
 
 inherit allarch autotools-brokensep opendreambox-github
 
