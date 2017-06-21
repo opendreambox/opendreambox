@@ -1,0 +1,45 @@
+From 84e11e9677b763f26be17ea55b218c2302999f02 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Wed, 21 Jun 2017 17:39:01 +0200
+Subject: [PATCH] Components/ServiceScan: dont crash when try to scan out of
+ frequency range transponder
+
+---
+ usr/lib/enigma2/python/Components/ServiceScan.py | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/ServiceScan.py b/usr/lib/enigma2/python/Components/ServiceScan.py
+index 7fe9719..0384e09 100644
+--- a/usr/lib/enigma2/python/Components/ServiceScan.py
++++ b/usr/lib/enigma2/python/Components/ServiceScan.py
+@@ -101,7 +101,8 @@ class ServiceScan:
+ 				self.transponder.setText(tp_text)
+ 
+ 		if self.state == self.Done:
+-			if self.scan.getNumServices() == 0:
++			foundServices = self.scan and self.scan.getNumServices() or 0
++			if foundServices == 0:
+ 				self.text.setText(_("scan done!") + ' ' + _("%d services found!") % 0 )
+ 			else:
+ 				self.text.setText(_("scan done!") + ' ' + _("%d services found!") % (self.foundServices + self.scan.getNumServices()))
+@@ -110,7 +111,7 @@ class ServiceScan:
+ 			self.text.setText(_("ERROR - failed to scan (%s)!") % (self.Errors[self.errorcode]) )
+ 
+ 		if self.state == self.Done or self.state == self.Error:
+-			foundServices = self.scan.getNumServices()
++			foundServices = self.scan and self.scan.getNumServices() or 0
+ 			self.execEnd()
+ 			if self.run != len(self.scanList) - 1:
+ 				self.foundServices += foundServices
+@@ -142,7 +143,7 @@ class ServiceScan:
+ 
+ 	def doRun(self):
+ 		self.scan = eComponentScan()
+-		self.frontendInfo.frontend_source = lambda : self.scan.getFrontend()
++		self.frontendInfo.frontend_source = lambda : self.scan and self.scan.getFrontend() or None
+ 		self.feid = self.scanList[self.run]["feid"]
+ 		self.flags = self.scanList[self.run]["flags"]
+ 		self.state = self.Idle
+-- 
+2.1.4
+
