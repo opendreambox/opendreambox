@@ -8,7 +8,7 @@
 	branch = obi/krogoth
 [submodule "bitbake"]
 	path = bitbake
-	url = git://git.openembedded.org/bitbake
+	url = git://github.com/opendreambox/bitbake
 	branch = 1.30
 [submodule "meta-qt5"]
 	path = meta-qt5
