@@ -1,0 +1,422 @@
+From 5ea1a278438d85ba9b39e6a5c01a1855c7e1d422 Mon Sep 17 00:00:00 2001
+From: Stephan Reichholf <reichi@opendreambox.org>
+Date: Wed, 5 Jul 2017 12:19:28 +0200
+Subject: [PATCH] implement dbus based dreambox player
+
+---
+ github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go  | 168 +++++++++++++++++++++++++++++++++++++++++++++
+ github.com/aykevl/plaincast/apps/youtube/mp/player.go  |   8 ++-
+ github.com/aykevl/plaincast/apps/youtube/mp/youtube.go | 127 +---------------------------------
+ github.com/aykevl/plaincast/plaincast.service          |   7 +-
+ 4 files changed, 177 insertions(+), 133 deletions(-)
+ create mode 100644 github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
+
+diff --git a/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go b/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
+new file mode 100644
+index 0000000..ed1c4b7
+--- /dev/null
++++ b/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
+@@ -0,0 +1,168 @@
++package mp
++
++import (
++	"flag"
++	"fmt"
++	"sync"
++	"time"
++
++	"github.com/aykevl/plaincast/config"
++	"github.com/aykevl/plaincast/log"
++	"github.com/godbus/dbus"
++)
++
++type MPDBUS struct {
++	connection   *dbus.Conn
++	object       dbus.BusObject
++	running      bool
++	runningMutex sync.Mutex
++	eventChan    chan State
++	dbusChan     chan *dbus.Signal
++}
++
++var mpdbusLogger = log.New("dbus", "log DBus wrapper output")
++var logMPDBUS = flag.Bool("log-mpdbus", false, "log output of dbus mp")
++
++func (mpdbus *MPDBUS) initialize() (chan State, int) {
++	if mpdbus.connection != nil || mpdbus.running {
++		panic("already initialized")
++	}
++
++	conn, err := dbus.SystemBus()
++	if err != nil {
++		panic(err)
++	}
++	mpdbus.connection = conn
++	mpdbus.object = conn.Object("com.dreambox.ctl", "/com/dreambox/ctl")
++	mpdbus.running = true
++
++	conf := config.Get()
++	initialVolume, err := conf.GetInt("player.mpdbus.volume", func() (int, error) {
++		return INITIAL_VOLUME, nil
++	})
++	if err != nil {
++		// should not happen
++		panic(err)
++	}
++
++	mpdbus.connection.BusObject().Call("org.freedesktop.DBus.AddMatch", 0,
++		"type='signal', interface='com.dreambox.ctl', member='event'")
++	mpdbus.dbusChan = make(chan *dbus.Signal, 20)
++	mpdbus.connection.Signal(mpdbus.dbusChan)
++
++	go mpdbus.dbusEventHandler(mpdbus.dbusChan)
++
++	mpdbus.eventChan = make(chan State)
++	return mpdbus.eventChan, initialVolume
++}
++
++func (mpdbus *MPDBUS) quit() {
++	mpdbus.running = false
++	mpdbus.stop()
++}
++
++func (mpdbus *MPDBUS) play(videoId string, position time.Duration, volume int) {
++	pos := position.Seconds()
++	uri := fmt.Sprintf("yt://%s", videoId)
++	logger.Println("MPDBUS uri:", uri)
++	logger.Println("MPDBUS pos:", pos)
++	var res bool
++	err := mpdbus.object.Call("com.dreambox.ctl.play", 0, uri, true).Store(&res)
++	if err != nil {
++		panic(err)
++	}
++	logger.Println("play result is", res)
++
++	if position.Seconds() > 0 {
++		mpdbus.setPosition(position)
++	}
++	mpdbus.setVolume(volume)
++}
++
++func (mpdbus *MPDBUS) pause() {
++	var res bool
++	err := mpdbus.object.Call("com.dreambox.ctl.pause", 0).Store(&res)
++	if err != nil {
++		panic(err)
++	}
++}
++
++func (mpdbus *MPDBUS) resume() {
++	var res bool
++	err := mpdbus.object.Call("com.dreambox.ctl.resume", 0).Store(&res)
++	if err != nil {
++		panic(err)
++	}
++}
++
++func (mpdbus *MPDBUS) getPosition() (time.Duration, error) {
++	var pos int64
++	err := mpdbus.object.Call("com.dreambox.ctl.getPosition", 0).Store(&pos)
++	if err != nil {
++		panic(err)
++	}
++	logger.Println("position: ", pos)
++	if pos < 0 {
++		pos = 0
++	}
++	return time.Duration(pos * int64(time.Second)), nil
++}
++
++func (mpdbus *MPDBUS) setPosition(position time.Duration) {
++	var res bool
++	err := mpdbus.object.Call("com.dreambox.ctl.setPosition", 0, int64(position.Seconds())).Store(&res)
++	if err != nil {
++		panic(err)
++	}
++}
++
++func (mpdbus *MPDBUS) getVolume() int {
++	var vol int
++	err := mpdbus.object.Call("com.dreambox.ctl.getVolume", 0).Store(&vol)
++	if err != nil {
++		panic(err)
++	}
++	return vol
++}
++
++func (mpdbus *MPDBUS) setVolume(volume int) {
++	var res bool
++	err := mpdbus.object.Call("com.dreambox.ctl.setVolume", 0, volume).Store(&res)
++	if err != nil {
++		panic(err)
++	}
++}
++
++func (mpdbus *MPDBUS) stop() {
++	go func() { mpdbus.eventChan <- STATE_STOPPED }()
++	var res bool
++	err := mpdbus.object.Call("com.dreambox.ctl.stop", 0).Store(&res)
++	if err != nil {
++		panic(err)
++	}
++}
++
++func (mpdbus *MPDBUS) dbusEventHandler(dbusEventChan chan *dbus.Signal) {
++	for v := range dbusEventChan {
++		logger.Println(v.Body)
++		eventId := v.Body[0].(int32)
++		var state State
++		if eventId == 0 {
++			state = STATE_STOPPED
++		}
++		if eventId == 1 {
++			state = STATE_PLAYING
++		}
++		if eventId == 2 {
++			state = STATE_PAUSED
++		}
++		if eventId == 3 {
++			state = STATE_BUFFERING
++			return //Ignore buffering
++		}
++		if eventId == 4 {
++			state = STATE_SEEKING
++		}
++		mpdbus.eventChan <- state
++	}
++}
+diff --git a/github.com/aykevl/plaincast/apps/youtube/mp/player.go b/github.com/aykevl/plaincast/apps/youtube/mp/player.go
+index 2418ea0..e853f1c 100644
+--- a/github.com/aykevl/plaincast/apps/youtube/mp/player.go
++++ b/github.com/aykevl/plaincast/apps/youtube/mp/player.go
+@@ -22,7 +22,7 @@ func New(stateChange chan StateChange) *MediaPlayer {
+ 	p.playstateChan = make(chan PlayState)
+ 	p.vg = NewVideoGrabber()
+ 
+-	p.player = &MPV{}
++	p.player = &MPDBUS{}
+ 	playerEventChan, initialVolume := p.player.initialize()
+ 
+ 	// Start the mainloop.
+@@ -44,6 +44,7 @@ func (p *MediaPlayer) Quit() {
+ func (p *MediaPlayer) getPosition(ps *PlayState) time.Duration {
+ 	var position time.Duration
+ 
++	logger.Println("State is ", ps.State)
+ 	switch ps.State {
+ 	case STATE_STOPPED:
+ 		position = 0
+@@ -117,7 +118,7 @@ func (p *MediaPlayer) startPlaying(ps *PlayState, position time.Duration) {
+ 		//  *  On very slow systems, like the Raspberry Pi, downloading the
+ 		//     stream URL for the next video doesn't interrupt the currently
+ 		//     playing video.
+-		p.player.stop()
++		// p.player.stop()
+ 	}
+ 	p.setPlayState(ps, STATE_BUFFERING, position)
+ 
+@@ -365,7 +366,6 @@ func (p *MediaPlayer) Seek(position time.Duration) {
+ 		if ps.State == STATE_STOPPED {
+ 			p.startPlaying(ps, position)
+ 		} else if ps.State == STATE_PAUSED || ps.State == STATE_PLAYING {
+-			p.setPlayState(ps, STATE_SEEKING, position)
+ 			p.player.setPosition(position)
+ 		} else {
+ 			logger.Warnf("state is not paused or playing while seeking (state: %d) - ignoring\n", ps.State)
+@@ -450,7 +450,9 @@ func (p *MediaPlayer) run(playerEventChan chan State, initialVolume int) {
+ 			ps = <-p.playstateChan
+ 
+ 		case event, ok := <-playerEventChan:
++			logger.Println("event: ", event, "# ok: ", ok)
+ 			if !ok {
++				logger.Println("Player has quit! Closing channels")
+ 				// player has quit, and closed channel
+ 				close(p.stateChange)
+ 				close(p.playstateChan)
+diff --git a/github.com/aykevl/plaincast/apps/youtube/mp/youtube.go b/github.com/aykevl/plaincast/apps/youtube/mp/youtube.go
+index 44d0ce1..110f187 100644
+--- a/github.com/aykevl/plaincast/apps/youtube/mp/youtube.go
++++ b/github.com/aykevl/plaincast/apps/youtube/mp/youtube.go
+@@ -1,126 +1,25 @@
+ package mp
+ 
+ import (
+-	"bufio"
+-	"io"
+ 	"net/url"
+-	"os"
+-	"os/exec"
+ 	"strconv"
+ 	"sync"
+ 	"time"
+ )
+ 
+-const pythonGrabber = `
+-try:
+-    import sys
+-    from youtube_dl import YoutubeDL
+-    from youtube_dl.utils import DownloadError
+-
+-    if len(sys.argv) != 3:
+-        sys.stderr.write('arguments: <format string> <cache dir>')
+-        os.exit(1)
+-
+-    yt = YoutubeDL({
+-        'geturl': True,
+-        'format': sys.argv[1],
+-        'cachedir': sys.argv[2] or None,
+-        'quiet': True,
+-        'simulate': True})
+-
+-    while True:
+-        stream = ''
+-        try:
+-            url = sys.stdin.readline().strip()
+-            stream = yt.extract_info(url, ie_key='Youtube')['url']
+-        except (KeyboardInterrupt, EOFError, IOError):
+-            break
+-        except DownloadError as why:
+-            # error message has already been printed
+-            sys.stderr.write('Could not extract video, try updating youtube-dl.\n')
+-        finally:
+-            try:
+-                sys.stdout.write(stream + '\n')
+-                sys.stdout.flush()
+-            except:
+-                pass
+-
+-except (KeyboardInterrupt, EOFError, IOError):
+-    pass
+-`
+-
+-// First (mkv-container) audio only with 100+kbps, then video with audio
+-// bitrate 100+ (where video has the lowest possible quality), then
+-// slightly lower quality audio.
+-// We do this because for some reason DASH aac audio (in the MP4 container)
+-// doesn't support seeking in any of the tested players (mpv using
+-// libavformat, and vlc, gstreamer and mplayer2 using their own demuxers).
+-// But the MKV container seems to have much better support.
+-// See:
+-//   https://github.com/mpv-player/mpv/issues/579
+-//   https://trac.ffmpeg.org/ticket/3842
+-const grabberFormats = "171/172/43/22/18"
+-
+ type VideoGrabber struct {
+ 	streams      map[string]*VideoURL // map of video ID to stream gotten from youtube-dl
+ 	streamsMutex sync.Mutex
+-	cmd          *exec.Cmd
+-	cmdMutex     sync.Mutex
+-	cmdStdin     io.Writer
+-	cmdStdout    *bufio.Reader
+ }
+ 
+ func NewVideoGrabber() *VideoGrabber {
+ 	vg := VideoGrabber{}
+ 	vg.streams = make(map[string]*VideoURL)
+ 
+-	cacheDir := *cacheDir
+-	if cacheDir != "" {
+-		cacheDir = cacheDir + "/" + "youtube-dl"
+-	}
+-
+-	// Start the process in a separate goroutine.
+-	vg.cmdMutex.Lock()
+-	go func() {
+-		defer vg.cmdMutex.Unlock()
+-
+-		vg.cmd = exec.Command("python", "-c", pythonGrabber, grabberFormats, cacheDir)
+-		stdout, err := vg.cmd.StdoutPipe()
+-		if err != nil {
+-			logger.Fatal(err)
+-		}
+-		vg.cmdStdout = bufio.NewReader(stdout)
+-		vg.cmdStdin, err = vg.cmd.StdinPipe()
+-		if err != nil {
+-			logger.Fatal(err)
+-		}
+-		vg.cmd.Stderr = os.Stderr
+-		err = vg.cmd.Start()
+-		if err != nil {
+-			logger.Fatal("Could not start video stream grabber:", err)
+-		}
+-
+-	}()
+-
+ 	return &vg
+ }
+ 
+ func (vg *VideoGrabber) Quit() {
+-	vg.cmdMutex.Lock()
+-	defer vg.cmdMutex.Unlock()
+-
+-	err := vg.cmd.Process.Signal(os.Interrupt)
+-	if err != nil {
+-		logger.Fatal("could not send SIGINT:", err)
+-	}
+-
+-	// Wait until exit, and free resources
+-	err = vg.cmd.Wait()
+-	if err != nil {
+-		if _, ok := err.(*exec.ExitError); !ok {
+-			logger.Fatal("process could not be stopped:", err)
+-		}
+-	}
+ }
+ 
+ // GetStream returns the stream for videoId, or an empty string if an error
+@@ -151,32 +50,8 @@ func (vg *VideoGrabber) getStream(videoId string) *VideoURL {
+ 
+ 	// Streams normally expire in 6 hour, give it a margin of one hour.
+ 	stream = &VideoURL{videoId: videoId, expires: time.Now().Add(5 * time.Hour)}
+-	stream.fetchMutex.Lock()
+-
+ 	vg.streams[videoId] = stream
+-
+-	go func() {
+-		vg.cmdMutex.Lock()
+-		defer vg.cmdMutex.Unlock()
+-
+-		io.WriteString(vg.cmdStdin, videoURL+"\n")
+-		line, err := vg.cmdStdout.ReadString('\n')
+-		if err != nil {
+-			logger.Fatal("could not grab video:", err)
+-		}
+-
+-		stream.url = line[:len(line)-1]
+-		stream.fetchMutex.Unlock()
+-
+-		logger.Println("Got stream for", videoURL)
+-
+-		expires, err := getExpiresFromURL(stream.url)
+-		if err != nil {
+-			logger.Warnln("failed to extract expires from video URL:", err)
+-		} else if expires.Before(stream.expires) {
+-			logger.Warnln("URL expires before the estimated expires!")
+-		}
+-	}()
++	stream.url = videoId
+ 
+ 	return stream
+ }
+diff --git a/github.com/aykevl/plaincast/plaincast.service b/github.com/aykevl/plaincast/plaincast.service
+index 97739e0..aa38570 100644
+--- a/github.com/aykevl/plaincast/plaincast.service
++++ b/github.com/aykevl/plaincast/plaincast.service
+@@ -1,11 +1,10 @@
+ [Unit]
+ Description=Plaincast service
+-After=network.target sound.target
++After=network.target enigma2.service
+ 
+ [Service]
+-ExecStart=/usr/local/bin/plaincast -log-mpv -log-youtube -config /var/local/plaincast/plaincast.conf -cachedir /var/local/plaincast/cache
+-User=plaincast
+-Group=audio
++ExecStart=/usr/bin/plaincast -loglevel=info -config /etc/plaincast.conf
++Restart=always
+ 
+ [Install]
+ WantedBy=multi-user.target
+-- 
+2.7.4
+
