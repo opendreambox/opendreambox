@@ -61,6 +61,7 @@ BITBAKE = . $(CURDIR)/bitbake.env && cd $(TOPDIR) && $(NICE) bitbake
 
 BBLAYERS ?= \
 	$(CURDIR)/meta-dreambox \
+	$(CURDIR)/meta-golang \
 	$(CURDIR)/meta-opendreambox \
 	$(CURDIR)/meta-openembedded/meta-filesystems \
 	$(CURDIR)/meta-openembedded/meta-multimedia \

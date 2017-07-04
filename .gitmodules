@@ -14,3 +14,7 @@
 	path = meta-qt5
 	url = git://github.com/opendreambox/meta-qt5
 	branch = krogoth
+[submodule "meta-golang"]
+	path = meta-golang
+	url = https://github.com/madisongh/meta-golang
+	branch = krogoth
