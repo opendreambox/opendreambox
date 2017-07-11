@@ -18,6 +18,9 @@ SYSTEMD_SERVICE_${PN} = "plaincast.service"
 
 inherit golang systemd
 
+PACKAGES += "${PN}-meta"
+FILES_${PN}-meta = "${datadir}/meta"
+
 do_compile_prepend() {
         rm -f ${S}/${GO_SRCROOT}/apps/youtube/mp/mpv.go
 }
@@ -29,5 +32,4 @@ do_install_append() {
         install -m644 ${S}/plugin_plaincast.xml ${D}${datadir}/meta/plugin_plaincast.xml
 }
 
-FILES_${PN} += "${datadir}/meta/plugin_plaincast.xml"
 GO_SRCROOT = "github.com/aykevl/plaincast"
