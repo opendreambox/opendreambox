@@ -25,6 +25,6 @@ do_install_append() {
     install -m 0644 youtube-dl.bash-completion ${D}${sysconfdir}/bash_completion.d
 }
 
-RDEPENDS_${PN} = "python-unixadmin python-subprocess python-email python-argparse"
+RDEPENDS_${PN} = "python-unixadmin python-subprocess python-email python-argparse python-json"
 
 FILES_${PN} += "${sysconfdir}"
