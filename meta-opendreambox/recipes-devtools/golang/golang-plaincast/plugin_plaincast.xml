@@ -1,0 +1,17 @@
+<default>
+	<prerequisites>
+		<tag type="Network" />
+		<tag type="Multimedia" />
+	</prerequisites>
+	<info>
+		<author>Dream Property GmbH</author>
+		<name>Plaincast</name>
+		<packagename>golang-plaincast</packagename>
+		<shortdescription>Cast YouTube Videos using the official YouTube App</shortdescription>
+		<description>This plugin is used to cast youtube videos to your dreambox.</description>
+	</info>
+
+	<files type="package"> <!-- without version, without .ipk -->
+		<file type="package" name="golang-plaincast" />
+	</files>
+</default>
