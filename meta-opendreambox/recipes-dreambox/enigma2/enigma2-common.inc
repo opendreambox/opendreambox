@@ -19,10 +19,12 @@ RDEPENDS_${PN} += " \
         enigma2-autofs \
         hdparm \
         libpagecache \
+        python-argparse \
         python-codecs \
         python-core \
         python-crypt \
         python-ctypes \
+        python-dbus \
         python-fcntl \
         python-importlib \
         python-ioctl \
