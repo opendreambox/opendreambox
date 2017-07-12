@@ -9,6 +9,7 @@
 		<packagename>golang-plaincast</packagename>
 		<shortdescription>Cast YouTube Videos using the official YouTube App</shortdescription>
 		<description>This plugin is used to cast youtube videos to your dreambox.</description>
+		<needsRestart>True</needsRestart>
 	</info>
 
 	<files type="package"> <!-- without version, without .ipk -->
