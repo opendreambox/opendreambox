@@ -1,22 +1,22 @@
-From 5ea1a278438d85ba9b39e6a5c01a1855c7e1d422 Mon Sep 17 00:00:00 2001
+From 5d665700e078df1a37122f83735c91ab3b40adc5 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Wed, 5 Jul 2017 12:19:28 +0200
 Subject: [PATCH] implement dbus based dreambox player
 
 ---
- github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go  | 168 +++++++++++++++++++++++++++++++++++++++++++++
+ github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go  | 171 +++++++++++++++++++++++++++++++++++++++++++++
  github.com/aykevl/plaincast/apps/youtube/mp/player.go  |   8 ++-
- github.com/aykevl/plaincast/apps/youtube/mp/youtube.go | 127 +---------------------------------
+ github.com/aykevl/plaincast/apps/youtube/mp/youtube.go | 127 +--------------------------------
  github.com/aykevl/plaincast/plaincast.service          |   7 +-
- 4 files changed, 177 insertions(+), 133 deletions(-)
+ 4 files changed, 180 insertions(+), 133 deletions(-)
  create mode 100644 github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
 
 diff --git a/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go b/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
 new file mode 100644
-index 0000000..ed1c4b7
+index 0000000..ab37fdf
 --- /dev/null
 +++ b/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
-@@ -0,0 +1,168 @@
+@@ -0,0 +1,171 @@
 +package mp
 +
 +import (
@@ -42,6 +42,9 @@ index 0000000..ed1c4b7
 +var mpdbusLogger = log.New("dbus", "log DBus wrapper output")
 +var logMPDBUS = flag.Bool("log-mpdbus", false, "log output of dbus mp")
 +
++var DEST = "de.dreambox.ctl"
++var PATH = dbus.ObjectPath("/de/dreambox/ctl")
++
 +func (mpdbus *MPDBUS) initialize() (chan State, int) {
 +	if mpdbus.connection != nil || mpdbus.running {
 +		panic("already initialized")
@@ -52,7 +55,7 @@ index 0000000..ed1c4b7
 +		panic(err)
 +	}
 +	mpdbus.connection = conn
-+	mpdbus.object = conn.Object("com.dreambox.ctl", "/com/dreambox/ctl")
++	mpdbus.object = conn.Object(DEST, PATH)
 +	mpdbus.running = true
 +
 +	conf := config.Get()
@@ -65,7 +68,7 @@ index 0000000..ed1c4b7
 +	}
 +
 +	mpdbus.connection.BusObject().Call("org.freedesktop.DBus.AddMatch", 0,
-+		"type='signal', interface='com.dreambox.ctl', member='event'")
++		"type='signal', interface="+DEST+", member='event'")
 +	mpdbus.dbusChan = make(chan *dbus.Signal, 20)
 +	mpdbus.connection.Signal(mpdbus.dbusChan)
 +
@@ -86,7 +89,7 @@ index 0000000..ed1c4b7
 +	logger.Println("MPDBUS uri:", uri)
 +	logger.Println("MPDBUS pos:", pos)
 +	var res bool
-+	err := mpdbus.object.Call("com.dreambox.ctl.play", 0, uri, true).Store(&res)
++	err := mpdbus.object.Call(DEST+".play", 0, uri, true).Store(&res)
 +	if err != nil {
 +		panic(err)
 +	}
@@ -100,7 +103,7 @@ index 0000000..ed1c4b7
 +
 +func (mpdbus *MPDBUS) pause() {
 +	var res bool
-+	err := mpdbus.object.Call("com.dreambox.ctl.pause", 0).Store(&res)
++	err := mpdbus.object.Call(DEST+".pause", 0).Store(&res)
 +	if err != nil {
 +		panic(err)
 +	}
@@ -108,7 +111,7 @@ index 0000000..ed1c4b7
 +
 +func (mpdbus *MPDBUS) resume() {
 +	var res bool
-+	err := mpdbus.object.Call("com.dreambox.ctl.resume", 0).Store(&res)
++	err := mpdbus.object.Call(DEST+".resume", 0).Store(&res)
 +	if err != nil {
 +		panic(err)
 +	}
@@ -116,7 +119,7 @@ index 0000000..ed1c4b7
 +
 +func (mpdbus *MPDBUS) getPosition() (time.Duration, error) {
 +	var pos int64
-+	err := mpdbus.object.Call("com.dreambox.ctl.getPosition", 0).Store(&pos)
++	err := mpdbus.object.Call(DEST+".getPosition", 0).Store(&pos)
 +	if err != nil {
 +		panic(err)
 +	}
@@ -129,7 +132,7 @@ index 0000000..ed1c4b7
 +
 +func (mpdbus *MPDBUS) setPosition(position time.Duration) {
 +	var res bool
-+	err := mpdbus.object.Call("com.dreambox.ctl.setPosition", 0, int64(position.Seconds())).Store(&res)
++	err := mpdbus.object.Call(DEST+".setPosition", 0, int64(position.Seconds())).Store(&res)
 +	if err != nil {
 +		panic(err)
 +	}
@@ -137,7 +140,7 @@ index 0000000..ed1c4b7
 +
 +func (mpdbus *MPDBUS) getVolume() int {
 +	var vol int
-+	err := mpdbus.object.Call("com.dreambox.ctl.getVolume", 0).Store(&vol)
++	err := mpdbus.object.Call(DEST+".getVolume", 0).Store(&vol)
 +	if err != nil {
 +		panic(err)
 +	}
@@ -146,7 +149,7 @@ index 0000000..ed1c4b7
 +
 +func (mpdbus *MPDBUS) setVolume(volume int) {
 +	var res bool
-+	err := mpdbus.object.Call("com.dreambox.ctl.setVolume", 0, volume).Store(&res)
++	err := mpdbus.object.Call(DEST+".setVolume", 0, volume).Store(&res)
 +	if err != nil {
 +		panic(err)
 +	}
@@ -155,7 +158,7 @@ index 0000000..ed1c4b7
 +func (mpdbus *MPDBUS) stop() {
 +	go func() { mpdbus.eventChan <- STATE_STOPPED }()
 +	var res bool
-+	err := mpdbus.object.Call("com.dreambox.ctl.stop", 0).Store(&res)
++	err := mpdbus.object.Call(DEST+".stop", 0).Store(&res)
 +	if err != nil {
 +		panic(err)
 +	}
