@@ -359,5 +359,5 @@ CROSS_COMPILE_ENV_HASH := $(call hash, \
 
 $(CONFDEPS):
 	@test -d $(@D) || mkdir -p $(@D)
-	@$(RM) $(basename $@).*
-	@touch $@
+	@$(RM) $(filter-out $@,$(wildcard $(basename $@).*))
+	@test -e $@ || touch $@
