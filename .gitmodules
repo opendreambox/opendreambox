@@ -17,4 +17,4 @@
 [submodule "meta-golang"]
 	path = meta-golang
 	url = https://github.com/madisongh/meta-golang
-	branch = krogoth
+	branch = master
