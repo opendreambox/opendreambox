@@ -1,6 +1,5 @@
 DESCRIPTION = "Configuration files for online package repositories aka feeds (${PKGTYPE} version)"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=8f242b441da515e30c7b07f2cc6f4d5c"
 
 DISTRO_FEED_PREFIX ?= "remote"
 DISTRO_FEED_URI ?= "http://my-distribution.example/remote-feed/"

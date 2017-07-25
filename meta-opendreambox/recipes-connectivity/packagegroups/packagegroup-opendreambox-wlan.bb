@@ -1,7 +1,6 @@
 SUMMARY = "OpenDreambox: WLAN support"
 SECTION = "opendreambox/base"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=8f242b441da515e30c7b07f2cc6f4d5c"
 DEPENDS = " \
   virtual/kernel \
   ${@base_version_less_or_equal('OLDEST_KERNEL', '3.4', 'r8192c', '',d) } \
