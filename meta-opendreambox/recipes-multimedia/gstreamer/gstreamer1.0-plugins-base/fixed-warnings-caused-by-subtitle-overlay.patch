@@ -1,0 +1,18 @@
+diff -Naur orig/gst/playback/gstplaysinkconvertbin.c gst-plugins-base-1.6.4/gst/playback/gstplaysinkconvertbin.c
+--- orig/gst/playback/gstplaysinkconvertbin.c	2015-09-26 00:19:23.000000000 +0200
++++ gst-plugins-base-1.6.4/gst/playback/gstplaysinkconvertbin.c	2017-07-30 00:46:41.980484787 +0200
+@@ -438,9 +438,11 @@
+             gst_caps_append_structure (downstream_filter, s);
+           }
+         }
+-        downstream_filter =
+-            gst_caps_merge (downstream_filter,
+-            gst_caps_ref (self->converter_caps));
++        if (self->converter_caps) {
++            downstream_filter =
++                gst_caps_merge (downstream_filter,
++                gst_caps_ref (self->converter_caps));
++        }
+       }
+ 
+       peer_caps = gst_pad_query_caps (peer, downstream_filter);
