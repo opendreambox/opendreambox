@@ -1,0 +1,28 @@
+From 3791428151f8516d6a7e3add9b1459086b817c3c Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Tue, 1 Aug 2017 20:09:23 +0200
+Subject: [PATCH] AVSwitch: removed duplicate code...
+
+---
+ lib/python/Components/AVSwitch.py | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/AVSwitch.py b/usr/lib/enigma2/python/Components/AVSwitch.py
+index d7980ba..f25b812 100644
+--- a/usr/lib/enigma2/python/Components/AVSwitch.py
++++ b/usr/lib/enigma2/python/Components/AVSwitch.py
+@@ -242,11 +242,3 @@ def InitAVSwitch():
+ 		SystemInfo["HDRSupport"] = True
+ 	except:
+ 		SystemInfo["HDRSupport"] = False
+-
+-	SystemInfo["SupportsAC3PlusTranscode"] = ac3plus_support
+-	if ac3plus_support:
+-		def setAC3PlusConvert(configElement):
+-			open("/proc/stb/audio/ac3plus", "w").write(configElement.value)
+-		config.av.convert_ac3plus = ConfigSelection(choices = [ ("use_hdmi_caps",  _("controlled by HDMI")), ("force_ac3", _("always")) ], default = "use_hdmi_caps")
+-		config.av.convert_ac3plus.addNotifier(setAC3PlusConvert)
+-
+-- 
+2.1.4
+
