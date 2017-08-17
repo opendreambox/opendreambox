@@ -1,4 +1,4 @@
-From 2332c22ebf42c4c52e16b3ea5c702de2eb202429 Mon Sep 17 00:00:00 2001
+From ed8c4614a1198653c1af7ed1248086f80f1de373 Mon Sep 17 00:00:00 2001
 From: Julien Isorce <julien.isorce@gmail.com>
 Date: Fri, 13 Jan 2012 10:53:03 +0100
 Subject: [PATCH] udpsrc: add support for IGMPv3 SSM
@@ -8,15 +8,15 @@ Source Specific Muliticast RFC 4604
 
 Fixes https://bugzilla.gnome.org/show_bug.cgi?id=652711
 ---
- gst/udp/gstudpnetutils.c | 17 +++++++---
+ gst/udp/gstudpnetutils.c | 14 +++++++--
  gst/udp/gstudpnetutils.h |  2 +-
  gst/udp/gstudpsink.c     |  2 +-
  gst/udp/gstudpsrc.c      | 82 ++++++++++++++++++++++++++++++++++++++----------
  gst/udp/gstudpsrc.h      |  2 ++
- 5 files changed, 82 insertions(+), 23 deletions(-)
+ 5 files changed, 82 insertions(+), 20 deletions(-)
 
 diff --git a/gst/udp/gstudpnetutils.c b/gst/udp/gstudpnetutils.c
-index b4dc5ef..22b1378 100644
+index b4dc5ef01..c8dda54b0 100644
 --- a/gst/udp/gstudpnetutils.c
 +++ b/gst/udp/gstudpnetutils.c
 @@ -29,7 +29,8 @@
@@ -29,21 +29,21 @@ index b4dc5ef..22b1378 100644
  {
    gchar *protocol, *location_start;
    gchar *location, *location_end;
-@@ -49,13 +50,19 @@ gst_udp_parse_uri (const gchar * uristr, gchar ** host, guint16 * port)
+@@ -49,13 +50,22 @@ gst_udp_parse_uri (const gchar * uristr, gchar ** host, guint16 * port)
  
    GST_DEBUG ("got location '%s'", location_start);
  
--  /* VLC compatibility, strip everything before the @ sign. VLC uses that as the
--   * remote address. */
-+  /* parse source ip for igmpv3 */
++  if (source != NULL)
++    *source = NULL;
++
+   /* VLC compatibility, strip everything before the @ sign. VLC uses that as the
+    * remote address. */
    location = g_strstr_len (location_start, -1, "@");
--  if (location == NULL)
-+  if (location == NULL) {
-+    if (source != NULL)
-+      *source = NULL;
+   if (location == NULL)
      location = location_start;
 -  else
-+  } else {
++  else {
++    /* parse source ip for igmpv3 */
 +    if (source != NULL && location - location_start > 0) {
 +      *source = g_strndup (location_start, location - location_start);
 +      GST_DEBUG ("source ip address set to '%s'", *source);
@@ -54,7 +54,7 @@ index b4dc5ef..22b1378 100644
    if (location[0] == '[') {
      GST_DEBUG ("parse IPV6 address '%s'", location);
 diff --git a/gst/udp/gstudpnetutils.h b/gst/udp/gstudpnetutils.h
-index a62be56..c5e26c9 100644
+index a62be562c..c5e26c9be 100644
 --- a/gst/udp/gstudpnetutils.h
 +++ b/gst/udp/gstudpnetutils.h
 @@ -23,7 +23,7 @@
@@ -67,7 +67,7 @@ index a62be56..c5e26c9 100644
  #endif /* __GST_UDP_NET_UTILS_H__*/
  
 diff --git a/gst/udp/gstudpsink.c b/gst/udp/gstudpsink.c
-index 224d578..bfc9ee6 100644
+index 224d57818..bfc9ee6fa 100644
 --- a/gst/udp/gstudpsink.c
 +++ b/gst/udp/gstudpsink.c
 @@ -130,7 +130,7 @@ gst_udpsink_set_uri (GstUDPSink * sink, const gchar * uri, GError ** error)
@@ -80,7 +80,7 @@ index 224d578..bfc9ee6 100644
  
    g_free (sink->host);
 diff --git a/gst/udp/gstudpsrc.c b/gst/udp/gstudpsrc.c
-index da412ba..5f4c070 100644
+index da412ba42..5f4c07038 100644
 --- a/gst/udp/gstudpsrc.c
 +++ b/gst/udp/gstudpsrc.c
 @@ -145,6 +145,7 @@ static GstStaticPadTemplate src_template = GST_STATIC_PAD_TEMPLATE ("src",
@@ -285,7 +285,7 @@ index da412ba..5f4c070 100644
          GST_ERROR_OBJECT (src, "Failed to leave multicast group: %s",
              err->message);
 diff --git a/gst/udp/gstudpsrc.h b/gst/udp/gstudpsrc.h
-index a476483..f77d022 100644
+index a47648322..f77d022d4 100644
 --- a/gst/udp/gstudpsrc.h
 +++ b/gst/udp/gstudpsrc.h
 @@ -49,6 +49,7 @@ struct _GstUDPSrc {
