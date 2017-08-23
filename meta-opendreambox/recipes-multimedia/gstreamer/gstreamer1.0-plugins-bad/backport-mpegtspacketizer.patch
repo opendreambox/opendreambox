@@ -1,0 +1,172 @@
+diff --git a/gst/mpegtsdemux/mpegtspacketizer.c b/gst/mpegtsdemux/mpegtspacketizer.c
+index 2a303ab..cc46ebb 100644
+--- a/gst/mpegtsdemux/mpegtspacketizer.c
++++ b/gst/mpegtsdemux/mpegtspacketizer.c
+@@ -212,8 +212,7 @@ mpegts_packetizer_clear_section (MpegTSPacketizerStream * stream)
+   stream->section_length = 0;
+   stream->section_offset = 0;
+   stream->table_id = TABLE_ID_UNSET;
+-  if (stream->section_data)
+-    g_free (stream->section_data);
++  g_free (stream->section_data);
+   stream->section_data = NULL;
+ }
+ 
+@@ -228,8 +227,6 @@ static void
+ mpegts_packetizer_stream_free (MpegTSPacketizerStream * stream)
+ {
+   mpegts_packetizer_clear_section (stream);
+-  if (stream->section_data)
+-    g_free (stream->section_data);
+   g_slist_foreach (stream->subtables,
+       (GFunc) mpegts_packetizer_stream_subtable_free, NULL);
+   g_slist_free (stream->subtables);
+@@ -560,9 +557,9 @@ void
+ mpegts_packetizer_clear (MpegTSPacketizer2 * packetizer)
+ {
+   guint i;
++  MpegTSPCR *pcrtable;
+ 
+-  if (packetizer->packet_size)
+-    packetizer->packet_size = 0;
++  packetizer->packet_size = 0;
+ 
+   if (packetizer->streams) {
+     int i;
+@@ -583,6 +580,10 @@ mpegts_packetizer_clear (MpegTSPacketizer2 * packetizer)
+   packetizer->map_offset = 0;
+   packetizer->last_in_time = GST_CLOCK_TIME_NONE;
+ 
++  pcrtable = packetizer->observations[packetizer->pcrtablelut[0x1fff]];
++  if (pcrtable)
++    pcrtable->base_time = GST_CLOCK_TIME_NONE;
++
+   /* Close current PCR group */
+   PACKETIZER_GROUP_LOCK (packetizer);
+ 
+@@ -599,6 +600,7 @@ void
+ mpegts_packetizer_flush (MpegTSPacketizer2 * packetizer, gboolean hard)
+ {
+   guint i;
++  MpegTSPCR *pcrtable;
+   GST_DEBUG ("Flushing");
+ 
+   if (packetizer->streams) {
+@@ -618,6 +620,10 @@ mpegts_packetizer_flush (MpegTSPacketizer2 * packetizer, gboolean hard)
+   packetizer->map_offset = 0;
+   packetizer->last_in_time = GST_CLOCK_TIME_NONE;
+ 
++  pcrtable = packetizer->observations[packetizer->pcrtablelut[0x1fff]];
++  if (pcrtable)
++    pcrtable->base_time = GST_CLOCK_TIME_NONE;
++
+   /* Close current PCR group */
+   PACKETIZER_GROUP_LOCK (packetizer);
+   for (i = 0; i < MAX_PCR_OBS_CHANNELS; i++) {
+@@ -922,7 +928,7 @@ mpegts_packetizer_push_section (MpegTSPacketizer2 * packetizer,
+   MpegTSPacketizerStream *stream;
+   gboolean long_packet;
+   guint8 pointer = 0, table_id;
+-  guint16 subtable_extension = 0;
++  guint16 subtable_extension;
+   gsize to_read;
+   guint section_length;
+   /* data points to the current read location
+@@ -984,6 +990,7 @@ mpegts_packetizer_push_section (MpegTSPacketizer2 * packetizer,
+       GST_LOG
+           ("PID 0x%04x PUSI and pointer == 0, skipping straight to section_start parsing",
+           packet->pid);
++      mpegts_packetizer_clear_section (stream);
+       goto section_start;
+     }
+   }
+@@ -1044,9 +1051,16 @@ accumulate_data:
+       res = section;
+   }
+ 
+-  /* FIXME : We need at least 8 bytes with current algorithm :(
++section_start:
++  subtable_extension = 0;
++  version_number = 0;
++  last_section_number = 0;
++  section_number = 0;
++  table_id = 0;
++
++  /* FIXME : We need at least 3 bytes (or 8 for long packets) with current algorithm :(
+    * We might end up losing sections that start across two packets (srsl...) */
+-  if (data > packet->data_end - 8 || *data == 0xff) {
++  if (data > packet->data_end - 3 || *data == 0xff) {
+     /* flush stuffing bytes and leave */
+     mpegts_packetizer_clear_section (stream);
+     goto out;
+@@ -1055,8 +1069,6 @@ accumulate_data:
+   /* We have more data to process ... */
+   GST_DEBUG ("PID 0x%04x, More section present in packet (remaining bytes:%"
+       G_GSIZE_FORMAT ")", stream->pid, (gsize) (packet->data_end - data));
+-
+-section_start:
+   GST_MEMDUMP ("section_start", data, packet->data_end - data);
+   data_start = data;
+   /* Beginning of a new section */
+@@ -1109,6 +1121,10 @@ section_start:
+   data += 2;
+ 
+   if (long_packet) {
++    /* Do we have enough data for a long packet? */
++    if (data > packet->data_end - 5)
++      goto out;
++
+     /* subtable_extension (always present, we are in a long section) */
+     /* subtable extension              : 16 bit */
+     subtable_extension = GST_READ_UINT16_BE (data);
+@@ -1857,14 +1873,20 @@ _set_current_group (MpegTSPCR * pcrtable,
+ static inline void
+ _append_group_values (PCROffsetGroup * group, PCROffset pcroffset)
+ {
+-  group->last_value++;
+-  /* Resize values if needed */
+-  if (G_UNLIKELY (group->nb_allocated == group->last_value)) {
+-    group->nb_allocated += DEFAULT_ALLOCATED_OFFSET;
+-    group->values =
+-        g_realloc (group->values, group->nb_allocated * sizeof (PCROffset));
++  /* Only append if new values */
++  if (group->values[group->last_value].offset == pcroffset.offset &&
++      group->values[group->last_value].pcr == pcroffset.pcr) {
++    GST_DEBUG ("Same values, ignoring");
++  } else {
++    group->last_value++;
++    /* Resize values if needed */
++    if (G_UNLIKELY (group->nb_allocated == group->last_value)) {
++      group->nb_allocated += DEFAULT_ALLOCATED_OFFSET;
++      group->values =
++          g_realloc (group->values, group->nb_allocated * sizeof (PCROffset));
++    }
++    group->values[group->last_value] = pcroffset;
+   }
+-  group->values[group->last_value] = pcroffset;
+ 
+   GST_DEBUG ("First PCR:%" GST_TIME_FORMAT " offset:%" G_GUINT64_FORMAT
+       " PCR_offset:%" GST_TIME_FORMAT,
+@@ -2192,6 +2214,12 @@ mpegts_packetizer_pts_to_ts (MpegTSPacketizer2 * packetizer,
+   PACKETIZER_GROUP_LOCK (packetizer);
+   pcrtable = get_pcr_table (packetizer, pcr_pid);
+ 
++  if (!GST_CLOCK_TIME_IS_VALID (pcrtable->base_time) && pcr_pid == 0x1fff &&
++      GST_CLOCK_TIME_IS_VALID (packetizer->last_in_time)) {
++    pcrtable->base_time = packetizer->last_in_time;
++    pcrtable->base_pcrtime = pts;
++  }
++
+   /* Use clock skew if present */
+   if (packetizer->calculate_skew
+       && GST_CLOCK_TIME_IS_VALID (pcrtable->base_time)) {
+@@ -2209,7 +2237,8 @@ mpegts_packetizer_pts_to_ts (MpegTSPacketizer2 * packetizer,
+      * That being said, this will only happen for the small interval of time
+      * where PTS/DTS are wrapping just before we see the first reset/wrap PCR
+      */
+-    if (G_UNLIKELY (ABSDIFF (res, pcrtable->last_pcrtime) > 15 * GST_SECOND))
++    if (G_UNLIKELY (pcr_pid != 0x1fff &&
++            ABSDIFF (res, pcrtable->last_pcrtime) > 15 * GST_SECOND))
+       res = GST_CLOCK_TIME_NONE;
+     else {
+       GstClockTime tmp = pcrtable->base_time + pcrtable->skew;

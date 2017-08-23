@@ -5,6 +5,7 @@ SRC_URI += " \
     file://dvdspu-forced-mode-property.patch \
     file://assrender-overlay-caps.patch \
     file://rtmpsrc-interruption.patch \
+    file://backport-mpegtspacketizer.patch \
 "
 
 EXTRA_OECONF += "--disable-dvb"
