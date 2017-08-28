@@ -18,3 +18,7 @@
 	path = meta-golang
 	url = https://github.com/madisongh/meta-golang
 	branch = master
+[submodule "meta-games"]
+	path = meta-games
+	url = https://github.com/opendreambox/meta-games.git
+	branch = krogoth
