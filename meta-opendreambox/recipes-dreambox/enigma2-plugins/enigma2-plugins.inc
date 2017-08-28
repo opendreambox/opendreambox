@@ -6,11 +6,10 @@ DEPENDS = "gettext-native"
 inherit autotools-brokensep pythonnative
 
 PACKAGES_DYNAMIC = "^enigma2-plugin-(extensions|systemplugins)-.*"
-PACKAGES += "${PN}-meta ${PN}-po"
+PACKAGES += "${PN}-meta"
 
 FILES_${PN} = ""
 FILES_${PN}-meta = "${datadir}/meta"
-FILES_${PN}-po = "${datadir}/enigma2/po"
 
 python enigma2_plugins_split_packages() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
