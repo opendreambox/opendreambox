@@ -4,3 +4,6 @@ SRC_URI[mips32el.md5sum] = "993f390187d529e51a701eacb9559955"
 SRC_URI[mips32el.sha256sum] = "bb691bff8bce453e903fb218c8f92c0b49a3e84614524e2f93fba9f1b32bbccd"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " file://0001-InfoBarServiceErrorSupport-close-statinfo-onClose.patch"
+

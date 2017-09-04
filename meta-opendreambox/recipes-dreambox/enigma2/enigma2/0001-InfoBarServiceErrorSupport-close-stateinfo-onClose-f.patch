@@ -1,0 +1,28 @@
+From ef23ebc0676c781c609150d0287704999c886b37 Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Mon, 4 Sep 2017 09:08:29 +0200
+Subject: [PATCH] InfoBarServiceErrorSupport: close stateinfo onClose (fixes
+ stalled InfoBarStateInfos)
+
+---
+ lib/python/Screens/InfoBarGenerics.py | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/usr/lib/enigma2/python/Screens/InfoBarGenerics.py b/usr/lib/enigma2/python/Screens/InfoBarGenerics.py
+index 22089d9..2667a68 100644
+--- a/usr/lib/enigma2/python/Screens/InfoBarGenerics.py
++++ b/usr/lib/enigma2/python/Screens/InfoBarGenerics.py
+@@ -2550,6 +2550,10 @@ class InfoBarServiceErrorPopupSupport:
+ 		self._reconnTimer = eTimer()
+ 		self._reconnTimer_conn = self._reconnTimer.timeout.connect(self._doReconnect)
+ 		self.__servicePlaying()
++		self.onClose.append(self.__onClose)
++
++	def __onClose(self):
++		self._stateInfo.close()
+ 
+ 	def setPlaybackState(self, state=None, message=None):
+ 		Log.w("%s %s %s" %(state, message, time()))
+-- 
+2.7.4
+
