@@ -1,0 +1,113 @@
+From 6d763911db5e7dc9fc63e8d5a080676d136a999e Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Tue, 5 Sep 2017 10:03:43 +0200
+Subject: [PATCH 2/2] InfoBarServiceErrorPopupSupport: rework InfoBarStateInfo
+ handling a bit. - Make InfoBarStateInfo static/shared between all
+ InfoBarServiceErrorPopupSupport instances - Hide InfoBarStateInfo when
+ InfoBarServiceErrorPopupSupport is not execing, and restore it in onShown -
+ Fixes issues with "external" players that i was aware of and tested Screen:
+ Add onExecEnd callback
+
+---
+ lib/python/Screens/InfoBarGenerics.py | 42 ++++++++++++++++++++++++++---------
+ lib/python/Screens/Screen.py          |  3 +++
+ 2 files changed, 34 insertions(+), 11 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/InfoBarGenerics.py b/usr/lib/enigma2/python/Screens/InfoBarGenerics.py
+index 2667a68..3f8c28d 100644
+--- a/usr/lib/enigma2/python/Screens/InfoBarGenerics.py
++++ b/usr/lib/enigma2/python/Screens/InfoBarGenerics.py
+@@ -2523,12 +2523,17 @@ class InfoBarStateInfo(Screen):
+ 		self._stateOnly = False if message else True
+ 		#self._resizeBoxes()
+ 
++	def current(self):
++		return (self["state"].text, self["message"].text)
++
+ class InfoBarServiceErrorPopupSupport:
+ 	STATE_TUNING = _("tuning...")
+ 	STATE_CONNECTING = _("connecting...")
+ 	MESSAGE_WAIT = _("Please wait!")
+ 	STATE_RECONNECTING = _("reconnecting...")
+ 
++	_stateInfo = None
++
+ 	def __init__(self):
+ 		Notifications.notificationQueue.registerDomain("ZapError", _("ZapError"), Notifications.ICON_DEFAULT)
+ 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
+@@ -2545,25 +2550,40 @@ class InfoBarServiceErrorPopupSupport:
+ 		self._isReconnect = False
+ 		self._currentRef = None
+ 		self.last_error = None
+-		self._stateInfo = self.session.instantiateDialog(InfoBarStateInfo,zPosition=-5)
+-		self._stateInfo.neverAnimate()
++		if not InfoBarServiceErrorPopupSupport._stateInfo:
++			InfoBarServiceErrorPopupSupport._stateInfo = self.session.instantiateDialog(InfoBarStateInfo,zPosition=-5)
++			InfoBarServiceErrorPopupSupport._stateInfo.neverAnimate()
+ 		self._reconnTimer = eTimer()
+ 		self._reconnTimer_conn = self._reconnTimer.timeout.connect(self._doReconnect)
++		self._restoreInfo = None
++
++		self.onShown.append(self.__restoreState)
++		self.onExecEnd.append(self.__hideState)
++		self.onClose.append(self.__hideState)
++
+ 		self.__servicePlaying()
+-		self.onClose.append(self.__onClose)
+ 
+-	def __onClose(self):
+-		self._stateInfo.close()
++	def __restoreState(self):
++		Log.i()
++		if self.execing and self._restoreInfo:
++			self.setPlaybackState(*self._restoreInfo)
++
++	def __hideState(self):
++		if InfoBarServiceErrorPopupSupport._stateInfo.shown:
++			self._restoreInfo = InfoBarServiceErrorPopupSupport._stateInfo.current()
++		InfoBarServiceErrorPopupSupport._stateInfo.hide()
+ 
+ 	def setPlaybackState(self, state=None, message=None):
+-		Log.w("%s %s %s" %(state, message, time()))
++		Log.i("%s %s %s" %(state, message, time()))
+ 		if state or message:
+-			Log.w("show")
+-			self._stateInfo.setPlaybackState(state, message)
+-			self._stateInfo.show()
++			if self.execing:
++				InfoBarServiceErrorPopupSupport._stateInfo.setPlaybackState(state, message)
++				InfoBarServiceErrorPopupSupport._stateInfo.show()
++				self._restoreInfo = None
++			else:
++				self._restoreInfo = (state, message)
+ 		else:
+-			self._stateInfo.hide()
+-			Log.w("hide")
++			InfoBarServiceErrorPopupSupport._stateInfo.hide()
+ 
+ 	def __serviceStarted(self):
+ 		if not self._isStream:
+diff --git a/usr/lib/enigma2/python/Screens/Screen.py b/usr/lib/enigma2/python/Screens/Screen.py
+index 1bbf916..30aa0fe 100644
+--- a/usr/lib/enigma2/python/Screens/Screen.py
++++ b/usr/lib/enigma2/python/Screens/Screen.py
+@@ -30,6 +30,7 @@ class Screen(dict, GUISkin):
+ 
+ 		self.onShow = [ ]
+ 		self.onHide = [ ]
++		self.onExecEnd = [ ]
+ 		self.onHideFinished = [ ]
+ 
+ 		self.execing = False
+@@ -106,6 +107,8 @@ class Screen(dict, GUISkin):
+ #		assert self.session != None, "execEnd on non-execing screen!"
+ #		self.session = None
+ 		self.execing = False
++		for x in self.onExecEnd:
++			x()
+ 
+ 	def doClose(self, immediate=True):
+ 		print "WARNING: NEVER call Screen.doClose directly!!! You have to use Session.deleteDialog(screen)\nThis function is deprecated and will be removed in the future\nPlease report!"
+-- 
+2.7.4
+
