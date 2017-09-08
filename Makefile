@@ -29,7 +29,7 @@
 -include conf/make.conf
 
 # Target platforms:
-# dm520, dm820, dm900, dm7080
+# dm520, dm820, dm900, dm920, dm7080
 #
 # This only sets the default value. All platforms now use a shared build
 # directory. Run "MACHINE=dm820 bitbake dreambox-image" to build an image
@@ -130,14 +130,14 @@ help:
 	@echo
 	@echo "  * Select a new target machine:"
 	@echo "      $$ echo MACHINE=dm820 >> conf/make.conf"
-	@echo "    [Valid values: dm520, dm820, dm900, dm7080]"
+	@echo "    [Valid values: dm520, dm820, dm900, dm920, dm7080]"
 	@echo
 	@echo "  * Build a firmware image for the selected target machine:"
 	@echo "      $$ $(MAKE) image"
 	@echo
 	@echo "  * Build a firmware image for a different target machine:"
 	@echo "      $$ $(MAKE) image MACHINE=dm820"
-	@echo "    [Valid values: dm520, dm820, dm900, dm7080]"
+	@echo "    [Valid values: dm520, dm820, dm900, dm920, dm7080]"
 	@echo
 	@echo "  * Download all source files at once:"
 	@echo "      $$ $(MAKE) download"
