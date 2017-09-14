@@ -23,7 +23,7 @@ python enigma2_plugins_split_packages() {
                     try:
                         name, value = line.strip().split(': ', 1)
                         if name == 'Description':
-                            d.setVar('DESCRIPTION_%s' % package, value)
+                            d.setVar('SUMMARY_%s' % package, value)
                         elif name in ('Breaks', 'Conflicts', 'Depends', 'Provides', 'Recommends', 'Replaces', 'Suggests'):
                             d.appendVar('R%s_%s' % (name.upper(), package), ' ' + ' '.join(value.split(', ')))
                     except:
