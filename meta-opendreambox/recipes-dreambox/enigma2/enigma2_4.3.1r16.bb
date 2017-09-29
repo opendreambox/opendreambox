@@ -4,3 +4,9 @@ SRC_URI[mips32el.md5sum] = "100bb084fc61f24d6af5c3383362a809"
 SRC_URI[mips32el.sha256sum] = "2a3c1c1be249bf24cc8be5e2e4c73d3c5f546d4ec658e6c68b66cdc5a6ebb10f"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " \
+	file://0001-Satconfig-pass-session-to-ConfigListScreen.patch \
+	file://0002-config-warn-when-help-is-available-but-session-is-mi.patch \
+	file://0003-use-a-little-bit-smaller-font-size-for-ConfigSetHelp.patch \
+"
