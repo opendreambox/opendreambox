@@ -5,6 +5,6 @@ PV = "4.3.2.1+git${SRCPV}"
 
 GITHUB_PROJECT = "enigma2-plugins-po"
 
-inherit autotools opendreambox-github
+inherit autotools gettext opendreambox-github
 
 FILES_${PN} = "${datadir}/enigma2/po"
