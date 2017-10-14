@@ -7,6 +7,8 @@ SRC_URI = " \
     http://dreamboxupdate.com/download/kernel-patches/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
 "
 
+SRC_URI_append_dm920 += " file://0001-dm920_defconfig-changed-localversion-to-dm920-change.patch"
+
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
 SRC_URI[kernel.sha256sum] = "61558aa490855f42b6340d1a1596be47454909629327c49a5e4e10268065dffa"
 SRC_URI[stable-patch.md5sum] = "c2bc200bf9eb5a49e2137e039ea27884"

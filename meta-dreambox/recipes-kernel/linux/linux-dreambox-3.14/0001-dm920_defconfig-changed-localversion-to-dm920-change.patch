@@ -1,0 +1,35 @@
+From e33e3924cb142870ee290dc31236a25b83563edf Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Sat, 14 Oct 2017 18:31:41 +0200
+Subject: [PATCH] dm920_defconfig: changed localversion to -dm920, changed
+ hostname to dm920
+
+---
+ arch/arm/configs/dm920_defconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/configs/dm920_defconfig b/arch/arm/configs/dm920_defconfig
+index 6de7f48..21804551 100644
+--- a/arch/arm/configs/dm920_defconfig
++++ b/arch/arm/configs/dm920_defconfig
+@@ -27,7 +27,7 @@ CONFIG_BUILDTIME_EXTABLE_SORT=y
+ CONFIG_INIT_ENV_ARG_LIMIT=32
+ CONFIG_CROSS_COMPILE="arm-linux-"
+ # CONFIG_COMPILE_TEST is not set
+-CONFIG_LOCALVERSION="-dm900"
++CONFIG_LOCALVERSION="-dm920"
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_HAVE_KERNEL_GZIP=y
+ CONFIG_HAVE_KERNEL_LZMA=y
+@@ -39,7 +39,7 @@ CONFIG_KERNEL_GZIP=y
+ # CONFIG_KERNEL_XZ is not set
+ # CONFIG_KERNEL_LZO is not set
+ # CONFIG_KERNEL_LZ4 is not set
+-CONFIG_DEFAULT_HOSTNAME="dm900"
++CONFIG_DEFAULT_HOSTNAME="dm920"
+ CONFIG_SWAP=y
+ CONFIG_SYSVIPC=y
+ CONFIG_SYSVIPC_SYSCTL=y
+-- 
+2.1.4
+
