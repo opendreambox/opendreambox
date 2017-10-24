@@ -1,6 +1,6 @@
 /build/
-/.cross-compile-*.env
 /.deps/
+/.env/
 /meta-*/
 !/meta-dreambox/
 !/meta-opendreambox/

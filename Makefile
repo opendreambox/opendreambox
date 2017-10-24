@@ -56,6 +56,7 @@ PERSISTENT_DIR = $(CURDIR)/persist-cache
 SSTATE_DIR = $(CURDIR)/sstate-cache
 TMPDIR = $(TOPDIR)/tmp
 DEPDIR = $(CURDIR)/.deps
+ENVDIR = $(CURDIR)/.env
 
 BITBAKE = . $(CURDIR)/bitbake.env && cd $(TOPDIR) && $(NICE) bitbake
 
@@ -83,7 +84,7 @@ CONFFILES_AUTO = \
 	$(TOPDIR)/conf/local.conf
 
 CONFFILES_MANUAL = \
-	$(wildcard .cross-compile-$(MACHINE)*.env)
+	$(wildcard $(ENVDIR)/*.env)
 
 CONFDEPS = \
 	$(DEPDIR)/.bitbake.env.$(BITBAKE_ENV_HASH) \
@@ -181,6 +182,8 @@ clean:
 distclean: clean
 	@echo '[*] Deleting dependencies directory'
 	@$(RM) -r $(DEPDIR)
+	@echo '[*] Deleting generated environment'
+	@$(RM) -r $(ENVDIR)
 	@echo '[*] Deleting download directory'
 	@$(RM) -r $(DL_DIR)
 	@echo '[*] Deleting tmp directory'
@@ -358,9 +361,10 @@ CROSS_COMPILE_ENV_HASH := $(call hash, \
 	'CROSS_COMPILE_ENV_BLACKLIST = "$(CROSS_COMPILE_ENV_BLACKLIST)"' \
 	)
 
-.cross-compile-$(MACHINE)-%.env: $(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH) $(CONFFILES_BITBAKE)
+$(ENVDIR)/cross-compile-$(MACHINE)-%.env: $(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH) $(CONFFILES_BITBAKE)
 	@test -d $(TOPDIR) || (echo 'The directory "$(TOPDIR)" does not exist. Is "$(MACHINE)" a valid machine? Try running "make MACHINE=$(MACHINE)" first.' && exit 1)
 	@echo '[*] Generating $@'
+	@test -d $(@D) || mkdir -p $(@D)
 	@(BB_SRCREV_POLICY=cache $(BITBAKE) -e $* | grep '^\(export\s\)\?[a-zA-Z0-9_]\+=".*"$$' | sed -e 's,^export\s,,' | grep -v $(foreach v,$(CROSS_COMPILE_ENV_BLACKLIST),-e ^$(v)=) | sed -e 's,^,local ,' | sort) > $@.tmp && [ -s $@.tmp ] && mv $@.tmp $@ || ($(RM) $@.tmp && echo 'Failed! Please verify that no instance of bitbake is currently running for this machine.' && exit 1)
 
 $(CONFDEPS):
