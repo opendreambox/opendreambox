@@ -367,6 +367,10 @@ $(ENVDIR)/cross-compile-$(MACHINE)-%.env: $(DEPDIR)/.cross-compile.env.$(MACHINE
 	@test -d $(@D) || mkdir -p $(@D)
 	@(BB_SRCREV_POLICY=cache $(BITBAKE) -e $* | grep '^\(export\s\)\?[a-zA-Z0-9_]\+=".*"$$' | sed -e 's,^export\s,,' | grep -v $(foreach v,$(CROSS_COMPILE_ENV_BLACKLIST),-e ^$(v)=) | sed -e 's,^,local ,' | sort) > $@.tmp && [ -s $@.tmp ] && mv $@.tmp $@ || ($(RM) $@.tmp && echo 'Failed! Please verify that no instance of bitbake is currently running for this machine.' && exit 1)
 
+$(ENVDIR)/meson-$(MACHINE)-%.env: $(ENVDIR)/cross-compile-$(MACHINE)-%.env scripts/mesonenv.py
+	@test -d $(@D) || mkdir -p $(@D)
+	$(CURDIR)/scripts/mesonenv.py < $< > $@
+
 $(CONFDEPS):
 	@test -d $(@D) || mkdir -p $(@D)
 	@$(RM) $(filter-out $@,$(wildcard $(basename $@).*))
