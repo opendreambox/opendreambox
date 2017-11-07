@@ -4,3 +4,5 @@ SRC_URI[mips32el.md5sum] = "ae19f9d4bccab0bb521e01d37ad4cbb1"
 SRC_URI[mips32el.sha256sum] = "f4331422d232ba617b3122c13cd0deeb6bd5d26a6b67a7ae6a40c66e45298d8f"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " file://0001-NimManager-dont-crash-on-empty-tuner-slot-s.patch"
