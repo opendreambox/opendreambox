@@ -1,0 +1,30 @@
+From 7cea6f28706c9c619b13138336d5c7fe8c8ddba7 Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Mon, 13 Nov 2017 11:34:35 +0100
+Subject: [PATCH 2/3] MediaCenter: remove from extensions menus (it's in the
+ main menu!)
+
+---
+ usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py b/usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py
+index 85ac49c..c5e5e65 100644
+--- a/usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py
++++ b/usr/lib/enigma2/python/Plugins/Extensions/MediaCenter/plugin.py
+@@ -243,12 +243,6 @@ def Plugins(**kwargs):
+ 	return [
+ 			PluginDescriptor(name="MediaCenter",
+ 							  description="Play and watch all your media",
+-							  icon="plugin.png",
+-							  where=[ PluginDescriptor.WHERE_EXTENSIONSMENU, PluginDescriptor.WHERE_PLUGINMENU ],
+-							  fnc=main),
+-
+-			PluginDescriptor(name="MediaCenter",
+-							  description="Play and watch all your media",
+ 							  where=PluginDescriptor.WHERE_MENU,
+ 							  fnc=menu),
+ 
+-- 
+2.1.4
+

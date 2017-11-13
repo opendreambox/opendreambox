@@ -5,4 +5,8 @@ SRC_URI[mips32el.sha256sum] = "f4331422d232ba617b3122c13cd0deeb6bd5d26a6b67a7ae6
 
 require enigma2-bin-4.3.inc
 
-SRC_URI += " file://0001-NimManager-dont-crash-on-empty-tuner-slot-s.patch"
+SRC_URI += " \
+	file://0001-NimManager-dont-crash-on-empty-tuner-slot-s.patch \
+	file://0002-MediaCenter-remove-from-extensions-menus-it-s-in-the.patch \
+	file://0003-update-default-tv-favourites-bouquet.patch \
+"
