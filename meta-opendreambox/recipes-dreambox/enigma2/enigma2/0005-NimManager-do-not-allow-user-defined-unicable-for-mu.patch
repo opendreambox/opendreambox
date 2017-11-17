@@ -1,0 +1,31 @@
+From 110c27ff62221c163f5f54b0c0f9d232f88fc309 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 16 Nov 2017 23:24:41 +0100
+Subject: [PATCH 5/7] NimManager: do not allow user defined unicable for multi
+ channel / multi input tuners (aka FBC tuners) .. because it is currently not
+ possible to configure more than one SCR in this way
+
+---
+ usr/lib/enigma2/python/Components/NimManager.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Components/NimManager.py b/usr/lib/enigma2/python/Components/NimManager.py
+index 250487d..ec7d89d 100644
+--- a/usr/lib/enigma2/python/Components/NimManager.py
++++ b/usr/lib/enigma2/python/Components/NimManager.py
+@@ -1614,8 +1614,10 @@ def configLOFChanged(configElement):
+ 		if isinstance(section.unicable, ConfigNothing):
+ 			unicable_choices = {
+ 				"unicable_lnb": _("Unicable LNB"),
+-				"unicable_matrix": _("Unicable Matrix"),
+-				"unicable_user": "Unicable "+_("User defined")}
++				"unicable_matrix": _("Unicable Matrix")}
++			# FIXMEE user defined unicable is not usable with multi channel / multi input tuners (aka FBC tuners yet)
++			if not create_scrs:
++				unicable_choices["unicable_user"] = "Unicable "+_("User defined")
+ 			unicable_choices_default = "unicable_lnb"
+ 			section.unicable = ConfigSelection(unicable_choices, unicable_choices_default)
+ 			section.unicable.slot_id = x
+-- 
+2.1.4
+

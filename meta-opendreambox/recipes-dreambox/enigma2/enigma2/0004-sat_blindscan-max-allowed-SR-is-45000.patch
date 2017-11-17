@@ -1,0 +1,25 @@
+From 8a8cfdc2923039d8941160b28ac27801633cf649 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 16 Nov 2017 12:46:31 +0100
+Subject: [PATCH 4/7] sat_blindscan: max allowed SR is 45000
+
+---
+ usr/lib/enigma2/python/Screens/ScanSetup.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/usr/lib/enigma2/python/Screens/ScanSetup.py b/usr/lib/enigma2/python/Screens/ScanSetup.py
+index 1539e03..915413d 100644
+--- a/usr/lib/enigma2/python/Screens/ScanSetup.py
++++ b/usr/lib/enigma2/python/Screens/ScanSetup.py
+@@ -891,6 +891,8 @@ class SatelliteTransponderSearchSupport:
+ 						self.parm.frequency += self.parm.symbol_rate
+ 				else:
+ 					sr_rounded = freq_round(sr, 500)
++					if sr_rounded > 45000000:
++						sr_rounded = 45000000
+ #					print "SR after round", sr_rounded
+ 					parm.symbol_rate = sr_rounded
+ 					fstr += str(parm.symbol_rate/1000)
+-- 
+2.1.4
+

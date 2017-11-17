@@ -9,4 +9,6 @@ SRC_URI += " \
 	file://0001-NimManager-dont-crash-on-empty-tuner-slot-s.patch \
 	file://0002-MediaCenter-remove-from-extensions-menus-it-s-in-the.patch \
 	file://0003-update-default-tv-favourites-bouquet.patch \
+	file://0004-sat_blindscan-max-allowed-SR-is-45000.patch \
+	file://0005-NimManager-do-not-allow-user-defined-unicable-for-mu.patch \
 "
