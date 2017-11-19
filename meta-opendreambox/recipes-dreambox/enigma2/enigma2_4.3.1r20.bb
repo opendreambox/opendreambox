@@ -11,4 +11,5 @@ SRC_URI += " \
 	file://0003-update-default-tv-favourites-bouquet.patch \
 	file://0004-sat_blindscan-max-allowed-SR-is-45000.patch \
 	file://0005-NimManager-do-not-allow-user-defined-unicable-for-mu.patch \
+	file://0006-DVB-S-2-blindscan-always-set-is_id-to-1-on-blindscan.patch \
 "

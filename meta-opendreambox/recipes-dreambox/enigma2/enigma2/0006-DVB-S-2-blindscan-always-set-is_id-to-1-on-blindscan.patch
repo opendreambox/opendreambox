@@ -1,0 +1,33 @@
+From 0d70b9b2377707b5685e2d98838aea39d30ca626 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Sun, 19 Nov 2017 17:26:33 +0100
+Subject: [PATCH] DVB-S(2) blindscan: always set is_id to -1 on blindscan
+ to fix not working DVB-S transponders directly after blindscan
+
+---
+ usr/lib/enigma2/python/Screens/ScanSetup.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/ScanSetup.py b/usr/lib/enigma2/python/Screens/ScanSetup.py
+index 915413d..1133a51 100644
+--- a/usr/lib/enigma2/python/Screens/ScanSetup.py
++++ b/usr/lib/enigma2/python/Screens/ScanSetup.py
+@@ -909,12 +909,12 @@ class SatelliteTransponderSearchSupport:
+ 					fstr += " "
+ 					fstr += r["modulation"]
+ 
++					parm.is_id = -1
++					parm.pls_mode = eDVBFrontendParametersSatellite.PLS_Unknown
++					parm.pls_code = 0
+ 					if parm.system == eDVBFrontendParametersSatellite.System_DVB_S2:
+ 						parm.rolloff = d["rolloff"]
+ 						parm.pilot = d["pilot"]
+-						parm.is_id = -1
+-						parm.pls_mode = eDVBFrontendParametersSatellite.PLS_Unknown
+-						parm.pls_code = 0
+ 
+ 					if self.auto_scan:
+ 						print "LOCKED at", freq
+-- 
+2.1.4
+
