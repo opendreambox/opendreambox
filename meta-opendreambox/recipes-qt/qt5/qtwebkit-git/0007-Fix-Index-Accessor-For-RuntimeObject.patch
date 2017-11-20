@@ -1,0 +1,51 @@
+diff --git a/Source/WebCore/bridge/runtime_object.cpp b/Source/WebCore/bridge/runtime_object.cpp
+index d28a8f7..386228b 100644
+--- a/Source/WebCore/bridge/runtime_object.cpp
++++ b/Source/WebCore/bridge/runtime_object.cpp
+@@ -237,6 +237,23 @@ bool RuntimeObject::deleteProperty(JSCell*, ExecState*, PropertyName)
+     return false;
+ }
+ 
++bool RuntimeObject::getOwnPropertySlotByIndex(JSCell* cell, ExecState *exec, unsigned index, PropertySlot& slot)
++{
++    if(getOwnPropertySlot(cell, exec, Identifier::from(exec, index), slot));
++        return true;
++    return JSDestructibleObject::getOwnPropertySlotByIndex(cell, exec, index, slot);
++}
++
++void RuntimeObject::putByIndex(JSCell* cell, ExecState* exec, unsigned index, JSValue value, bool shouldThrow)
++{
++    JSDestructibleObject::putByIndex(cell, exec, index, value, shouldThrow);
++}
++
++bool RuntimeObject::deletePropertyByIndex(JSCell* cell, ExecState* exec, unsigned index)
++{
++    return false;
++}
++
+ JSValue RuntimeObject::defaultValue(const JSObject* object, ExecState* exec, PreferredPrimitiveType hint)
+ {
+     const RuntimeObject* thisObject = jsCast<const RuntimeObject*>(object);
+diff --git a/Source/WebCore/bridge/runtime_object.h b/Source/WebCore/bridge/runtime_object.h
+index 15cda65..956086f 100644
+--- a/Source/WebCore/bridge/runtime_object.h
++++ b/Source/WebCore/bridge/runtime_object.h
+@@ -49,6 +49,9 @@ public:
+     static bool getOwnPropertyDescriptor(JSObject*, ExecState*, PropertyName, PropertyDescriptor&);
+     static void put(JSCell*, ExecState*, PropertyName, JSValue, PutPropertySlot&);
+     static bool deleteProperty(JSCell*, ExecState*, PropertyName);
++    static bool getOwnPropertySlotByIndex(JSCell*, ExecState*, unsigned, PropertySlot&);
++    static void putByIndex(JSCell*, ExecState*, unsigned propertyName, JSValue, bool shouldThrow);
++    static bool deletePropertyByIndex(JSCell*, ExecState*, unsigned propertyName);
+     static JSValue defaultValue(const JSObject*, ExecState*, PreferredPrimitiveType);
+     static CallType getCallData(JSCell*, CallData&);
+     static ConstructType getConstructData(JSCell*, ConstructData&);
+@@ -76,7 +79,7 @@ public:
+ protected:
+     RuntimeObject(ExecState*, JSGlobalObject*, Structure*, PassRefPtr<Instance>);
+     void finishCreation(JSGlobalObject*);
+-    static const unsigned StructureFlags = OverridesGetOwnPropertySlot | OverridesGetPropertyNames | Base::StructureFlags;
++    static const unsigned StructureFlags = OverridesGetOwnPropertySlot | OverridesGetPropertyNames | InterceptsGetOwnPropertySlotByIndexEvenWhenLengthIsNotZero | Base::StructureFlags;
+ 
+ private:
+     static JSValue fallbackObjectGetter(ExecState*, JSValue, PropertyName);
