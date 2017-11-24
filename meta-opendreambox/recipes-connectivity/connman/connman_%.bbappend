@@ -8,3 +8,7 @@ do_install_append() {
         install -m 755 ${WORKDIR}/connmand-nfsroot.in ${D}${sbindir}/connmand
         sed -e 's,@sbindir@,${sbindir},g' -i ${D}${sbindir}/connmand
 }
+do_install_append_mipsel() {
+    sed -e '/^Protect/d' \
+        -i ${D}${systemd_system_unitdir}/connman.service
+}
