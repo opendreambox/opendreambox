@@ -13,6 +13,7 @@ RDEPENDS_${PN} += " \
         base-passwd \
         busybox \
         ${@bb.utils.contains('MACHINE_FEATURES', 'keyboard', 'keymaps', '', d)} \
+        kernel \
         netbase \
         udev \
         update-alternatives-dpkg \
