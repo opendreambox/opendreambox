@@ -17,6 +17,8 @@ RPROVIDES_kernel-base = "kernel-base-${KERNEL_VERSION_PKG_NAME}"
 RDEPENDS_kernel-base = ""
 PACKAGES_remove = "kernel-image"
 
+KERNEL_FLASH_ARGS ?= ""
+
 python __anonymous() {
     type = d.getVar('KERNEL_IMAGETYPE', True) or ""
     alttype = d.getVar('KERNEL_ALT_IMAGETYPE', True) or ""
@@ -36,7 +38,7 @@ python __anonymous() {
     postinst = d.getVar('pkg_postinst_kernel-image-%s' % imagetype.lower(), False)
     if not postinst:
         postinst = '#!/bin/sh\n'
-    postinst += '[ -n "$D" ] || flash-kernel /${KERNEL_IMAGEDEST}/%s-${KERNEL_VERSION_NAME}\n' % imagetype
+    postinst += '[ -n "$D" ] || flash-kernel ${KERNEL_FLASH_ARGS} /${KERNEL_IMAGEDEST}/%s-${KERNEL_VERSION_NAME}\n' % imagetype
     d.setVar('pkg_postinst_kernel-image-%s' % imagetype.lower(), postinst)
 
     d.setVar('PKG_kernel-image-%s' % imagetype.lower(), 'kernel-image')
