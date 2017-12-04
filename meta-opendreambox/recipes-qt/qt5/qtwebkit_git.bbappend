@@ -6,6 +6,7 @@ SRC_URI += " \
         file://0005-import-a-bunch-of-hbbtv-patches.patch \
         file://0006-ANGLE-remove-EGL-GLES2-KHR-headers.patch \
         file://0007-Fix-Index-Accessor-For-RuntimeObject.patch \
+        file://0008-Add-QDBus-based-MediaPlayer-for-dreamboxes.patch \
 "
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/qtwebkit-git:"

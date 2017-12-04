@@ -1,0 +1,878 @@
+From 3abc2fdeff07d032f08b5c4900be19ed0da2e372 Mon Sep 17 00:00:00 2001
+From: Stephan Reichholf <reichi@opendreambox.org>
+Date: Sun, 26 Nov 2017 13:16:20 +0100
+Subject: [PATCH] Add QDBus based MediaPlayer for dreamboxes
+
+Change-Id: I79e8cd486b3017b335123aac27493d91af129e38
+---
+ Source/WebCore/Target.pri                          |   7 +
+ Source/WebCore/WebCore.pri                         |   2 +
+ Source/WebCore/platform/graphics/MediaPlayer.cpp   |   3 +
+ .../graphics/qt/MediaPlayerPrivateQtDBus.cpp       | 460 +++++++++++++++++++++
+ .../graphics/qt/MediaPlayerPrivateQtDBus.h         | 168 ++++++++
+ .../qt/MediaPlayerPrivateQtDBusInterface.cpp       |  13 +
+ .../qt/MediaPlayerPrivateQtDBusInterface.h         | 117 ++++++
+ Tools/qmake/mkspecs/features/features.prf          |   1 +
+ Tools/qmake/mkspecs/features/features.pri          |   2 +-
+ 9 files changed, 772 insertions(+), 1 deletion(-)
+ create mode 100644 Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBus.cpp
+ create mode 100644 Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBus.h
+ create mode 100644 Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.cpp
+ create mode 100644 Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.h
+
+diff --git a/Source/WebCore/Target.pri b/Source/WebCore/Target.pri
+index 0518eb3..16ac535 100644
+--- a/Source/WebCore/Target.pri
++++ b/Source/WebCore/Target.pri
+@@ -3387,6 +3387,13 @@ enable?(VIDEO) {
+ 
+         SOURCES += \
+             platform/graphics/qt/MediaPlayerPrivateQt.cpp
++    } else {
++        HEADERS += \
++            platform/graphics/qt/MediaPlayerPrivateQtDBus.h \
++            platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.h
++        SOURCES += \
++            platform/graphics/qt/MediaPlayerPrivateQtDBus.cpp \
++            platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.cpp
+     }
+ }
+ 
+diff --git a/Source/WebCore/WebCore.pri b/Source/WebCore/WebCore.pri
+index 0189394..fcfbc7c 100644
+--- a/Source/WebCore/WebCore.pri
++++ b/Source/WebCore/WebCore.pri
+@@ -190,6 +190,8 @@ enable?(VIDEO) {
+         INCLUDEPATH += $$SOURCE_DIR/platform/graphics/gstreamer
+     } else:use?(QT_MULTIMEDIA) {
+         QT *= multimedia
++    } else {
++        QT *= dbus
+     }
+ }
+ 
+diff --git a/Source/WebCore/platform/graphics/MediaPlayer.cpp b/Source/WebCore/platform/graphics/MediaPlayer.cpp
+index 3b0d63f..ed1f743 100644
+--- a/Source/WebCore/platform/graphics/MediaPlayer.cpp
++++ b/Source/WebCore/platform/graphics/MediaPlayer.cpp
+@@ -75,6 +75,9 @@
+ #if USE(QT_MULTIMEDIA) && !USE(GSTREAMER)
+ #include "MediaPlayerPrivateQt.h"
+ #define PlatformMediaEngineClassName MediaPlayerPrivateQt
++#else
++#include "MediaPlayerPrivateQtDBus.h"
++#define PlatformMediaEngineClassName MediaPlayerPrivateQtDBus
+ #endif
+ #elif PLATFORM(BLACKBERRY)
+ #include "MediaPlayerPrivateBlackBerry.h"
+diff --git a/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBus.cpp b/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBus.cpp
+new file mode 100644
+index 0000000..b11279a
+--- /dev/null
++++ b/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBus.cpp
+@@ -0,0 +1,460 @@
++/*
++    Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies)
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License as published by the Free Software Foundation; either
++    version 2 of the License, or (at your option) any later version.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++*/
++
++#include "config.h"
++#include "MediaPlayerPrivateQtDBus.h"
++#include "MediaPlayerPrivateQtDBusInterface.h"
++
++#include "Frame.h"
++#include "FrameView.h"
++#include "GraphicsContext.h"
++#include "GraphicsLayer.h"
++#include "HTMLMediaElement.h"
++#include "HTMLVideoElement.h"
++#include "Logging.h"
++#include "NetworkingContext.h"
++#include "NotImplemented.h"
++#include "RenderVideo.h"
++#include "TimeRanges.h"
++#include "Widget.h"
++
++#include <QPainter>
++#include <QPoint>
++#include <QRect>
++#include <QTime>
++#include <QTimer>
++#include <limits>
++#include <wtf/HashSet.h>
++#include <wtf/text/CString.h>
++
++
++#if USE(ACCELERATED_COMPOSITING)
++#include "texmap/TextureMapper.h"
++#endif
++
++using namespace WTF;
++
++namespace WebCore {
++
++PassOwnPtr<MediaPlayerPrivateInterface> MediaPlayerPrivateQtDBus::create(MediaPlayer* player)
++{
++    return adoptPtr(new MediaPlayerPrivateQtDBus(player));
++}
++
++void MediaPlayerPrivateQtDBus::registerMediaEngine(MediaEngineRegistrar registrar)
++{
++    registrar(create, getSupportedTypes, supportsType, 0, 0, 0);
++}
++
++void MediaPlayerPrivateQtDBus::getSupportedTypes(HashSet<String> &supported)
++{
++    supported.add("video/webm");
++    supported.add("audio/webm");
++    supported.add("video/ogg");
++    supported.add("audio/ogg");
++    supported.add("application/ogg");
++    supported.add("audio/ogg; codecs=opus");
++    supported.add("video/mp4");
++    supported.add("audio/mp4");
++    supported.add("audio/mpeg");
++    supported.add("audio/wave");
++    supported.add("audio/wav");
++    supported.add("audio/x-wav");
++    supported.add("audio/x-pn-wav");
++    supported.add("audio/flac");
++    supported.add("audio/x-flac");
++    supported.add("audio/flac");
++    supported.add("video/x-flv");
++}
++
++MediaPlayer::SupportsType MediaPlayerPrivateQtDBus::supportsType(const String& mime, const String& codec, const KURL&)
++{
++    if (!mime.startsWith("audio/") && !mime.startsWith("video/") && !mime.startsWith("application/"))
++        return MediaPlayer::IsNotSupported;
++    return MediaPlayer::IsSupported;
++}
++
++MediaPlayerPrivateQtDBus::MediaPlayerPrivateQtDBus(MediaPlayer* player)
++    : m_webCorePlayer(player)
++    , m_interface(new MediaPlayerPrivateQtDBusInterface)
++    , m_networkState(MediaPlayer::Empty)
++    , m_readyState(MediaPlayer::HaveNothing)
++    , m_currentSize(0, 0)
++    , m_naturalSize(RenderVideo::defaultSize())
++    , m_isSeeking(false)
++    , m_composited(false)
++    , m_preload(MediaPlayer::Auto)
++    , m_suppressNextPlaybackChanged(false)
++    , m_isPaused(false)
++{
++    // Signal Handlers
++    connect(m_interface, SIGNAL(event(int)), this, SLOT(event(int)));
++}
++
++MediaPlayerPrivateQtDBus::~MediaPlayerPrivateQtDBus()
++{
++    delete m_interface;
++}
++
++bool MediaPlayerPrivateQtDBus::hasVideo() const
++{
++    return true;
++}
++
++bool MediaPlayerPrivateQtDBus::hasAudio() const
++{
++    return true;
++}
++
++void MediaPlayerPrivateQtDBus::load(const String& url)
++{
++    m_mediaUrl = url;
++    commitLoad(url);
++}
++
++void MediaPlayerPrivateQtDBus::commitLoad(const String& url)
++{
++    // We are now loading
++    if (m_networkState != MediaPlayer::Loading) {
++        m_networkState = MediaPlayer::Loading;
++        m_webCorePlayer->networkStateChanged();
++    }
++
++    // And we don't have any data yet
++    if (m_readyState != MediaPlayer::HaveNothing) {
++        m_readyState = MediaPlayer::HaveNothing;
++        m_webCorePlayer->readyStateChanged();
++    }
++
++    setMuted(m_webCorePlayer->muted());
++    if (m_webCorePlayer->paused())
++        m_isPaused = true;
++    else
++        play();
++}
++
++void MediaPlayerPrivateQtDBus::cancelLoad()
++{
++    m_interface->stop();
++    updateStates((int)STREAM_STATE_CANCELLED);
++}
++
++void MediaPlayerPrivateQtDBus::prepareToPlay()
++{
++    notImplemented();
++}
++
++void MediaPlayerPrivateQtDBus::play()
++{
++    m_isPaused = false;
++    m_interface->play(m_mediaUrl);
++}
++
++void MediaPlayerPrivateQtDBus::pause()
++{
++    m_isPaused = m_interface->pause();
++}
++
++bool MediaPlayerPrivateQtDBus::paused() const
++{
++    return m_isPaused;
++}
++
++void MediaPlayerPrivateQtDBus::seek(float position)
++{
++    m_isSeeking = true;
++    m_interface->setPosition(static_cast<qint64>(position));
++}
++
++bool MediaPlayerPrivateQtDBus::seeking() const
++{
++    return m_isSeeking;
++}
++
++float MediaPlayerPrivateQtDBus::duration() const
++{
++    if (m_readyState < MediaPlayer::HaveMetadata)
++        return 0.0f;
++    float duration = static_cast<float>(m_interface->getDuration());
++    LOG(Media, "Duration: %f", duration);
++    return duration;
++}
++
++float MediaPlayerPrivateQtDBus::currentTime() const
++{
++    return m_interface->getPosition();
++}
++
++PassRefPtr<TimeRanges> MediaPlayerPrivateQtDBus::buffered() const
++{
++    notImplemented();
++    RefPtr<TimeRanges> buffered = TimeRanges::create();
++    return buffered;
++}
++
++float MediaPlayerPrivateQtDBus::maxTimeSeekable() const
++{
++    notImplemented();
++    return 0.0f;
++}
++
++bool MediaPlayerPrivateQtDBus::didLoadingProgress() const
++{
++    return true;
++}
++
++unsigned MediaPlayerPrivateQtDBus::totalBytes() const
++{
++    return 100;
++}
++
++void MediaPlayerPrivateQtDBus::setPreload(MediaPlayer::Preload preload)
++{
++    m_preload = preload;
++    notImplemented();
++}
++
++void MediaPlayerPrivateQtDBus::setRate(float rate)
++{
++    notImplemented();
++}
++
++void MediaPlayerPrivateQtDBus::setVolume(float volume)
++{
++    m_interface->setVolume(static_cast<int>(volume));
++}
++
++bool MediaPlayerPrivateQtDBus::supportsMuting() const
++{
++    return true;
++}
++
++void MediaPlayerPrivateQtDBus::setMuted(bool muted)
++{
++    int volume = 0;
++    if (!muted)
++        volume = static_cast<int>(m_webCorePlayer->volume() * 100.0);
++    m_interface->setVolume(volume);
++
++}
++
++MediaPlayer::NetworkState MediaPlayerPrivateQtDBus::networkState() const
++{
++    return m_networkState;
++}
++
++MediaPlayer::ReadyState MediaPlayerPrivateQtDBus::readyState() const
++{
++    return m_readyState;
++}
++
++void MediaPlayerPrivateQtDBus::setVisible(bool)
++{
++}
++
++void MediaPlayerPrivateQtDBus::event(int state)
++{
++    LOG(Media, "MediaPlayerPrivateQtDBus::event(state=%i)", state);
++    updateStates(state);
++}
++
++void MediaPlayerPrivateQtDBus::timeChanged()
++{
++    m_webCorePlayer->timeChanged();
++}
++
++void MediaPlayerPrivateQtDBus::durationChanged()
++{
++    if(m_interface->getDuration() >= 0)
++        m_webCorePlayer->durationChanged();
++}
++
++void MediaPlayerPrivateQtDBus::volumeChanged(int volume)
++{
++    m_webCorePlayer->volumeChanged(static_cast<float>(volume) / 100.0);
++}
++
++void MediaPlayerPrivateQtDBus::mutedChanged(bool muted)
++{
++    m_webCorePlayer->muteChanged(muted);
++}
++
++void MediaPlayerPrivateQtDBus::sizeChanged()
++{
++    int width = m_interface->getVideoWidth();
++    int height = m_interface->getVideoHeight();
++    if(!width || !height)
++        return;
++    m_naturalSize.setWidth(width);
++    m_naturalSize.setHeight(height);
++    m_webCorePlayer->sizeChanged();
++}
++
++void MediaPlayerPrivateQtDBus::updateStates(int state)
++{
++    // Store the old states so that we can detect a change and raise change events
++    MediaPlayer::NetworkState oldNetworkState = m_networkState;
++    MediaPlayer::ReadyState oldReadyState = m_readyState;
++    bool oldPaused = m_isPaused;
++    switch(state) {
++        case STREAM_STATE_STOPPED:
++            m_isSeeking = false;
++            m_isPaused = true;
++            m_networkState = MediaPlayer::Loaded;
++            m_readyState = MediaPlayer::HaveEnoughData;
++        case STREAM_STATE_CANCELLED:
++            m_isSeeking = false;
++            m_isPaused = false;
++            m_networkState = MediaPlayer::Idle;
++            m_readyState = MediaPlayer::HaveNothing;
++            break;
++		case STREAM_STATE_PLAYING:
++            m_isSeeking = false;
++            m_isPaused = false;
++            m_networkState = MediaPlayer::Loaded;
++            m_readyState = MediaPlayer::HaveEnoughData;
++            durationChanged();
++            break;
++        case STREAM_STATE_PAUSED:
++            m_isSeeking = false;
++            m_isPaused = true;
++            m_networkState = MediaPlayer::Loaded;
++            m_readyState = MediaPlayer::HaveEnoughData;
++            break;
++        case STREAM_STATE_SEEKING:
++            m_networkState = MediaPlayer::Loaded;
++            m_readyState = MediaPlayer::HaveEnoughData;
++            m_isSeeking = true;
++            m_isPaused = false;
++            break;
++		case STREAM_STATE_BUFFERING:
++            m_networkState = MediaPlayer::Loading;
++            m_readyState = MediaPlayer::HaveFutureData;
++            break;
++        case STREAM_STATE_ERROR:
++            m_isSeeking = false;
++            m_isPaused = false;
++            m_networkState = MediaPlayer::FormatError;
++            m_readyState = MediaPlayer::HaveNothing;
++            break;
++        case STREAM_POSITION_CHANGED:
++            timeChanged();
++            break;
++		case STREAM_RESOLUTION_CHANGED:
++            sizeChanged();
++            break;
++    }
++    if (m_isPaused != oldPaused)
++        m_webCorePlayer->playbackStateChanged();
++
++    if (m_readyState != oldReadyState)
++        m_webCorePlayer->readyStateChanged();
++
++    if (m_networkState != oldNetworkState)
++        m_webCorePlayer->networkStateChanged();
++
++    m_webCorePlayer->repaint();
++}
++
++void MediaPlayerPrivateQtDBus::setSize(const IntSize& size)
++{
++    if (size == m_currentSize)
++        return;
++
++    m_currentSize = size;
++}
++
++IntSize MediaPlayerPrivateQtDBus::naturalSize() const
++{
++    if (!hasVideo() ||  m_readyState < MediaPlayer::HaveMetadata) {
++        LOG(Media, "MediaPlayerPrivateQtDBus::naturalSize() -> 0x0 (!hasVideo || !haveMetaData)");
++        return IntSize();
++    }
++
++    LOG(Media, "MediaPlayerPrivateQtDBus::naturalSize() -> %dx%d (m_naturalSize)",
++            m_naturalSize.width(), m_naturalSize.height());
++    return m_naturalSize;
++}
++
++void MediaPlayerPrivateQtDBus::removeVideoItem()
++{
++    m_interface->setVideoWindow(0, 0, 0, 0);
++}
++
++void MediaPlayerPrivateQtDBus::restoreVideoItem()
++{
++    if(m_currentRect.isValid())
++        m_interface->setVideoWindow(m_currentRect.x(), m_currentRect.y(), m_currentRect.width(), m_currentRect.height());
++}
++
++void MediaPlayerPrivateQtDBus::paint(GraphicsContext* context, const IntRect& rect)
++{
++    paintCurrentFrameInContext(context, rect);
++}
++
++void MediaPlayerPrivateQtDBus::paintCurrentFrameInContext(GraphicsContext* context, const IntRect& rect)
++{
++    if (context->paintingDisabled())
++        return;
++
++
++    QPainter* painter = context->platformContext();
++    IntRect exposedRect(rect);
++    IntRect frameRect(m_webCorePlayer->frameView()->frameRect());
++    exposedRect.move(frameRect.x(), frameRect.y());
++    QRect r(exposedRect);
++
++    QPainter::CompositionMode oldMode = painter->compositionMode();
++    painter->setCompositionMode(QPainter::CompositionMode_Clear);
++    painter->eraseRect(rect);
++    painter->setCompositionMode(oldMode);
++
++    if(r != m_currentRect) {
++        m_currentRect = r;
++        m_interface->setVideoWindow(m_currentRect.x(), m_currentRect.y(), m_currentRect.width(), m_currentRect.height());
++    }
++}
++
++#if USE(ACCELERATED_COMPOSITING)
++void MediaPlayerPrivateQtDBus::paintToTextureMapper(TextureMapper* textureMapper, const FloatRect& targetRect, const TransformationMatrix& matrix, float opacity)
++{
++}
++#endif
++#if USE(NATIVE_FULLSCREEN_VIDEO)
++void MediaPlayerPrivateQtDBus::enterFullscreen()
++{
++    m_interface->setVideoWindow(0,0,1280,720);
++}
++
++void MediaPlayerPrivateQtDBus::exitFullscreen()
++{
++    m_interface->setVideoWindow(m_currentRect.x(), m_currentRect.y(), m_currentRect.width(), m_currentRect.height());
++}
++#endif
++PlatformMedia MediaPlayerPrivateQtDBus::platformMedia() const
++{
++    PlatformMedia pm;
++    pm.type = PlatformMedia::QtMediaPlayerType;
++    pm.media.qtMediaPlayer = const_cast<MediaPlayerPrivateQtDBus*>(this);
++    return pm;
++}
++
++} // namespace WebCore
++
++#include "moc_MediaPlayerPrivateQtDBus.cpp"
+diff --git a/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBus.h b/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBus.h
+new file mode 100644
+index 0000000..7135fc8
+--- /dev/null
++++ b/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBus.h
+@@ -0,0 +1,168 @@
++/*
++    Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies)
++
++    This library is free software; you can redistribute it and/or
++    modify it under the terms of the GNU Library General Public
++    License as published by the Free Software Foundation; either
++    version 2 of the License, or (at your option) any later version.
++
++    This library is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++    Library General Public License for more details.
++
++    You should have received a copy of the GNU Library General Public License
++    along with this library; see the file COPYING.LIB.  If not, write to
++    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
++    Boston, MA 02110-1301, USA.
++*/
++
++#ifndef MediaPlayerPrivateQtDBus_h
++#define MediaPlayerPrivateQtDBus_h
++
++#include "MediaPlayerPrivate.h"
++#include "MediaPlayerPrivateQtDBusInterface.h"
++
++#include <QObject>
++#include <QTimer>
++
++#if USE(ACCELERATED_COMPOSITING)
++#include "TextureMapperPlatformLayer.h"
++#endif
++
++namespace WebCore {
++
++class MediaPlayerPrivateQtDBus : public QObject, public MediaPlayerPrivateInterface
++#if USE(ACCELERATED_COMPOSITING)
++                           , public TextureMapperPlatformLayer
++#endif
++{
++    class Private;
++
++    Q_OBJECT
++
++public:
++	enum {
++		STREAM_STATE_STOPPED = 0,
++		STREAM_STATE_PLAYING,
++		STREAM_STATE_PAUSED,
++		STREAM_STATE_BUFFERING,
++		STREAM_STATE_SEEKING,
++		STREAM_STATE_ERROR,
++		STREAM_STATE_CANCELLED,
++		STREAM_POSITION_CHANGED,
++		STREAM_RESOLUTION_CHANGED,
++	};
++
++    static PassOwnPtr<MediaPlayerPrivateInterface> create(MediaPlayer*);
++    ~MediaPlayerPrivateQtDBus();
++
++    static void registerMediaEngine(MediaEngineRegistrar);
++    static void getSupportedTypes(HashSet<String>&);
++    static MediaPlayer::SupportsType supportsType(const String&, const String&, const KURL&);
++    static bool isAvailable() { return true; }
++
++    bool hasVideo() const;
++    bool hasAudio() const;
++
++    void load(const String &url);
++    void commitLoad(const String& url);
++    void cancelLoad();
++
++    void play();
++    void pause();
++    void prepareToPlay();
++
++    bool paused() const;
++    bool seeking() const;
++
++    float duration() const;
++    float currentTime() const;
++    void seek(float);
++
++    void setRate(float);
++    void setVolume(float);
++
++    bool supportsMuting() const;
++    void setMuted(bool);
++
++    void setPreload(MediaPlayer::Preload);
++
++    MediaPlayer::NetworkState networkState() const;
++    MediaPlayer::ReadyState readyState() const;
++
++    PassRefPtr<TimeRanges> buffered() const;
++    float maxTimeSeekable() const;
++    bool didLoadingProgress() const;
++    unsigned totalBytes() const;
++
++    void setVisible(bool);
++
++    IntSize naturalSize() const;
++    void setSize(const IntSize&);
++
++    void paint(GraphicsContext*, const IntRect&);
++    // reimplemented for canvas drawImage(HTMLVideoElement)
++    void paintCurrentFrameInContext(GraphicsContext*, const IntRect&);
++
++    bool supportsFullscreen() const { return true; }
++#if USE(NATIVE_FULLSCREEN_VIDEO)
++    void enterFullscreen();
++    void exitFullscreen();
++    bool canEnterFullscreen() const { return true; }
++#endif
++
++
++#if USE(ACCELERATED_COMPOSITING)
++    // whether accelerated rendering is supported by the media engine for the current media.
++    virtual bool supportsAcceleratedRendering() const { return false; }
++    // called when the rendering system flips the into or out of accelerated rendering mode.
++    virtual void acceleratedRenderingStateChanged() { }
++    // Const-casting here is safe, since all of TextureMapperPlatformLayer's functions are const.g
++    virtual PlatformLayer* platformLayer() const { return 0; }
++    virtual void paintToTextureMapper(TextureMapper*, const FloatRect& targetRect, const TransformationMatrix&, float opacity);
++#endif
++
++    virtual PlatformMedia platformMedia() const;
++
++    void removeVideoItem();
++    void restoreVideoItem();
++
++    void durationChanged();
++    void timeChanged();
++    void volumeChanged(int);
++    void mutedChanged(bool);
++    void sizeChanged();
++
++private Q_SLOTS:
++    void event(int);
++
++private:
++    void updateStates(int state);
++
++    virtual String engineDescription() const { return "QtDBus"; }
++
++private:
++    MediaPlayerPrivateQtDBus(MediaPlayer*);
++
++    MediaPlayer* m_webCorePlayer;
++    MediaPlayerPrivateQtDBusInterface* m_interface;
++
++    mutable MediaPlayer::NetworkState m_networkState;
++    mutable MediaPlayer::ReadyState m_readyState;
++
++    IntSize m_currentSize;
++    IntSize m_naturalSize;
++    bool m_isVisible;
++    bool m_isSeeking;
++    bool m_composited;
++    MediaPlayer::Preload m_preload;
++    String m_mediaUrl;
++    bool m_suppressNextPlaybackChanged;
++//new
++    bool m_isPaused;
++    QRect m_currentRect;
++};
++}
++
++#endif // MediaPlayerPrivateQtDBus_h
+diff --git a/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.cpp b/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.cpp
+new file mode 100644
+index 0000000..098c6e1
+--- /dev/null
++++ b/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.cpp
+@@ -0,0 +1,13 @@
++#include "MediaPlayerPrivateQtDBusInterface.h"
++
++MediaPlayerPrivateQtDBusInterface::MediaPlayerPrivateQtDBusInterface(QObject *parent)
++:
++	QDBusAbstractInterface(QLatin1String(staticInterfaceName()), QLatin1String(staticPath()), staticInterfaceName(), QDBusConnection::systemBus(), parent)
++{
++}
++
++MediaPlayerPrivateQtDBusInterface::~MediaPlayerPrivateQtDBusInterface()
++{
++}
++
++#include "moc_MediaPlayerPrivateQtDBusInterface.cpp"
+\ No newline at end of file
+diff --git a/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.h b/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.h
+new file mode 100644
+index 0000000..208bd49
+--- /dev/null
++++ b/Source/WebCore/platform/graphics/qt/MediaPlayerPrivateQtDBusInterface.h
+@@ -0,0 +1,117 @@
++#pragma once
++
++#include <QtCore/QObject>
++#include <QtCore/QByteArray>
++#include <QtCore/QList>
++#include <QtCore/QMap>
++#include <QtCore/QString>
++#include <QtCore/QStringList>
++#include <QtCore/QVariant>
++#include <QtDBus/QtDBus>
++
++/*
++ * Proxy class for interface de.dreambox.webmediaplayer
++ */
++class MediaPlayerPrivateQtDBusInterface: public QDBusAbstractInterface
++{
++Q_OBJECT
++	public:
++	static inline const char *staticInterfaceName()
++	{
++		return "de.dreambox.webmediaplayer";
++	}
++	static inline const char* staticPath()
++	{
++		return "/de/dreambox/webmediaplayer";
++	}
++
++
++public:
++	MediaPlayerPrivateQtDBusInterface(QObject *parent = 0);
++	~MediaPlayerPrivateQtDBusInterface();
++
++public Q_SLOTS:
++	inline void setVideoWindow(int x, int y, int width, int height)
++	{
++		QList<QVariant> argumentList;
++		argumentList << QVariant::fromValue(x) << QVariant::fromValue(y) << QVariant::fromValue(width)
++			<< QVariant::fromValue(height);
++		callWithArgumentList(QDBus::BlockWithGui, QLatin1String("setVideoWindow"), argumentList);
++	}
++
++	inline bool play(const QString &uri)
++	{
++		QList<QVariant> argumentList;
++		//it's always an uri here so we omit the 2nd parameter in the method's signature
++		argumentList << QVariant::fromValue(uri) << QVariant::fromValue(true); 
++		QDBusReply<bool> reply = callWithArgumentList(QDBus::BlockWithGui, QLatin1String("play"), argumentList);
++		return reply.value();
++	}
++
++	inline bool pause()
++	{
++        QDBusReply<bool> reply = call(QLatin1String("pause"));
++		return reply.value();
++	}
++
++	inline bool resume()
++	{
++        QDBusReply<bool> reply = call(QLatin1String("resume"));
++		return reply.value();
++	}
++
++    inline bool stop()
++	{
++        QDBusReply<bool> reply = call(QLatin1String("stop"));
++		return reply.value();
++	}
++
++    inline qint64 getPosition()
++	{
++        QDBusReply<qint64> reply = call(QLatin1String("getPosition"));
++		return reply.value();
++	}
++
++    inline bool setPosition(qint64 to)
++	{
++		QList<QVariant> argumentList;
++		argumentList << QVariant::fromValue(to);
++		QDBusReply<bool> reply = callWithArgumentList(QDBus::BlockWithGui, QLatin1String("setPosition"), argumentList);
++		return reply.value();
++	}
++
++    inline qint64 getDuration()
++	{
++        QDBusReply<qint64> reply = call(QLatin1String("getDuration"));
++		return reply.value();
++	}
++
++    inline int getVolume()
++	{
++        QDBusReply<int> reply = call(QLatin1String("getVolume"));
++		return reply.value();
++	}
++
++    inline bool setVolume(int to)
++	{
++		QList<QVariant> argumentList;
++		argumentList << QVariant::fromValue(to);
++		QDBusReply<bool> reply = callWithArgumentList(QDBus::BlockWithGui, QLatin1String("setVolume"), argumentList);
++		return reply.value();
++	}
++
++    inline int getVideoWidth()
++	{
++        QDBusReply<int> reply = call(QLatin1String("getVideoWidth"));
++		return reply.value();
++	}
++
++    inline int getVideoHeight()
++	{
++        QDBusReply<int> reply = call(QLatin1String("getVideoHeight"));
++		return reply.value();
++	}
++
++Q_SIGNALS: // SIGNALS
++	void event(int type);
++};
+diff --git a/Tools/qmake/mkspecs/features/features.prf b/Tools/qmake/mkspecs/features/features.prf
+index 21286be..132087d 100644
+--- a/Tools/qmake/mkspecs/features/features.prf
++++ b/Tools/qmake/mkspecs/features/features.prf
+@@ -23,6 +23,7 @@ defineTest(detectFeatures) {
+ 
+     WEBKIT_CONFIG += use_tiled_backing_store
+     WEBKIT_CONFIG += use_cross_platform_context_menus
++    WEBKIT_CONFIG += video use_native_fullscreen_video
+ 
+     # ------------- Prepare for feature detection -------------
+ 
+diff --git a/Tools/qmake/mkspecs/features/features.pri b/Tools/qmake/mkspecs/features/features.pri
+index 69efc9e..f711e6a 100644
+--- a/Tools/qmake/mkspecs/features/features.pri
++++ b/Tools/qmake/mkspecs/features/features.pri
+@@ -119,7 +119,7 @@ FEATURE_DEFAULTS = \
+     ENABLE_TOUCH_SLIDER=1 \
+     ENABLE_USER_TIMING=0 \
+     ENABLE_VIBRATION=0 \
+-    ENABLE_VIDEO=0 \
++    ENABLE_VIDEO=1 \
+     ENABLE_VIDEO_TRACK=1 \
+     ENABLE_VIEW_MODE_CSS_MEDIA=1 \
+     ENABLE_WEBGL=0 \
+-- 
+2.7.4
+
