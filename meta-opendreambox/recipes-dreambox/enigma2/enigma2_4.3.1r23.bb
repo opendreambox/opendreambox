@@ -4,3 +4,9 @@ SRC_URI[mips32el.md5sum] = "cfadc6de7b0ff74467db48b30fda8cd4"
 SRC_URI[mips32el.sha256sum] = "56870fa7a37677e1ffd854d2f6b60aa6efd1a6a600caa18317c6693c394ebcbd"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " \
+	file://0001-unicables.xml-add-entry-for-DCT-Delta-MSU-401-2-16K-.patch \
+	file://0002-PiconResolver-fix-DVB-T-T2-again-correctly-return-de.patch \
+"
+
