@@ -2,7 +2,7 @@ SUMMARY = "Server that acts like a lightweight Chromecast that only includes You
 HOMEPAGE = "https://${GO_SRCROOT}"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://${GO_SRCROOT}/LICENSE;md5=8c72efa592970068179de01858522f24"
-DEPENDS = "golang-gouuid golang-x-crypto golang-dbus"
+DEPENDS = "golang-gouuid golang-x-crypto golang-dbus enigma2"
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-dbusinterfaceproxy enigma2-plugin-systemplugins-tubelib"
 SRCREV = "5c2670ca5b9285f7f91db376b3e60026d4384b26"
 RECIPE_PV := "${PV}"
