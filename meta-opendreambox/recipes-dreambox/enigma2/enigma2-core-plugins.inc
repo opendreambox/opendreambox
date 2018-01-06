@@ -5,6 +5,7 @@ SUMMARY_engima2-plugin-extensions-hbbtv = "HbbTV functionality for your Dreambox
 SUMMARY_enigma2-plugin-extensions-pictureplayer = "Show photos"
 SUMMARY_enigma2-plugin-systemplugins-cleanupwizard = "Detect low flash memory"
 SUMMARY_enigma2-plugin-systemplugins-crashlogautosubmit = "Send crash logs to Dream Multimedia"
+SUMMARY_enigma2-plugin-systemplugins-devshell = "Interactive Python shell for debugging"
 SUMMARY_enigma2-plugin-systemplugins-positionersetup = "Install a motorized dish"
 SUMMARY_enigma2-plugin-systemplugins-remotecontrolselection = "Select the type of remote you're using"
 SUMMARY_enigma2-plugin-systemplugins-satelliteequipmentcontrol = "Fine-tune DiSEqC settings"
@@ -22,6 +23,7 @@ PACKAGES =+ " \
     enigma2-plugin-extensions-hbbtv \
     enigma2-plugin-systemplugins-commoninterfaceassignment \
     enigma2-plugin-systemplugins-crashlogautosubmit \
+    enigma2-plugin-systemplugins-devshell \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-jsonapi \
     enigma2-plugin-systemplugins-networkmanager \
@@ -71,6 +73,12 @@ RDEPENDS_enigma2-plugin-systemplugins-crashlogautosubmit = " \
         python-mime \
         python-twisted-mail \
         python-twisted-names \
+"
+RDEPENDS_enigma2-plugin-systemplugins-devshell = " \
+        python-twisted-conch \
+"
+RRECOMMENDS_enigma2-plugin-systemplugins-devshell = " \
+        python-pydoc \
 "
 RDEPENDS_enigma2-plugin-systemplugins-hotplug = " \
         python-fcntl \
