@@ -6,14 +6,12 @@ LIC_FILES_CHKSUM = "file://${OPENDREAMBOX_BASE}/LICENSE;md5=8f242b441da515e30c7b
 inherit packagegroup
 
 RDEPENDS_${PN} += " \
-  dropbear \
   killall \
   parted \
   procps \
   tpmd \
   tuxbox-common \
   tzdata \
-  vsftpd \
   xfsprogs-mkfs \
 "
 
@@ -25,11 +23,13 @@ RRECOMMENDS_${PN} += " \
   bash-completion-extra \
   dccamd \
   dreambox-compat \
+  dropbear \
   e2fsprogs-e2fsck \
   hdstandby \
   joe \
   less \
   mc \
   samba-base \
+  vsftpd \
   zeroconf \
 "
