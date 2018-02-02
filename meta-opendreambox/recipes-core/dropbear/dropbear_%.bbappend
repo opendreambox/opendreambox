@@ -1,4 +1,5 @@
 SRC_URI += "file://dropbear.xinetd.in"
+SRC_URI += "file://0001-forward-LANG-and-LC_-variables-from-client.patch"
 
 inherit xinetd
 

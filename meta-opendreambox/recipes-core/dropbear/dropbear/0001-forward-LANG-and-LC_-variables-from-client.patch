@@ -1,0 +1,173 @@
+From 94ec7a86801fcca910b1d10eb3aea9c5169f8e4a Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@saftware.de>
+Date: Fri, 12 Jan 2018 13:32:45 +0100
+Subject: [PATCH] forward LANG and LC_* variables from client
+
+---
+ chansession.h     |  9 +++++++++
+ dbutil.c          |  8 ++++++++
+ dbutil.h          |  1 +
+ svr-chansession.c | 46 +++++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 63 insertions(+), 1 deletion(-)
+
+diff --git a/chansession.h b/chansession.h
+index 6eb8c76..0cf2511 100644
+--- a/chansession.h
++++ b/chansession.h
+@@ -37,6 +37,12 @@ struct exitinfo {
+ 	int exitcore;
+ };
+ 
++struct ChildEnv {
++
++	char * name;
++	char * value;
++};
++
+ struct ChanSess {
+ 
+ 	char * cmd; /* command to exec */
+@@ -76,6 +82,9 @@ struct ChanSess {
+ #ifdef ENABLE_SVR_PUBKEY_OPTIONS
+ 	char *original_command;
+ #endif
++
++	struct ChildEnv *env;
++	size_t envsize;
+ };
+ 
+ struct ChildPid {
+diff --git a/dbutil.c b/dbutil.c
+index d87835b..ee33005 100644
+--- a/dbutil.c
++++ b/dbutil.c
+@@ -559,6 +559,14 @@ void * m_realloc(void* ptr, size_t size) {
+ 	return ret;
+ }
+ 
++void * m_reallocarray(void* ptr, size_t nmemb, size_t size) {
++
++	if (nmemb > 0 && SIZE_MAX / nmemb < size) {
++		dropbear_exit("m_reallocarray failed");
++	}
++	return m_realloc(ptr, nmemb * size);
++}
++
+ /* Clear the data, based on the method in David Wheeler's
+  * "Secure Programming for Linux and Unix HOWTO" */
+ /* Beware of calling this from within dbutil.c - things might get
+diff --git a/dbutil.h b/dbutil.h
+index e1db328..36a7b22 100644
+--- a/dbutil.h
++++ b/dbutil.h
+@@ -78,6 +78,7 @@ void m_close(int fd);
+ void * m_malloc(size_t size);
+ void * m_strdup(const char * str);
+ void * m_realloc(void* ptr, size_t size);
++void * m_reallocarray(void* ptr, size_t nmemb, size_t size);
+ #define m_free(X) do {free(X); (X) = NULL;} while (0)
+ void m_burn(void* data, unsigned int len);
+ void setnonblocking(int fd);
+diff --git a/svr-chansession.c b/svr-chansession.c
+index bfaf7f6..5e513f9 100644
+--- a/svr-chansession.c
++++ b/svr-chansession.c
+@@ -44,6 +44,7 @@ static int sessioncommand(struct Channel *channel, struct ChanSess *chansess,
+ 		int iscmd, int issubsys);
+ static int sessionpty(struct ChanSess * chansess);
+ static int sessionsignal(struct ChanSess *chansess);
++static int sessionenv(struct ChanSess *chansess);
+ static int noptycommand(struct Channel *channel, struct ChanSess *chansess);
+ static int ptycommand(struct Channel *channel, struct ChanSess *chansess);
+ static int sessionwinchange(struct ChanSess *chansess);
+@@ -266,6 +267,9 @@ static int newchansess(struct Channel *channel) {
+ 	chansess->agentdir = NULL;
+ #endif
+ 
++	chansess->env = NULL;
++	chansess->envsize = 0;
++
+ 	channel->prio = DROPBEAR_CHANNEL_PRIO_INTERACTIVE;
+ 
+ 	return 0;
+@@ -298,6 +302,12 @@ static void closechansess(struct Channel *channel) {
+ 
+ 	send_exitsignalstatus(channel);
+ 
++	for (i = 0; i < chansess->envsize; i++) {
++		m_free(chansess->env[i].name);
++		m_free(chansess->env[i].value);
++	}
++	m_free(chansess->env);
++
+ 	m_free(chansess->cmd);
+ 	m_free(chansess->term);
+ 
+@@ -383,8 +393,10 @@ static void chansessionrequest(struct Channel *channel) {
+ #endif
+ 	} else if (strcmp(type, "signal") == 0) {
+ 		ret = sessionsignal(chansess);
++	} else if (strcmp(type, "env") == 0) {
++		ret = sessionenv(chansess);
+ 	} else {
+-		/* etc, todo "env", "subsystem" */
++		/* etc, todo "subsystem" */
+ 	}
+ 
+ out:
+@@ -439,6 +451,33 @@ static int sessionsignal(struct ChanSess *chansess) {
+ 	return DROPBEAR_SUCCESS;
+ }
+ 
++/* Send an environment variable to a session's process as requested by the client*/
++static int sessionenv(struct ChanSess *chansess) {
++
++	char *name, *value;
++
++	name = buf_getstring(ses.payload, NULL);
++	value = buf_getstring(ses.payload, NULL);
++
++	if (!strcmp("LANG", name) || !strncmp("LC_", name, 3)) {
++		void *tmp = m_reallocarray(chansess->env, chansess->envsize + 1, sizeof(*chansess->env));
++		if (tmp == NULL) {
++			m_free(name);
++			m_free(value);
++			return DROPBEAR_FAILURE;
++		}
++		chansess->env = tmp;
++		chansess->env[chansess->envsize].name = name;
++		chansess->env[chansess->envsize].value = value;
++		chansess->envsize++;
++	} else {
++		m_free(name);
++		m_free(value);
++	}
++
++	return DROPBEAR_SUCCESS;
++}
++
+ /* Let the process know that the window size has changed, as notified from the
+  * client. Returns DROPBEAR_SUCCESS or DROPBEAR_FAILURE */
+ static int sessionwinchange(struct ChanSess *chansess) {
+@@ -893,6 +932,7 @@ static void addchildpid(struct ChanSess *chansess, pid_t pid) {
+ static void execchild(void *user_data) {
+ 	struct ChanSess *chansess = user_data;
+ 	char *usershell = NULL;
++	size_t i;
+ 
+ 	/* with uClinux we'll have vfork()ed, so don't want to overwrite the
+ 	 * hostkey. can't think of a workaround to clear it */
+@@ -965,6 +1005,10 @@ static void execchild(void *user_data) {
+ 		addnewvar("SSH_CLIENT", chansess->client_string);
+ 	}
+ 	
++	for (i = 0; i < chansess->envsize; i++) {
++		addnewvar(chansess->env[i].name, chansess->env[i].value);
++	}
++
+ #ifdef ENABLE_SVR_PUBKEY_OPTIONS
+ 	if (chansess->original_command) {
+ 		addnewvar("SSH_ORIGINAL_COMMAND", chansess->original_command);
+-- 
+2.14.1
+
