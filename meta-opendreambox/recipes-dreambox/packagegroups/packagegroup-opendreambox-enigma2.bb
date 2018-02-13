@@ -56,6 +56,7 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-extensions-browser \
   enigma2-plugin-extensions-cutlisteditor \
   enigma2-plugin-extensions-epgrefresh \
+  enigma2-plugin-extensions-epgsearch \
   enigma2-plugin-extensions-graphmultiepg \
   enigma2-plugin-extensions-hbbtv \
   enigma2-plugin-extensions-mediacenter \
