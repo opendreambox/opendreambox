@@ -1,7 +1,7 @@
 require dreambox-dvb-modules.inc
 
-SRC_URI[dm7080.md5sum] = "fc016647c2b3c260cc6ca75c591f1ff0"
-SRC_URI[dm7080.sha256sum] = "478a8fbeb6adf8980b763f608917c4eb8b56c994f3d1e62c06f6d4513b6feb4e"
+SRC_URI[dm7080.md5sum] = "1858f867b5ae51aba6ad9496dca2c259"
+SRC_URI[dm7080.sha256sum] = "7b874ca71d46cc5cf7d65edf669a15d75766ab1d475df1f4f94fbf6a9de685b8"
 
 RREPLACES_${PN}-stb-core = "${PN} (< 3.4-3.0-dm7080-20140906-r1)"
 RBREAKS_${PN}-stb-core = "${PN} (< 3.4-3.0-dm7080-20140906-r1)"
