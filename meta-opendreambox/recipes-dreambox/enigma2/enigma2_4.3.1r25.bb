@@ -11,6 +11,5 @@ SRC_URI += " \
 	file://0006-ScanSetup-fixed-broken-blinscan-with-Si216x2-after-r.patch \
 	file://0003-keymap-improve-keyboard-support-by-forum-member-pcli.patch \
 	file://0005-Converter-ServiceInfo-re-add-evVideoSizeChanged-to-F.patch \
+	file://0001-blindscan-add-workaround-for-driver-bug.patch \
 "
-
-
