@@ -10,6 +10,7 @@ inherit packagegroup
 RDEPENDS_${PN} += " \
   gstreamer1.0-dreamsinks \
   gstreamer1.0-plugins-bad-assrender \
+  gstreamer1.0-plugins-bad-dashdemux \
   gstreamer1.0-plugins-bad-dvdspu \
   gstreamer1.0-plugins-bad-faad \
   gstreamer1.0-plugins-bad-fragmented \
