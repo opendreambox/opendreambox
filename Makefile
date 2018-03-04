@@ -116,10 +116,7 @@ all: init usage
 $(BBLAYERS):
 	[ -d $@ ] || $(MAKE) $(MFLAGS) update
 
-gcccheck:
-	@[ `(gcc -dumpversion 2>/dev/null || echo 7) | sed -e 's/\..*//'` -lt 7 ] || (echo "GCC < 7 is required to build this version of opendreambox." && exit 1)
-
-init: gcccheck $(BBLAYERS) $(CONFFILES_AUTO)
+init: $(BBLAYERS) $(CONFFILES_AUTO)
 
 help:
 	@echo "Your options:"
@@ -245,7 +242,7 @@ update:
 		echo "[*] The Dreambox SDK is now up-to-date."; \
 	fi
 
-.PHONY: all clean doc gcccheck help image init update usage
+.PHONY: all clean doc help image init update usage
 
 MACHINE_INCLUDE_CONF = $(CURDIR)/conf/$(basename $(@F))-$(MACHINE)-ext.conf
 DISTRO_INCLUDE_CONF = $(CURDIR)/conf/$(basename $(@F))-ext.conf
