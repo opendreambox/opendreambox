@@ -90,6 +90,7 @@ CONFDEPS = \
 	$(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH) \
 	$(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CONF_HASH) \
 	$(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH) \
+	$(DEPDIR)/.Makefile.$(MACHINE).$(MAKEFILE_HASH) \
 	$(DEPDIR)/.cross-compile.env.$(MACHINE).$(CROSS_COMPILE_ENV_HASH)
 
 CONFFILES_BITBAKE = \
@@ -333,10 +334,14 @@ $(TOPDIR)/conf/bblayers.conf: $(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CON
 	@echo 'include $(DISTRO_INCLUDE_CONF)' >> $@
 	@echo 'include $(MACHINE_INCLUDE_CONF)' >> $@
 
-$(TOPDIR)/Makefile:
+MAKEFILE_HASH := $(call hash, \
+	'CURDIR = "$(CURDIR)"' \
+	)
+
+$(TOPDIR)/Makefile: $(DEPDIR)/.Makefile.$(MACHINE).$(MAKEFILE_HASH)
 	@echo '[*] Generating $@'
 	@test -d $(@D) || mkdir -p $(@D)
-	@printf '%%::\n\tMACHINE=$(MACHINE) $$(MAKE) -C ../.. $$(MAKECMDGOALS)\n' > $@
+	@printf '%%::\n\tMACHINE=$(MACHINE) $$(MAKE) -C $(CURDIR) $$(MAKECMDGOALS)\n' > $@
 
 $(TOPDIR)/bitbake.env:
 	@echo '[*] Generating $@'
