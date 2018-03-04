@@ -1,4 +1,4 @@
-From 94ec7a86801fcca910b1d10eb3aea9c5169f8e4a Mon Sep 17 00:00:00 2001
+From fe9b488977fce9a5be1102b99322eb0309ad15ec Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@saftware.de>
 Date: Fri, 12 Jan 2018 13:32:45 +0100
 Subject: [PATCH] forward LANG and LC_* variables from client
@@ -11,7 +11,7 @@ Subject: [PATCH] forward LANG and LC_* variables from client
  4 files changed, 63 insertions(+), 1 deletion(-)
 
 diff --git a/chansession.h b/chansession.h
-index 6eb8c76..0cf2511 100644
+index 3b39fdc..fbcb913 100644
 --- a/chansession.h
 +++ b/chansession.h
 @@ -37,6 +37,12 @@ struct exitinfo {
@@ -38,7 +38,7 @@ index 6eb8c76..0cf2511 100644
  
  struct ChildPid {
 diff --git a/dbutil.c b/dbutil.c
-index d87835b..ee33005 100644
+index ef06802..10fb67d 100644
 --- a/dbutil.c
 +++ b/dbutil.c
 @@ -559,6 +559,14 @@ void * m_realloc(void* ptr, size_t size) {
@@ -53,21 +53,21 @@ index d87835b..ee33005 100644
 +	return m_realloc(ptr, nmemb * size);
 +}
 +
- /* Clear the data, based on the method in David Wheeler's
-  * "Secure Programming for Linux and Unix HOWTO" */
- /* Beware of calling this from within dbutil.c - things might get
+ void setnonblocking(int fd) {
+ 
+ 	TRACE(("setnonblocking: %d", fd))
 diff --git a/dbutil.h b/dbutil.h
-index e1db328..36a7b22 100644
+index 8d589ed..1793f9d 100644
 --- a/dbutil.h
 +++ b/dbutil.h
-@@ -78,6 +78,7 @@ void m_close(int fd);
+@@ -69,6 +69,7 @@ void m_close(int fd);
  void * m_malloc(size_t size);
  void * m_strdup(const char * str);
  void * m_realloc(void* ptr, size_t size);
 +void * m_reallocarray(void* ptr, size_t nmemb, size_t size);
  #define m_free(X) do {free(X); (X) = NULL;} while (0)
- void m_burn(void* data, unsigned int len);
  void setnonblocking(int fd);
+ void disallow_core(void);
 diff --git a/svr-chansession.c b/svr-chansession.c
 index bfaf7f6..5e513f9 100644
 --- a/svr-chansession.c
@@ -168,6 +168,3 @@ index bfaf7f6..5e513f9 100644
  #ifdef ENABLE_SVR_PUBKEY_OPTIONS
  	if (chansess->original_command) {
  		addnewvar("SSH_ORIGINAL_COMMAND", chansess->original_command);
--- 
-2.14.1
-
