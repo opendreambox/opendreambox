@@ -49,13 +49,13 @@ PARALLEL_MAKE ?= -j $(NR_CPU)
 NICE ?= nice -n 19
 XSUM ?= md5sum
 
-BUILD_DIR = $(CURDIR)/build
-TOPDIR = $(BUILD_DIR)/$(MACHINE)
-DL_DIR = $(CURDIR)/sources
-PERSISTENT_DIR = $(CURDIR)/persist-cache
-SSTATE_DIR = $(CURDIR)/sstate-cache
-TMPDIR = $(TOPDIR)/tmp
-DEPDIR = $(CURDIR)/.deps
+BUILD_DIR ?= $(CURDIR)/build
+TOPDIR ?= $(BUILD_DIR)/$(MACHINE)
+DL_DIR ?= $(CURDIR)/sources
+PERSISTENT_DIR ?= $(CURDIR)/persist-cache
+SSTATE_DIR ?= $(CURDIR)/sstate-cache
+TMPDIR ?= $(TOPDIR)/tmp
+DEPDIR ?= $(CURDIR)/.deps
 
 BITBAKE = . $(CURDIR)/bitbake.env && cd $(TOPDIR) && $(NICE) bitbake
 
