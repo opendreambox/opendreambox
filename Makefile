@@ -34,7 +34,7 @@
 # This only sets the default value. All platforms now use a shared build
 # directory. Run "MACHINE=dm820 bitbake dreambox-image" to build an image
 # for the dm820, if it is not the default.
-MACHINE ?= dm900
+MACHINE ?= dm920
 
 USER_MACHINE := $(MACHINE)
 
