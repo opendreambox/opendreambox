@@ -87,6 +87,7 @@ CONFFILES_MANUAL = \
 
 CONFDEPS = \
 	$(DEPDIR)/.bitbake.env.$(BITBAKE_ENV_HASH) \
+	$(DEPDIR)/.bitbake.env.$(MACHINE).$(MAKEFILE_HASH) \
 	$(DEPDIR)/.opendreambox.conf.$(OPENDREAMBOX_CONF_HASH) \
 	$(DEPDIR)/.bblayers.conf.$(MACHINE).$(BBLAYERS_CONF_HASH) \
 	$(DEPDIR)/.local.conf.$(MACHINE).$(LOCAL_CONF_HASH) \
@@ -343,10 +344,10 @@ $(TOPDIR)/Makefile: $(DEPDIR)/.Makefile.$(MACHINE).$(MAKEFILE_HASH)
 	@test -d $(@D) || mkdir -p $(@D)
 	@printf '%%::\n\tMACHINE=$(MACHINE) $$(MAKE) -C $(CURDIR) $$(MAKECMDGOALS)\n' > $@
 
-$(TOPDIR)/bitbake.env:
+$(TOPDIR)/bitbake.env: $(DEPDIR)/.bitbake.env.$(MACHINE).$(MAKEFILE_HASH)
 	@echo '[*] Generating $@'
 	@test -d $(@D) || mkdir -p $(@D)
-	@echo '. ../../bitbake.env' > $@
+	@echo '. $(CURDIR)/bitbake.env' > $@
 
 CROSS_COMPILE_ENV_BLACKLIST = \
 	HOME LOGNAME PWD SHELL SSH_AGENT_PID SSH_AUTH_SOCK TERM USER
