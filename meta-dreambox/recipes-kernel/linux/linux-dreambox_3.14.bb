@@ -17,7 +17,6 @@ SRC_URI[dream-patch.md5sum] = "b8e267850e54a1d13be41456be5ec4b5"
 SRC_URI[dream-patch.sha256sum] = "85a18df9f07e221c0fd305cc213e5557d9006a40b3229bf9d13e5bc9ba8e2371"
 
 require linux-dreambox.inc
-require recipes-kernel/linux/linux-dtb.inc
 
 S = "${WORKDIR}/linux-${PV}"
 
