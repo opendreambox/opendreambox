@@ -1,0 +1,9 @@
+prefix=/usr
+libdir=/usr/lib
+includedir=${prefix}/include
+
+Name: live555
+Description: multimedia RTSP streaming library
+Version: 2018.02.18
+Cflags: -I${includedir}/liveMedia -I${includedir}/groupsock -I${includedir}/BasicUsageEnvironment -I${includedir}/UsageEnvironment
+Libs: -L${libdir} -lliveMedia -lgroupsock -lBasicUsageEnvironment -lUsageEnvironment
