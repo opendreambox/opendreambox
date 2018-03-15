@@ -109,7 +109,7 @@ RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = " \
         python-twisted-web \
 "
 RDEPENDS_enigma2-plugin-systemplugins-streamserver = " \
-        dreamrtspserver \
+        dreamliveserver \
 "
 RDEPENDS_enigma2-plugin-systemplugins-upnp = " \
         python-coherence \
