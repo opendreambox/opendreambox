@@ -1,0 +1,27 @@
+From: Benjamin Drung <bdrung@debian.org>
+Date: Sat, 16 Sep 2017 11:22:04 +0200
+Subject: Link shared libraries with g++ instead of gcc to fix build failure
+
+---
+ config.linux                       | 6 +++---
+ config.linux-with-shared-libraries | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+--- a/config.linux-with-shared-libraries
++++ b/config.linux-with-shared-libraries
+@@ -33,12 +33,12 @@
+ CPLUSPLUS_FLAGS =	$(COMPILE_OPTS) -Wall -DBSD=1 $(CPPFLAGS) $(CXXFLAGS)
+ OBJ =			o
+ LINK =			$(CXX) -o
+-LINK_OPTS =		-L. $(LDFLAGS)
++LINK_OPTS =		-L. $(CPPFLAGS) $(LDFLAGS)
+ CONSOLE_LINK_OPTS =	$(LINK_OPTS)
+-LIBRARY_LINK =		$(CC) -o 
++LIBRARY_LINK =		$(CXX) -o 
+ SHORT_LIB_SUFFIX =	so.$(shell expr $($(NAME)_VERSION_CURRENT) - $($(NAME)_VERSION_AGE))
+ LIB_SUFFIX =	 	$(SHORT_LIB_SUFFIX).$($(NAME)_VERSION_AGE).$($(NAME)_VERSION_REVISION)
+-LIBRARY_LINK_OPTS =	-shared -Wl,-soname,$(NAME).$(SHORT_LIB_SUFFIX) $(LDFLAGS)
++LIBRARY_LINK_OPTS =	-shared -Wl,-soname,$(NAME).$(SHORT_LIB_SUFFIX) $(CPPFLAGS) $(LDFLAGS)
+ LIBS_FOR_CONSOLE_APPLICATION =
+ LIBS_FOR_GUI_APPLICATION =
+ EXE =

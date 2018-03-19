@@ -10,9 +10,7 @@ SECTION = "devel"
 INC_PR = "r1"
 
 URLV = "${@d.getVar('PV',1)[0:4]}.${@d.getVar('PV',1)[4:6]}.${@d.getVar('PV',1)[6:8]}"
-SRC_URI = "http://www.live555.com/liveMedia/public/live.${URLV}.tar.gz \
-           file://config.linux-cross \
-           file://live555.pc"
+SRC_URI = "http://www.live555.com/liveMedia/public/live.${URLV}.tar.gz"
 # only latest live version stays on http://www.live555.com/liveMedia/public/, add mirror for older
 MIRRORS += "http://www.live555.com/liveMedia/public/ http://distcache.FreeBSD.org/ports-distfiles/ \n"
 
@@ -20,9 +18,7 @@ S = "${WORKDIR}/live"
 TARGET_CC_ARCH += "${LDFLAGS}"
 
 do_configure() {
-    cp ${WORKDIR}/config.linux-cross .
-    echo "COMPILE_OPTS+=" -fPIC "" >> config.linux-cross
-    ./genMakefiles linux-cross
+    ./genMakefiles linux-with-shared-libraries
 }
 
 do_compile() {
@@ -30,32 +26,11 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${includedir}/BasicUsageEnvironment
-    install -d ${D}${includedir}/groupsock
-    install -d ${D}${includedir}/liveMedia
-    install -d ${D}${includedir}/UsageEnvironment
-    install -d ${D}${libdir}
-    install -d ${D}/usr/lib/pkgconfig
-    cp -R --no-dereference --preserve=mode,links -v ${S}/BasicUsageEnvironment/include/*.hh ${D}${includedir}/BasicUsageEnvironment/
-    cp -R --no-dereference --preserve=mode,links -v ${S}/groupsock/include/*.h ${D}${includedir}/groupsock/
-    cp -R --no-dereference --preserve=mode,links -v ${S}/groupsock/include/*.hh ${D}${includedir}/groupsock/
-    cp -R --no-dereference --preserve=mode,links -v ${S}/liveMedia/include/*.hh ${D}${includedir}/liveMedia/
-    cp -R --no-dereference --preserve=mode,links -v ${S}/UsageEnvironment/include/*.hh ${D}${includedir}/UsageEnvironment/
-    cp -R --no-dereference --preserve=mode,links -v ${WORKDIR}/live555.pc ${D}/usr/lib/pkgconfig/
-    # Find all the headers
-    for i in $(find . -name "*.hh") $(find . -name "*.h") ; do
-        install ${i} ${D}${includedir}
-    done
-    cp ${S}/*/*.a ${D}${libdir}
-    install -d ${D}${bindir}
-    for i in MPEG2TransportStreamIndexer openRTSP playSIP registerRTSPStream sapWatch; do
-        install -m 0755 ${S}/testProgs/${i} ${D}${bindir}/
-    done
-    install -m 0755 ${S}/mediaServer/live555MediaServer ${D}${bindir}/
+    make DESTDIR=${D} install
 }
 
-PACKAGES =+ " live555-openrtsp live555-playsip live555-mediaserver"
-FILES_${PN} = "${bindir}/sapWatch ${bindir}/registerRTSPStream ${bindir]/MPEG2TransportStreamIndexer"
+PACKAGES =+ " live555-openrtsp live555-playsip live555-mediaserver live555-examples"
 FILES_live555-openrtsp = "${bindir}/openRTSP"
 FILES_live555-playsip = "${bindir}/playSIP"
 FILES_live555-mediaserver = "${bindir}/live555MediaServer"
+FILES_live555-examples = "${bindir}/*"

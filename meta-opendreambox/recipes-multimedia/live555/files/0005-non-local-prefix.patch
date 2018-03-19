@@ -1,0 +1,65 @@
+--- a/BasicUsageEnvironment/Makefile.head
++++ b/BasicUsageEnvironment/Makefile.head
+@@ -1,4 +1,4 @@
+ INCLUDES = -Iinclude -I../UsageEnvironment/include -I../groupsock/include
+-PREFIX = /usr/local
++PREFIX = /usr
+ LIBDIR = $(PREFIX)/lib
+ ##### Change the following for your environment:
+--- a/UsageEnvironment/Makefile.head
++++ b/UsageEnvironment/Makefile.head
+@@ -1,4 +1,4 @@
+ INCLUDES = -Iinclude -I../groupsock/include
+-PREFIX = /usr/local
++PREFIX = /usr
+ LIBDIR = $(PREFIX)/lib
+ ##### Change the following for your environment:
+--- a/groupsock/Makefile.head
++++ b/groupsock/Makefile.head
+@@ -1,4 +1,4 @@
+ INCLUDES = -Iinclude -I../UsageEnvironment/include
+-PREFIX = /usr/local
++PREFIX = /usr
+ LIBDIR = $(PREFIX)/lib
+ ##### Change the following for your environment:
+--- a/liveMedia/Makefile.head
++++ b/liveMedia/Makefile.head
+@@ -1,4 +1,4 @@
+ INCLUDES = -Iinclude -I../UsageEnvironment/include -I../groupsock/include
+-PREFIX = /usr/local
++PREFIX = /usr
+ LIBDIR = $(PREFIX)/lib
+ ##### Change the following for your environment:
+--- a/mediaServer/Makefile.tail
++++ b/mediaServer/Makefile.tail
+@@ -2,7 +2,7 @@
+ 
+ MEDIA_SERVER = live555MediaServer$(EXE)
+ 
+-PREFIX = /usr/local
++PREFIX = /usr
+ ALL = $(MEDIA_SERVER)
+ all: $(ALL)
+ 
+--- a/proxyServer/Makefile.tail
++++ b/proxyServer/Makefile.tail
+@@ -2,7 +2,7 @@
+ 
+ PROXY_SERVER = live555ProxyServer$(EXE)
+ 
+-PREFIX = /usr/local
++PREFIX = /usr
+ ALL = $(PROXY_SERVER)
+ all: $(ALL)
+ 
+--- a/testProgs/Makefile.tail
++++ b/testProgs/Makefile.tail
+@@ -11,7 +11,7 @@
+ 
+ MISC_APPS = testMPEG1or2Splitter$(EXE) testMPEG1or2ProgramToTransportStream$(EXE) testH264VideoToTransportStream$(EXE) testH265VideoToTransportStream$(EXE) MPEG2TransportStreamIndexer$(EXE) testMPEG2TransportStreamTrickPlay$(EXE) registerRTSPStream$(EXE)
+ 
+-PREFIX = /usr/local
++PREFIX = /usr
+ ALL = $(MULTICAST_APPS) $(UNICAST_APPS) $(MISC_APPS)
+ all: $(ALL)
+ 

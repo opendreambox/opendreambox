@@ -1,0 +1,89 @@
+From: Sebastian Ramacher <sramacher@debian.org>
+Date: Sat, 16 Sep 2017 14:12:44 +0200
+Subject: Reduce number of unresolved symbols by linking libraries
+
+This leaves HashTable::Iterator::create as only reamining unresolved
+symbol. However, this symbol is not defined.
+---
+ BasicUsageEnvironment/Makefile.tail | 5 ++++-
+ Makefile.tail                       | 4 ++--
+ groupsock/Makefile.tail             | 7 ++++++-
+ liveMedia/Makefile.tail             | 9 ++++++++-
+ 4 files changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/BasicUsageEnvironment/Makefile.tail b/BasicUsageEnvironment/Makefile.tail
+index 5d04179..55db8ad 100644
+--- a/BasicUsageEnvironment/Makefile.tail
++++ b/BasicUsageEnvironment/Makefile.tail
+@@ -9,8 +9,11 @@ OBJS = BasicUsageEnvironment0.$(OBJ) BasicUsageEnvironment.$(OBJ) \
+ 	BasicTaskScheduler0.$(OBJ) BasicTaskScheduler.$(OBJ) \
+ 	DelayQueue.$(OBJ) BasicHashTable.$(OBJ)
+ 
++USAGE_ENVIRONMENT_DIR = ../UsageEnvironment
++USAGE_ENVIRONMENT_LIB = $(USAGE_ENVIRONMENT_DIR)/libUsageEnvironment.$(libUsageEnvironment_LIB_SUFFIX)
++
+ libBasicUsageEnvironment.$(LIB_SUFFIX): $(OBJS)
+-	$(LIBRARY_LINK)$@ $(LIBRARY_LINK_OPTS) \
++	$(LIBRARY_LINK)$@ $(LIBRARY_LINK_OPTS) $(USAGE_ENVIRONMENT_LIB) \
+ 		$(OBJS)
+ 
+ .$(C).$(OBJ):
+diff --git a/Makefile.tail b/Makefile.tail
+index a20a527..f28c77f 100644
+--- a/Makefile.tail
++++ b/Makefile.tail
+@@ -12,10 +12,10 @@ MEDIA_SERVER_DIR = mediaServer
+ PROXY_SERVER_DIR = proxyServer
+ 
+ all:
+-	cd $(LIVEMEDIA_DIR) ; $(MAKE)
+-	cd $(GROUPSOCK_DIR) ; $(MAKE)
+ 	cd $(USAGE_ENVIRONMENT_DIR) ; $(MAKE)
+ 	cd $(BASIC_USAGE_ENVIRONMENT_DIR) ; $(MAKE)
++	cd $(GROUPSOCK_DIR) ; $(MAKE)
++	cd $(LIVEMEDIA_DIR) ; $(MAKE)
+ 	cd $(TESTPROGS_DIR) ; $(MAKE)
+ 	cd $(MEDIA_SERVER_DIR) ; $(MAKE)
+ 	cd $(PROXY_SERVER_DIR) ; $(MAKE)
+diff --git a/groupsock/Makefile.tail b/groupsock/Makefile.tail
+index 89a8593..798ea3a 100644
+--- a/groupsock/Makefile.tail
++++ b/groupsock/Makefile.tail
+@@ -25,9 +25,14 @@ NetInterface.$(CPP):	include/NetInterface.hh include/GroupsockHelper.hh
+ NetAddress.$(CPP):	include/NetAddress.hh include/GroupsockHelper.hh
+ IOHandlers.$(CPP):	include/IOHandlers.hh include/TunnelEncaps.hh
+ 
++USAGE_ENVIRONMENT_DIR = ../UsageEnvironment
++USAGE_ENVIRONMENT_LIB = $(USAGE_ENVIRONMENT_DIR)/libUsageEnvironment.$(libUsageEnvironment_LIB_SUFFIX)
++BASIC_USAGE_ENVIRONMENT_DIR = ../BasicUsageEnvironment
++BASIC_USAGE_ENVIRONMENT_LIB = $(BASIC_USAGE_ENVIRONMENT_DIR)/libBasicUsageEnvironment.$(libBasicUsageEnvironment_LIB_SUFFIX)
++
+ libgroupsock.$(LIB_SUFFIX): $(GROUPSOCK_LIB_OBJS) \
+     $(PLATFORM_SPECIFIC_LIB_OBJS)
+-	$(LIBRARY_LINK)$@ $(LIBRARY_LINK_OPTS) \
++	$(LIBRARY_LINK)$@ $(LIBRARY_LINK_OPTS) $(BASIC_USAGE_ENVIRONMENT_LIB) $(USAGE_ENVIRONMENT_LIB) \
+ 		$(GROUPSOCK_LIB_OBJS)
+ 
+ clean:
+diff --git a/liveMedia/Makefile.tail b/liveMedia/Makefile.tail
+index 92dbc83..e4a6356 100644
+--- a/liveMedia/Makefile.tail
++++ b/liveMedia/Makefile.tail
+@@ -56,9 +56,16 @@ MISC_OBJS = BitVector.$(OBJ) StreamParser.$(OBJ) DigestAuthentication.$(OBJ) our
+ 
+ LIVEMEDIA_LIB_OBJS = Media.$(OBJ) $(MISC_SOURCE_OBJS) $(MISC_SINK_OBJS) $(MISC_FILTER_OBJS) $(RTP_OBJS) $(RTCP_OBJS) $(GENERIC_MEDIA_SERVER_OBJS) $(RTSP_OBJS) $(SIP_OBJS) $(SESSION_OBJS) $(QUICKTIME_OBJS) $(AVI_OBJS) $(TRANSPORT_STREAM_TRICK_PLAY_OBJS) $(MATROSKA_OBJS) $(OGG_OBJS) $(MISC_OBJS)
+ 
++GROUPSOCK_DIR = ../groupsock
++GROUPSOCK_LIB = $(GROUPSOCK_DIR)/libgroupsock.$(libgroupsock_LIB_SUFFIX)
++USAGE_ENVIRONMENT_DIR = ../UsageEnvironment
++USAGE_ENVIRONMENT_LIB = $(USAGE_ENVIRONMENT_DIR)/libUsageEnvironment.$(libUsageEnvironment_LIB_SUFFIX)
++BASIC_USAGE_ENVIRONMENT_DIR = ../BasicUsageEnvironment
++BASIC_USAGE_ENVIRONMENT_LIB = $(BASIC_USAGE_ENVIRONMENT_DIR)/libBasicUsageEnvironment.$(libBasicUsageEnvironment_LIB_SUFFIX)
++
+ $(LIVEMEDIA_LIB): $(LIVEMEDIA_LIB_OBJS) \
+     $(PLATFORM_SPECIFIC_LIB_OBJS)
+-	$(LIBRARY_LINK)$@ $(LIBRARY_LINK_OPTS) \
++	$(LIBRARY_LINK)$@ $(LIBRARY_LINK_OPTS) $(GROUPSOCK_LIB) $(BASIC_USAGE_ENVIRONMENT_LIB) $(USAGE_ENVIRONMENT_LIB) \
+ 		$(LIVEMEDIA_LIB_OBJS)
+ 
+ Media.$(CPP):		include/Media.hh
