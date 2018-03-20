@@ -48,6 +48,9 @@ RDEPENDS_${PN} += " \
 RDEPENDS_${PN}_append_libc-glibc = " \
         glibc-gconv-iso8859-15 \
 "
+RRECOMMENDS_${PN} += " \
+        enigma2-journald \
+"
 
 FILES_${PN} += "${datadir}/fonts ${datadir}/keymaps ${libdir}/fonts ${libdir}/libopen.so"
 FILES_${PN}-dev = "${includedir} ${libdir}/*.la ${libdir}/pkgconfig"
