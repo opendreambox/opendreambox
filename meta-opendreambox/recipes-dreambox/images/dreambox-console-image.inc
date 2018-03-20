@@ -8,7 +8,6 @@ python __anonymous() {
 }
 
 BAD_RECOMMENDATIONS += " \
-    busybox-syslog \
     libconnman-qt5-qmlplugins \
     libnss-mdns \
     qtbase-plugins \
