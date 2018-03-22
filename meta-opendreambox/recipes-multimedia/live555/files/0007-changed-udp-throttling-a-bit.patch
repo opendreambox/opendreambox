@@ -1,0 +1,13 @@
+--- live/liveMedia/MultiFramedRTPSink.cpp	2018-02-18 09:53:11.000000000 +0100
++++ live_patched/liveMedia/MultiFramedRTPSink.cpp	2018-03-22 19:14:40.907726076 +0100
+@@ -412,6 +412,10 @@
+     }
+ 
+     // Delay this amount of time:
++    const int64_t maxBitrate = 10000000ul + 5000000; // 10mbit encoder max + reserve
++    int64_t minInterPacketGap = (int64_t)(8ul * 1500 * 1000000) / maxBitrate;
++    if (uSecondsToGo < minInterPacketGap)
++      uSecondsToGo = minInterPacketGap;
+     nextTask() = envir().taskScheduler().scheduleDelayedTask(uSecondsToGo, (TaskFunc*)sendNext, this);
+   }
+ }

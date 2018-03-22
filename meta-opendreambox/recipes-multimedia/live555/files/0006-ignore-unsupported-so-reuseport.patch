@@ -1,0 +1,29 @@
+diff -Naur live/groupsock/GroupsockHelper.cpp live_patched/groupsock/GroupsockHelper.cpp
+--- live/groupsock/GroupsockHelper.cpp	2018-02-18 09:53:11.000000000 +0100
++++ live_patched/groupsock/GroupsockHelper.cpp	2018-03-22 19:06:41.118980225 +0100
+@@ -118,8 +118,10 @@
+   // Windoze doesn't properly handle SO_REUSEPORT or IP_MULTICAST_LOOP
+ #else
+ #ifdef SO_REUSEPORT
+-  if (setsockopt(newSocket, SOL_SOCKET, SO_REUSEPORT,
+-		 (const char*)&reuseFlag, sizeof reuseFlag) < 0) {
++  int ret = setsockopt(newSocket, SOL_SOCKET, SO_REUSEPORT, (const char*)&reuseFlag, sizeof reuseFlag);
++  if (ret < 0 && errno != ENOPROTOOPT) {
++    // dont fail on ENOPROTOOPT! checking SO_REUSEPORT is only compile time check,
++    // but the used kernel still may not support SO_REUSEPORT at runtime
+     socketErr(env, "setsockopt(SO_REUSEPORT) error: ");
+     closeSocket(newSocket);
+     return -1;
+@@ -247,8 +249,10 @@
+   // Windoze doesn't properly handle SO_REUSEPORT
+ #else
+ #ifdef SO_REUSEPORT
+-  if (setsockopt(newSocket, SOL_SOCKET, SO_REUSEPORT,
+-		 (const char*)&reuseFlag, sizeof reuseFlag) < 0) {
++  int ret = setsockopt(newSocket, SOL_SOCKET, SO_REUSEPORT, (const char*)&reuseFlag, sizeof reuseFlag);
++  if (ret < 0 && errno != ENOPROTOOPT) {
++    // dont fail on ENOPROTOOPT! checking SO_REUSEPORT is only compile time check,
++    // but the used kernel still may not support SO_REUSEPORT at runtime
+     socketErr(env, "setsockopt(SO_REUSEPORT) error: ");
+     closeSocket(newSocket);
+     return -1;
