@@ -1,0 +1,47 @@
+From 03cc2b48ff325d6a5e6f813a97d0c98056a12629 Mon Sep 17 00:00:00 2001
+From: Aleix Conchillo Flaque <aleix@oblong.com>
+Date: Wed, 7 Sep 2016 16:10:27 +0300
+Subject: [PATCH] rtspsrc: always send teardown request
+
+Allow CMD_CLOSE to cancel all commands not only CMD_PAUSE
+and ignore CMD_WAIT while closing.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=748360
+(cherry picked from commit bc9f06f37b856be0b3270e62e58feac635239556)
+---
+ gst/rtsp/gstrtspsrc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/gst/rtsp/gstrtspsrc.c b/gst/rtsp/gstrtspsrc.c
+index d6b4789..22509a6 100644
+--- a/gst/rtsp/gstrtspsrc.c
++++ b/gst/rtsp/gstrtspsrc.c
+@@ -5420,8 +5420,14 @@ gst_rtspsrc_loop_send_cmd (GstRTSPSrc * src, gint cmd, gint mask)
+   if (old == CMD_RECONNECT) {
+     GST_DEBUG_OBJECT (src, "ignore, we were reconnecting");
+     cmd = CMD_RECONNECT;
+-  }
+-  if (old != CMD_WAIT) {
++  } else if(old == CMD_CLOSE) {
++    /* our CMD_CLOSE might have interrutped CMD_LOOP. gst_rtspsrc_loop
++    * will send a CMD_WAIT which would cancel our pending CMD_CLOSE (if
++    * still pending). We just avoid it here by making sure CMD_CLOSE is
++    * still the pending command. */
++    GST_DEBUG_OBJECT (src, "ignore, we were closing");
++    cmd = CMD_CLOSE;
++  } else if (old != CMD_WAIT) {
+     src->pending_cmd = CMD_WAIT;
+     GST_OBJECT_UNLOCK (src);
+     /* cancel previous request */
+@@ -8292,7 +8298,7 @@ gst_rtspsrc_change_state (GstElement * element, GstStateChange transition)
+       ret = GST_STATE_CHANGE_NO_PREROLL;
+       break;
+     case GST_STATE_CHANGE_PAUSED_TO_READY:
+-      gst_rtspsrc_loop_send_cmd (rtspsrc, CMD_CLOSE, CMD_PAUSE);
++      gst_rtspsrc_loop_send_cmd (rtspsrc, CMD_CLOSE, CMD_ALL);
+       ret = GST_STATE_CHANGE_SUCCESS;
+       break;
+     case GST_STATE_CHANGE_READY_TO_NULL:
+-- 
+2.7.4
+
