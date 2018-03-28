@@ -10,6 +10,7 @@ SRC_URI += " \
 	file://0005-non-local-prefix.patch \
 	file://0006-ignore-unsupported-so-reuseport.patch \
 	file://0007-changed-udp-throttling-a-bit.patch \
+	file://0008-fixed-rtsp-teardown.patch \
 "
 
 SRC_URI[md5sum] = "5e070a0bf4b60af65717d09283ba0bbc"
