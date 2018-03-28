@@ -7,7 +7,7 @@ SRC_URI += " \
     file://satip-client.service \
 "
 
-SRCREV = "de95c81d97676b849871935a403136abc3fc2a73"
+SRCREV = "4e62c7ec468ededd1c87a2083ec34dbc8f25ef26"
 
 inherit autotools pkgconfig opendreambox-github systemd
 
