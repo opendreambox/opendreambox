@@ -33,6 +33,7 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-extensions-moviecut-meta \
   enigma2-plugin-extensions-partnerbox-meta \
   enigma2-plugin-extensions-permanenttimeshift-meta \
+  enigma2-plugin-extensions-pzyp4t-meta \
   enigma2-plugin-extensions-reconstructapsc-meta \
   enigma2-plugin-extensions-retrogamestation-meta \
   enigma2-plugin-extensions-seriesplugin-meta \
