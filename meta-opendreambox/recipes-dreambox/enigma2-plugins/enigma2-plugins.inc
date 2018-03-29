@@ -136,3 +136,4 @@ RDEPENDS_${PN} = " \
         smartmontools \
         streamripper \
 "
+RDEPENDS_${PN}-dev = ""
