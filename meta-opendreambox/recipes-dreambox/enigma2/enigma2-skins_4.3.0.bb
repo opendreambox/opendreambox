@@ -53,3 +53,4 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-skincomponents-reftopiconname \
     enigma2-plugin-skincomponents-serviceresolution \
 "
+RDEPENDS_${PN}-dev = ""
