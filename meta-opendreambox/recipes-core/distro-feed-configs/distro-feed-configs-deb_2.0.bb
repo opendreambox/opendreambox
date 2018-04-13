@@ -18,6 +18,8 @@ do_install_append() {
     install -m 644 ${WORKDIR}/tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/${BPN}.conf
 }
 
+RDEPENDS_${PN} = "opendreambox-archive-keyring"
+
 pkg_postinst_${PN} () {
     if [ -z "$D" ]; then
         if command -v systemd-tmpfiles >/dev/null; then
