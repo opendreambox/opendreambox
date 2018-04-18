@@ -62,6 +62,7 @@ RDEPENDS_${PN} = " \
         gstreamer1.0-plugins-good-spectrum \
         hdparm \
         parted \
+        python-autobahn \
         python-codecs \
         python-compression \
         python-crypt \
@@ -89,6 +90,7 @@ RDEPENDS_${PN} = " \
         python-twisted-names \
         python-twisted-protocols \
         python-twisted-web \
+        python-voluptuous \
         python-xml \
         python-youtube-dl \
         python-zlib \
