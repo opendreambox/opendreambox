@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://src/plugin.py;beginline=3;endline=21;md5=50ed3c5b628a
 
 GITHUB_PROJECT = "enigma2-plugin-pzyp4t"
 
-SRCREV = "${@opendreambox_srcrev('f6000c172061a8b675eaca6b1e6ff999b3a06d9e', d)}"
+SRCREV = "${@opendreambox_srcrev('15dcd56e41e0cb6508374965914bfc54aa64fa4b', d)}"
 
 inherit autotools opendreambox-github
 
