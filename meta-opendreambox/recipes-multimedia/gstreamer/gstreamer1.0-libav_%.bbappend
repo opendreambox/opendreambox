@@ -1,1 +1,1 @@
-EXTRA_OECONF += "--with-libav-extra-configure='--disable-mipsdspr1 --disable-mipsdspr2'"
+LIBAV_EXTRA_CONFIGURE_COMMON_ARG += "--disable-mipsdspr1 --disable-mipsdspr2"
