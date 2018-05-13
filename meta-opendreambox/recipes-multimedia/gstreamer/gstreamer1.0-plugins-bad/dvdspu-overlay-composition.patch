@@ -41,7 +41,7 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
      GST_PAD_ALWAYS,
 -    GST_STATIC_CAPS ("video/x-raw, " "format = (string) { I420, NV12, YV12 }, "
 -        "width = (int) [ 16, 4096 ], " "height = (int) [ 16, 4096 ]")
-+    GST_STATIC_CAPS (DVDSPU_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-divx; video/x-xvid; video/x-wmv")
++    GST_STATIC_CAPS (DVDSPU_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-h265; video/x-vp9; video/x-divx; video/x-xvid; video/x-wmv")
      );
  
  static GstStaticPadTemplate src_factory = GST_STATIC_PAD_TEMPLATE ("src",
@@ -49,7 +49,7 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
      GST_PAD_ALWAYS,
 -    GST_STATIC_CAPS ("video/x-raw, " "format = (string) { I420, NV12, YV12 }, "
 -        "width = (int) [ 16, 4096 ], " "height = (int) [ 16, 4096 ]")
-+    GST_STATIC_CAPS (DVDSPU_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-divx; video/x-xvid; video/x-wmv")
++    GST_STATIC_CAPS (DVDSPU_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-h265; video/x-vp9; video/x-divx; video/x-xvid; video/x-wmv")
      );
  
  static GstStaticPadTemplate subpic_sink_factory =

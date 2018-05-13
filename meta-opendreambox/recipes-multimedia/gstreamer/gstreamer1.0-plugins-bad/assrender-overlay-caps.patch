@@ -7,7 +7,7 @@ index 711ab04..2b72ee6 100644
      GST_PAD_SRC,
      GST_PAD_ALWAYS,
 -    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS)
-+    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-divx; video/x-xvid; video/x-wmv")
++    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-h265; video/x-vp9; video/x-divx; video/x-xvid; video/x-wmv")
      );
  
  static GstStaticPadTemplate video_sink_factory =
@@ -15,7 +15,7 @@ index 711ab04..2b72ee6 100644
      GST_PAD_SINK,
      GST_PAD_ALWAYS,
 -    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS)
-+    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-divx; video/x-xvid; video/x-wmv")
++    GST_STATIC_CAPS (ASSRENDER_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-h265; video/x-vp9; video/x-divx; video/x-xvid; video/x-wmv")
      );
  
  static GstStaticPadTemplate text_sink_factory =
