@@ -61,6 +61,7 @@ RDEPENDS_${PN} = " \
         gstreamer1.0-plugins-good-icydemux \
         gstreamer1.0-plugins-good-spectrum \
         hdparm \
+        libsss-segment \
         parted \
         python-autobahn \
         python-codecs \
