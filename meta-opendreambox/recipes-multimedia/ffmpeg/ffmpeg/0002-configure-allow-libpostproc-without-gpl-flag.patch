@@ -1,0 +1,34 @@
+Upstream-Status: inappropriate [distro-specific]
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+
+From 9c28ed17d1184ee95819e4c576373c20fe2c3600 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Sat, 11 Feb 2017 22:57:42 +0100
+Subject: [PATCH] configure: allow libpostproc without gpl flag
+
+There may be GPL'ed programs in a distribution which want libpostproc,
+while other GPL-incompatible programs use some of the other libraries
+provided by ffmpeg.
+
+Since we know the license of libpostproc, we mark the resulting binary
+package accordingly instead of refusing to build it.
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure b/configure
+index d60ffd8..cd53e6c 100755
+--- a/configure
++++ b/configure
+@@ -3135,7 +3135,7 @@ avdevice_deps="avformat avcodec avutil"
+ avfilter_deps="avutil"
+ avformat_deps="avcodec avutil"
+ avresample_deps="avutil"
+-postproc_deps="avutil gpl"
++postproc_deps="avutil"
+ swresample_deps="avutil"
+ swscale_deps="avutil"
+ 
