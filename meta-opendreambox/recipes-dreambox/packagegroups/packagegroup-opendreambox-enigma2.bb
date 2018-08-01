@@ -43,10 +43,12 @@ RDEPENDS_${PN} += " \
   enigma2-skins-meta \
   enigma2-streamproxy \
   golang-plaincast-meta \
-  libpassthrough \
   packagegroup-opendreambox-gstreamer-1.0 \
   packagegroup-opendreambox-systemlocales \
 "
+
+RDEPENDS_${PN}_append_bcm7435 = " libpassthrough"
+RDEPENDS_${PN}_append_bcm7439 = " libpassthrough"
 
 RRECOMMENDS_${PN} += " \
   aio-grab \
