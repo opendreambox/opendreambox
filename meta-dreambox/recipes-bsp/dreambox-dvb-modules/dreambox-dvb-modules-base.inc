@@ -18,7 +18,7 @@ do_install_append() {
         echo lcd > ${D}${sysconfdir}/modules-load.d/02-${BPN}-lcd.conf
         chmod 0644 ${D}${sysconfdir}/modules-load.d/02-${BPN}-lcd.conf
     fi
-    for module in ${SOC_FAMILY} dreambox_keyboard ble; do
+    for module in ${SOC_FAMILY} dreambox_keyboard ble ${MODULES_TO_LOAD}; do
         if [ -n "$(find ${D}/lib/modules/${DM_LOCALVERSION}/extra -name $module.ko)" ]; then
             echo $module >> ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf
         fi
