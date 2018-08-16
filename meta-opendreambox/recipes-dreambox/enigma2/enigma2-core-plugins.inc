@@ -14,6 +14,7 @@ SUMMARY_enigma2-plugin-systemplugins-skinselector = "Select installed skins"
 SUMMARY_enigma2-plugin-systemplugins-upnp = "UPnP tools based on python-coherence"
 SUMMARY_enigma2-plugin-systemplugins-videomode = "Select custom video modes"
 SUMMARY_enigma2-plugin-systemplugins-hdmicec = "HDMI CEC support"
+SUMMARY_enigma2-plugin-systemplugins-inputdevicemanager = "Manage wireless input devices"
 
 PACKAGES =+ " \
     enigma2-plugin-extensions-browser \
@@ -31,6 +32,7 @@ PACKAGES =+ " \
     enigma2-plugin-systemplugins-streamserver \
     enigma2-plugin-systemplugins-upnp \
     enigma2-plugin-systemplugins-hdmicec \
+    enigma2-plugin-systemplugins-inputdevicemanager \
 "
 
 RDEPENDS_enigma2-plugin-extensions-browser = " \
