@@ -86,6 +86,9 @@ RDEPENDS_enigma2-plugin-systemplugins-hotplug = " \
         python-fcntl \
         python-threading \
 "
+RRECOMMENDS_enigma2-plugin-systemplugins-inputdevicemanager = " \
+        flash-nrf52 \
+"
 RDEPENDS_enigma2-plugin-systemplugins-jsonapi = " \
         python-json \
 "
