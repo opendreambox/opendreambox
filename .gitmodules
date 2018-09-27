@@ -13,7 +13,7 @@
 [submodule "meta-qt5"]
 	path = meta-qt5
 	url = git://github.com/meta-qt5/meta-qt5
-	branch = pyro
+	branch = sumo
 [submodule "meta-golang"]
 	path = meta-golang
 	url = https://github.com/madisongh/meta-golang
