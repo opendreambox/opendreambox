@@ -87,7 +87,7 @@ RDEPENDS_enigma2-plugin-systemplugins-hotplug = " \
         python-threading \
 "
 RRECOMMENDS_enigma2-plugin-systemplugins-inputdevicemanager = " \
-        flash-nrf52 \
+        ${@bb.utils.contains('DREAMBOX_FEATURES', 'nrf52', 'flash-nrf52', '', d)} \
 "
 RDEPENDS_enigma2-plugin-systemplugins-jsonapi = " \
         python-json \
