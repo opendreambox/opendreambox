@@ -1,0 +1,25 @@
+From 818e08fb9219baab0ec4118dddf69150204e88e5 Mon Sep 17 00:00:00 2001
+From: reichi <stephan@reichholf.net>
+Date: Thu, 4 Oct 2018 11:02:47 +0200
+Subject: [PATCH] fix check_hyphen_ok for youtube
+
+---
+ idna/core.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/idna/core.py b/idna/core.py
+index ff3b38d..f3299a6 100644
+--- a/idna/core.py
++++ b/idna/core.py
+@@ -130,7 +130,7 @@ def check_initial_combiner(label):
+ 
+ def check_hyphen_ok(label):
+ 
+-    if label[2:4] == '--':
++    if label[:4] == 'xn--':
+         raise IDNAError('Label has disallowed hyphens in 3rd and 4th position')
+     if label[0] == '-' or label[-1] == '-':
+         raise IDNAError('Label must not start or end with a hyphen')
+-- 
+2.17.1
+
