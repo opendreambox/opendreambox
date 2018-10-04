@@ -1,0 +1,25 @@
+From 1054099b40dda6069ff0e471a346ac6074f6ed5f Mon Sep 17 00:00:00 2001
+From: reichi <stephan@reichholf.net>
+Date: Thu, 4 Oct 2018 10:36:24 +0200
+Subject: [PATCH] skin_default: add missing default windowsstylescrollbar with
+ id 5
+
+---
+ usr/share/enigma2/skin_default.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/usr/share/enigma2/skin_default.xml b/usr/share/enigma2/skin_default.xml
+index b0b4730..7359956 100644
+--- a/usr/share/enigma2/skin_default.xml
++++ b/usr/share/enigma2/skin_default.xml
+@@ -55,6 +55,7 @@
+ 		<color name="WindowTitleBackground" color="#000000"/>
+ 	</windowstyle>
+ 	<windowstylescrollbar id="4"/>
++	<windowstylescrollbar id="5"/>
+ 	<fonts>
+ 		<font filename="nmsbd.ttf" name="Display" scale="90"/>
+ 	</fonts>
+-- 
+2.17.1
+
