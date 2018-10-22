@@ -17,12 +17,17 @@ SYSTEMD_SERVICE_${PN} = "satip-client.service"
 do_install_append() {
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/satip-client.service ${D}${systemd_unitdir}/system/
-    install -d ${D}${sysconfdir}
-    install -m 0644 ${WORKDIR}/vtuner.conf ${D}${sysconfdir}
+    install -d ${D}${datadir}/satip-client
+    install -m 0644 ${WORKDIR}/vtuner.conf ${D}${datadir}/satip-client/vtuner.example.conf
 }
 
-CONFFILES_${PN} = "${sysconfdir}/vtuner.conf"
+pkg_postinst_${PN} () {
+if [ ! -e "${sysconfdir}/vtuner.conf" ]; then
+	cp ${datadir}/satip-client/vtuner.example.conf ${sysconfdir}/vtuner.conf
+fi
+}
 
 EXTRA_OECONF = " \
     --with-boxtype=${MACHINE} \
 "
+
