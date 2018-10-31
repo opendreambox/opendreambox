@@ -12,6 +12,7 @@ RDEPENDS_${PN} += " \
   tpmd \
   tuxbox-common \
   tzdata \
+  tzdata-europe \
   xfsprogs-mkfs \
 "
 
