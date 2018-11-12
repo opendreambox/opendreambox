@@ -51,4 +51,5 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-skincomponents-eventlist \
     enigma2-plugin-skincomponents-eventposition \
     enigma2-plugin-skincomponents-reftopiconname \
+    enigma2-plugin-skincomponents-serviceresolution \
 "
