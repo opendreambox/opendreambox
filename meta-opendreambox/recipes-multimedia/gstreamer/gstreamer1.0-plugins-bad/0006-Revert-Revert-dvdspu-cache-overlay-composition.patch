@@ -1,0 +1,119 @@
+From e9ef129b5eb0df2f6d415e2642451b397af17472 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 1 Nov 2018 14:07:09 +0100
+Subject: [PATCH 6/7] Revert "Revert "dvdspu: cache overlay composition""
+
+This reverts commit de568c48966bdb1fca5e499c79403c3884dd44c2.
+---
+ gst/dvdspu/gstdvdspu.c | 35 +++++++++++++++++++++++++++--------
+ gst/dvdspu/gstdvdspu.h |  1 +
+ 2 files changed, 28 insertions(+), 8 deletions(-)
+
+diff --git a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
+index c7c67db..e80a619 100644
+--- a/gst/dvdspu/gstdvdspu.c
++++ b/gst/dvdspu/gstdvdspu.c
+@@ -179,6 +179,15 @@ gst_dvd_spu_init (GstDVDSpu * dvdspu)
+ }
+ 
+ static void
++gst_dvd_spu_reset_composition (GstDVDSpu * dvdspu)
++{
++  if (dvdspu->composition) {
++    gst_video_overlay_composition_unref (dvdspu->composition);
++    dvdspu->composition = NULL;
++  }
++}
++
++static void
+ gst_dvd_spu_clear (GstDVDSpu * dvdspu)
+ {
+   gst_dvd_spu_flush_spu_info (dvdspu, FALSE);
+@@ -268,6 +277,8 @@ gst_dvd_spu_flush_spu_info (GstDVDSpu * dvdspu, gboolean keep_events)
+     default:
+       break;
+   }
++
++  gst_dvd_spu_reset_composition (dvdspu);
+ }
+ 
+ static gboolean
+@@ -798,26 +809,27 @@ gstspu_render (GstDVDSpu * dvdspu, GstBuffer * buf)
+   GstVideoOverlayComposition *composition;
+   GstVideoFrame frame;
+ 
+-  composition = gstspu_render_composition (dvdspu);
+-  if (!composition)
+-    return;
++  if (!dvdspu->composition) {
++    dvdspu->composition = gstspu_render_composition (dvdspu);
++    if (!dvdspu->composition)
++      return;
++  }
++
++  composition = dvdspu->composition;
+ 
+   if (dvdspu->attach_compo_to_buffer) {
+     gst_buffer_add_video_overlay_composition_meta (buf, composition);
+-    goto done;
++    return;
+   }
+ 
+   if (!gst_video_frame_map (&frame, &dvdspu->spu_state.info, buf,
+           GST_MAP_READWRITE)) {
+     GST_WARNING_OBJECT (dvdspu, "failed to map video frame for blending");
+-    goto done;
++    return;
+   }
+ 
+   gst_video_overlay_composition_blend (composition, &frame);
+   gst_video_frame_unmap (&frame);
+-
+-done:
+-  gst_video_overlay_composition_unref (composition);
+ }
+ 
+ /* With SPU LOCK */
+@@ -886,6 +898,9 @@ gst_dvd_spu_handle_dvd_event (GstDVDSpu * dvdspu, GstEvent * event)
+       break;
+   }
+ 
++  if (hl_change)
++    gst_dvd_spu_reset_composition (dvdspu);
++
+   if (hl_change && (dvdspu->spu_state.flags & SPU_STATE_STILL_FRAME)) {
+     gst_dvd_spu_redraw_still (dvdspu, FALSE);
+   }
+@@ -939,6 +954,8 @@ gst_dvd_spu_advance_spu (GstDVDSpu * dvdspu, GstClockTime new_ts)
+           GST_TIME_ARGS (dvdspu->video_seg.position),
+           packet->buf ? "buffer" : "event");
+ 
++      gst_dvd_spu_reset_composition (dvdspu);
++
+       if (packet->buf) {
+         switch (dvdspu->spu_input_type) {
+           case SPU_INPUT_TYPE_VOBSUB:
+@@ -1050,6 +1067,8 @@ gst_dvd_spu_negotiate (GstDVDSpu * dvdspu)
+   GstCaps *caps;
+   gboolean attach = FALSE;
+ 
++  gst_dvd_spu_reset_composition (dvdspu);
++
+   GST_DEBUG_OBJECT (dvdspu, "performing negotiation");
+ 
+   caps = gst_pad_get_current_caps (dvdspu->srcpad);
+diff --git a/gst/dvdspu/gstdvdspu.h b/gst/dvdspu/gstdvdspu.h
+index 0512082..6fa700c 100644
+--- a/gst/dvdspu/gstdvdspu.h
++++ b/gst/dvdspu/gstdvdspu.h
+@@ -115,6 +115,7 @@ struct _GstDVDSpu {
+ 
+   /* Overlay composition */
+   gboolean attach_compo_to_buffer;
++  GstVideoOverlayComposition *composition;
+ };
+ 
+ struct _GstDVDSpuClass {
+-- 
+2.1.4
+

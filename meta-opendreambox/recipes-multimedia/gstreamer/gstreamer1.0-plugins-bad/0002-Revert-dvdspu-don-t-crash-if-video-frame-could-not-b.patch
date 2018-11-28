@@ -1,0 +1,29 @@
+From ee2b7ef2937df907f4c4a58cf13d370b2a1295b8 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 1 Nov 2018 14:05:59 +0100
+Subject: [PATCH 2/7] Revert "dvdspu: don't crash if video frame could not be
+ mapped"
+
+This reverts commit f991e09319d55f35f19b486e3094992224ddf4c4.
+---
+ gst/dvdspu/gstdvdspu.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
+index fb21748..52d1038 100644
+--- a/gst/dvdspu/gstdvdspu.c
++++ b/gst/dvdspu/gstdvdspu.c
+@@ -664,9 +664,7 @@ gstspu_render (GstDVDSpu * dvdspu, GstBuffer * buf)
+ {
+   GstVideoFrame frame;
+ 
+-  if (!gst_video_frame_map (&frame, &dvdspu->spu_state.info, buf,
+-          GST_MAP_READWRITE))
+-    return;
++  gst_video_frame_map (&frame, &dvdspu->spu_state.info, buf, GST_MAP_READWRITE);
+ 
+   switch (dvdspu->spu_input_type) {
+     case SPU_INPUT_TYPE_VOBSUB:
+-- 
+2.1.4
+

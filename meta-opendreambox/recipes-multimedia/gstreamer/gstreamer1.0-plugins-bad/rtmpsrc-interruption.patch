@@ -1,18 +1,6 @@
-From d1ce2a422d1747ce6773094a423f31edb8fd887b Mon Sep 17 00:00:00 2001
-From: Andreas Frisch <fraxinas@opendreambox.org>
-Date: Wed, 1 Jun 2016 15:25:41 +0200
-Subject: [PATCH] implement librtmp read thread interruption (fixes rtmpsrc
- segfault on zapping in READY)
-
----
- ext/rtmp/gstrtmpsrc.c | 50 +++++++++++++++++++++++++++++++++++++++++++-------
- ext/rtmp/gstrtmpsrc.h |  2 ++
- 2 files changed, 45 insertions(+), 7 deletions(-)
-
-diff --git a/ext/rtmp/gstrtmpsrc.c b/ext/rtmp/gstrtmpsrc.c
-index bbed8b0..af24c3e 100644
---- a/ext/rtmp/gstrtmpsrc.c
-+++ b/ext/rtmp/gstrtmpsrc.c
+diff -Naur gst-plugins-bad-1.10.4.orig/ext/rtmp/gstrtmpsrc.c gst-plugins-bad-1.10.4/ext/rtmp/gstrtmpsrc.c
+--- gst-plugins-bad-1.10.4.orig/ext/rtmp/gstrtmpsrc.c	2016-11-04 18:07:13.000000000 +0100
++++ gst-plugins-bad-1.10.4/ext/rtmp/gstrtmpsrc.c	2018-11-14 20:07:56.247099524 +0100
 @@ -52,6 +52,11 @@
  #include <string.h>
  
@@ -25,15 +13,15 @@ index bbed8b0..af24c3e 100644
  
  #ifdef G_OS_WIN32
  #include <winsock2.h>
-@@ -161,6 +166,7 @@ gst_rtmp_src_init (GstRTMPSrc * rtmpsrc)
+@@ -168,6 +173,7 @@
  
    rtmpsrc->cur_offset = 0;
    rtmpsrc->last_timestamp = 0;
 +  rtmpsrc->read_tid = -1;
+   rtmpsrc->timeout = DEFAULT_TIMEOUT;
  
    gst_base_src_set_format (GST_BASE_SRC (rtmpsrc), GST_FORMAT_TIME);
- }
-@@ -296,6 +302,11 @@ gst_rtmp_src_get_property (GObject * object, guint prop_id, GValue * value,
+@@ -311,6 +317,11 @@
    }
  }
  
@@ -45,7 +33,7 @@ index bbed8b0..af24c3e 100644
  /*
   * Read a new buffer from src->reqoffset, takes care of events
   * and seeking and such.
-@@ -303,6 +314,9 @@ gst_rtmp_src_get_property (GObject * object, guint prop_id, GValue * value,
+@@ -318,6 +329,9 @@
  static GstFlowReturn
  gst_rtmp_src_create (GstPushSrc * pushsrc, GstBuffer ** buffer)
  {
@@ -55,9 +43,9 @@ index bbed8b0..af24c3e 100644
    GstRTMPSrc *src;
    GstBuffer *buf;
    GstMapInfo map;
-@@ -332,6 +346,17 @@ gst_rtmp_src_create (GstPushSrc * pushsrc, GstBuffer ** buffer)
+@@ -346,6 +360,17 @@
    data = map.data;
-   read = bsize = 0;
+   bsize = 0;
  
 +  if (!tid_read) {
 +    tid = syscall (SYS_gettid);
@@ -71,9 +59,9 @@ index bbed8b0..af24c3e 100644
 +  sigaction (SIGUSR1, &act, 0);
 +
    while (todo > 0) {
-     read = RTMP_Read (src->rtmp, (char *) data, todo);
+     int read = RTMP_Read (src->rtmp, (char *) data, todo);
  
-@@ -357,6 +383,11 @@ gst_rtmp_src_create (GstPushSrc * pushsrc, GstBuffer ** buffer)
+@@ -370,6 +395,11 @@
    }
    gst_buffer_unmap (buf, &map);
    gst_buffer_resize (buf, 0, bsize);
@@ -85,18 +73,7 @@ index bbed8b0..af24c3e 100644
  
    if (src->discont) {
      GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
-@@ -440,8 +471,8 @@ gst_rtmp_src_query (GstBaseSrc * basesrc, GstQuery * query)
-     }
-     case GST_QUERY_SCHEDULING:{
-       gst_query_set_scheduling (query,
--          GST_SCHEDULING_FLAG_SEQUENTIAL | GST_SCHEDULING_FLAG_BANDWIDTH_LIMITED,
--          1, -1, 0);
-+          GST_SCHEDULING_FLAG_SEQUENTIAL |
-+          GST_SCHEDULING_FLAG_BANDWIDTH_LIMITED, 1, -1, 0);
-       gst_query_add_scheduling_mode (query, GST_PAD_MODE_PUSH);
- 
-       ret = TRUE;
-@@ -607,18 +638,22 @@ gst_rtmp_src_unlock (GstBaseSrc * basesrc)
+@@ -629,18 +659,22 @@
  {
    GstRTMPSrc *rtmpsrc = GST_RTMP_SRC (basesrc);
  
@@ -124,7 +101,7 @@ index bbed8b0..af24c3e 100644
  static gboolean
  gst_rtmp_src_stop (GstBaseSrc * basesrc)
  {
-@@ -627,6 +662,7 @@ gst_rtmp_src_stop (GstBaseSrc * basesrc)
+@@ -649,6 +683,7 @@
    src = GST_RTMP_SRC (basesrc);
  
    if (src->rtmp) {
@@ -132,11 +109,10 @@ index bbed8b0..af24c3e 100644
      RTMP_Free (src->rtmp);
      src->rtmp = NULL;
    }
-diff --git a/ext/rtmp/gstrtmpsrc.h b/ext/rtmp/gstrtmpsrc.h
-index fa6da17..6a7cabc 100644
---- a/ext/rtmp/gstrtmpsrc.h
-+++ b/ext/rtmp/gstrtmpsrc.h
-@@ -68,6 +68,8 @@ struct _GstRTMPSrc
+diff -Naur gst-plugins-bad-1.10.4.orig/ext/rtmp/gstrtmpsrc.h gst-plugins-bad-1.10.4/ext/rtmp/gstrtmpsrc.h
+--- gst-plugins-bad-1.10.4.orig/ext/rtmp/gstrtmpsrc.h	2016-11-04 18:07:13.000000000 +0100
++++ gst-plugins-bad-1.10.4/ext/rtmp/gstrtmpsrc.h	2018-11-14 20:06:39.303101306 +0100
+@@ -68,6 +68,8 @@
    GstClockTime last_timestamp;
    gboolean seekable;
    gboolean discont;
@@ -145,6 +121,3 @@ index fa6da17..6a7cabc 100644
  };
  
  struct _GstRTMPSrcClass
--- 
-2.8.2
-

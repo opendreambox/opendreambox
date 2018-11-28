@@ -1,6 +1,27 @@
-diff -u a/gst/dvdspu/Makefile.am b/gst/dvdspu/Makefile.am
---- a/gst/dvdspu/Makefile.am	2015-09-01 11:05:50.348528393 +0200
-+++ b/gst/dvdspu/Makefile.am	2015-09-28 16:30:05.862437231 +0200
+From 62b9c108a4c0b75e7f12c9b4cee57b3f41fe03a2 Mon Sep 17 00:00:00 2001
+From: Andreas Monzner <andreas.monzner@dream-property.net>
+Date: Thu, 1 Nov 2018 14:06:15 +0100
+Subject: [PATCH 3/7] Revert "Revert "dvdspu: render to AYUV overlay""
+
+This reverts commit 7d27dc7e23e2a6cb18dcda8bdeed7ad49679b125.
+---
+ gst/dvdspu/Makefile.am            |   2 +-
+ gst/dvdspu/gstdvdspu-render.c     |  99 ------------
+ gst/dvdspu/gstdvdspu.c            | 226 ++++++++++++++++++++++++---
+ gst/dvdspu/gstdvdspu.h            |   7 +-
+ gst/dvdspu/gstspu-common.h        |  20 +--
+ gst/dvdspu/gstspu-pgs.c           | 176 +++++++++++++--------
+ gst/dvdspu/gstspu-pgs.h           |   5 +-
+ gst/dvdspu/gstspu-vobsub-render.c | 317 ++++++++++----------------------------
+ gst/dvdspu/gstspu-vobsub.c        |  23 +++
+ gst/dvdspu/gstspu-vobsub.h        |  13 +-
+ 10 files changed, 440 insertions(+), 448 deletions(-)
+ delete mode 100644 gst/dvdspu/gstdvdspu-render.c
+
+diff --git a/gst/dvdspu/Makefile.am b/gst/dvdspu/Makefile.am
+index d7d48a5..106b2f4 100644
+--- a/gst/dvdspu/Makefile.am
++++ b/gst/dvdspu/Makefile.am
 @@ -1,7 +1,7 @@
  
  plugin_LTLIBRARIES = libgstdvdspu.la
@@ -10,9 +31,115 @@ diff -u a/gst/dvdspu/Makefile.am b/gst/dvdspu/Makefile.am
  
  libgstdvdspu_la_CFLAGS = $(GST_PLUGINS_BAD_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) $(GST_CFLAGS)
  libgstdvdspu_la_LIBADD = $(GST_PLUGINS_BASE_LIBS) -lgstvideo-$(GST_API_VERSION) \
-diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
---- a/gst/dvdspu/gstdvdspu.c	2015-09-24 13:57:24.000000000 +0200
-+++ b/gst/dvdspu/gstdvdspu.c	2015-09-28 16:35:11.004443667 +0200
+diff --git a/gst/dvdspu/gstdvdspu-render.c b/gst/dvdspu/gstdvdspu-render.c
+deleted file mode 100644
+index 9c34270..0000000
+--- a/gst/dvdspu/gstdvdspu-render.c
++++ /dev/null
+@@ -1,99 +0,0 @@
+-/* GStreamer DVD Sub-Picture Unit
+- * Copyright (C) 2007 Fluendo S.A. <info@fluendo.com>
+- * Copyright (C) 2009 Jan Schmidt <thaytan@noraisin.net>
+- *
+- * This library is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU Library General Public
+- * License as published by the Free Software Foundation; either
+- * version 2 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Library General Public License for more details.
+- *
+- * You should have received a copy of the GNU Library General Public
+- * License along with this library; if not, write to the
+- * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+- * Boston, MA 02110-1301, USA.
+- */
+-#ifdef HAVE_CONFIG_H
+-#  include <config.h>
+-#endif
+-
+-#include <string.h>
+-
+-#include <gst/gst.h>
+-
+-#include "gstdvdspu.h"
+-
+-GST_DEBUG_CATEGORY_EXTERN (dvdspu_debug);
+-#define GST_CAT_DEFAULT dvdspu_debug
+-
+-void
+-gstspu_clear_comp_buffers (SpuState * state)
+-{
+-  /* The area to clear is the line inside the disp_rect, each entry 4 bytes,
+-   * of the sub-sampled UV planes. */
+-  gint16 left = state->comp_left / 2;
+-  gint16 right = state->comp_right / 2;
+-  gint16 uv_width = sizeof (guint32) * (right - left + 1);
+-
+-  memset (state->comp_bufs[0] + left, 0, uv_width);
+-  memset (state->comp_bufs[1] + left, 0, uv_width);
+-  memset (state->comp_bufs[2] + left, 0, uv_width);
+-}
+-
+-void
+-gstspu_blend_comp_buffers (SpuState * state, guint8 * planes[3])
+-{
+-  gint16 uv_end;
+-  gint16 left, x;
+-  guint8 *out_U;
+-  guint8 *out_V;
+-  guint32 *in_U;
+-  guint32 *in_V;
+-  guint32 *in_A;
+-  gint16 comp_last_x = state->comp_right;
+-
+-  if (comp_last_x < state->comp_left)
+-    return;                     /* Didn't draw in the comp buffers, nothing to do... */
+-
+-#if 0
+-  GST_LOG ("Blending comp buffers from x=%d to x=%d",
+-      state->comp_left, state->comp_right);
+-#endif
+-
+-  /* Set up the output pointers */
+-  out_U = planes[1];            /* U plane */
+-  out_V = planes[2];            /* V plane */
+-
+-  /* Input starts at the first pixel of the compositing buffer */
+-  in_U = state->comp_bufs[0];   /* U comp buffer */
+-  in_V = state->comp_bufs[1];   /* V comp buffer */
+-  in_A = state->comp_bufs[2];   /* A comp buffer */
+-
+-  /* Calculate how many pixels to blend based on the maximum X value that was 
+-   * drawn in the render_line function, divided by 2 (rounding up) to account 
+-   * for UV sub-sampling */
+-  uv_end = (comp_last_x + 1) / 2;
+-  left = state->comp_left / 2;
+-
+-  out_U += left * GST_VIDEO_INFO_COMP_PSTRIDE (&state->info, 1);
+-  out_V += left * GST_VIDEO_INFO_COMP_PSTRIDE (&state->info, 2);
+-  for (x = left; x < uv_end; x++) {
+-    guint32 tmp;
+-    /* Each entry in the compositing buffer is 4 summed pixels, so the
+-     * inverse alpha is (4 * 0xff) - in_A[x] */
+-    guint16 inv_A = (4 * 0xff) - in_A[x];
+-
+-    tmp = in_U[x] + inv_A * *out_U;
+-    *out_U = (guint8) (tmp / (4 * 0xff));
+-
+-    tmp = in_V[x] + inv_A * *out_V;
+-    *out_V = (guint8) (tmp / (4 * 0xff));
+-
+-    out_U += GST_VIDEO_INFO_COMP_PSTRIDE (&state->info, 1);
+-    out_V += GST_VIDEO_INFO_COMP_PSTRIDE (&state->info, 2);
+-  }
+-}
+diff --git a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
+index 52d1038..61b093d 100644
+--- a/gst/dvdspu/gstdvdspu.c
++++ b/gst/dvdspu/gstdvdspu.c
 @@ -34,6 +34,9 @@
  
  #include <gst/gst-i18n-plugin.h>
@@ -23,17 +150,11 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
  
  #include <string.h>
  
-@@ -53,19 +56,25 @@
+@@ -53,19 +56,19 @@ enum
    LAST_SIGNAL
  };
  
 +#define VIDEO_FORMATS GST_VIDEO_OVERLAY_COMPOSITION_BLEND_FORMATS
-+
-+#define DVDSPU_CAPS GST_VIDEO_CAPS_MAKE (VIDEO_FORMATS)
-+#define DVDSPU_ALL_CAPS DVDSPU_CAPS ";" \
-+    GST_VIDEO_CAPS_MAKE_WITH_FEATURES ("ANY", GST_VIDEO_FORMATS_ALL)
-+
-+static GstStaticCaps sw_template_caps = GST_STATIC_CAPS (DVDSPU_CAPS);
 +
  static GstStaticPadTemplate video_sink_factory =
  GST_STATIC_PAD_TEMPLATE ("video",
@@ -41,7 +162,7 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
      GST_PAD_ALWAYS,
 -    GST_STATIC_CAPS ("video/x-raw, " "format = (string) { I420, NV12, YV12 }, "
 -        "width = (int) [ 16, 4096 ], " "height = (int) [ 16, 4096 ]")
-+    GST_STATIC_CAPS (DVDSPU_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-h265; video/x-vp9; video/x-divx; video/x-xvid; video/x-wmv")
++    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (VIDEO_FORMATS))
      );
  
  static GstStaticPadTemplate src_factory = GST_STATIC_PAD_TEMPLATE ("src",
@@ -49,54 +170,19 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
      GST_PAD_ALWAYS,
 -    GST_STATIC_CAPS ("video/x-raw, " "format = (string) { I420, NV12, YV12 }, "
 -        "width = (int) [ 16, 4096 ], " "height = (int) [ 16, 4096 ]")
-+    GST_STATIC_CAPS (DVDSPU_ALL_CAPS "; video/mpeg; video/msmpeg; video/x-h264; video/x-h265; video/x-vp9; video/x-divx; video/x-xvid; video/x-wmv")
++    GST_STATIC_CAPS (GST_VIDEO_CAPS_MAKE (VIDEO_FORMATS))
      );
  
  static GstStaticPadTemplate subpic_sink_factory =
-@@ -87,10 +96,13 @@
+@@ -107,6 +110,7 @@ static gboolean gst_dvd_spu_subpic_event (GstPad * pad, GstObject * parent,
      GstEvent * event);
- static gboolean gst_dvd_spu_src_query (GstPad * pad, GstObject * parent,
-     GstQuery * query);
-+static GstCaps *gst_dvd_spu_src_get_caps (GstDVDSpu * dvdspu, GstPad * pad,
-+    GstCaps * filter);
- 
--static GstCaps *gst_dvd_spu_video_proxy_getcaps (GstPad * pad,
-+static GstCaps *gst_dvd_spu_video_get_caps (GstDVDSpu * dvdspu, GstPad * pad,
-     GstCaps * filter);
--static gboolean gst_dvd_spu_video_set_caps (GstPad * pad, GstCaps * caps);
-+static gboolean gst_dvd_spu_video_set_caps (GstDVDSpu * dvdspu, GstPad * pad,
-+    GstCaps * caps);
- static GstFlowReturn gst_dvd_spu_video_chain (GstPad * pad, GstObject * parent,
-     GstBuffer * buf);
- static gboolean gst_dvd_spu_video_event (GstPad * pad, GstObject * parent,
-@@ -104,7 +116,9 @@
-     GstBuffer * buf);
- static gboolean gst_dvd_spu_subpic_event (GstPad * pad, GstObject * parent,
-     GstEvent * event);
--static gboolean gst_dvd_spu_subpic_set_caps (GstPad * pad, GstCaps * caps);
-+static gboolean gst_dvd_spu_subpic_set_caps (GstDVDSpu * dvdspu, GstPad * pad,
-+    GstCaps * caps);
-+static gboolean gst_dvd_spu_negotiate (GstDVDSpu * dvdspu, GstCaps * caps);
+ static gboolean gst_dvd_spu_subpic_set_caps (GstDVDSpu * dvdspu, GstPad * pad,
+     GstCaps * caps);
++static gboolean gst_dvd_spu_negotiate (GstDVDSpu * dvdspu);
  
  static void gst_dvd_spu_clear (GstDVDSpu * dvdspu);
  static void gst_dvd_spu_flush_spu_info (GstDVDSpu * dvdspu,
-@@ -174,6 +188,15 @@
- }
- 
- static void
-+gst_dvd_spu_reset_composition (GstDVDSpu * dvdspu)
-+{
-+  if (dvdspu->composition) {
-+    gst_video_overlay_composition_unref (dvdspu->composition);
-+    dvdspu->composition = NULL;
-+  }
-+}
-+
-+static void
- gst_dvd_spu_clear (GstDVDSpu * dvdspu)
- {
-   gst_dvd_spu_flush_spu_info (dvdspu, FALSE);
-@@ -207,14 +230,7 @@
+@@ -208,14 +212,7 @@ static void
  gst_dvd_spu_finalize (GObject * object)
  {
    GstDVDSpu *dvdspu = GST_DVD_SPU (object);
@@ -111,359 +197,49 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
    g_queue_free (dvdspu->pending_spus);
    g_mutex_clear (&dvdspu->spu_lock);
  
-@@ -270,6 +286,8 @@
-     default:
-       break;
-   }
-+
-+  gst_dvd_spu_reset_composition (dvdspu);
- }
- 
- static gboolean
-@@ -292,6 +310,7 @@
- static gboolean
- gst_dvd_spu_src_query (GstPad * pad, GstObject * parent, GstQuery * query)
+@@ -320,24 +317,20 @@ gst_dvd_spu_video_set_caps (GstDVDSpu * dvdspu, GstPad * pad, GstCaps * caps)
  {
-+  GstDVDSpu *dvdspu = GST_DVD_SPU (parent);
    gboolean res = FALSE;
- 
-   switch (GST_QUERY_TYPE (query)) {
-@@ -300,7 +319,7 @@
-       GstCaps *filter, *caps;
- 
-       gst_query_parse_caps (query, &filter);
--      caps = gst_dvd_spu_video_proxy_getcaps (pad, filter);
-+      caps = gst_dvd_spu_src_get_caps (dvdspu, pad, filter);
-       gst_query_set_caps_result (query, caps);
-       gst_caps_unref (caps);
-       res = TRUE;
-@@ -315,59 +334,238 @@
- }
- 
- static gboolean
--gst_dvd_spu_video_set_caps (GstPad * pad, GstCaps * caps)
-+gst_dvd_spu_can_handle_caps (GstCaps * caps)
-+{
-+  GstCaps *sw_caps;
-+  gboolean ret;
-+
-+  sw_caps = gst_static_caps_get (&sw_template_caps);
-+  ret = gst_caps_is_subset (caps, sw_caps);
-+  gst_caps_unref (sw_caps);
-+
-+  return ret;
-+}
-+
-+static gboolean
-+gst_dvd_spu_video_set_caps (GstDVDSpu * dvdspu, GstPad * pad, GstCaps * caps)
- {
--  GstDVDSpu *dvdspu = GST_DVD_SPU (gst_pad_get_parent (pad));
--  gboolean res = FALSE;
    GstVideoInfo info;
 -  gint i;
--  SpuState *state;
-+  gboolean ret = FALSE;
+   SpuState *state;
  
    if (!gst_video_info_from_caps (&info, caps))
--    goto done;
-+    goto invalid_caps;
+     goto done;
  
 -  DVD_SPU_LOCK (dvdspu);
-+  dvdspu->spu_state.info = info;
- 
+-
 -  state = &dvdspu->spu_state;
-+  ret = gst_dvd_spu_negotiate (dvdspu, caps);
- 
+-
 -  state->info = info;
 -  for (i = 0; i < 3; i++) {
 -    state->comp_bufs[i] = g_realloc (state->comp_bufs[i],
 -        sizeof (guint32) * info.width);
-+  DVD_SPU_LOCK (dvdspu);
-+  if (!dvdspu->attach_compo_to_buffer && !gst_dvd_spu_can_handle_caps (caps)) {
-+    GST_DEBUG_OBJECT (dvdspu, "unsupported caps %" GST_PTR_FORMAT, caps);
-+    ret = FALSE;
++  res = gst_pad_set_caps (dvdspu->srcpad, caps);
++  if (res) {
++    DVD_SPU_LOCK (dvdspu);
++    state = &dvdspu->spu_state;
++    state->info = info;
++    gst_dvd_spu_negotiate (dvdspu);
++    DVD_SPU_UNLOCK (dvdspu);
    }
-+
-   DVD_SPU_UNLOCK (dvdspu);
+-  DVD_SPU_UNLOCK (dvdspu);
  
 -  res = TRUE;
--done:
--  gst_object_unref (dvdspu);
--  return res;
-+  return ret;
-+
-+  /* ERRORS */
-+invalid_caps:
-+  {
-+    GST_DEBUG_OBJECT (dvdspu, "could not parse caps");
-+    return FALSE;
-+  }
-+}
-+
-+
-+/**
-+ * gst_dvd_spu_add_feature_and_intersect:
-+ *
-+ * Creates a new #GstCaps containing the (given caps +
-+ * given caps feature) + (given caps intersected by the
-+ * given filter).
-+ *
-+ * Returns: the new #GstCaps
-+ */
-+static GstCaps *
-+gst_dvd_spu_add_feature_and_intersect (GstCaps * caps,
-+    const gchar * feature, GstCaps * filter)
-+{
-+  int i, caps_size;
-+  GstCaps *new_caps;
-+
-+  new_caps = gst_caps_copy (caps);
-+
-+  caps_size = gst_caps_get_size (new_caps);
-+  for (i = 0; i < caps_size; i++) {
-+    GstCapsFeatures *features = gst_caps_get_features (new_caps, i);
-+    if (!gst_caps_features_is_any (features)) {
-+      gst_caps_features_add (features, feature);
-+    }
-+  }
-+
-+  gst_caps_append (new_caps, gst_caps_intersect_full (caps,
-+          filter, GST_CAPS_INTERSECT_FIRST));
-+
-+  return new_caps;
+ done:
+   return res;
  }
- 
-+/**
-+ * gst_dvd_spu_intersect_by_feature:
-+ *
-+ * Creates a new #GstCaps based on the following filtering rule.
-+ *
-+ * For each individual caps contained in given caps, if the
-+ * caps uses the given caps feature, keep a version of the caps
-+ * with the feature and an another one without. Otherwise, intersect
-+ * the caps with the given filter.
-+ *
-+ * Returns: the new #GstCaps
-+ */
- static GstCaps *
--gst_dvd_spu_video_proxy_getcaps (GstPad * pad, GstCaps * filter)
-+gst_dvd_spu_intersect_by_feature (GstCaps * caps,
-+    const gchar * feature, GstCaps * filter)
- {
--  GstDVDSpu *dvdspu = GST_DVD_SPU (gst_pad_get_parent (pad));
--  GstCaps *caps;
--  GstPad *otherpad;
--
--  /* Proxy the getcaps between videosink and the srcpad, ignoring the 
--   * subpicture sink pad */
--  otherpad = (pad == dvdspu->srcpad) ? dvdspu->videosinkpad : dvdspu->srcpad;
--
--  caps = gst_pad_peer_query_caps (otherpad, filter);
--  if (caps) {
--    GstCaps *temp, *templ;
--
--    templ = gst_pad_get_pad_template_caps (otherpad);
--    temp = gst_caps_intersect (caps, templ);
--    gst_caps_unref (templ);
-+  int i, caps_size;
-+  GstCaps *new_caps;
-+
-+  new_caps = gst_caps_new_empty ();
-+
-+  caps_size = gst_caps_get_size (caps);
-+  for (i = 0; i < caps_size; i++) {
-+    GstStructure *caps_structure = gst_caps_get_structure (caps, i);
-+    GstCapsFeatures *caps_features =
-+        gst_caps_features_copy (gst_caps_get_features (caps, i));
-+    GstCaps *filtered_caps;
-+    GstCaps *simple_caps =
-+        gst_caps_new_full (gst_structure_copy (caps_structure), NULL);
-+    gst_caps_set_features (simple_caps, 0, caps_features);
-+
-+    if (gst_caps_features_contains (caps_features, feature)) {
-+      gst_caps_append (new_caps, gst_caps_copy (simple_caps));
-+
-+      gst_caps_features_remove (caps_features, feature);
-+      filtered_caps = gst_caps_ref (simple_caps);
-+    } else {
-+      filtered_caps = gst_caps_intersect_full (simple_caps, filter,
-+          GST_CAPS_INTERSECT_FIRST);
-+    }
-+
-+    gst_caps_unref (simple_caps);
-+    gst_caps_append (new_caps, filtered_caps);
-+  }
-+
-+  return new_caps;
-+}
-+
-+static GstCaps *
-+gst_dvd_spu_video_get_caps (GstDVDSpu * dvdspu, GstPad * pad, GstCaps * filter)
-+{
-+  GstPad *srcpad = dvdspu->srcpad;
-+  GstCaps *peer_caps = NULL, *caps = NULL, *dvdspu_filter = NULL;
-+
-+  if (filter) {
-+    /* filter caps + composition feature + filter caps
-+     * filtered by the software caps. */
-+    GstCaps *sw_caps = gst_static_caps_get (&sw_template_caps);
-+    dvdspu_filter = gst_dvd_spu_add_feature_and_intersect (filter,
-+        GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION, sw_caps);
-+    gst_caps_unref (sw_caps);
-+
-+    GST_DEBUG_OBJECT (dvdspu, "dvdspu filter %" GST_PTR_FORMAT, dvdspu_filter);
-+  }
-+
-+  peer_caps = gst_pad_peer_query_caps (srcpad, dvdspu_filter);
-+
-+  if (dvdspu_filter)
-+    gst_caps_unref (dvdspu_filter);
-+
-+  if (peer_caps) {
-+    GST_DEBUG_OBJECT (pad, "peer caps %" GST_PTR_FORMAT, peer_caps);
-+
-+    if (gst_caps_is_any (peer_caps)) {
-+      /* if peer returns ANY caps, return filtered src pad template caps */
-+      caps = gst_caps_copy (gst_pad_get_pad_template_caps (srcpad));
-+    } else {
-+      /* duplicate caps which contains the composition into one version with
-+       * the meta and one without. Filter the other caps by the software caps */
-+      GstCaps *sw_caps = gst_static_caps_get (&sw_template_caps);
-+      caps = gst_dvd_spu_intersect_by_feature (peer_caps,
-+          GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION, sw_caps);
-+      gst_caps_unref (sw_caps);
-+    }
-+
-+    gst_caps_unref (peer_caps);
-+
-+  } else {
-+    /* no peer, our padtemplate is enough then */
-+    caps = gst_pad_get_pad_template_caps (pad);
-+  }
-+
-+  if (filter) {
-+    GstCaps *intersection = gst_caps_intersect_full (filter, caps,
-+        GST_CAPS_INTERSECT_FIRST);
-     gst_caps_unref (caps);
--    caps = temp;
-+    caps = intersection;
-+  }
-+
-+  GST_DEBUG_OBJECT (dvdspu, "returning %" GST_PTR_FORMAT, caps);
-+
-+  return caps;
-+}
-+
-+static GstCaps *
-+gst_dvd_spu_src_get_caps (GstDVDSpu * dvdspu, GstPad * pad, GstCaps * filter)
-+{
-+  GstPad *sinkpad = dvdspu->videosinkpad;
-+  GstCaps *peer_caps = NULL, *caps = NULL, *dvdspu_filter = NULL;
-+
-+  if (filter) {
-+    /* duplicate filter caps which contains the composition into one version
-+     * with the meta and one without. Filter the other caps by the software
-+     * caps */
-+    GstCaps *sw_caps = gst_static_caps_get (&sw_template_caps);
-+    dvdspu_filter = gst_dvd_spu_intersect_by_feature (filter,
-+        GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION, sw_caps);
-+    gst_caps_unref (sw_caps);
-+  }
-+
-+  peer_caps = gst_pad_peer_query_caps (sinkpad, dvdspu_filter);
-+
-+  if (dvdspu_filter)
-+    gst_caps_unref (dvdspu_filter);
-+
-+  if (peer_caps) {
-+    GST_DEBUG_OBJECT (pad, "peer caps %" GST_PTR_FORMAT, peer_caps);
-+
-+    if (gst_caps_is_any (peer_caps)) {
-+      /* if peer returns ANY caps, return filtered sink pad template caps */
-+      caps = gst_caps_copy (gst_pad_get_pad_template_caps (sinkpad));
-+    } else {
-+      /* return upstream caps + composition feature + upstream caps
-+       * filtered by the software caps. */
-+      GstCaps *sw_caps = gst_static_caps_get (&sw_template_caps);
-+      caps = gst_dvd_spu_add_feature_and_intersect (peer_caps,
-+          GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION, sw_caps);
-+      gst_caps_unref (sw_caps);
-+    }
-+
-+    gst_caps_unref (peer_caps);
-+
-   } else {
-+    /* no peer, our padtemplate is enough then */
-     caps = gst_pad_get_pad_template_caps (pad);
-   }
- 
--  gst_object_unref (dvdspu);
-+  if (filter) {
-+    GstCaps *intersection = gst_caps_intersect_full (filter, caps,
-+        GST_CAPS_INTERSECT_FIRST);
-+    gst_caps_unref (caps);
-+    caps = intersection;
-+  }
-+
-+  GST_DEBUG_OBJECT (dvdspu, "returning %" GST_PTR_FORMAT, caps);
-+
-   return caps;
- }
- 
-@@ -405,7 +603,7 @@
-       GstCaps *caps;
- 
-       gst_event_parse_caps (event, &caps);
--      res = gst_dvd_spu_video_set_caps (pad, caps);
-+      res = gst_dvd_spu_video_set_caps (dvdspu, pad, caps);
-       if (res)
-         res = gst_pad_push_event (dvdspu->srcpad, event);
-       else
-@@ -496,12 +694,16 @@
-       break;
-     }
-     case GST_EVENT_FLUSH_START:
-+      DVD_SPU_LOCK (dvdspu);
-+      dvdspu->video_flushing = TRUE;
-+      DVD_SPU_UNLOCK (dvdspu);
-       res = gst_pad_event_default (pad, parent, event);
-       goto done;
-     case GST_EVENT_FLUSH_STOP:
-       res = gst_pad_event_default (pad, parent, event);
- 
-       DVD_SPU_LOCK (dvdspu);
-+      dvdspu->video_flushing = FALSE;
-       gst_segment_init (&dvdspu->video_seg, GST_FORMAT_UNDEFINED);
-       gst_buffer_replace (&dvdspu->ref_frame, NULL);
-       gst_buffer_replace (&dvdspu->pending_frame, NULL);
-@@ -525,6 +727,7 @@
- static gboolean
- gst_dvd_spu_video_query (GstPad * pad, GstObject * parent, GstQuery * query)
- {
-+  GstDVDSpu *dvdspu = GST_DVD_SPU (parent);
-   gboolean res = FALSE;
- 
-   switch (GST_QUERY_TYPE (query)) {
-@@ -533,7 +736,7 @@
-       GstCaps *filter, *caps;
- 
-       gst_query_parse_caps (query, &filter);
--      caps = gst_dvd_spu_video_proxy_getcaps (pad, filter);
-+      caps = gst_dvd_spu_video_get_caps (dvdspu, pad, filter);
-       gst_query_set_caps_result (query, caps);
-       gst_caps_unref (caps);
-       res = TRUE;
-@@ -555,6 +758,9 @@
+@@ -554,6 +547,9 @@ gst_dvd_spu_video_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
  
    g_return_val_if_fail (dvdspu != NULL, GST_FLOW_ERROR);
  
 +  if (gst_pad_check_reconfigure (dvdspu->srcpad))
-+    gst_dvd_spu_negotiate (dvdspu, NULL);
++    gst_dvd_spu_negotiate (dvdspu);
 +
    GST_LOG_OBJECT (dvdspu, "video buffer %p with TS %" GST_TIME_FORMAT,
        buf, GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
  
-@@ -659,13 +865,104 @@
+@@ -658,13 +654,104 @@ no_ref_frame:
    return GST_FLOW_OK;
  }
  
@@ -474,11 +250,11 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
 +  gint video_width = GST_VIDEO_INFO_WIDTH (&dvdspu->spu_state.info);
 +  gint video_height = GST_VIDEO_INFO_HEIGHT (&dvdspu->spu_state.info);
 +  GstVideoRectangle r;
-+
-+  r = *rect;
  
 -static void
 -gstspu_render (GstDVDSpu * dvdspu, GstBuffer * buf)
++  r = *rect;
++
 +  if (spu_width != video_width || spu_height != video_height) {
 +    gdouble hscale, vscale;
 +
@@ -530,7 +306,7 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
 +  gint spu_w, spu_h;
 +  gsize size;
 +
-+  format = GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_RGB;
++  format = GST_VIDEO_OVERLAY_COMPOSITION_FORMAT_YUV;
 +
 +  switch (dvdspu->spu_input_type) {
 +    case SPU_INPUT_TYPE_PGS:
@@ -557,26 +333,26 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
 +    GST_WARNING_OBJECT (dvdspu, "failed to allocate overlay buffer");
 +    return NULL;
 +  }
- 
--  gst_video_frame_map (&frame, &dvdspu->spu_state.info, buf, GST_MAP_READWRITE);
++
 +  gst_buffer_add_video_meta (buffer, GST_VIDEO_FRAME_FLAG_NONE,
 +      format, win.w, win.h);
 +
 +  if (!gst_video_frame_map (&frame, &overlay_info, buffer, GST_MAP_READWRITE))
 +    goto map_failed;
-+
+ 
+-  gst_video_frame_map (&frame, &dvdspu->spu_state.info, buf, GST_MAP_READWRITE);
 +  memset (GST_VIDEO_FRAME_PLANE_DATA (&frame, 0), 0,
 +      GST_VIDEO_FRAME_PLANE_STRIDE (&frame, 0) *
 +      GST_VIDEO_FRAME_HEIGHT (&frame));
  
    switch (dvdspu->spu_input_type) {
      case SPU_INPUT_TYPE_VOBSUB:
-@@ -677,6 +974,61 @@
+@@ -676,7 +763,61 @@ gstspu_render (GstDVDSpu * dvdspu, GstBuffer * buf)
      default:
        break;
    }
 +
-+  gst_video_frame_unmap (&frame);
+   gst_video_frame_unmap (&frame);
 +
 +  GST_DEBUG_OBJECT (dvdspu, "Overlay rendered for video size %dx%d, "
 +      "spu display size %dx%d, window geometry %dx%d+%d%+d",
@@ -610,230 +386,76 @@ diff -u a/gst/dvdspu/gstdvdspu.c b/gst/dvdspu/gstdvdspu.c
 +  GstVideoOverlayComposition *composition;
 +  GstVideoFrame frame;
 +
-+  if (!dvdspu->composition) {
-+    dvdspu->composition = gstspu_render_composition (dvdspu);
-+    if (!dvdspu->composition)
-+      return;
-+  }
-+
-+  composition = dvdspu->composition;
++  composition = gstspu_render_composition (dvdspu);
++  if (!composition)
++    return;
 +
 +  if (dvdspu->attach_compo_to_buffer) {
 +    gst_buffer_add_video_overlay_composition_meta (buf, composition);
-+    return;
++    goto done;
 +  }
 +
 +  if (!gst_video_frame_map (&frame, &dvdspu->spu_state.info, buf,
 +          GST_MAP_READWRITE)) {
 +    GST_WARNING_OBJECT (dvdspu, "failed to map video frame for blending");
-+    return;
++    goto done;
 +  }
 +
 +  gst_video_overlay_composition_blend (composition, &frame);
-   gst_video_frame_unmap (&frame);
++  gst_video_frame_unmap (&frame);
++
++done:
++  gst_video_overlay_composition_unref (composition);
  }
  
-@@ -746,6 +1098,9 @@
-       break;
-   }
- 
-+  if (hl_change)
-+    gst_dvd_spu_reset_composition (dvdspu);
-+
-   if (hl_change && (dvdspu->spu_state.flags & SPU_STATE_STILL_FRAME)) {
-     gst_dvd_spu_redraw_still (dvdspu, FALSE);
-   }
-@@ -799,6 +1154,8 @@
-           GST_TIME_ARGS (dvdspu->video_seg.position),
-           packet->buf ? "buffer" : "event");
- 
-+      gst_dvd_spu_reset_composition (dvdspu);
-+
-       if (packet->buf) {
-         switch (dvdspu->spu_input_type) {
-           case SPU_INPUT_TYPE_VOBSUB:
-@@ -903,6 +1260,137 @@
+ /* With SPU LOCK */
+@@ -902,6 +1043,41 @@ submit_new_spu_packet (GstDVDSpu * dvdspu, GstBuffer * buf)
    }
  }
  
 +static gboolean
-+gst_dvd_spu_negotiate (GstDVDSpu * dvdspu, GstCaps * caps)
++gst_dvd_spu_negotiate (GstDVDSpu * dvdspu)
 +{
-+  gboolean upstream_has_meta = FALSE;
-+  gboolean caps_has_meta = FALSE;
-+  gboolean alloc_has_meta = FALSE;
-+  gboolean attach = FALSE;
-+  gboolean ret = TRUE;
-+  GstCapsFeatures *f;
-+  GstCaps *overlay_caps;
 +  GstQuery *query;
++  GstCaps *caps;
++  gboolean attach = FALSE;
 +
 +  GST_DEBUG_OBJECT (dvdspu, "performing negotiation");
 +
-+  /* Clear the cached composition */
-+  gst_dvd_spu_reset_composition (dvdspu);
-+
-+  /* Clear any pending reconfigure to avoid negotiating twice */
-+  gst_pad_check_reconfigure (dvdspu->srcpad);
-+
-+  if (!caps)
-+    caps = gst_pad_get_current_caps (dvdspu->videosinkpad);
-+  else
-+    gst_caps_ref (caps);
-+
++  caps = gst_pad_get_current_caps (dvdspu->srcpad);
 +  if (!caps || gst_caps_is_empty (caps))
 +    goto no_format;
 +
-+  /* Check if upstream caps have meta */
-+  if ((f = gst_caps_get_features (caps, 0))) {
-+    upstream_has_meta = gst_caps_features_contains (f,
-+        GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION);
-+  }
++  query = gst_query_new_allocation (caps, FALSE);
 +
-+  if (upstream_has_meta) {
-+    overlay_caps = gst_caps_ref (caps);
-+  } else {
-+    GstCaps *peercaps;
++  if (!gst_pad_peer_query (dvdspu->srcpad, query))
++    GST_DEBUG_OBJECT (dvdspu, "ALLOCATION query failed");
 +
-+    /* BaseTransform requires caps for the allocation query to work */
-+    overlay_caps = gst_caps_copy (caps);
-+    f = gst_caps_get_features (overlay_caps, 0);
-+    gst_caps_features_add (f,
-+        GST_CAPS_FEATURE_META_GST_VIDEO_OVERLAY_COMPOSITION);
-+
-+    /* Then check if downstream accept dvdspu composition in caps */
-+    /* FIXME: We should probably check if downstream *prefers* the
-+     * dvdspu meta, and only enforce usage of it if we can't handle
-+     * the format ourselves and thus would have to drop the overlays.
-+     * Otherwise we should prefer what downstream wants here.
-+     */
-+    peercaps = gst_pad_peer_query_caps (dvdspu->srcpad, NULL);
-+    caps_has_meta = gst_caps_can_intersect (peercaps, overlay_caps);
-+    gst_caps_unref (peercaps);
-+
-+    GST_DEBUG ("caps have dvdspu meta %d", caps_has_meta);
-+  }
-+
-+  if (upstream_has_meta || caps_has_meta) {
-+    /* Send caps immediatly, it's needed by GstBaseTransform to get a reply
-+     * from allocation query */
-+    ret = gst_pad_set_caps (dvdspu->srcpad, overlay_caps);
-+
-+    /* First check if the allocation meta has compositon */
-+    query = gst_query_new_allocation (overlay_caps, FALSE);
-+
-+    if (!gst_pad_peer_query (dvdspu->srcpad, query)) {
-+      /* no problem, we use the query defaults */
-+      GST_DEBUG_OBJECT (dvdspu, "ALLOCATION query failed");
-+
-+      /* In case we were flushing, mark reconfigure and fail this method,
-+       * will make it retry */
-+      if (dvdspu->video_flushing)
-+        ret = FALSE;
-+    }
-+
-+    alloc_has_meta = gst_query_find_allocation_meta (query,
-+        GST_VIDEO_OVERLAY_COMPOSITION_META_API_TYPE, NULL);
-+
-+    GST_DEBUG ("sink alloc has dvdspu meta %d", alloc_has_meta);
-+
-+    gst_query_unref (query);
-+  }
-+
-+  /* For backward compatbility, we will prefer bliting if downstream
-+   * allocation does not support the meta. In other case we will prefer
-+   * attaching, and will fail the negotiation in the unlikely case we are
-+   * force to blit, but format isn't supported. */
-+
-+  if (upstream_has_meta) {
++  if (gst_query_find_allocation_meta (query,
++          GST_VIDEO_OVERLAY_COMPOSITION_META_API_TYPE, NULL))
 +    attach = TRUE;
-+  } else if (caps_has_meta) {
-+    if (alloc_has_meta) {
-+      attach = TRUE;
-+    } else {
-+      /* Don't attach unless we cannot handle the format */
-+      attach = !gst_dvd_spu_can_handle_caps (caps);
-+    }
-+  } else {
-+    ret = gst_dvd_spu_can_handle_caps (caps);
-+  }
 +
-+  /* If we attach, then pick the dvdspu caps */
-+  if (attach) {
-+    GST_DEBUG_OBJECT (dvdspu, "Using caps %" GST_PTR_FORMAT, overlay_caps);
-+    /* Caps where already sent */
-+  } else if (ret) {
-+    GST_DEBUG_OBJECT (dvdspu, "Using caps %" GST_PTR_FORMAT, caps);
-+    ret = gst_pad_set_caps (dvdspu->srcpad, caps);
-+  }
++  gst_query_unref (query);
++  gst_caps_unref (caps);
 +
 +  dvdspu->attach_compo_to_buffer = attach;
 +
-+  if (!ret) {
-+    GST_DEBUG_OBJECT (dvdspu, "negotiation failed, schedule reconfigure");
-+    gst_pad_mark_reconfigure (dvdspu->srcpad);
-+  }
-+
-+  gst_caps_unref (overlay_caps);
-+  gst_caps_unref (caps);
-+
-+  return ret;
++  return TRUE;
 +
 +no_format:
-+  {
-+    if (caps)
-+      gst_caps_unref (caps);
-+    return FALSE;
-+  }
++  if (caps)
++    gst_caps_unref (caps);
++  return FALSE;
 +}
 +
  static GstFlowReturn
  gst_dvd_spu_subpic_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
  {
-@@ -1057,7 +1545,7 @@
-       GstCaps *caps;
- 
-       gst_event_parse_caps (event, &caps);
--      res = gst_dvd_spu_subpic_set_caps (pad, caps);
-+      res = gst_dvd_spu_subpic_set_caps (dvdspu, pad, caps);
-       gst_event_unref (event);
-       break;
-     }
-@@ -1066,9 +1554,10 @@
-     case GST_EVENT_CUSTOM_DOWNSTREAM_OOB:
-     {
-       const GstStructure *structure = gst_event_get_structure (event);
-+      const gchar *name = gst_structure_get_name (structure);
-       gboolean need_push;
- 
--      if (!gst_structure_has_name (structure, "application/x-gst-dvd")) {
-+      if (!g_str_has_prefix (name, "application/x-gst-dvd")) {
-         res = gst_pad_event_default (pad, parent, event);
-         break;
-       }
-@@ -1184,9 +1673,8 @@
- }
- 
- static gboolean
--gst_dvd_spu_subpic_set_caps (GstPad * pad, GstCaps * caps)
-+gst_dvd_spu_subpic_set_caps (GstDVDSpu * dvdspu, GstPad * pad, GstCaps * caps)
- {
--  GstDVDSpu *dvdspu = GST_DVD_SPU (gst_pad_get_parent (pad));
-   gboolean res = FALSE;
-   GstStructure *s;
-   SpuInputType input_type;
-@@ -1212,7 +1700,6 @@
-   DVD_SPU_UNLOCK (dvdspu);
-   res = TRUE;
- done:
--  gst_object_unref (dvdspu);
-   return res;
- }
- 
-diff -u a/gst/dvdspu/gstdvdspu.h b/gst/dvdspu/gstdvdspu.h
---- a/gst/dvdspu/gstdvdspu.h	2015-09-24 13:57:24.272613939 +0200
-+++ b/gst/dvdspu/gstdvdspu.h	2015-09-28 16:32:19.551442789 +0200
-@@ -71,10 +71,6 @@
+diff --git a/gst/dvdspu/gstdvdspu.h b/gst/dvdspu/gstdvdspu.h
+index aa8ae77..0512082 100644
+--- a/gst/dvdspu/gstdvdspu.h
++++ b/gst/dvdspu/gstdvdspu.h
+@@ -71,10 +71,6 @@ struct SpuState {
  
    GstVideoInfo info;
  
@@ -844,43 +466,42 @@ diff -u a/gst/dvdspu/gstdvdspu.h b/gst/dvdspu/gstdvdspu.h
    SpuVobsubState vobsub;
    SpuPgsState pgs;
  };
-@@ -98,6 +94,7 @@
-   /* Mutex to protect state we access from different chain funcs */
-   GMutex spu_lock;
- 
-+  gboolean video_flushing;
-   GstSegment video_seg;
-   GstSegment subp_seg;
- 
-@@ -116,6 +113,10 @@
+@@ -116,6 +112,9 @@ struct _GstDVDSpu {
  
    /* Buffer to push after handling a DVD event, if any */
    GstBuffer *pending_frame;
 +
 +  /* Overlay composition */
 +  gboolean attach_compo_to_buffer;
-+  GstVideoOverlayComposition *composition;
  };
  
  struct _GstDVDSpuClass {
-diff -u a/gst/dvdspu/gstspu-common.h b/gst/dvdspu/gstspu-common.h
---- a/gst/dvdspu/gstspu-common.h	2015-03-20 11:50:14.000000000 +0100
-+++ b/gst/dvdspu/gstspu-common.h	2015-09-28 16:30:56.646658928 +0200
-@@ -39,19 +39,14 @@
+diff --git a/gst/dvdspu/gstspu-common.h b/gst/dvdspu/gstspu-common.h
+index 7134fab..3107f29 100644
+--- a/gst/dvdspu/gstspu-common.h
++++ b/gst/dvdspu/gstspu-common.h
+@@ -39,19 +39,21 @@ struct SpuRect {
    gint16 bottom;
  };
  
 -/* Store a pre-multiplied colour value. The YUV fields hold the YUV values
 - * multiplied by the 8-bit alpha, to save computing it while rendering */
-+/* Store a pre-multiplied ARGB colour value */
++/* Store a pre-multiplied YUV colour value */
  struct SpuColour {
 -  guint16 Y;
 -  guint16 U;
 -  guint16 V;
-+  guint8 B;
-+  guint8 G;
-+  guint8 R;
++#if G_BYTE_ORDER == G_LITTLE_ENDIAN
    guint8 A;
++  guint8 Y;
++  guint8 U;
++  guint8 V;
++#else
++  guint8 V;
++  guint8 U;
++  guint8 Y;
++  guint8 A;
++#endif
  };
  
 -void gstspu_clear_comp_buffers (SpuState * state);
@@ -890,41 +511,11 @@ diff -u a/gst/dvdspu/gstspu-common.h b/gst/dvdspu/gstspu-common.h
  G_END_DECLS
  
  #endif /* __GSTSPU_COMMON_H__ */
-diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
---- a/gst/dvdspu/gstspu-pgs.c	2015-09-28 16:34:05.253292679 +0200
-+++ b/gst/dvdspu/gstspu-pgs.c	2015-09-28 16:30:56.646658928 +0200
-@@ -81,7 +81,8 @@
- static void
- dump_rle_data (GstDVDSpu * dvdspu, guint8 * data, guint32 len)
- {
--  guint16 obj_h G_GNUC_UNUSED;
-+#if DUMP_FULL_IMAGE
-+  guint16 obj_h;
-   guint16 obj_w;
-   guint8 *end = data + len;
-   guint x = 0;
-@@ -141,7 +142,6 @@
-       }
-     }
- 
--#if DUMP_FULL_IMAGE
-     {
-       gint i;
- #if 1
-@@ -159,7 +159,6 @@
-       PGS_DUMP ("Run x: %d pix: %d col: %d\n", x, run_len, pal_id);
- #endif
-     }
--#endif
- 
-     x += run_len;
-     if (!run_len || x > obj_w)
-@@ -167,19 +166,24 @@
-   };
- 
-   PGS_DUMP ("\n");
-+#endif
- }
+diff --git a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
+index 6108de0..e74a657 100644
+--- a/gst/dvdspu/gstspu-pgs.c
++++ b/gst/dvdspu/gstspu-pgs.c
+@@ -171,15 +171,19 @@ dump_rle_data (GstDVDSpu * dvdspu, guint8 * data, guint32 len)
  
  static void
  pgs_composition_object_render (PgsCompositionObject * obj, SpuState * state,
@@ -950,7 +541,7 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
  
    if (G_UNLIKELY (obj->rle_data == NULL || obj->rle_data_size == 0
            || obj->rle_data_used != obj->rle_data_size))
-@@ -191,37 +195,47 @@
+@@ -191,37 +195,47 @@ pgs_composition_object_render (PgsCompositionObject * obj, SpuState * state,
    if (data + 4 > end)
      return;
  
@@ -994,12 +585,12 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
 +    obj_w = MIN (obj_w, obj->crop_w);
 +    obj_h = MIN (obj_h, obj->crop_h);
 +  }
-+
-+  max_x = min_x + obj_w;
-+  max_y = min_y + obj_h;
  
 -  state->comp_left = x = min_x;
 -  state->comp_right = max_x;
++  max_x = min_x + obj_w;
++  max_y = min_y + obj_h;
++
 +  /* Early out if object is out of the window */
 +  if (max_x <= 0 || max_y < 0 || min_x >= win_w || min_y >= win_h)
 +    return;
@@ -1022,16 +613,23 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
  
    while (data < end) {
      guint8 pal_id;
-@@ -264,43 +278,56 @@
+@@ -264,43 +278,56 @@ pgs_composition_object_render (PgsCompositionObject * obj, SpuState * state,
        }
      }
  
+-    colour = &state->pgs.palette[pal_id];
+-    if (colour->A) {
+-      guint32 inv_A = 0xff - colour->A;
+-      if (G_UNLIKELY (x + run_len > max_x))
+-        run_len = (max_x - x);
 +    if (!run_len) {
 +      x = obj_x;
 +      y++;
 +      if (y >= max_y)
 +        break;
-+
+ 
+-      for (i = 0; i < run_len; i++) {
+-        planes[0][x] = (inv_A * planes[0][x] + colour->Y) / 0xff;
 +      p = pixels + y * stride;
 +      continue;
 +    }
@@ -1041,7 +639,11 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
 +
 +    if (x >= max_x)
 +      continue;
-+
+ 
+-        state->comp_bufs[0][x / 2] += colour->U;
+-        state->comp_bufs[1][x / 2] += colour->V;
+-        state->comp_bufs[2][x / 2] += colour->A;
+-        x++;
 +    if (x < min_x) {
 +      if (x + run_len <= min_x) {
 +        x += run_len;
@@ -1049,56 +651,45 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
 +      } else {
 +        run_len -= min_x - x;
 +        x = min_x;
-+      }
-+    }
-+
-     colour = &state->pgs.palette[pal_id];
--    if (colour->A) {
--      guint32 inv_A = 0xff - colour->A;
-+
+       }
+-    } else {
+-      x += run_len;
+     }
+ 
+-    if (!run_len || x > max_x) {
+-      x = min_x;
+-      planes[0] += strides[0];
++    colour = &state->pgs.palette[pal_id];
+ 
+-      if (y % 2) {
+-        gstspu_blend_comp_buffers (state, planes);
+-        gstspu_clear_comp_buffers (state);
 +    if (colour->A > 0) {
 +      guint8 inv_A = 255 - colour->A;
-+
-       if (G_UNLIKELY (x + run_len > max_x))
--        run_len = (max_x - x);
+ 
+-        planes[1] += strides[1];
+-        planes[2] += strides[2];
++      if (G_UNLIKELY (x + run_len > max_x))
 +        run_len = max_x - x;
- 
-       for (i = 0; i < run_len; i++) {
--        planes[0][x] = (inv_A * planes[0][x] + colour->Y) / 0xff;
++
++      for (i = 0; i < run_len; i++) {
 +        SpuColour *pix = &((SpuColour *) p)[x++];
- 
--        state->comp_bufs[0][x / 2] += colour->U;
--        state->comp_bufs[1][x / 2] += colour->V;
--        state->comp_bufs[2][x / 2] += colour->A;
--        x++;
++
 +        if (pix->A == 0) {
 +          memcpy (pix, colour, sizeof (*pix));
 +        } else {
 +          pix->A = colour->A;
-+          pix->R = colour->R + pix->R * inv_A / 255;
-+          pix->G = colour->G + pix->G * inv_A / 255;
-+          pix->B = colour->B + pix->B * inv_A / 255;
++          pix->Y = colour->Y + pix->Y * inv_A / 255;
++          pix->U = colour->U + pix->U * inv_A / 255;
++          pix->V = colour->V + pix->V * inv_A / 255;
 +        }
        }
-     } else {
-       x += run_len;
-     }
--
--    if (!run_len || x > max_x) {
--      x = min_x;
--      planes[0] += strides[0];
--
--      if (y % 2) {
--        gstspu_blend_comp_buffers (state, planes);
--        gstspu_clear_comp_buffers (state);
--
--        planes[1] += strides[1];
--        planes[2] += strides[2];
--      }
 -      y++;
 -      if (y >= state->info.height)
 -        return;                 /* Hit the bottom */
--    }
++    } else {
++      x += run_len;
+     }
    }
 -
 -  if (y % 2)
@@ -1106,7 +697,7 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
  }
  
  static void
-@@ -427,8 +454,10 @@
+@@ -429,8 +456,10 @@ parse_presentation_segment (GstDVDSpu * dvdspu, guint8 type, guint8 * payload,
          "x %u y %u\n", i, obj->id, obj->win_id, obj->flags, obj->x, obj->y);
  
      if (obj->flags & PGS_COMPOSITION_OBJECT_FLAG_CROPPED) {
@@ -1118,48 +709,21 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
  
        obj->crop_x = GST_READ_UINT16_BE (payload);
        obj->crop_y = GST_READ_UINT16_BE (payload + 2);
-@@ -482,23 +511,31 @@
-     state->pgs.palette[i].A = 0;
-   for (i = 0; i < n_entries; i++) {
-     guint8 n, Y, U, V, A;
-+    gint R, G, B;
-     n = payload[0];
-     Y = payload[1];
-     V = payload[2];
-     U = payload[3];
-     A = payload[4];
+@@ -497,10 +526,10 @@ parse_set_palette (GstDVDSpu * dvdspu, guint8 type, guint8 * payload,
+ #endif
  
--#if DUMP_FULL_PALETTE
--    PGS_DUMP ("Entry %3d: Y %3d U %3d V %3d A %3d  ", n, Y, U, V, A);
--    if (((i + 1) % 2) == 0)
--      PGS_DUMP ("\n");
--#endif
-+    /* Convert to ARGB */
-+    R = (298 * Y + 459 * V - 63514) >> 8;
-+    G = (298 * Y - 55 * U - 136 * V + 19681) >> 8;
-+    B = (298 * Y + 541 * U - 73988) >> 8;
-+
-+    R = CLAMP (R, 0, 255);
-+    G = CLAMP (G, 0, 255);
-+    B = CLAMP (B, 0, 255);
- 
--    /* Premultiply the palette entries by the alpha */
+     /* Premultiply the palette entries by the alpha */
 -    state->pgs.palette[n].Y = Y * A;
 -    state->pgs.palette[n].U = U * A;
 -    state->pgs.palette[n].V = V * A;
-+#if DUMP_FULL_PALETTE
-+    PGS_DUMP ("Entry %3d: A %3d R %3d G %3d B %3d\n", n, A, R, G, B);
-+ #endif
-+ 
-+     /* Premultiply the palette entries by the alpha */
      state->pgs.palette[n].A = A;
-+    state->pgs.palette[n].R = R * A / 255;
-+    state->pgs.palette[n].G = G * A / 255;
-+    state->pgs.palette[n].B = B * A / 255;
++    state->pgs.palette[n].Y = Y * A / 255;
++    state->pgs.palette[n].U = U * A / 255;
++    state->pgs.palette[n].V = V * A / 255;
  
      payload += PGS_PALETTE_ENTRY_SIZE;
    }
-@@ -761,7 +798,7 @@
+@@ -763,7 +792,7 @@ gstspu_pgs_execute_event (GstDVDSpu * dvdspu)
  }
  
  void
@@ -1168,7 +732,7 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
  {
    SpuState *state = &dvdspu->spu_state;
    PgsPresentationSegment *ps = &state->pgs.pres_seg;
-@@ -773,7 +814,7 @@
+@@ -775,7 +804,7 @@ gstspu_pgs_render (GstDVDSpu * dvdspu, GstVideoFrame * frame)
    for (i = 0; i < ps->objects->len; i++) {
      PgsCompositionObject *cur =
          &g_array_index (ps->objects, PgsCompositionObject, i);
@@ -1177,7 +741,7 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
    }
  }
  
-@@ -785,6 +826,27 @@
+@@ -787,6 +816,27 @@ gstspu_pgs_handle_dvd_event (GstDVDSpu * dvdspu, GstEvent * event)
  }
  
  void
@@ -1205,10 +769,11 @@ diff -u a/gst/dvdspu/gstspu-pgs.c b/gst/dvdspu/gstspu-pgs.c
  gstspu_pgs_flush (GstDVDSpu * dvdspu)
  {
    SpuPgsState *pgs_state = &dvdspu->spu_state.pgs;
-diff -u a/gst/dvdspu/gstspu-pgs.h b/gst/dvdspu/gstspu-pgs.h
---- a/gst/dvdspu/gstspu-pgs.h	2015-03-20 11:50:14.721690223 +0100
-+++ b/gst/dvdspu/gstspu-pgs.h	2015-09-28 16:30:05.862437231 +0200
-@@ -99,8 +99,11 @@
+diff --git a/gst/dvdspu/gstspu-pgs.h b/gst/dvdspu/gstspu-pgs.h
+index 68429c4..7d0689e 100644
+--- a/gst/dvdspu/gstspu-pgs.h
++++ b/gst/dvdspu/gstspu-pgs.h
+@@ -99,8 +99,11 @@ struct SpuPgsState {
  
  void gstspu_pgs_handle_new_buf (GstDVDSpu * dvdspu, GstClockTime event_ts, GstBuffer *buf);
  gboolean gstspu_pgs_execute_event (GstDVDSpu *dvdspu);
@@ -1221,64 +786,42 @@ diff -u a/gst/dvdspu/gstspu-pgs.h b/gst/dvdspu/gstspu-pgs.h
  void gstspu_pgs_flush (GstDVDSpu *dvdspu);
  
  #endif
-diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
---- a/gst/dvdspu/gstspu-vobsub-render.c	2015-09-01 11:05:50.348528393 +0200
-+++ b/gst/dvdspu/gstspu-vobsub-render.c	2015-09-28 16:30:56.649992319 +0200
-@@ -40,29 +40,42 @@
-   if (state->vobsub.current_clut[idx[0]] != 0) {
-     for (i = 0; i < 4; i++, dest++) {
-       guint32 col = state->vobsub.current_clut[idx[i]];
-+      gint A, Y, U, V;
-+      gint R, G, B;
+diff --git a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
+index d55b1bf..45dcabb 100644
+--- a/gst/dvdspu/gstspu-vobsub-render.c
++++ b/gst/dvdspu/gstspu-vobsub-render.c
+@@ -43,10 +43,10 @@ gstspu_vobsub_recalc_palette (GstDVDSpu * dvdspu,
  
        /* Convert incoming 4-bit alpha to 8 bit for blending */
--      dest->A = (alpha[i] << 4) | alpha[i];
+       dest->A = (alpha[i] << 4) | alpha[i];
 -      dest->Y = ((guint16) ((col >> 16) & 0xff)) * dest->A;
-+      A = (alpha[i] << 4) | alpha[i];
-+      Y = ((col >> 16) & 0xff);
++      dest->Y = ((col >> 16) & 0xff) * dest->A / 255;
        /* U/V are stored as V/U in the clut words, so switch them */
 -      dest->V = ((guint16) ((col >> 8) & 0xff)) * dest->A;
 -      dest->U = ((guint16) (col & 0xff)) * dest->A;
-+      V = ((col >> 8) & 0xff);
-+      U = (col & 0xff);
-+
-+      R = (298 * Y + 459 * V - 63514) >> 8;
-+      G = (298 * Y - 55 * U - 136 * V + 19681) >> 8;
-+      B = (298 * Y + 541 * U - 73988) >> 8;
-+
-+      R = CLAMP (R, 0, 255);
-+      G = CLAMP (G, 0, 255);
-+      B = CLAMP (B, 0, 255);
-+
-+      dest->A = A;
-+      dest->R = R * A / 255;
-+      dest->G = G * A / 255;
-+      dest->B = B * A / 255;
++      dest->V = ((col >> 8) & 0xff) * dest->A / 255;
++      dest->U = (col & 0xff) * dest->A / 255;
      }
    } else {
--    int y = 240;
-+    int c = 255;
- 
-     /* The CLUT presumably hasn't been set, so we'll just guess some
-      * values for the non-transparent colors (white, grey, black) */
+     int y = 240;
+@@ -56,13 +56,13 @@ gstspu_vobsub_recalc_palette (GstDVDSpu * dvdspu,
      for (i = 0; i < 4; i++, dest++) {
        dest->A = (alpha[i] << 4) | alpha[i];
        if (alpha[i] != 0) {
 -        dest[0].Y = y * dest[0].A;
--        y -= 112;
--        if (y < 0)
--          y = 0;
-+        dest->R = dest->G = dest->B = c * dest->A / 255;
-+        c -= 128;
-+        if (c < 0)
-+          c = 0;
++        dest[0].Y = y * dest[0].A / 255;
+         y -= 112;
+         if (y < 0)
+           y = 0;
        }
 -      dest[0].U = 128 * dest[0].A;
 -      dest[0].V = 128 * dest[0].A;
++      dest[0].U = 128 * dest[0].A / 255;
++      dest[0].V = 128 * dest[0].A / 255;
      }
    }
  }
-@@ -169,28 +182,36 @@
+@@ -169,28 +169,36 @@ gstspu_vobsub_get_rle_code (SpuState * state, guint16 * rle_offset)
  }
  
  static inline gboolean
@@ -1289,14 +832,13 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
  {
 -#if 0
 -  GST_LOG ("Y: %d x: %d end %d col %d %d %d %d",
--      state->vobsub.cur_Y, x, end, colour->Y, colour->U, colour->V, colour->A);
++  GST_TRACE ("Y: %d x: %d end %d %d %d %d %d",
+       state->vobsub.cur_Y, x, end, colour->Y, colour->U, colour->V, colour->A);
 -#endif
--
+ 
 -  if (colour->A != 0) {
 -    guint32 inv_A = 0xff - colour->A;
-+  GST_TRACE ("Y: %d x: %d end %d %d %d %d %d",
-+      state->vobsub.cur_Y, x, end, colour->R, colour->G, colour->B, colour->A);
- 
+-
 -    /* FIXME: This could be more efficient */
 -    while (x < end) {
 -      state->vobsub.out_Y[x] =
@@ -1324,9 +866,9 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
 +        memcpy (pix, colour, sizeof (*pix));
 +      } else {
 +        pix->A = colour->A;
-+        pix->R = colour->R + pix->R * inv_A / 255;
-+        pix->G = colour->G + pix->G * inv_A / 255;
-+        pix->B = colour->B + pix->B * inv_A / 255;
++        pix->Y = colour->Y + pix->Y * inv_A / 255;
++        pix->U = colour->U + pix->U * inv_A / 255;
++        pix->V = colour->V + pix->V * inv_A / 255;
 +      }
      }
 -    /* Update the compositing buffer so we know how much to blend later */
@@ -1334,7 +876,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
  
      return TRUE;
    }
-@@ -208,11 +229,11 @@
+@@ -208,11 +216,11 @@ rle_end_x (guint16 rle_code, gint16 x, gint16 end)
  }
  
  static gboolean gstspu_vobsub_render_line_with_chgcol (SpuState * state,
@@ -1348,7 +890,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
      guint16 * rle_offset)
  {
    gint16 x, next_x, end, rle_code, next_draw_x;
-@@ -226,19 +247,13 @@
+@@ -226,19 +234,13 @@ gstspu_vobsub_render_line (SpuState * state, guint8 * planes[3],
        /* Check the top & bottom, because we might not be within the region yet */
        if (state->vobsub.cur_Y >= state->vobsub.cur_chg_col->top &&
            state->vobsub.cur_Y <= state->vobsub.cur_chg_col->bottom) {
@@ -1369,7 +911,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
    /* We always need to start our RLE decoding byte_aligned */
    *rle_offset = GST_ROUND_UP_2 (*rle_offset);
  
-@@ -249,12 +264,10 @@
+@@ -249,12 +251,10 @@ gstspu_vobsub_render_line (SpuState * state, guint8 * planes[3],
      colour = &state->vobsub.main_pal[rle_code & 3];
      next_x = rle_end_x (rle_code, x, end);
      next_draw_x = next_x;
@@ -1385,7 +927,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
      x = next_x;
    }
  
-@@ -289,7 +302,7 @@
+@@ -289,7 +289,7 @@ gstspu_vobsub_update_chgcol (SpuState * state)
  }
  
  static gboolean
@@ -1394,7 +936,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
      guint16 * rle_offset)
  {
    SpuVobsubLineCtrlI *chg_col = state->vobsub.cur_chg_col;
-@@ -304,11 +317,6 @@
+@@ -304,11 +304,6 @@ gstspu_vobsub_render_line_with_chgcol (SpuState * state, guint8 * planes[3],
    gint16 cur_reg_end;
    gint i;
  
@@ -1406,7 +948,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
    /* We always need to start our RLE decoding byte_aligned */
    *rle_offset = GST_ROUND_UP_2 (*rle_offset);
  
-@@ -344,12 +352,13 @@
+@@ -344,12 +339,13 @@ gstspu_vobsub_render_line_with_chgcol (SpuState * state, guint8 * planes[3],
        run_end = MIN (next_x, cur_reg_end);
  
        run_draw_end = run_end;
@@ -1423,48 +965,64 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
          x = run_end;
        }
  
-@@ -370,51 +379,36 @@
+@@ -370,51 +366,36 @@ gstspu_vobsub_render_line_with_chgcol (SpuState * state, guint8 * planes[3],
  }
  
  static void
 -gstspu_vobsub_blend_comp_buffers (SpuState * state, guint8 * planes[3])
--{
++gstspu_vobsub_draw_highlight (SpuState * state,
++    GstVideoFrame * frame, SpuRect * rect)
+ {
 -  state->comp_left = state->vobsub.disp_rect.left;
 -  state->comp_right =
 -      MAX (state->vobsub.comp_last_x[0], state->vobsub.comp_last_x[1]);
--
++  SpuColour *cur;
++  SpuRect r;
++  guint8 *data;
++  guint stride;
++  gint16 pos;
+ 
 -  state->comp_left = MAX (state->comp_left, state->vobsub.clip_rect.left);
 -  state->comp_right = MIN (state->comp_right, state->vobsub.clip_rect.right);
--
++  r.left = rect->left - state->vobsub.disp_rect.left;
++  r.right = rect->right - state->vobsub.disp_rect.left;
++  r.top = rect->top - state->vobsub.disp_rect.top;
++  r.bottom = rect->bottom - state->vobsub.disp_rect.top;
++  rect = &r;
+ 
 -  gstspu_blend_comp_buffers (state, planes);
 -}
--
++  data = GST_VIDEO_FRAME_PLANE_DATA (frame, 0);
++  stride = GST_VIDEO_FRAME_PLANE_STRIDE (frame, 0);
+ 
 -static void
 -gstspu_vobsub_clear_comp_buffers (SpuState * state)
 -{
 -  state->comp_left = state->vobsub.clip_rect.left;
 -  state->comp_right = state->vobsub.clip_rect.right;
--
++  cur = (SpuColour *) (data + stride * rect->top);
++  for (pos = rect->left; pos < rect->right; pos++)
++    cur[pos].A = 0x80;
+ 
 -  gstspu_clear_comp_buffers (state);
--
++  cur = (SpuColour *) (data + stride * (rect->bottom - 1));
++  for (pos = rect->left; pos < rect->right; pos++)
++    cur[pos].A = 0x80;
+ 
 -  state->vobsub.comp_last_x[0] = -1;
 -  state->vobsub.comp_last_x[1] = -1;
 -}
 -
 -static void
- gstspu_vobsub_draw_highlight (SpuState * state,
-     GstVideoFrame * frame, SpuRect * rect)
- {
+-gstspu_vobsub_draw_highlight (SpuState * state,
+-    GstVideoFrame * frame, SpuRect * rect)
+-{
 -  guint8 *cur;
-+  SpuColour *cur;
-+  SpuRect r;
-+  guint8 *data;
-+  guint stride;
-   gint16 pos;
+-  gint16 pos;
 -  gint ystride;
 -
 -  ystride = GST_VIDEO_FRAME_COMP_STRIDE (frame, 0);
- 
+-
 -  cur = GST_VIDEO_FRAME_COMP_DATA (frame, 0) + ystride * rect->top;
 -  for (pos = rect->left + 1; pos < rect->right; pos++)
 -    cur[pos] = (cur[pos] / 2) + 0x8;
@@ -1476,23 +1034,6 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
 -    cur[rect->left] = (cur[rect->left] / 2) + 0x8;
 -    cur[rect->right] = (cur[rect->right] / 2) + 0x8;
 -    cur += ystride;
-+  r.left = rect->left - state->vobsub.disp_rect.left;
-+  r.right = rect->right - state->vobsub.disp_rect.left;
-+  r.top = rect->top - state->vobsub.disp_rect.top;
-+  r.bottom = rect->bottom - state->vobsub.disp_rect.top;
-+  rect = &r;
-+
-+  data = GST_VIDEO_FRAME_PLANE_DATA (frame, 0);
-+  stride = GST_VIDEO_FRAME_PLANE_STRIDE (frame, 0);
-+
-+  cur = (SpuColour *) (data + stride * rect->top);
-+  for (pos = rect->left; pos < rect->right; pos++)
-+    cur[pos].A = 0x80;
-+
-+  cur = (SpuColour *) (data + stride * (rect->bottom - 1));
-+  for (pos = rect->left; pos < rect->right; pos++)
-+    cur[pos].A = 0x80;
-+
 +  for (pos = rect->top; pos < rect->bottom; pos++) {
 +    cur = (SpuColour *) (data + stride * pos);
 +    cur[rect->left].A = 0x80;
@@ -1500,7 +1041,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
    }
  }
  
-@@ -422,10 +416,8 @@
+@@ -422,10 +403,8 @@ void
  gstspu_vobsub_render (GstDVDSpu * dvdspu, GstVideoFrame * frame)
  {
    SpuState *state = &dvdspu->spu_state;
@@ -1512,7 +1053,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
  
    /* Set up our initial state */
    if (G_UNLIKELY (state->vobsub.pix_buf == NULL))
-@@ -435,18 +427,6 @@
+@@ -435,18 +414,6 @@ gstspu_vobsub_render (GstDVDSpu * dvdspu, GstVideoFrame * frame)
            GST_MAP_READ))
      return;
  
@@ -1531,7 +1072,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
    GST_DEBUG_OBJECT (dvdspu,
        "Rendering SPU. disp_rect %d,%d to %d,%d. hl_rect %d,%d to %d,%d",
        state->vobsub.disp_rect.left, state->vobsub.disp_rect.top,
-@@ -454,13 +434,6 @@
+@@ -454,13 +421,6 @@ gstspu_vobsub_render (GstDVDSpu * dvdspu, GstVideoFrame * frame)
        state->vobsub.hl_rect.left, state->vobsub.hl_rect.top,
        state->vobsub.hl_rect.right, state->vobsub.hl_rect.bottom);
  
@@ -1545,7 +1086,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
    /* Update all the palette caches */
    gstspu_vobsub_update_palettes (dvdspu, state);
  
-@@ -475,140 +448,25 @@
+@@ -475,140 +435,25 @@ gstspu_vobsub_render (GstDVDSpu * dvdspu, GstVideoFrame * frame)
    } else
      state->vobsub.cur_chg_col = NULL;
  
@@ -1623,13 +1164,12 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
 -   * accumulating 2 lines of chroma then blending it. We might need to render a
 -   * single line at the end if the display rect ends on an even line too. */
 -  last_y = (state->vobsub.disp_rect.bottom - 1) & ~(0x01);
--
++  last_y = state->vobsub.disp_rect.bottom;
+ 
 -  /* Update our plane references to the first line of the disp_rect */
 -  planes[0] += strides[0] * y;
 -  planes[1] += strides[1] * (y / 2);
 -  planes[2] += strides[2] * (y / 2);
-+  last_y = state->vobsub.disp_rect.bottom;
- 
 +  /* When reading RLE data, we track the offset in nibbles... */
 +  state->vobsub.max_offset = state->vobsub.pix_buf_map.size * 2;
 +  if (y & 1) {
@@ -1639,7 +1179,7 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
 +    cur_offsets[0] = state->vobsub.pix_data[0] * 2;
 +    cur_offsets[1] = state->vobsub.pix_data[1] * 2;
 +  }
-+
+ 
 +  /* Render line by line */
    for (state->vobsub.cur_Y = y; state->vobsub.cur_Y <= last_y;
        state->vobsub.cur_Y++) {
@@ -1700,22 +1240,11 @@ diff -u a/gst/dvdspu/gstspu-vobsub-render.c b/gst/dvdspu/gstspu-vobsub-render.c
    }
  
    /* for debugging purposes, draw a faint rectangle at the edges of the disp_rect */
-diff -u a/gst/dvdspu/gstspu-vobsub.c b/gst/dvdspu/gstspu-vobsub.c
---- a/gst/dvdspu/gstspu-vobsub.c	2015-03-20 11:50:14.721690223 +0100
-+++ b/gst/dvdspu/gstspu-vobsub.c	2015-09-28 16:31:14.380302505 +0200
-@@ -485,6 +485,11 @@
-       if (was_forced != forced_only)
-         hl_change = TRUE;
-     }
-+  } else if (strcmp (event_type, "dvd-set-frame-size") == 0) {
-+    gst_structure_get_int (structure, "width", &state->vobsub.frame_w);
-+    gst_structure_get_int (structure, "height", &state->vobsub.frame_h);
-+    GST_INFO_OBJECT (dvdspu, "Frame size is now %dx%d",
-+        state->vobsub.frame_w, state->vobsub.frame_h);
-   }
- 
-   gst_event_unref (event);
-@@ -493,6 +498,31 @@
+diff --git a/gst/dvdspu/gstspu-vobsub.c b/gst/dvdspu/gstspu-vobsub.c
+index fa05d5b..4f4ccbf 100644
+--- a/gst/dvdspu/gstspu-vobsub.c
++++ b/gst/dvdspu/gstspu-vobsub.c
+@@ -493,6 +493,29 @@ gstspu_vobsub_handle_dvd_event (GstDVDSpu * dvdspu, GstEvent * event)
  }
  
  void
@@ -1735,32 +1264,29 @@ diff -u a/gst/dvdspu/gstspu-vobsub.c b/gst/dvdspu/gstspu-vobsub.c
 +  }
 +
 +  if (display_width)
-+    *display_width = state->vobsub.frame_w > 0 ?
-+        state->vobsub.frame_w : state->info.width;
++    *display_width = state->info.width;
 +
 +  if (display_height)
-+    *display_height = state->vobsub.frame_h > 0 ?
-+        state->vobsub.frame_h : state->info.height;
++    *display_height = state->info.height;
 +}
 +
 +void
  gstspu_vobsub_flush (GstDVDSpu * dvdspu)
  {
    SpuState *state = &dvdspu->spu_state;
-diff -u a/gst/dvdspu/gstspu-vobsub.h b/gst/dvdspu/gstspu-vobsub.h
---- a/gst/dvdspu/gstspu-vobsub.h	2015-09-01 11:05:50.348528393 +0200
-+++ b/gst/dvdspu/gstspu-vobsub.h	2015-09-28 16:31:14.380302505 +0200
-@@ -55,8 +55,8 @@
+diff --git a/gst/dvdspu/gstspu-vobsub.h b/gst/dvdspu/gstspu-vobsub.h
+index 541631e..0c8d0f1 100644
+--- a/gst/dvdspu/gstspu-vobsub.h
++++ b/gst/dvdspu/gstspu-vobsub.h
+@@ -55,7 +55,6 @@ struct SpuVobsubState {
    GstMapInfo pix_buf_map; /* Mapped buffer info */
    
    SpuRect disp_rect;
 -  SpuRect clip_rect;
    SpuRect hl_rect;
-+  gint frame_w, frame_h;
  
    guint32 current_clut[16]; /* Colour lookup table from incoming events */
- 
-@@ -81,31 +81,25 @@
+@@ -81,31 +80,25 @@ struct SpuVobsubState {
                                     * need recalculating */
  
    /* Rendering state vars below */
@@ -1795,3 +1321,6 @@ diff -u a/gst/dvdspu/gstspu-vobsub.h b/gst/dvdspu/gstspu-vobsub.h
  void gstspu_vobsub_flush (GstDVDSpu *dvdspu);
  
  #endif
+-- 
+2.1.4
+
