@@ -17,16 +17,18 @@ MIRRORS += "http://www.live555.com/liveMedia/public/ http://distcache.FreeBSD.or
 S = "${WORKDIR}/live"
 TARGET_CC_ARCH += "${LDFLAGS}"
 
+EXTRA_OEMAKE = "PREFIX=${prefix} LIBDIR=${libdir}"
+
 do_configure() {
     ./genMakefiles linux-with-shared-libraries
 }
 
 do_compile() {
-    make
+    oe_runmake
 }
 
 do_install() {
-    make DESTDIR=${D} install
+    oe_runmake DESTDIR=${D} install
 }
 
 PACKAGES =+ " live555-openrtsp live555-playsip live555-mediaserver live555-examples"
