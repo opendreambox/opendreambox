@@ -6,7 +6,7 @@ DEPENDS = "libgcrypt"
 SRCREV = "ffad3228fef99bd7248b3de41258f74263f27a16"
 PV = "0.8.0"
 
-SRC_URI = "git://git.videolan.org/${PN}.git"
+SRC_URI = "git://git.videolan.org/${BPN}.git"
 
 S = "${WORKDIR}/git"
 
