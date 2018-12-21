@@ -1,7 +1,9 @@
-From e4ee5debf58887c46d014957d910d3e08fc9f49c Mon Sep 17 00:00:00 2001
+From 2ccf441b8c1fd325cc88e05c3951f9e0404ad03c Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Wed, 25 Feb 2015 16:01:42 +0100
-Subject: [PATCH 3/4] configure: use pkg-config to detect freetype2
+Subject: [PATCH] configure: use pkg-config to detect freetype2
+
+Require freetype 2.0.2 (released in 2001), which introduced ft2build.h.
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
@@ -12,17 +14,17 @@ Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
  4 files changed, 2 insertions(+), 24 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index a7caa8b..819ef2c 100644
+index c06ac6b..c578077 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -78,22 +78,7 @@ PKG_CHECK_MODULES([FRIBIDI], [fribidi], [AC_DEFINE(HAVE_FRIBIDI, 1, [whether Fri
+@@ -79,22 +79,7 @@ PKG_CHECK_MODULES([FRIBIDI], [fribidi], [AC_DEFINE(HAVE_FRIBIDI, 1, [whether Fri
  AC_SUBST(FRIBIDI_CFLAGS)
  AC_SUBST(FRIBIDI_LIBS)
  
 -AC_CHECK_PROGS(FREETYPECONFIG, [freetype-config])
 -if test -n "$FREETYPECONFIG"; then
 -    FREETYPE_CPPFLAGS="`$FREETYPECONFIG --cflags`"
--    FREETYPE_LIBS="`$FREETYPECONFIG --libs`"
+-    FREETYPE_LIBS="`$FREETYPECONFIG --libs $config_static`"
 -    AC_DEFINE(HAVE_FREETYPE, 1, [Whether FreeType is available])
 -
 -    ac_save_CPPFLAGS="$CPPFLAGS"
@@ -53,10 +55,10 @@ index 5ef90c3..3cec718 100644
  
  dvdauthor_SOURCES = dvdauthor.c common.h dvdauthor.h da-internal.h \
 diff --git a/src/compat.h b/src/compat.h
-index 126dcd7..ea7eba8 100644
+index 82117dd..694052e 100644
 --- a/src/compat.h
 +++ b/src/compat.h
-@@ -183,11 +183,6 @@ char * locale_decode
+@@ -195,11 +195,6 @@ char * locale_decode
  
  #define PACKAGE_HEADER(x) PACKAGE_NAME "::" x ", version " PACKAGE_VERSION ".\nBuild options:" BUILDSPEC "\nSend bug reports to <" PACKAGE_BUGREPORT ">\n\n"
  
@@ -82,6 +84,3 @@ index 5b39c04..88099ed 100644
  #include FT_FREETYPE_H
  #endif
  
--- 
-1.9.1
-
