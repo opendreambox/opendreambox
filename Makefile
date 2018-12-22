@@ -258,12 +258,15 @@ BB_ENV_EXTRAWHITE = MACHINE DISTRO TCMODE TCLIBC HTTP_PROXY http_proxy \
 BITBAKE_ENV_HASH := $(call hash, \
 	'BITBAKE_ENV_VERSION = "0"' \
 	'BB_ENV_EXTRAWHITE = "$(BB_ENV_EXTRAWHITE)"' \
+	'BUILD_DIR = "$(BUILD_DIR)"' \
 	'CURDIR = "$(CURDIR)"' \
 	)
 
 bitbake.env: $(DEPDIR)/.bitbake.env.$(BITBAKE_ENV_HASH)
 	@echo '[*] Generating $@'
 	@echo '# Automatically generated file. Do not edit!' > $@
+	@echo '[ -n "$$1" ] && export BBPATH="$(BUILD_DIR)/$$1" || unset BBPATH' >> $@
+	@echo '[ -n "$$1" ] && export BUILDDIR="$(BUILD_DIR)/$$1" || unset BUILDDIR' >> $@
 	@echo 'export BB_ENV_EXTRAWHITE="$(BB_ENV_EXTRAWHITE)"' >> $@
 	@echo 'export PATH="$(CURDIR)/openembedded-core/scripts:$(CURDIR)/bitbake/bin:$${PATH}"' >> $@
 
@@ -346,7 +349,7 @@ $(TOPDIR)/Makefile: $(DEPDIR)/.Makefile.$(MACHINE).$(MAKEFILE_HASH)
 $(TOPDIR)/bitbake.env: $(DEPDIR)/.bitbake.env.$(MACHINE).$(MAKEFILE_HASH)
 	@echo '[*] Generating $@'
 	@test -d $(@D) || mkdir -p $(@D)
-	@echo '. $(CURDIR)/bitbake.env' > $@
+	@echo '. $(CURDIR)/bitbake.env $(MACHINE)' > $@
 
 CROSS_COMPILE_ENV_BLACKLIST = \
 	HOME LOGNAME PWD SHELL SSH_AGENT_PID SSH_AUTH_SOCK TERM USER
