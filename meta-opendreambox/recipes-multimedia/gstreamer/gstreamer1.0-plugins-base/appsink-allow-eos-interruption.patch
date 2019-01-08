@@ -1,0 +1,62 @@
+diff -Naur gst-plugins-base-1.10.4.orig/gst-libs/gst/app/gstappsink.c gst-plugins-base-1.10.4/gst-libs/gst/app/gstappsink.c
+--- gst-plugins-base-1.10.4.orig/gst-libs/gst/app/gstappsink.c	2016-11-04 18:07:05.000000000 +0100
++++ gst-plugins-base-1.10.4/gst-libs/gst/app/gstappsink.c	2019-01-08 11:01:13.315531453 +0100
+@@ -658,6 +658,7 @@
+ {
+   GstAppSink *appsink = GST_APP_SINK_CAST (sink);
+   GstAppSinkPrivate *priv = appsink->priv;
++  gboolean ret = TRUE;
+ 
+   switch (event->type) {
+     case GST_EVENT_SEGMENT:
+@@ -689,11 +690,18 @@
+       g_mutex_unlock (&priv->mutex);
+ 
+       if (emit) {
++
++        if (GST_EVENT_IS_SERIALIZED (event))
++            GST_BASE_SINK_PREROLL_UNLOCK (sink);
++
+         /* emit EOS now */
+         if (priv->callbacks.eos)
+-          priv->callbacks.eos (appsink, priv->user_data);
++          ret = priv->callbacks.eos (appsink, priv->user_data);
+         else
+-          g_signal_emit (appsink, gst_app_sink_signals[SIGNAL_EOS], 0);
++          g_signal_emit (appsink, gst_app_sink_signals[SIGNAL_EOS], 0, &ret);
++
++        if (GST_EVENT_IS_SERIALIZED (event))
++            GST_BASE_SINK_PREROLL_LOCK (sink);
+       }
+ 
+       break;
+@@ -712,7 +720,7 @@
+     default:
+       break;
+   }
+-  return GST_BASE_SINK_CLASS (parent_class)->event (sink, event);
++  return ret && GST_BASE_SINK_CLASS (parent_class)->event (sink, event);
+ }
+ 
+ static GstFlowReturn
+diff -Naur gst-plugins-base-1.10.4.orig/gst-libs/gst/app/gstappsink.h gst-plugins-base-1.10.4/gst-libs/gst/app/gstappsink.h
+--- gst-plugins-base-1.10.4.orig/gst-libs/gst/app/gstappsink.h	2016-11-04 18:07:05.000000000 +0100
++++ gst-plugins-base-1.10.4/gst-libs/gst/app/gstappsink.h	2019-01-08 11:01:58.035530417 +0100
+@@ -63,7 +63,7 @@
+  * gst_app_sink_set_callbacks().
+  */
+ typedef struct {
+-  void          (*eos)              (GstAppSink *appsink, gpointer user_data);
++  gboolean      (*eos)              (GstAppSink *appsink, gpointer user_data);
+   GstFlowReturn (*new_preroll)      (GstAppSink *appsink, gpointer user_data);
+   GstFlowReturn (*new_sample)       (GstAppSink *appsink, gpointer user_data);
+ 
+@@ -87,7 +87,7 @@
+   GstBaseSinkClass basesink_class;
+ 
+   /* signals */
+-  void          (*eos)              (GstAppSink *appsink);
++  gboolean      (*eos)              (GstAppSink *appsink);
+   GstFlowReturn (*new_preroll)      (GstAppSink *appsink);
+   GstFlowReturn (*new_sample)       (GstAppSink *appsink);
+ 

@@ -5,4 +5,5 @@ SRC_URI += " \
     file://gsttextoverlay-timestamps.patch \
     file://alsasink-lower-rank.patch \
     file://fixed-warnings-caused-by-subtitle-overlay.patch \
+    file://appsink-allow-eos-interruption.patch \
 "
