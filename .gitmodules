@@ -12,7 +12,7 @@
 	branch = 1.34
 [submodule "meta-qt5"]
 	path = meta-qt5
-	url = git://github.com/meta-qt5/meta-qt5
+	url = git://github.com/opendreambox/meta-qt5
 	branch = sumo
 [submodule "meta-golang"]
 	path = meta-golang
