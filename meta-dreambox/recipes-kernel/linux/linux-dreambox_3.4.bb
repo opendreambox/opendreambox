@@ -21,8 +21,8 @@ require linux-dreambox.inc
 S = "${WORKDIR}/linux-${PV}"
 
 CMDLINE = ""
-CMDLINE_bcm73625 = "bmem=192M@64M console=ttyS0,1000000 ubi.mtd=rootfs root=ubi0:dreambox-rootfs rootfstype=ubifs rw"
-CMDLINE_bcm7435 = "bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
+CMDLINE_bcm73625 = "bmem=192M@64M ${@kernel_console(d)} ubi.mtd=rootfs root=ubi0:dreambox-rootfs rootfstype=ubifs rw"
+CMDLINE_bcm7435 = "bmem=512M@512M memc1=768M ${@kernel_console(d)} root=/dev/mmcblk0p1 rootwait rootfstype=ext4"
 
 COMPATIBLE_MACHINE = "^(bcm7435|bcm73625)$"
 

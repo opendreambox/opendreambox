@@ -20,7 +20,7 @@ require linux-dreambox.inc
 
 S = "${WORKDIR}/linux-${PV}"
 
-CMDLINE = "bmem=640M@384M bmem=384M@2048M console=ttyS0,1000000 root=/dev/mmcblk0p2 rootwait rootfstype=ext4 coherent_pool=2M"
+CMDLINE = "bmem=640M@384M bmem=384M@2048M ${@kernel_console(d)} root=/dev/mmcblk0p2 rootwait rootfstype=ext4 coherent_pool=2M"
 
 COMPATIBLE_MACHINE = "^(bcm7439)$"
 
