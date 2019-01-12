@@ -52,3 +52,7 @@ INITRAMFS_IMAGE_BUNDLE_bcm73625 = "1"
 INITRAMFS_IMAGE_BUNDLE_bcm7435 = "1"
 INITRAMFS_IMAGE_BUNDLE_bcm7439 = "1"
 INITRAMFS_BASE_NAME = "rescue-${PV}-${PR}-${MACHINE}-${DATETIME}"
+
+def kernel_console(d):
+    console = ','.join(reversed(next(iter((d.getVar('SERIAL_CONSOLES') or '').split()), 'null').split(';')))
+    return 'console=%s' % console
