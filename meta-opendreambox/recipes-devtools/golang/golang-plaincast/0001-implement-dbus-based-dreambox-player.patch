@@ -1,22 +1,22 @@
-From 5d665700e078df1a37122f83735c91ab3b40adc5 Mon Sep 17 00:00:00 2001
+From 5f63198eb755e7a0a470665f293a0b64ed51b957 Mon Sep 17 00:00:00 2001
 From: Stephan Reichholf <reichi@opendreambox.org>
 Date: Wed, 5 Jul 2017 12:19:28 +0200
 Subject: [PATCH] implement dbus based dreambox player
 
 ---
- github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go  | 171 +++++++++++++++++++++++++++++++++++++++++++++
- github.com/aykevl/plaincast/apps/youtube/mp/player.go  |   8 ++-
- github.com/aykevl/plaincast/apps/youtube/mp/youtube.go | 127 +--------------------------------
+ github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go  | 184 +++++++++++++++++++++++++++++++++++++
+ github.com/aykevl/plaincast/apps/youtube/mp/player.go  |   8 +-
+ github.com/aykevl/plaincast/apps/youtube/mp/youtube.go | 127 +------------------------
  github.com/aykevl/plaincast/plaincast.service          |   7 +-
- 4 files changed, 180 insertions(+), 133 deletions(-)
+ 4 files changed, 193 insertions(+), 133 deletions(-)
  create mode 100644 github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
 
 diff --git a/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go b/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
 new file mode 100644
-index 0000000..ab37fdf
+index 0000000..02794e2
 --- /dev/null
 +++ b/github.com/aykevl/plaincast/apps/youtube/mp/mpdbus.go
-@@ -0,0 +1,171 @@
+@@ -0,0 +1,184 @@
 +package mp
 +
 +import (
@@ -117,6 +117,19 @@ index 0000000..ab37fdf
 +	}
 +}
 +
++func (mpdbus *MPDBUS) getDuration() (time.Duration, error) {
++	var duration int64
++	err := mpdbus.object.Call(DEST+".getDuration", 0).Store(&duration)
++	if err != nil {
++		panic(err)
++	}
++	logger.Println("duration: ", duration)
++	if duration < 0 {
++		duration = 0
++	}
++	return time.Duration(duration * int64(time.Second)), nil
++}
++
 +func (mpdbus *MPDBUS) getPosition() (time.Duration, error) {
 +	var pos int64
 +	err := mpdbus.object.Call(DEST+".getPosition", 0).Store(&pos)
@@ -189,7 +202,7 @@ index 0000000..ab37fdf
 +	}
 +}
 diff --git a/github.com/aykevl/plaincast/apps/youtube/mp/player.go b/github.com/aykevl/plaincast/apps/youtube/mp/player.go
-index 2418ea0..e853f1c 100644
+index 705f563..ce06135 100644
 --- a/github.com/aykevl/plaincast/apps/youtube/mp/player.go
 +++ b/github.com/aykevl/plaincast/apps/youtube/mp/player.go
 @@ -22,7 +22,7 @@ func New(stateChange chan StateChange) *MediaPlayer {
@@ -209,7 +222,7 @@ index 2418ea0..e853f1c 100644
  	switch ps.State {
  	case STATE_STOPPED:
  		position = 0
-@@ -117,7 +118,7 @@ func (p *MediaPlayer) startPlaying(ps *PlayState, position time.Duration) {
+@@ -126,7 +127,7 @@ func (p *MediaPlayer) startPlaying(ps *PlayState, position time.Duration) {
  		//  *  On very slow systems, like the Raspberry Pi, downloading the
  		//     stream URL for the next video doesn't interrupt the currently
  		//     playing video.
@@ -218,7 +231,7 @@ index 2418ea0..e853f1c 100644
  	}
  	p.setPlayState(ps, STATE_BUFFERING, position)
  
-@@ -365,7 +366,6 @@ func (p *MediaPlayer) Seek(position time.Duration) {
+@@ -374,7 +375,6 @@ func (p *MediaPlayer) Seek(position time.Duration) {
  		if ps.State == STATE_STOPPED {
  			p.startPlaying(ps, position)
  		} else if ps.State == STATE_PAUSED || ps.State == STATE_PLAYING {
@@ -226,7 +239,7 @@ index 2418ea0..e853f1c 100644
  			p.player.setPosition(position)
  		} else {
  			logger.Warnf("state is not paused or playing while seeking (state: %d) - ignoring\n", ps.State)
-@@ -450,7 +450,9 @@ func (p *MediaPlayer) run(playerEventChan chan State, initialVolume int) {
+@@ -459,7 +459,9 @@ func (p *MediaPlayer) run(playerEventChan chan State, initialVolume int) {
  			ps = <-p.playstateChan
  
  		case event, ok := <-playerEventChan:
@@ -421,5 +434,5 @@ index 97739e0..aa38570 100644
  [Install]
  WantedBy=multi-user.target
 -- 
-2.7.4
+2.17.1
 
