@@ -67,7 +67,6 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-extensions-teletext \
   enigma2-plugin-extensions-webbouqueteditor \
   enigma2-plugin-extensions-webinterface \
-  enigma2-plugin-systemplugins-crashlogautosubmit \
   enigma2-plugin-systemplugins-fsblupdater \
   enigma2-plugin-systemplugins-minidlnasetup \
   enigma2-plugin-systemplugins-mediadatabasemanager \
