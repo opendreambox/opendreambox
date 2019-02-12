@@ -23,12 +23,12 @@ diff --git a/configure b/configure
 index d60ffd8..cd53e6c 100755
 --- a/configure
 +++ b/configure
-@@ -3135,7 +3135,7 @@ avdevice_deps="avformat avcodec avutil"
- avfilter_deps="avutil"
- avformat_deps="avcodec avutil"
+@@ -3529,7 +3529,7 @@
  avresample_deps="avutil"
+ avresample_suggest="libm"
+ avutil_suggest="clock_gettime ffnvcodec libm libdrm libmfx opencl user32 vaapi videotoolbox corefoundation corevideo coremedia bcrypt"
 -postproc_deps="avutil gpl"
 +postproc_deps="avutil"
+ postproc_suggest="libm"
  swresample_deps="avutil"
- swscale_deps="avutil"
- 
+ swresample_suggest="libm libsoxr"
