@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 DISTRO_FEED_PREFIX ?= "remote"
 DISTRO_FEED_URI ?= "http://my-distribution.example/remote-feed/"
 
-FEED_ARCHS = "all ${PACKAGE_EXTRA_ARCHS} ${MACHINE_ARCH}"
+FEED_ARCHS = "${@oe.utils.str_filter_out('^(any|noarch)$', d.getVar('ALL_MULTILIB_PACKAGE_ARCHS'), d)}"
 
 do_compile_prepend() {
     install -d ${S}${PKGCONFDIR}
