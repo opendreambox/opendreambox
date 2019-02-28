@@ -1,5 +1,4 @@
 SUMMARY = "A Dreambox firmware image"
-PROVIDES = "dreambox-image"
 
 SYSTEMD_DEFAULT_TARGET = "graphical.target"
 
