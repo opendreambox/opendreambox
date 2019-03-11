@@ -22,7 +22,7 @@ python debian_package_name_hook_append() {
         #        add_rprovides(orig_pkg, d)
 
         # Generate Multi-Arch flags
-        if not d.getVar('MULTI_ARCH_' + orig_pkg, False) and mlprefix != "nativesdk-":
+        if not d.getVar('MULTI_ARCH_' + orig_pkg) and mlprefix != "nativesdk-":
             arch = d.getVar('PACKAGE_ARCH_' + orig_pkg) or package_arch
             if arch == 'all' or is_kernel:
                 flag = 'foreign'
