@@ -23,6 +23,8 @@ RDEPENDS_${PN} += " \
         python-core \
         python-crypt \
         python-ctypes \
+        python-dateutil \
+        python-dateutil-zoneinfo \
         python-dbus \
         python-fcntl \
         python-importlib \
