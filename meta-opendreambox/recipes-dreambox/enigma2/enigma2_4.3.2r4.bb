@@ -5,7 +5,12 @@ SRC_URI[cortexa15hf-neon-vfpv4.sha256sum] = "430e61eb863959127258047eca149035b8a
 
 require enigma2-bin-4.3.inc
 
-SRC_URI += " file://de.mo"
+SRC_URI += " \
+	file://de.mo \
+	file://0001-ServiceList-fix-c-p-error.patch \
+	file://0002-ChannelSelectionDisplaySettings-fix-handling-of-data.patch \
+	file://0003-EventView-fix-item-duplication-in-EventView-Plugin-B.patch \
+"
 
 do_install_append() {
     install -d ${D}${libdir}/fonts

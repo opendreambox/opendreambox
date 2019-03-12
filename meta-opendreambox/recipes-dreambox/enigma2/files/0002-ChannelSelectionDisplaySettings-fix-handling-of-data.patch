@@ -1,0 +1,26 @@
+From 47a0eb76d44799b3f99078336b37c450f9b997ae Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Tue, 12 Mar 2019 10:02:56 +0100
+Subject: [PATCH 2/3] ChannelSelectionDisplaySettings: fix handling of /data
+ for small picons
+
+---
+ usr/lib/enigma2/python/Screens/ChannelSelectionDisplaySettings.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/ChannelSelectionDisplaySettings.py b/usr/lib/enigma2/python/Screens/ChannelSelectionDisplaySettings.py
+index 8992c3d..a108b6f 100644
+--- a/usr/lib/enigma2/python/Screens/ChannelSelectionDisplaySettings.py
++++ b/usr/lib/enigma2/python/Screens/ChannelSelectionDisplaySettings.py
+@@ -59,7 +59,7 @@ class ChannelSelectionDisplaySettings(Screen, ConfigListScreen):
+ 			self.createSetup("config")
+ 		if cur and (cur == self.piconPathEntry or cur == self.showPiconsEntry):
+ 			if self.showpicons.value:
+-				if self.piconpath.getIndex() > 0:
++				if self.piconpath.getIndex() in (1,3):
+ 					config.usage.configselection_bigpicons.value = True
+ 				else:
+ 					config.usage.configselection_bigpicons.value = False
+-- 
+2.1.4
+

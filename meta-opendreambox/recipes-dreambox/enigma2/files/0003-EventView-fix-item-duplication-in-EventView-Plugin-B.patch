@@ -1,0 +1,37 @@
+From 02b5d2f2f0bf177459f88d19c33ff6a70fcc282a Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Tue, 12 Mar 2019 14:12:59 +0100
+Subject: [PATCH 3/3] EventView: fix item duplication in EventView Plugin
+ Blue-Hook
+
+---
+ usr/lib/enigma2/python/Screens/EventView.py | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/EventView.py b/usr/lib/enigma2/python/Screens/EventView.py
+index 245c275..6c6bc6a 100644
+--- a/usr/lib/enigma2/python/Screens/EventView.py
++++ b/usr/lib/enigma2/python/Screens/EventView.py
+@@ -60,8 +60,8 @@ class EventViewBase:
+ 		self._pluginList = []
+ 		self._checkPlugins()
+ 
+-	def _checkPlugins(self, additionalPlugins =[]):
+-		self._pluginList = additionalPlugins
++	def _checkPlugins(self, additionalPlugins = []):
++		self._pluginList = additionalPlugins[:]
+ 		self._pluginList.extend([(p.name, p, False) for p in plugins.getPlugins(where = PluginDescriptor.WHERE_EVENTVIEW)])
+ 		if self._pluginList:
+ 			if len(self._pluginList) > 1:
+@@ -249,5 +249,7 @@ class EventViewEPGSelect(Screen, EventViewBase):
+ 			{
+ 				"openSingleServiceEPG": singleEPGCB,
+ 			})
++		additionalPlugins=[]
+ 		if multiEPGCB:
+-			self._checkPlugins(additionalPlugins=[(_("Multi EPG"), multiEPGCB, True)])
++			additionalPlugins=[(_("Multi EPG"), multiEPGCB, True)]
++		self._checkPlugins(additionalPlugins=additionalPlugins)
+-- 
+2.1.4
+
