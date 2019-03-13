@@ -1,6 +1,8 @@
 SUMMARY = "dreambox video and audio sink elements for Gstreamer 1.0"
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base openssl"
 
+SRC_URI[aarch64.md5sum] = "7ecfa0488d425edde1b72626319164e8"
+SRC_URI[aarch64.sha256sum] = "2d283172f56ad8b19f4269c02022492b63b3cbc690753fbf491fe80ae9582a92"
 SRC_URI[mips32el.md5sum] = "69673b790fbadfafbaeb9553931cb3d9"
 SRC_URI[mips32el.sha256sum] = "5c592202963c8fa8c4d70b1c62cca462d392fac4330a98617fc5c0f7bf25a2f6"
 SRC_URI[cortexa15hf-neon-vfpv4.md5sum] = "491c3ccdc3a08acb47431556685ccee9"
