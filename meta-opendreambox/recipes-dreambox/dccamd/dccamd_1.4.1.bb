@@ -1,8 +1,8 @@
 SUMMARY = "Dreamcrypt/Firecrypt Conditional Access Daemon"
 DEPENDS = "openssl systemd"
 
-SRC_URI[armv7ahf-neon.md5sum] = "f3417ad050c4ae168cadc6b52f0511b7"
-SRC_URI[armv7ahf-neon.sha256sum] = "c0e8646d7a6f3dcbfbd12863f1c583838e2246e5b44f6a93a156056386f7df3a"
+SRC_URI[aarch64.md5sum] = "5b29d583f3b5a77ff4a5e575611219ff"
+SRC_URI[aarch64.sha256sum] = "69543743c7d03b97fc4abe30b509fed8855d5b8f04f7231de7b7658c61efc756"
 SRC_URI[cortexa15hf-neon-vfpv4.md5sum] = "f0eb29ddf8527c3347917ecb9a75745d"
 SRC_URI[cortexa15hf-neon-vfpv4.sha256sum] = "213b6b748aea8094ca4d87f505582d50d956c367cc4c279478dc739d0b008aa0"
 SRC_URI[mips32el.md5sum] = "2c59dede28f7b669a48a5cb772e412d8"
