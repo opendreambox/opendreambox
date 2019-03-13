@@ -4,38 +4,19 @@ LICENSE = "CLOSED"
 DEPENDS += "virtual/kernel dreambox-dvb-modules-systemd"
 PRIORITY = "required"
 
-inherit module-base
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-addtask make_scripts after do_prepare_recipe_sysroot before do_compile
-do_make_scripts[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
-do_make_scripts[depends] += "virtual/kernel:do_shared_workdir"
-
-do_install_append() {
-    install -d ${D}${sysconfdir}/modules-load.d
-    echo stb-core > ${D}${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf
-    chmod 0644 ${D}${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf
-    if [ -f ${D}/lib/modules/${DM_LOCALVERSION}/extra/lcd.ko ]; then
-        echo lcd > ${D}${sysconfdir}/modules-load.d/02-${BPN}-lcd.conf
-        chmod 0644 ${D}${sysconfdir}/modules-load.d/02-${BPN}-lcd.conf
-    fi
-    for module in ${SOC_FAMILY} dreambox_keyboard ble ${MODULES_TO_LOAD}; do
-        if [ -n "$(find ${D}/lib/modules/${DM_LOCALVERSION}/extra -name $module.ko)" ]; then
-            echo $module >> ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf
-        fi
-    done
-    if [ -f ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf ]; then
-        chmod 0644 ${D}${sysconfdir}/modules-load.d/10-${BPN}.conf
-    fi
-}
-
-PACKAGES =+ "${PN}-lcd ${PN}-stb-core"
+PACKAGES =+ "${PN}-firmware ${PN}-lcd ${PN}-stb-core"
 
 RDEPENDS_${PN} = "${PN}-stb-core"
+RDEPENDS_${PN}-firmware = "${PN}-firmware"
 RDEPENDS_${PN}-lcd = "${PN}-stb-core"
-RRECOMMENDS_${PN} = "${PN}-lcd dreambox-dvb-modules-systemd"
+RRECOMMENDS_${PN} = "${PN}-firmware ${PN}-lcd dreambox-dvb-modules-systemd"
 
 FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
                /lib/modules/${DM_LOCALVERSION}/extra/"
+
+FILES_${PN}-firmware = "/lib/firmware"
 
 FILES_${PN}-lcd = "${sysconfdir}/modules-load.d/02-${BPN}-lcd.conf \
                    /lib/modules/${DM_LOCALVERSION}/extra/lcd.ko"
