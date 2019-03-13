@@ -11,7 +11,7 @@ do_install() {
     oe_runmake install DESTDIR=${D}
 }
 
-PACKAGES =+ "flash-scripts"
+PACKAGES =+ "flash-scripts ${PN}-autoflashd ${PN}-fbscaled"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -39,6 +39,7 @@ FASTBOOTRDEPENDS_flash-scripts = " \
 "
 
 RDEPENDS_${PN} = " \
+    ${PN}-autoflashd \
     flash-scripts \
     gpgv \
     pigz \
@@ -53,6 +54,10 @@ RDEPENDS_${PN}_append_bcm7439 = " \
 "
 RDEPENDS_${PN}_append_bcm73625 = " \
     ${NANDRDEPENDS_recovery} \
+"
+RDEPENDS_${PN}_append_meson64 = " \
+    ${EMMCRDEPENDS_recovery} \
+    ${PN}-fbscaled \
 "
 RRECOMMENDS_${PN} = " \
     recovery-ui \
@@ -72,10 +77,23 @@ RDEPENDS_flash-scripts_append_bcm7439 = " \
 RDEPENDS_flash-scripts_append_bcm73625 = " \
     ${NANDRDEPENDS_flash-scripts} \
 "
+RDEPENDS_flash-scripts_append_meson64 = " \
+    ${EMMCRDEPENDS_flash-scripts} \
+    mkbootimg \
+    u-boot-mkimage \
+"
 RRECOMMENDS_flash-scripts = " \
     dreambox-dvb-modules-stb-core \
 "
 
+FILES_${PN}-autoflashd = " \
+    ${sysconfdir}/init.d/autoflashd \
+    ${sbindir}/autoflashd \
+"
+FILES_${PN}-fbscaled = " \
+    ${sysconfdir}/init.d/fbscaled \
+    ${sbindir}/fbscaled \
+"
 FILES_flash-scripts = " \
     ${sbindir}/flash-fsbl \
     ${sbindir}/flash-rescue \
@@ -85,8 +103,12 @@ FILES_flash-scripts = " \
     ${sbindir}/readspi \
     ${sbindir}/select-boot-source \
     ${sbindir}/to-the-rescue \
+    ${sbindir}/update-autoexec \
     ${sbindir}/update-rescue \
     ${sbindir}/writespi \
 "
 
-INITSCRIPT_NAME = "autoflashd"
+INITSCRIPT_PACKAGES = "${PN}-autoflashd ${PN}-fbscaled"
+INITSCRIPT_NAME = ""
+INITSCRIPT_NAME_${PN}-autoflashd = "autoflashd"
+INITSCRIPT_NAME_${PN}-fbscaled = "fbscaled"
