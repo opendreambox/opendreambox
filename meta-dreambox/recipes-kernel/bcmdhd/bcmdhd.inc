@@ -12,6 +12,7 @@ EXTRA_OEMAKE += " \
     CROSS_COMPILE=${TARGET_PREFIX} \
     DEPMOD=echo \
     INSTALL_MOD_PATH=${D} \
+    KDIR=${STAGING_KERNEL_DIR} \
     M=${M} \
 "
 
