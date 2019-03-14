@@ -1,16 +1,39 @@
-From 63c214ae62af33a6ad116924cb4aba0b890822c3 Mon Sep 17 00:00:00 2001
+From 920212d2b42c269a28e7fad14fb845e818d3503d Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Mon, 18 Aug 2014 01:35:17 +0200
 Subject: [PATCH] stat_cache: fix reading block devices
 
 Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
 ---
+ src/http-header-glue.c      | 11 -----------
  src/network_write_no_mmap.c |  7 +++++++
- src/stat_cache.c            | 10 ++++++++++
- 2 files changed, 17 insertions(+)
+ src/stat_cache.c            | 15 +++++++++++++++
+ 3 files changed, 22 insertions(+), 11 deletions(-)
 
+diff --git a/src/http-header-glue.c b/src/http-header-glue.c
+index beee2bfb..2d35e358 100644
+--- a/src/http-header-glue.c
++++ b/src/http-header-glue.c
+@@ -556,17 +556,6 @@ void http_response_send_file (server *srv, connection *con, buffer *path) {
+ 		return;
+ 	}
+ #endif
+-	if (!S_ISREG(sce->st.st_mode)) {
+-		con->http_status = 403;
+-
+-		if (con->conf.log_file_not_found) {
+-			log_error_write(srv, __FILE__, __LINE__, "sbsb",
+-					"not a regular file:", con->uri.path,
+-					"->", sce->name);
+-		}
+-
+-		return;
+-	}
+ 
+ 	/* mod_compress might set several data directly, don't overwrite them */
+ 
 diff --git a/src/network_write_no_mmap.c b/src/network_write_no_mmap.c
-index 8042654..de33823 100644
+index 80426548..de338233 100644
 --- a/src/network_write_no_mmap.c
 +++ b/src/network_write_no_mmap.c
 @@ -13,6 +13,7 @@
@@ -35,7 +58,7 @@ index 8042654..de33823 100644
  		log_error_write(srv, __FILE__, __LINE__, "sb", "file shrunk:", c->file.name);
  		return -1;
 diff --git a/src/stat_cache.c b/src/stat_cache.c
-index 8fbcca5..1a810d6 100644
+index 8fbcca55..b0d8b268 100644
 --- a/src/stat_cache.c
 +++ b/src/stat_cache.c
 @@ -7,6 +7,7 @@
@@ -62,3 +85,15 @@ index 8fbcca5..1a810d6 100644
  	}
  
  #ifdef HAVE_FAM_H
+@@ -703,6 +713,11 @@ int stat_cache_open_rdonly_fstat (server *srv, connection *con, buffer *name, st
+ 	const int fd = open(name->ptr, O_RDONLY | oflags);
+ 	if (fd >= 0) {
+ 		if (0 == fstat(fd, st)) {
++			if (S_ISBLK(st->st_mode)) {
++				uint64_t size;
++				if (ioctl(fd, BLKGETSIZE64, &size) == 0)
++					st->st_size = size;
++			}
+ 			return fd;
+ 		} else {
+ 			close(fd);
