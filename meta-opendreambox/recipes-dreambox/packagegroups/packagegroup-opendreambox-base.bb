@@ -25,6 +25,7 @@ RRECOMMENDS_${PN} += " \
   dreambox-compat \
   dropbear \
   e2fsprogs-e2fsck \
+  haveged \
   hdstandby \
   joe \
   less \
