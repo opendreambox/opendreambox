@@ -124,11 +124,8 @@ help:
 	@echo "  * Update the SDK"
 	@echo "      $$ $(MAKE) update"
 	@echo
-	@echo "  * Build the PDF documentation (doc/opendreambox.pdf, requires pdfTeX):"
-	@echo "      $$ $(MAKE) doc"
-	@echo
 	@echo "  * View the documentation in text format:"
-	@echo "      $$ view doc/opendreambox.txt"
+	@echo "      $$ view README.md"
 	@echo
 	@echo "  * Select a new target machine:"
 	@echo "      $$ echo MACHINE=dm820 >> conf/make.conf"
@@ -176,7 +173,6 @@ usage:
 clean:
 	@echo '[*] Deleting generated configuration files'
 	@$(RM) $(CONFFILES_AUTO) $(CONFFILES_MANUAL) $(CONFDEPS)
-	@$(MAKE) $(MFLAGS) -C doc clean
 
 distclean: clean
 	@echo '[*] Deleting dependencies directory'
@@ -205,9 +201,6 @@ csv = $(subst $(space),$(comma),$(strip $1))
 sstate-cache-clean: init
 	@echo '[*] Cleaning up sstate-cache'
 	@. $(CURDIR)/bitbake.env && sstate-cache-management.sh --cache-dir=$(SSTATE_DIR) --stamps-dir=$(call csv,$(wildcard $(CURDIR)/build/*/tmp*/stamps)) -v
-
-doc:
-	@$(MAKE) $(MFLAGS) -C doc
 
 dreambox-image enigma2 package-index: init
 	@echo '[*] Building $@ for $(USER_MACHINE)'
@@ -244,7 +237,7 @@ update:
 		echo "[*] The Dreambox SDK is now up-to-date."; \
 	fi
 
-.PHONY: all clean doc help image init update usage
+.PHONY: all clean help image init update usage
 
 MACHINE_INCLUDE_CONF = $(CURDIR)/conf/$(basename $(@F))-$(MACHINE)-ext.conf
 DISTRO_INCLUDE_CONF = $(CURDIR)/conf/$(basename $(@F))-ext.conf
