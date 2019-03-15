@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 #
-# Copyright (c) 2016 Dream Property GmbH, Germany
+# Copyright (c) 2019 Dream Property GmbH, Germany
 #                    https://dreambox.de/
 # Author:
 #   Andreas Oberritter <obi@opendreambox.org>
