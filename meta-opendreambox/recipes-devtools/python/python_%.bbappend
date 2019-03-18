@@ -9,3 +9,5 @@ EXTRA_OECONF += " \
 	ac_cv_pthread=yes \
 	ac_cv_cxx_thread=yes \
 "
+
+RDEPENDS_${PN}-ctypes_append = " ldconfig"
