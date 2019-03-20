@@ -16,3 +16,5 @@ osd clear
 bmp scale
 bmp display ${loadaddr}
 vout output ${outputmode}
+
+setenv bootargs ${initargs} logo=${display_layer},loaded,0x${initrd_high} vout=${outputmode},enable hdmimode=${outputmode}
