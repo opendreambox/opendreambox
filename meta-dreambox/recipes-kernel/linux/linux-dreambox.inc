@@ -47,7 +47,12 @@ python __anonymous() {
     d.setVar('RDEPENDS_kernel-base', 'kernel-image-%s' % imagetype.lower())
 }
 
-INITRAMFS_IMAGE = "dreambox-rescue-image"
+PROVIDES_append_bcm73625 = " dreambox-rescue-image-${MACHINE}"
+PROVIDES_append_bcm7435 = " dreambox-rescue-image-${MACHINE}"
+PROVIDES_append_bcm7439 = " dreambox-rescue-image-${MACHINE}"
+INITRAMFS_IMAGE_bcm73625 = "dreambox-rescue-image"
+INITRAMFS_IMAGE_bcm7435 = "dreambox-rescue-image"
+INITRAMFS_IMAGE_bcm7439 = "dreambox-rescue-image"
 INITRAMFS_IMAGE_BUNDLE_bcm73625 = "1"
 INITRAMFS_IMAGE_BUNDLE_bcm7435 = "1"
 INITRAMFS_IMAGE_BUNDLE_bcm7439 = "1"
