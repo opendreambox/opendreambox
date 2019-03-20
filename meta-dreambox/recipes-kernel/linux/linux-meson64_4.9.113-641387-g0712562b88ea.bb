@@ -1,4 +1,4 @@
-DEPENDS = "mkbootimg-native libgcc"
+DEPENDS = "libgcc"
 PROVIDES = "linux-dreambox"
 
 require recipes-kernel/linux/linux-dreambox.inc
@@ -28,25 +28,3 @@ export KCFLAGS = "-Wno-error=misleading-indentation \
                   -Wno-error=unused-const-variable"
 
 KERNEL_FLASH_ARGS = "-c '${CMDLINE}'"
-
-kernel_do_deploy[vardepsexclude] = "DATETIME"
-kernel_do_deploy_append() {
-        mkbootimg --kernel ${B}/arch/arm64/boot/Image.gz \
-                  --second ${B}/arch/arm64/boot/dts/amlogic/${KERNEL_DEVICETREE} \
-                  --cmdline "${CMDLINE}" \
-                  --base 0 \
-                  --kernel_offset ${UBOOT_ENTRYPOINT} \
-                  --second_offset 0x1000000 \
-                  --board ${MACHINE} \
-                  -o ${DEPLOYDIR}/boot.img-${PV}-${PR}-${MACHINE}-${DATETIME}
-        mkbootimg --kernel ${B}/arch/arm64/boot/Image.gz \
-                  --ramdisk ${DEPLOY_DIR_IMAGE}/${INITRAMFS_IMAGE_NAME}.cpio \
-                  --second ${B}/arch/arm64/boot/dts/amlogic/${KERNEL_DEVICETREE} \
-                  --cmdline "${CMDLINE}" \
-                  --base 0 \
-                  --kernel_offset ${UBOOT_ENTRYPOINT} \
-                  --ramdisk_offset 0x4000000 \
-                  --second_offset 0x1000000 \
-                  --board ${MACHINE} \
-                  -o ${DEPLOYDIR}/rescue.img-${PV}-${PR}-${MACHINE}-${DATETIME}
-}
