@@ -9,7 +9,7 @@ BAD_RECOMMENDATIONS += " \
 "
 
 IMAGE_FEATURES = "empty-root-password"
-IMAGE_FSTYPES = "cpio"
+IMAGE_FSTYPES = "cpio.gz"
 IMAGE_INSTALL = " \
         base-files \
         base-passwd \
