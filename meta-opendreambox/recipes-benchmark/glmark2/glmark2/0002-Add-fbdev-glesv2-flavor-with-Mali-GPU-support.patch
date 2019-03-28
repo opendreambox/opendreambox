@@ -1,0 +1,337 @@
+From 7ede1b4527253de252c863f61db16961ddebd1b4 Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Wed, 6 Sep 2017 17:37:34 +0200
+Subject: [PATCH] Add fbdev-glesv2 flavor with Mali GPU support
+
+Based on revision 279 by Wladimir J. van der Laan and 282 by Spenser Gilliland
+from https://code.launchpad.net/~spenser-gilliland/glmark2/mali-fbdev
+
+(cherry picked from commit 5c3fd6ac2a196a56db0161d53b2784dc41e68650)
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org> [minor tweaks]
+---
+ src/main.cpp               |   4 +
+ src/native-state-fbdev.cpp | 160 +++++++++++++++++++++++++++++++++++++
+ src/native-state-fbdev.h   |  67 ++++++++++++++++
+ src/wscript_build          |   5 ++
+ wscript                    |   1 +
+ 5 files changed, 237 insertions(+)
+ create mode 100644 src/native-state-fbdev.cpp
+ create mode 100644 src/native-state-fbdev.h
+
+diff --git a/src/main.cpp b/src/main.cpp
+index 9025984..f0e9798 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -48,6 +48,8 @@
+ #include "native-state-dreambox.h"
+ #elif GLMARK2_USE_WIN32
+ #include "native-state-win32.h"
++#elif GLMARK2_USE_FBDEV
++#include "native-state-fbdev.h"
+ #endif
+ 
+ #if GLMARK2_USE_EGL
+@@ -181,6 +183,8 @@ main(int argc, char *argv[])
+     NativeStateDreambox native_state;
+ #elif GLMARK2_USE_WIN32
+     NativeStateWin32 native_state;
++#elif GLMARK2_USE_FBDEV
++    NativeStateFBDEV native_state;
+ #endif
+ 
+ #if GLMARK2_USE_EGL
+diff --git a/src/native-state-fbdev.cpp b/src/native-state-fbdev.cpp
+new file mode 100644
+index 0000000..d82a6e8
+--- /dev/null
++++ b/src/native-state-fbdev.cpp
+@@ -0,0 +1,160 @@
++/*
++ * Copyright © 2012 Linaro Limited
++ * Copyright © 2013 Canonical Ltd
++ *
++ * This file is part of the glmark2 OpenGL (ES) 2.0 benchmark.
++ *
++ * glmark2 is free software: you can redistribute it and/or modify it under the
++ * terms of the GNU General Public License as published by the Free Software
++ * Foundation, either version 3 of the License, or (at your option) any later
++ * version.
++ *
++ * glmark2 is distributed in the hope that it will be useful, but WITHOUT ANY
++ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
++ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
++ * details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * glmark2.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *  Simon Que
++ *  Jesse Barker
++ *  Alexandros Frantzis
++ *  Wladimir J. van der Laan
++ *  Andreas Oberritter
++ */
++#include "native-state-fbdev.h"
++#include "log.h"
++#include "util.h"
++
++#include <fcntl.h>
++#include <unistd.h>
++#include <sys/ioctl.h>
++#include <linux/fb.h>
++#include <EGL/egl.h>
++#ifdef ANDROID
++#define FBDEV_DEV "/dev/graphics/fb"
++#else
++#define FBDEV_DEV "/dev/fb"
++#endif
++
++/******************
++ * Public methods *
++ ******************/
++
++bool
++NativeStateFBDEV::init_display()
++{
++    if (fd == -1)
++        return init();
++    return true;
++}
++
++void*
++NativeStateFBDEV::display()
++{
++    return EGL_DEFAULT_DISPLAY;
++}
++
++bool
++NativeStateFBDEV::create_window(WindowProperties const& properties)
++{
++    struct fb_var_screeninfo fb_var;
++    if (fd == -1) {
++        Log::error("Error: display has not been initialized!\n");
++        return false;
++    }
++    if (ioctl(fd, FBIOGET_VSCREENINFO, &fb_var))
++    {
++        Log::error("Error: cannot get variable frame buffer info\n");
++        return false;
++    }
++
++    if (properties.width != fb_var.xres ||
++        properties.height != fb_var.yres ||
++        properties.width != fb_var.xres_virtual ||
++        properties.height * 3 != fb_var.yres_virtual) {
++        fb_var.xres = properties.width;
++        fb_var.yres = properties.height;
++        fb_var.xres_virtual = properties.width;
++        fb_var.yres_virtual = properties.height * 3;
++
++        if (ioctl(fd, FBIOPUT_VSCREENINFO, &fb_var) < 0) {
++            Log::error("FBIOPUT_VSCREENINFO\n");
++            return false;
++        }
++
++        if (ioctl(fd, FBIOGET_VSCREENINFO, &fb_var) < 0) {
++            Log::error("FBIOGET_VSCREENINFO\n");
++            return false;
++        }
++    }
++
++    winprops = properties;
++    winprops.fullscreen = true;
++    return true;
++}
++
++void*
++NativeStateFBDEV::window(WindowProperties& properties)
++{
++    properties = winprops;
++    native_window.height = winprops.height;
++    native_window.width = winprops.width;
++    return reinterpret_cast<void*>(&native_window);
++}
++
++void
++NativeStateFBDEV::visible(bool /*visible*/)
++{
++}
++
++bool
++NativeStateFBDEV::should_quit()
++{
++    return should_quit_;
++}
++
++void
++NativeStateFBDEV::flip()
++{
++}
++
++/*******************
++ * Private methods *
++ *******************/
++
++bool
++NativeStateFBDEV::init()
++{
++    std::string devname;
++    int num = 0; /* always fb0 for now */
++
++    devname = std::string(FBDEV_DEV) + Util::toString(num);
++    fd = open(devname.c_str(), O_RDWR);
++    if(fd == -1)
++    {
++        Log::error("Error: Cannot open framebuffer device %s\n", devname.c_str());
++        return false;
++    }
++
++    signal(SIGINT, &NativeStateFBDEV::quit_handler);
++
++    return true;
++}
++
++volatile std::sig_atomic_t NativeStateFBDEV::should_quit_(false);
++
++void
++NativeStateFBDEV::quit_handler(int /*signo*/)
++{
++    should_quit_ = true;
++}
++
++void
++NativeStateFBDEV::cleanup()
++{
++    close(fd);
++    fd = -1;
++}
+diff --git a/src/native-state-fbdev.h b/src/native-state-fbdev.h
+new file mode 100644
+index 0000000..f293c40
+--- /dev/null
++++ b/src/native-state-fbdev.h
+@@ -0,0 +1,67 @@
++/*
++ * Copyright © 2012 Linaro Limited
++ * Copyright © 2013 Canonical Ltd
++ *
++ * This file is part of the glmark2 OpenGL (ES) 2.0 benchmark.
++ *
++ * glmark2 is free software: you can redistribute it and/or modify it under the
++ * terms of the GNU General Public License as published by the Free Software
++ * Foundation, either version 3 of the License, or (at your option) any later
++ * version.
++ *
++ * glmark2 is distributed in the hope that it will be useful, but WITHOUT ANY
++ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
++ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
++ * details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * glmark2.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *  Simon Que
++ *  Jesse Barker
++ *  Alexandros Frantzis
++ *  Wladimir J. van der Laan
++ */
++#ifndef GLMARK2_NATIVE_STATE_FBDEV_H_
++#define GLMARK2_NATIVE_STATE_FBDEV_H_
++
++#include "native-state.h"
++#include <csignal>
++#include <cstring>
++
++#include <EGL/eglplatform.h>
++
++#ifndef _FBDEV_WINDOW_H_
++struct fbdev_window {
++	unsigned short width;
++	unsigned short height;
++};
++#endif
++
++class NativeStateFBDEV : public NativeState
++{
++public:
++    NativeStateFBDEV() :
++        fd(-1) {}
++    ~NativeStateFBDEV() { cleanup(); }
++
++    bool init_display();
++    void* display();
++    bool create_window(WindowProperties const& properties);
++    void* window(WindowProperties& properties);
++    void visible(bool v);
++    bool should_quit();
++    void flip();
++
++private:
++    static void quit_handler(int signum);
++    static volatile std::sig_atomic_t should_quit_;
++    int fd;
++    WindowProperties winprops;
++    struct fbdev_window native_window;
++    bool init();
++    void cleanup();
++};
++
++#endif /* GLMARK2_NATIVE_STATE_FBDEV_H_ */
+diff --git a/src/wscript_build b/src/wscript_build
+index 1662f80..357748b 100644
+--- a/src/wscript_build
++++ b/src/wscript_build
+@@ -54,6 +54,7 @@ flavor_sources = {
+   'dreambox-glesv2' : common_flavor_sources + ['native-state-dreambox.cpp', 'gl-state-egl.cpp'],
+   'drm-gl' : common_flavor_sources + ['native-state-drm.cpp', 'gl-state-egl.cpp'],
+   'drm-glesv2' : common_flavor_sources + ['native-state-drm.cpp', 'gl-state-egl.cpp'],
++  'fbdev-glesv2' : common_flavor_sources + ['native-state-fbdev.cpp', 'gl-state-egl.cpp'],
+   'mir-gl' : common_flavor_sources + ['native-state-mir.cpp', 'gl-state-egl.cpp'],
+   'mir-glesv2' : common_flavor_sources + ['native-state-mir.cpp', 'gl-state-egl.cpp'],
+   'wayland-gl' : common_flavor_sources + ['native-state-wayland.cpp', 'gl-state-egl.cpp'],
+@@ -68,6 +69,7 @@ flavor_uselibs = {
+   'dreambox-glesv2' : ['glad-egl-dreambox', 'glad-glesv2', 'matrix-glesv2', 'common-glesv2'],
+   'drm-gl' : ['drm', 'gbm', 'udev', 'glad-egl-drm', 'glad-gl', 'matrix-gl', 'common-gl'],
+   'drm-glesv2' : ['drm', 'gbm', 'udev', 'glad-egl-drm', 'glad-glesv2', 'matrix-glesv2', 'common-glesv2'],
++  'fbdev-glesv2' : ['glad-egl-fbdev', 'glad-glesv2', 'matrix-glesv2', 'common-glesv2'],
+   'mir-gl' : ['mirclient', 'glad-egl-mir', 'glad-gl', 'matrix-gl', 'common-gl'],
+   'mir-glesv2' : ['mirclient', 'glad-egl-mir', 'glad-glesv2', 'matrix-glesv2', 'common-glesv2'],
+   'wayland-gl' : ['wayland-client', 'wayland-egl', 'glad-egl-wayland', 'glad-gl', 'matrix-gl', 'common-gl'],
+@@ -83,6 +85,7 @@ flavor_defines = {
+   'dreambox-glesv2' : ['GLMARK2_USE_DREAMBOX', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
+   'drm-gl' : ['GLMARK2_USE_DRM', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
+   'drm-glesv2' : ['GLMARK2_USE_DRM', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
++  'fbdev-glesv2' : ['GLMARK2_USE_FBDEV', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
+   'mir-gl' : ['GLMARK2_USE_MIR', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
+   'mir-glesv2' : ['GLMARK2_USE_MIR', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
+   'wayland-gl' : ['GLMARK2_USE_WAYLAND', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
+@@ -97,6 +100,7 @@ flavor_libs = {
+   'dreambox-glesv2' : [],
+   'drm-gl' : [],
+   'drm-glesv2' : [],
++  'fbdev-glesv2' : [],
+   'mir-gl' : [],
+   'mir-glesv2' : [],
+   'wayland-gl' : [],
+@@ -109,6 +113,7 @@ flavor_libs = {
+ egl_platform_defines = {
+   'dispmanx' : ['MESA_EGL_NO_X11_HEADERS'],
+   'dreambox' : ['MESA_EGL_NO_X11_HEADERS'],
++  'fbdev' : ['MESA_EGL_NO_X11_HEADERS'],
+   'drm' : ['__GBM__'],
+   'mir' : ['MESA_EGL_NO_X11_HEADERS'],
+   'wayland' : ['WL_EGL_PLATFORM'],
+diff --git a/wscript b/wscript
+index 756ce8d..c3eb9f2 100644
+--- a/wscript
++++ b/wscript
+@@ -12,6 +12,7 @@ FLAVORS = {
+     'dreambox-glesv2' : 'glmark2-es2-dreambox',
+     'drm-gl' : 'glmark2-drm',
+     'drm-glesv2' : 'glmark2-es2-drm',
++    'fbdev-glesv2' : 'glmark2-es2-fbdev',
+     'mir-gl' : 'glmark2-mir',
+     'mir-glesv2' : 'glmark2-es2-mir',
+     'wayland-gl' : 'glmark2-wayland',

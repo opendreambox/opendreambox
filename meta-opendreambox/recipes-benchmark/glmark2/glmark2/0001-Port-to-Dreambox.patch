@@ -1,40 +1,40 @@
-From 889d4a938c1b7156edd2fa0d686e136c039d6d80 Mon Sep 17 00:00:00 2001
+From c57d85b4ff6b037847b7687a6b8a31035ea55cae Mon Sep 17 00:00:00 2001
 From: Andreas Oberritter <obi@opendreambox.org>
 Date: Fri, 24 Feb 2017 21:58:04 +0100
 Subject: [PATCH] Port to Dreambox
 
 ---
  src/main.cpp                  |   4 ++
- src/native-state-dreambox.cpp | 108 ++++++++++++++++++++++++++++++++++++++++++
- src/native-state-dreambox.h   |  45 ++++++++++++++++++
- src/wscript_build             |   9 ++--
- wscript                       |   3 +-
- 5 files changed, 165 insertions(+), 4 deletions(-)
+ src/native-state-dreambox.cpp | 108 ++++++++++++++++++++++++++++++++++
+ src/native-state-dreambox.h   |  45 ++++++++++++++
+ src/wscript_build             |   5 ++
+ wscript                       |   1 +
+ 5 files changed, 163 insertions(+)
  create mode 100644 src/native-state-dreambox.cpp
  create mode 100644 src/native-state-dreambox.h
 
 diff --git a/src/main.cpp b/src/main.cpp
-index b84b827..22705c2 100644
+index 677962e..9025984 100644
 --- a/src/main.cpp
 +++ b/src/main.cpp
-@@ -42,6 +42,8 @@
- #include "native-state-mir.h"
- #elif GLMARK2_USE_WAYLAND
+@@ -44,6 +44,8 @@
  #include "native-state-wayland.h"
+ #elif GLMARK2_USE_DISPMANX
+ #include "native-state-dispmanx.h"
 +#elif GLMARK2_USE_DREAMBOX
 +#include "native-state-dreambox.h"
+ #elif GLMARK2_USE_WIN32
+ #include "native-state-win32.h"
  #endif
- 
- #if GLMARK2_USE_EGL
-@@ -168,6 +170,8 @@ main(int argc, char *argv[])
-     NativeStateMir native_state;
- #elif GLMARK2_USE_WAYLAND
+@@ -175,6 +177,8 @@ main(int argc, char *argv[])
      NativeStateWayland native_state;
+ #elif GLMARK2_USE_DISPMANX
+     NativeStateDispmanx native_state;
 +#elif GLMARK2_USE_DREAMBOX
 +    NativeStateDreambox native_state;
+ #elif GLMARK2_USE_WIN32
+     NativeStateWin32 native_state;
  #endif
- 
- #if GLMARK2_USE_EGL
 diff --git a/src/native-state-dreambox.cpp b/src/native-state-dreambox.cpp
 new file mode 100644
 index 0000000..9d523d0
@@ -201,50 +201,58 @@ index 0000000..7b8949b
 +
 +#endif /* GLMARK2_NATIVE_STATE_DREAMBOX_H_ */
 diff --git a/src/wscript_build b/src/wscript_build
-index ed0f6ea..5361f0e 100644
+index 336dd13..1662f80 100644
 --- a/src/wscript_build
 +++ b/src/wscript_build
-@@ -20,7 +20,8 @@ flavor_sources = {
+@@ -51,6 +51,7 @@ else:
+ 
+ flavor_sources = {
+   'dispmanx-glesv2' : common_flavor_sources + ['native-state-dispmanx.cpp', 'gl-state-egl.cpp'],
++  'dreambox-glesv2' : common_flavor_sources + ['native-state-dreambox.cpp', 'gl-state-egl.cpp'],
+   'drm-gl' : common_flavor_sources + ['native-state-drm.cpp', 'gl-state-egl.cpp'],
+   'drm-glesv2' : common_flavor_sources + ['native-state-drm.cpp', 'gl-state-egl.cpp'],
    'mir-gl' : common_flavor_sources + ['native-state-mir.cpp', 'gl-state-egl.cpp'],
-   'mir-glesv2' : common_flavor_sources + ['native-state-mir.cpp', 'gl-state-egl.cpp'],
-   'wayland-gl' : common_flavor_sources + ['native-state-wayland.cpp', 'gl-state-egl.cpp'],
--  'wayland-glesv2' : common_flavor_sources + ['native-state-wayland.cpp', 'gl-state-egl.cpp']
-+  'wayland-glesv2' : common_flavor_sources + ['native-state-wayland.cpp', 'gl-state-egl.cpp'],
-+  'dreambox-glesv2' : common_flavor_sources + ['native-state-dreambox.cpp', 'gl-state-egl.cpp']
+@@ -64,6 +65,7 @@ flavor_sources = {
  }
  flavor_uselibs = {
-   'x11-gl' : ['x11', 'gl', 'matrix-gl', 'common-gl'],
-@@ -30,7 +31,8 @@ flavor_uselibs = {
-   'mir-gl' : ['mirclient', 'egl', 'gl', 'matrix-gl', 'common-gl'],
-   'mir-glesv2' : ['mirclient', 'egl', 'glesv2', 'matrix-glesv2', 'common-glesv2'],
-   'wayland-gl' : ['wayland-client', 'wayland-egl', 'egl', 'gl', 'matrix-gl', 'common-gl'],
--  'wayland-glesv2' : ['wayland-client', 'wayland-egl', 'egl', 'glesv2', 'matrix-glesv2', 'common-glesv2']
-+  'wayland-glesv2' : ['wayland-client', 'wayland-egl', 'egl', 'glesv2', 'matrix-glesv2', 'common-glesv2'],
-+  'dreambox-glesv2' : ['egl', 'glesv2', 'matrix-glesv2', 'common-glesv2']
- }
- flavor_defines = {
-   'x11-gl' : ['GLMARK2_USE_X11', 'GLMARK2_USE_GL', 'GLMARK2_USE_GLX'],
-@@ -40,7 +42,8 @@ flavor_defines = {
-   'mir-gl' : ['GLMARK2_USE_MIR', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
-   'mir-glesv2' : ['GLMARK2_USE_MIR', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
-   'wayland-gl' : ['GLMARK2_USE_WAYLAND', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
--  'wayland-glesv2' : ['GLMARK2_USE_WAYLAND', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL']
-+  'wayland-glesv2' : ['GLMARK2_USE_WAYLAND', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
-+  'dreambox-glesv2' : ['GLMARK2_USE_DREAMBOX', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL']
- }
+   'dispmanx-glesv2' : ['glad-egl-dispmanx', 'glad-glesv2', 'matrix-glesv2', 'common-glesv2',  'dispmanx'],
++  'dreambox-glesv2' : ['glad-egl-dreambox', 'glad-glesv2', 'matrix-glesv2', 'common-glesv2'],
+   'drm-gl' : ['drm', 'gbm', 'udev', 'glad-egl-drm', 'glad-gl', 'matrix-gl', 'common-gl'],
+   'drm-glesv2' : ['drm', 'gbm', 'udev', 'glad-egl-drm', 'glad-glesv2', 'matrix-glesv2', 'common-glesv2'],
+   'mir-gl' : ['mirclient', 'glad-egl-mir', 'glad-gl', 'matrix-gl', 'common-gl'],
+@@ -78,6 +80,7 @@ flavor_uselibs = {
  
- includes = ['.', 'scene-ideas', 'scene-terrain']
+ flavor_defines = {
+   'dispmanx-glesv2' : ['GLMARK2_USE_DISPMANX', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
++  'dreambox-glesv2' : ['GLMARK2_USE_DREAMBOX', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
+   'drm-gl' : ['GLMARK2_USE_DRM', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
+   'drm-glesv2' : ['GLMARK2_USE_DRM', 'GLMARK2_USE_GLESv2', 'GLMARK2_USE_EGL'],
+   'mir-gl' : ['GLMARK2_USE_MIR', 'GLMARK2_USE_GL', 'GLMARK2_USE_EGL'],
+@@ -91,6 +94,7 @@ flavor_defines = {
+ }
+ flavor_libs = {
+   'dispmanx-glesv2' : [],
++  'dreambox-glesv2' : [],
+   'drm-gl' : [],
+   'drm-glesv2' : [],
+   'mir-gl' : [],
+@@ -104,6 +108,7 @@ flavor_libs = {
+ }
+ egl_platform_defines = {
+   'dispmanx' : ['MESA_EGL_NO_X11_HEADERS'],
++  'dreambox' : ['MESA_EGL_NO_X11_HEADERS'],
+   'drm' : ['__GBM__'],
+   'mir' : ['MESA_EGL_NO_X11_HEADERS'],
+   'wayland' : ['WL_EGL_PLATFORM'],
 diff --git a/wscript b/wscript
-index f9f2a17..b5347bb 100644
+index e104b84..756ce8d 100644
 --- a/wscript
 +++ b/wscript
-@@ -15,7 +15,8 @@ FLAVORS = {
-     'mir-gl' : 'glmark2-mir',
-     'mir-glesv2' : 'glmark2-es2-mir',
-     'wayland-gl' : 'glmark2-wayland',
--    'wayland-glesv2' : 'glmark2-es2-wayland'
-+    'wayland-glesv2' : 'glmark2-es2-wayland',
-+    'dreambox-glesv2' : 'glmark2-es2-dreambox'
- }
- FLAVORS_STR = ", ".join(FLAVORS.keys())
+@@ -9,6 +9,7 @@ APPNAME = 'glmark2'
  
+ FLAVORS = {
+     'dispmanx-glesv2' : 'glmark2-es2-dispmanx',
++    'dreambox-glesv2' : 'glmark2-es2-dreambox',
+     'drm-gl' : 'glmark2-drm',
+     'drm-glesv2' : 'glmark2-es2-drm',
+     'mir-gl' : 'glmark2-mir',
