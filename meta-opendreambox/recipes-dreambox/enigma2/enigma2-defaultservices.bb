@@ -12,6 +12,9 @@ S = "${WORKDIR}"
 
 inherit allarch
 
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
+
 do_install() {
         install -d ${D}/usr/share/enigma2/dealer
         install ${WORKDIR}/*.info ${D}/usr/share/enigma2/dealer
