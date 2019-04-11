@@ -65,6 +65,7 @@ RRECOMMENDS_${PN} = " \
 
 RDEPENDS_flash-scripts = " \
     coreutils-realpath \
+    curl \
     tpm-ca \
 "
 RDEPENDS_flash-scripts_append_bcm7435 = " \
