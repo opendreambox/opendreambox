@@ -1,19 +1,28 @@
+From 6231727431b13a23399cdbd0dec624877bc90d81 Mon Sep 17 00:00:00 2001
+From: Marcel von Kannen <marcel.von.kannen@dream-property.net>
+Date: Wed, 13 Mar 2019 12:09:31 +0100
+Subject: [PATCH] Autoresolution: be compatible to new DisplayHardware
+ component
+
+---
+ autoresolution/src/plugin.py | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
 diff --git a/autoresolution/src/plugin.py b/autoresolution/src/plugin.py
-index 950c393..1351764 100644
+index 950c3930..ba25108b 100644
 --- a/autoresolution/src/plugin.py
 +++ b/autoresolution/src/plugin.py
-@@ -9,8 +9,9 @@ from Components.ActionMap import ActionMap
+@@ -9,8 +9,8 @@ from Components.ActionMap import ActionMap
  from Components.Label import Label
  from Components.Sources.StaticText import StaticText
  from enigma import iPlayableService, iServiceInformation, eTimer, getDesktop
 +from Components.DisplayHardware import DisplayHardware
  from Plugins.Plugin import PluginDescriptor
 -from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw # depends on Videomode Plugin
-+import re
  
  usable = False
  preferedmodes = None
-@@ -43,10 +44,10 @@ config.plugins.autoresolution.delay_switch_mode = ConfigSelection(default = "100
+@@ -43,10 +43,10 @@ config.plugins.autoresolution.delay_switch_mode = ConfigSelection(default = "100
  		("8000", "8 " + _("seconds")), ("9000", "9 " + _("seconds")), ("10000", "10 " + _("seconds")),("60000", "60 " + _("seconds"))])
  
  def setDeinterlacer(mode):
@@ -28,7 +37,7 @@ index 950c393..1351764 100644
  
  frqdic = { 23976: '24', \
  		24000: '24', \
-@@ -134,7 +135,7 @@ class AutoRes(Screen):
+@@ -134,7 +134,7 @@ class AutoRes(Screen):
  			global videoresolution_dictionary
  			print "mode changed to", configEntry.value
  			default = (configEntry.value, _("default"))
@@ -37,40 +46,7 @@ index 950c393..1351764 100644
  			preferedmodes.append(default)
  			print "default", default
  			print "preferedmodes", preferedmodes
-@@ -249,16 +250,7 @@ class AutoRes(Screen):
- 	def changeVideomode(self):
- 		if usable:
- 			mode = self.lastmode
--			if mode.find("0p30") != -1 or mode.find("0p24") != -1 or mode.find("0p25") != -1:
--				print "[AutoRes] switching to", mode
--				v = open('/proc/stb/video/videomode' , "w")
--				v.write("%s\n" % mode)
--				v.close()
--				resolutionlabel["restxt"].setText("Videomode: %s" % mode)
--				if config.plugins.autoresolution.showinfo.value:
--					resolutionlabel.show()
--			else:
--				self.setMode(mode)
-+			self.setMode(mode)
- 			if config.plugins.autoresolution.testmode.value and default[0] != mode:
- 				resolutionlabeltxt = "Videomode: %s" % mode
- 				self.session.openWithCallback(
-@@ -279,14 +271,21 @@ class AutoRes(Screen):
- 			self.setMode(default[0])
- 
- 	def setMode(self, mode, set=True):
--		rate = config.av.videorate[mode].value
- 		port_txt = "HDMI" if port == "DVI" else port
-+
-+		if mode.find("0p30") != -1 or mode.find("0p24") != -1 or mode.find("0p25") != -1:
-+			match = re.search(r"(\d*?[ip])(\d*?)$", mode)
-+			mode = match.group(1)
-+			rate = match.group(2) + "Hz"
-+		else:
-+			rate = config.av.videorate[mode].value
-+
- 		resolutionlabel["restxt"].setText("Videomode: %s %s %s" % (port_txt, mode, rate))
- 		if set:
+@@ -286,7 +286,7 @@ class AutoRes(Screen):
  			print "[AutoRes] switching to %s %s %s" % (port_txt, mode, rate)
  			if config.plugins.autoresolution.showinfo.value:
  				resolutionlabel.show()
