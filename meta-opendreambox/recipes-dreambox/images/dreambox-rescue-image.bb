@@ -23,6 +23,7 @@ IMAGE_INSTALL = " \
         kmod \
         modutils-initscripts \
         netbase \
+        ntpdate \
         procps \
         recovery-ui \
         recovery-web \
