@@ -1,0 +1,7 @@
+# Configuration script used by ntpdate-sync script
+
+NTPSERVERS="time1.google.com time2.google.com time3.google.com time4.google.com"
+
+# Set to "yes" to write time to hardware clock on success
+UPDATE_HWCLOCK="no"
+
