@@ -1,6 +1,6 @@
 require enigma2-plugins.inc
 
-SRCREV = "${@opendreambox_srcrev('e76c8a08451d2045c593df9e806ab54baa60f7fc', d)}"
+SRCREV = "${@opendreambox_srcrev('f5968eecea70756c35c887c0e505cc3abadc690e', d)}"
 
 inherit opendreambox-github
 
