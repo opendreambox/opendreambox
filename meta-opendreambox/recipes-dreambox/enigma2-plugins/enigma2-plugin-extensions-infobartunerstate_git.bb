@@ -3,11 +3,11 @@ HOMEPAGE = "https://github.com/betonme/e2openplugin-InfoBarTunerState"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://src/LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 DEPENDS = "gettext-native"
-SRCREV = "1fea517efcc5fefa0c391689dfaa71437d349989"
+SRCREV = "8510d1fabb078a2894bc636c5774371b18a69e10"
 PE = "1"
-PV = "3.3.1+git${SRCPV}"
+PV = "4.0.0+git${SRCPV}"
 
-SRC_URI = "git://github.com/betonme/e2openplugin-InfoBarTunerState.git"
+SRC_URI = "git://github.com/opendreambox/e2openplugin-InfoBarTunerState.git"
 
 S = "${WORKDIR}/git"
 

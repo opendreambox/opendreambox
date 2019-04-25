@@ -3,7 +3,7 @@ LICENSE = "CC-BY-NC-SA-3.0 | DreamProperty"
 LIC_FILES_CHKSUM = "file://src/LICENSE;md5=c4127d21ca0781e51e4886f80a372bc7"
 SRCREV = "${@opendreambox_srcrev('a4030d440930d5530bc9eabe4875ac6115403891', d)}"
 DEPENDS = "libtirpc nfs-utils python"
-PV = "4.3.2"
+PV = "4.4.1"
 
 inherit autotools-brokensep pkgconfig opendreambox-github
 
