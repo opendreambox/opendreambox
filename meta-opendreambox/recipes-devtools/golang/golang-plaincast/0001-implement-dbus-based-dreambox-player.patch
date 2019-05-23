@@ -418,7 +418,7 @@ diff --git a/github.com/aykevl/plaincast/plaincast.service b/github.com/aykevl/p
 index 97739e0..aa38570 100644
 --- a/github.com/aykevl/plaincast/plaincast.service
 +++ b/github.com/aykevl/plaincast/plaincast.service
-@@ -1,11 +1,10 @@
+@@ -1,11 +1,11 @@
  [Unit]
  Description=Plaincast service
 -After=network.target sound.target
@@ -429,6 +429,7 @@ index 97739e0..aa38570 100644
 -User=plaincast
 -Group=audio
 +ExecStart=/usr/bin/plaincast -loglevel=info -config /etc/plaincast.conf
++RestartSec=2
 +Restart=always
  
  [Install]
