@@ -3,7 +3,7 @@
 This is the build system of the opendreambox distribution, an embedded Linux distribution for Set-Top-Boxes manufactured by [Dream Property GmbH](https://dreambox.de/).
 
 It is based on the [OpenEmbedded](https://www.openembedded.org/) build framework, which uses
-BitBake to transform build instructions into distributable firmare images and software packages.
+BitBake to transform build instructions into distributable firmware images and software packages.
 
 The current version is based on the [Yocto Project](https://www.yoctoproject.org/) release 2.3 „Pyro“, an umbrella project for OpenEmbedded and related tools.
 
@@ -180,7 +180,7 @@ include:
 
 In the top level directory, there is a `Makefile`, which is used to set
 up build directories and to fetch or update all used repositories. The
-Makefile can be influenced by environment variables, either by specifing
+Makefile can be influenced by environment variables, either by specifying
 them on the command-line or by storing them in a file called
 `conf/make.conf`. It is not recommended to edit the `Makefile` directly
 in order to avoid conflicts with future updates.
@@ -239,7 +239,7 @@ It is possible to tweak a lot more options than those used by the
 `conf/local-${MACHINE}-ext.conf`.
 
 For example, if the firmware shall use the package feed built on the
-develoment machine, which happens to be 192.168.1.1 and has a webserver
+development machine, which happens to be 192.168.1.1 and has a web server
 configured to point to `tmp-glibc/deploy/deb`, a line like the following may
 be added:
 
@@ -253,7 +253,7 @@ The following sections list some commonly used options.
 ### DISTRO\_FEED\_PREFIX
 
 `DISTRO_FEED_PREFIX` specifies the name of the package update feed. This
-name may be chosen arbitarily.
+name may be chosen arbitrarily.
 
 Default: `DISTRO_FEED_PREFIX = "remote"`
 
