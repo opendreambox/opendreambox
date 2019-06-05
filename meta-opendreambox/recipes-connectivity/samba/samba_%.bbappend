@@ -1,6 +1,9 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 
-SRC_URI += "file://smb.conf"
+SRC_URI += " \
+        file://nmbd_systemd_network_online.patch \
+        file://smb.conf \
+"
 
 EXTRA_OECONF += "--without-ads --without-cluster-support --with-static-modules=!DEFAULT,!FORCED"
 
