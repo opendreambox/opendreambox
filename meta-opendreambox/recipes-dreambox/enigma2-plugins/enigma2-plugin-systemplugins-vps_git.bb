@@ -5,7 +5,7 @@ SRCREV = "${@opendreambox_srcrev('4e685554fad264646e5ef95df1b4d9476ded422a', d)}
 PE = "1"
 PV = "1.6-1+git${SRCPV}"
 
-inherit autotools-brokensep opendreambox-github package-transition
+inherit autotools-brokensep opendreambox-github
 
 RDEPENDS_${PN} = " \
     python-twisted-core \
