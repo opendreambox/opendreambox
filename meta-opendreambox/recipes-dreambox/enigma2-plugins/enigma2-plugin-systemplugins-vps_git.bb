@@ -17,5 +17,3 @@ require enigma2-plugin.inc
 
 GITHUB_PROJECT = "enigma2-plugin-vps"
 
-TRANSITION_${PN} = "enigma2-plugin-extensions-vps"
-TRANSITION_${PN}-meta = "enigma2-plugin-extensions-vps-meta"
