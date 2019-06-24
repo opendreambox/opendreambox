@@ -3,14 +3,14 @@ PROVIDES = "linux-dreambox"
 
 require recipes-kernel/linux/linux-dreambox.inc
 
-SRC_URI = "https://dreamboxupdate.com/download/opendreambox/${BPN}/${BPN}-v${PV}.tar.xz"
-SRC_URI[md5sum] = "f084198603c2bdd580fa09de2f98527d"
-SRC_URI[sha256sum] = "4809dfd2aff93c6bc6fe4439dbf768d3a2cb5c67a8235074e87c328517ab1fab"
+SRC_URI = "https://dreamboxupdate.com/download/opendreambox/${BPN}/${BPN}-${PV}.tar.xz"
+SRC_URI[md5sum] = "202288e57a413bc1f7639b1e795dacbb"
+SRC_URI[sha256sum] = "9e32661b1df3c1a43ed480d2fd5ac18f81c61bade98e88cf98596961f99d6eca"
 
 KERNEL_CC += "${TOOLCHAIN_OPTIONS}"
 KERNEL_LD += "${TOOLCHAIN_OPTIONS}"
 
-S = "${WORKDIR}/${BPN}-v${PV}"
+S = "${WORKDIR}/${BPN}-${PV}"
 
 CMDLINE = "${@kernel_console(d)} root=/dev/mmcblk0p7 rootwait rootfstype=ext4 no_console_suspend"
 
