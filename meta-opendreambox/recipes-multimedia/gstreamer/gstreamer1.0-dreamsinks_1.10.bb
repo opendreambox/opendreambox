@@ -1,8 +1,8 @@
 SUMMARY = "dreambox video and audio sink elements for Gstreamer 1.0"
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base openssl systemd"
 
-SRC_URI[aarch64.md5sum] = "bc9d9dfe4a83fc9121bdc5098fcb7e7d"
-SRC_URI[aarch64.sha256sum] = "b60356a9011366bdf0b8401c28e846efd1722a8aa51ed48f502b4fa99d0b53da"
+SRC_URI[aarch64.md5sum] = "8049bb4c5f0502ba7ffe6965e98559a5"
+SRC_URI[aarch64.sha256sum] = "9a62c26c2daa78d3008cd21b7784d01acef2d5a55565841a75d2b786da591d32"
 
 inherit opendreambox-precompiled-binary
 
