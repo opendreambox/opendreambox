@@ -1,0 +1,43 @@
+--- gst-plugins-base-1.10.4.orig/gst-libs/gst/app/gstappsink.c	2016-11-04 18:07:05.000000000 +0100
++++ gst-plugins-base-1.10.4/gst-libs/gst/app/gstappsink.c	2019-06-30 00:23:03.188867853 +0200
+@@ -903,9 +911,21 @@
+ static gboolean
+ gst_app_sink_query (GstBaseSink * bsink, GstQuery * query)
+ {
++  GstAppSink *appsink = GST_APP_SINK_CAST (bsink);
++  GstAppSinkPrivate *priv = appsink->priv;
+   gboolean ret;
+ 
+   switch (GST_QUERY_TYPE (query)) {
++    case GST_QUERY_DRAIN:
++    {
++      g_mutex_lock (&priv->mutex);
++      GST_DEBUG_OBJECT (appsink, "waiting buffers to be consumed");
++      while (priv->num_buffers > 0 || priv->preroll)
++        g_cond_wait (&priv->cond, &priv->mutex);
++      g_mutex_unlock (&priv->mutex);
++      ret = GST_BASE_SINK_CLASS (parent_class)->query (bsink, query);
++      break;
++    }
+     case GST_QUERY_SEEKING:{
+       GstFormat fmt;
+ 
+@@ -1365,6 +1385,9 @@
+       gst_sample_new (priv->preroll, priv->preroll_caps, &priv->preroll_segment,
+       NULL);
+   GST_DEBUG_OBJECT (appsink, "we have the preroll sample %p", sample);
++
++  gst_buffer_replace (&priv->preroll, NULL);
++
+   g_mutex_unlock (&priv->mutex);
+ 
+   return sample;
+@@ -1434,6 +1457,8 @@
+ 
+   g_mutex_lock (&priv->mutex);
+ 
++  gst_buffer_replace (&priv->preroll, NULL);
++
+   while (TRUE) {
+     GST_DEBUG_OBJECT (appsink, "trying to grab a buffer");
+     if (!priv->started)
