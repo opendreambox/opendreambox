@@ -4,3 +4,5 @@ SRC_URI[cortexa15hf-neon-vfpv4.md5sum] = "ef3e875ab1a63873ffdf7634e4840803"
 SRC_URI[cortexa15hf-neon-vfpv4.sha256sum] = "5a7e2995b8d28c9a9cf3d58cd98c4324d1ebb396752b96fd659930e0d7ac2dc4"
 
 require enigma2-bin-4.3.inc
+
+SRC_URI += " file://0001-skin_default-revert-accidentially-commited-change-di.patch"

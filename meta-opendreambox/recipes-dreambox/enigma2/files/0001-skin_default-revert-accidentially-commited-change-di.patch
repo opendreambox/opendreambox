@@ -1,0 +1,27 @@
+From bc4ee415d949ce3db1a4ff256e8aab6deb95b4bd Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Wed, 10 Jul 2019 21:09:09 +0200
+Subject: [PATCH] skin_default: revert accidentially commited change (disable
+ selectionZoom in setup)
+
+Change-Id: Iffe20349c2aa373def0c22f4571bfc871d7e9c3a
+---
+ data/skin_default.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/share/enigma2/skin_default.xml b/usr/share/enigma2/skin_default.xml
+index fec69a7..22912ca 100644
+--- a/usr/share/enigma2/skin_default.xml
++++ b/usr/share/enigma2/skin_default.xml
+@@ -1069,7 +1069,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)/2,(720-wsizey)/2))
+ 		<widget source="key_red" render="Label" position="10,5" size="200,40" zPosition="1" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-2,-2"/>
+ 		<widget source="key_green" render="Label" position="210,5" size="200,40" zPosition="1" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" transparent="1" foregroundColor="white" shadowColor="black" shadowOffset="-2,-2"/>
+ 		<eLabel position="10,50" size="800,1" backgroundColor="grey"/>
+-		<widget name="config" position="10,60" size="800,450" enableWrapAround="1" scrollbarMode="showOnDemand" selectionZoom="1.2"/>
++		<widget name="config" position="10,60" size="800,450" enableWrapAround="1" scrollbarMode="showOnDemand"/>
+ 	</screen>
+ 	<!-- Simple channelselection -->
+ 	<screen name="SimpleChannelSelection" position="center,120" size="820,520" title="Channel Selection">
+-- 
+2.1.4
+
