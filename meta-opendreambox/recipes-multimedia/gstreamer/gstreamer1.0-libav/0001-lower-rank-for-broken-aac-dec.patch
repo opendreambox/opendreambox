@@ -1,0 +1,12 @@
+diff -Naur gst-libav-1.6.4.orig/ext/libav/gstavauddec.c gst-libav-1.6.4/ext/libav/gstavauddec.c
+--- gst-libav-1.6.4.orig/ext/libav/gstavauddec.c	2019-07-13 22:18:55.692419209 +0200
++++ gst-libav-1.6.4/ext/libav/gstavauddec.c	2019-07-13 22:08:08.980440462 +0200
+@@ -933,7 +933,7 @@
+       case AV_CODEC_ID_RA_144:
+       case AV_CODEC_ID_RA_288:
+       case AV_CODEC_ID_COOK:
+-      case AV_CODEC_ID_AAC:
++//      case AV_CODEC_ID_AAC:
+         rank = GST_RANK_PRIMARY;
+         break;
+         /* SIPR: decoder should have a higher rank than realaudiodec.
