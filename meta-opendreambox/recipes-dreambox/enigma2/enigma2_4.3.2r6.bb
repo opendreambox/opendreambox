@@ -5,4 +5,7 @@ SRC_URI[cortexa15hf-neon-vfpv4.sha256sum] = "5a7e2995b8d28c9a9cf3d58cd98c4324d1e
 
 require enigma2-bin-4.3.inc
 
-SRC_URI += " file://0001-skin_default-revert-accidentially-commited-change-di.patch"
+SRC_URI += " \
+	file://0001-skin_default-revert-accidentially-commited-change-di.patch \
+	file://0001-skin.py-add-global-skin-variables-define-them-like-t.patch \
+"
