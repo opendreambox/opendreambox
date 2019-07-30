@@ -1,0 +1,21 @@
+--- a/plugins/elements/gstqueue2.c	2019-07-30 10:17:54.156859065 +0200
++++ b/plugins/elements/gstqueue2.c	2019-07-26 23:51:09.041826073 +0200
+@@ -547,6 +547,9 @@
+       "initialized queue's not_empty & not_full conditions");
+ }
+ 
++static void
++gst_queue2_locked_flush (GstQueue2 * queue, gboolean full, gboolean clear_temp);
++
+ /* called only once, as opposed to dispose */
+ static void
+ gst_queue2_finalize (GObject * object)
+@@ -555,6 +558,8 @@
+ 
+   GST_DEBUG_OBJECT (queue, "finalizing queue");
+ 
++  gst_queue2_locked_flush (queue, TRUE, TRUE);
++
+   while (!g_queue_is_empty (&queue->queue)) {
+     GstQueue2Item *qitem = g_queue_pop_head (&queue->queue);
+ 
