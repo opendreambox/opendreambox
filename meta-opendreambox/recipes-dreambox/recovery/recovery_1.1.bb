@@ -6,4 +6,4 @@ inherit opendreambox-git
 
 BRANCH = "master"
 
-COMPATIBLE_MACHINE = "^(dm520|dm820|dm900|dm920|dm7080|dreamone)$"
+COMPATIBLE_MACHINE = "^(dm520|dm820|dm900|dm920|dm7080|dreamone|dreamtwo)$"
