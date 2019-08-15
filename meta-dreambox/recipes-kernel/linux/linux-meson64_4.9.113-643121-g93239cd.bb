@@ -16,12 +16,14 @@ S = "${WORKDIR}/${BPN}-v${PV}"
 
 CMDLINE = "${@kernel_console(d)} root=/dev/mmcblk0p7 rootwait rootfstype=ext4 no_console_suspend"
 
-COMPATIBLE_MACHINE = "^(dreamone)$"
+COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 
 DEFCONFIG = "meson64"
 
 LINUX_VERSION = "4.9"
-KERNEL_DEVICETREE = "dreamone.dtb"
+KERNEL_DEVICETREE = ""
+KERNEL_DEVICETREE_dreamone = "dreamone.dtb"
+KERNEL_DEVICETREE_dreamtwo = "dreamtwo.dtb"
 KERNEL_IMAGETYPES = "Image.gz"
 
 export KCFLAGS = "-Wno-error=misleading-indentation \
