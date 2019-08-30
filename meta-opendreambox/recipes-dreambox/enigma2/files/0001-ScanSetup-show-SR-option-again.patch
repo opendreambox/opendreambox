@@ -1,0 +1,27 @@
+From e3c21641a8411a556d7b2eabfd71738c2e516d8d Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Fri, 30 Aug 2019 23:52:57 +0200
+Subject: [PATCH] ScanSetup: show SR option again
+
+---
+ usr/lib/enigma2/python/Screens/Satconfig.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/Satconfig.py b/usr/lib/enigma2/python/Screens/Satconfig.py
+index 9cbb623..56e3413 100644
+--- a/usr/lib/enigma2/python/Screens/Satconfig.py
++++ b/usr/lib/enigma2/python/Screens/Satconfig.py
+@@ -234,8 +234,8 @@ class NimSetupBase(object):
+ 								self.list.append(getConfigListEntry(_("Scan QAM64"), self.nimConfig.cable.scan_mod_qam64))
+ 								self.list.append(getConfigListEntry(_("Scan QAM128"), self.nimConfig.cable.scan_mod_qam128))
+ 								self.list.append(getConfigListEntry(_("Scan QAM256"), self.nimConfig.cable.scan_mod_qam256))
+-								self.list.append(getConfigListEntry(_("Scan SR6900"), self.nimConfig.cable.scan_sr_6900))
+-								self.list.append(getConfigListEntry(_("Scan SR6875"), self.nimConfig.cable.scan_sr_6875))
++							self.list.append(getConfigListEntry(_("Scan SR6900"), self.nimConfig.cable.scan_sr_6900))
++							self.list.append(getConfigListEntry(_("Scan SR6875"), self.nimConfig.cable.scan_sr_6875))
+ 							self.list.append(getConfigListEntry(_("Scan additional SR"), self.nimConfig.cable.scan_sr_ext1))
+ 							self.list.append(getConfigListEntry(_("Scan additional SR"), self.nimConfig.cable.scan_sr_ext2))
+ 			self.have_advanced = False
+-- 
+2.1.4
+
