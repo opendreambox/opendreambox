@@ -37,6 +37,7 @@ RDEPENDS_${PN} += " \
         python-pickle \
         python-re \
         python-shell \
+        python-six \
         python-subprocess \
         python-twisted-core \
         python-twisted-web \
