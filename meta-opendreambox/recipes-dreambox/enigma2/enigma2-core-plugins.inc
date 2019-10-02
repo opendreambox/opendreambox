@@ -94,6 +94,7 @@ RDEPENDS_enigma2-plugin-systemplugins-jsonapi = " \
 "
 RDEPENDS_enigma2-plugin-systemplugins-networkmanager = " \
         packagegroup-net-connman \
+        ethtool \
 "
 RPROVIDES_enigma2-plugin-systemplugins-networkmanager = " \
         enigma2-plugin-systemplugins-networksetup \
