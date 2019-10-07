@@ -1,12 +1,12 @@
 require recovery-web.inc
 
 SRCREV = "${@opendreambox_srcrev('5d68fcde19886c1fdf4987ec18ceaa346a40c68a', d)}"
-SRCREV_dm520 = "${@opendreambox_srcrev('b181468778f1e5ba95fb2185c9338d6b08122625', d)}"
+SRCREV_dm520 = "${@opendreambox_srcrev('40a427447ca0398a3511db10ea0919938b89a6c8', d)}"
 SRCREV_dm820 = "${SRCREV_dm7080}"
-SRCREV_dm900 = "${@opendreambox_srcrev('1e17339e15c8e77b03ae981989111c7c62b923d7', d)}"
+SRCREV_dm900 = "${@opendreambox_srcrev('046d365084e29c2dcacc0e9befd04f6947c6f7e3', d)}"
 SRCREV_dm920 = "${SRCREV_dm900}"
-SRCREV_dm7080 = "${@opendreambox_srcrev('3f02d9e7eeb29248ea1984730fdcbd3ceb63a726', d)}"
-SRCREV_dreamone = "${@opendreambox_srcrev('6329346b3d1d54523421543fa0cd8d772194334f', d)}"
+SRCREV_dm7080 = "${@opendreambox_srcrev('5fa8b020dde379faf3cec6142049f57c03fdb205', d)}"
+SRCREV_dreamone = "${@opendreambox_srcrev('0e2fb0527d1cc25f034b9c4adcfd295940d05078', d)}"
 
 inherit opendreambox-git
 
