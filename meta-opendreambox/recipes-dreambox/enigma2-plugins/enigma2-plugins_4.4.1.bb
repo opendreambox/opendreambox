@@ -9,4 +9,6 @@ SRC_URI += "file://0001-Autoresolution-be-compatible-to-new-DisplayHardware-.pat
             file://0003-mytube-remove-tpm-check.patch \
             file://0004-webadmin-remove-remnants-of-tpm-check.patch \
             file://0005-yttrailer-remove-remnants-of-tpm-check.patch \
-            file://0006-webinterface-remove-tpm-check.patch"
+            file://0006-webinterface-remove-tpm-check.patch \
+            file://0007-AutoResolution-fixed-wrongly-displayed-mode-after-au.patch \
+"
