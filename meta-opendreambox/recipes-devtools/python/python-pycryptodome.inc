@@ -7,3 +7,7 @@ inherit pypi
 
 SRC_URI[md5sum] = "7e09368b24e8fd0b3633db52fe8a3b8b"
 SRC_URI[sha256sum] = "1a222250e43f3c659b4ebd5df3e11c2f112aab6aef58e38af55ef5678b9f0636"
+
+RCONFLICTS_${PN} = "${PYTHON_PN}-pycrypto"
+RPROVIDES_${PN} = "${PYTHON_PN}-pycrypto"
+RREPLACES_${PN} = "${PYTHON_PN}-pycrypto"
