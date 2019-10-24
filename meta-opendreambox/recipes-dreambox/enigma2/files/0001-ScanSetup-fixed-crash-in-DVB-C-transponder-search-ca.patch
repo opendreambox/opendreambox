@@ -1,0 +1,60 @@
+From 04df21a5b850817ab3d5069b444677976118ba01 Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Thu, 24 Oct 2019 15:52:43 +0200
+Subject: [PATCH] ScanSetup: fixed crash in DVB-C transponder search caused by
+ py2 to py3 migration
+
+---
+ usr/lib/enigma2/python/Screens/ScanSetup.py | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Screens/ScanSetup.py b/usr/lib/enigma2/python/Screens/ScanSetup.py
+index 771aa79..15bd97a 100644
+--- a/usr/lib/enigma2/python/Screens/ScanSetup.py
++++ b/usr/lib/enigma2/python/Screens/ScanSetup.py
+@@ -155,6 +155,10 @@ def CableScanHelperDMM(nim_idx):
+ 		cmd += " --init --scan --verbose --wakeup --inv 2 --bus %d" % bus
+ 	return cmd
+ 
++def freq_round(freq, val):
++	mod = freq % val
++	return freq + val - mod if mod >= (val // 2) else freq - mod
++
+ class CableTransponderSearchSupport:
+ 	CableScanHelpers = [ CableScanHelperDMM ]
+ 
+@@ -171,8 +175,7 @@ class CableTransponderSearchSupport:
+ 		if tuner_state in (stateLock, stateFailed) or frontend_ptr is None:
+ 			d = { }
+ 			self.frontend.getTransponderData(d, False)
+-			freq = int(round(float(d["frequency"]*2) / 1000)) * 1000
+-			freq /= 2
++			freq = freq_round(d["frequency"], 500)
+ 
+ 			if tuner_state == stateLock:
+ 				parm = eDVBFrontendParametersCable()
+@@ -180,8 +183,8 @@ class CableTransponderSearchSupport:
+ 				fstr = str(parm.frequency)
+ 
+ 				sr = d["symbol_rate"]
+-				sr_rounded = round(float(sr*2) / 1000) * 1000
+-				sr_rounded /= 2
++				sr_rounded = freq_round(sr, 500)
++
+ #				print "SR after round", sr_rounded
+ 				parm.symbol_rate = int(sr_rounded)
+ 				fstr += " "
+@@ -820,10 +823,6 @@ class SatBlindscanState(Screen):
+ 		self.tmr.stop()
+ 		self.close(False)
+ 
+-def freq_round(freq, val):
+-	mod = freq % val
+-	return freq + val - mod if mod >= (val // 2) else freq - mod
+-
+ class SatelliteTransponderSearchSupport:
+ 	def satelliteTransponderSearchSessionClosed(self, *val):
+ 		if self.frontend:
+-- 
+2.1.4
+
