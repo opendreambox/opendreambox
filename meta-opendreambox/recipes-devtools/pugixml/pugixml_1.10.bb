@@ -13,5 +13,8 @@ inherit cmake pkgconfig
 
 S = "${WORKDIR}/pugixml-${PV}"
 
+EXTRA_OECMAKE += "-DBUILD_SHARED_LIBS=ON \
+                  -DCMAKE_BUILD_TYPE=Release \
+                  "
 
 FILES_${PN}-dev += "${libdir}/cmake"
