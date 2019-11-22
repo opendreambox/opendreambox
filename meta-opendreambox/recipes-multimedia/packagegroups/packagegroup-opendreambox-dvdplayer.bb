@@ -10,7 +10,7 @@ inherit packagegroup
 # packagegroup-opendreambox-dvdplayer
 #
 SUMMARY_${PN} = "OpenDreambox: DVD-Player Support"
-RDEPENDS_${PN} = "\
+RRECOMMENDS_${PN} = "\
   kernel-module-udf \
   kernel-module-isofs \
 "
