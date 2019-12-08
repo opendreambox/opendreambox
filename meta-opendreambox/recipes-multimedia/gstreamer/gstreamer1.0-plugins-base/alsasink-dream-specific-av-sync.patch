@@ -1,0 +1,289 @@
+--- gst-plugins-base-1.10.4.orig/ext/alsa/gstalsasink.c	2016-11-04 18:07:05.000000000 +0100
++++ gst-plugins-base-1.10.4/ext/alsa/gstalsasink.c	2019-12-09 02:04:53.014751586 +0100
+@@ -97,6 +97,9 @@
+ static gboolean gst_alsasink_acceptcaps (GstAlsaSink * alsa, GstCaps * caps);
+ static GstBuffer *gst_alsasink_payload (GstAudioBaseSink * sink,
+     GstBuffer * buf);
++static GstStateChangeReturn gst_alsasink_change_state (GstElement * element,
++  GstStateChange transition);
++static GstClockTime gst_alsasink_aml_get_pcrscr(GstAlsaSink *alsa);
+ 
+ static gint output_ref;         /* 0    */
+ static snd_output_t *output;    /* NULL */
+@@ -118,6 +121,7 @@
+ {
+   GstAlsaSink *sink = GST_ALSA_SINK (object);
+ 
++  g_timer_destroy(sink->tmr_resync);
+   g_free (sink->device);
+   g_mutex_clear (&sink->alsa_lock);
+   g_mutex_clear (&sink->delay_lock);
+@@ -182,6 +186,8 @@
+   gstaudiosink_class->delay = GST_DEBUG_FUNCPTR (gst_alsasink_delay);
+   gstaudiosink_class->reset = GST_DEBUG_FUNCPTR (gst_alsasink_reset);
+ 
++  gstelement_class->change_state = GST_DEBUG_FUNCPTR (gst_alsasink_change_state);
++
+   g_object_class_install_property (gobject_class, PROP_DEVICE,
+       g_param_spec_string ("device", "Device",
+           "ALSA device, as defined in an asound configuration file",
+@@ -257,6 +263,15 @@
+   alsasink->device = g_strdup (DEFAULT_DEVICE);
+   alsasink->handle = NULL;
+   alsasink->cached_caps = NULL;
++
++  alsasink->known_delay = 0;
++  alsasink->pending_delay = 0;
++  alsasink->tmr_resync = g_timer_new();
++  alsasink->next_resync = 0;
++  alsasink->dream_video_sink_detected = FALSE;
++  alsasink->first_apts = GST_CLOCK_TIME_NONE;
++  alsasink->calced_apts = GST_CLOCK_TIME_NONE;
++
+   g_mutex_init (&alsasink->alsa_lock);
+   g_mutex_init (&alsasink->delay_lock);
+ 
+@@ -1028,9 +1043,61 @@
+ 
+   GST_LOG_OBJECT (asink, "received audio samples buffer of %u bytes", length);
+ 
++  GST_ALSA_SINK_LOCK (asink);
++
++  if (alsa->dream_video_sink_detected) {
++    GstClockTime pcrscr = gst_alsasink_aml_get_pcrscr(alsa);
++
++    if (pcrscr) {
++      GstClockTime apts = alsa->first_apts + (alsa->frames_written * 1000000000LL / alsa->rate);
++      gint64 delay;
++      pcrscr = (pcrscr * 11111111LL) / 1000LL;
++
++      if (snd_pcm_state (alsa->handle) == SND_PCM_STATE_RUNNING) {
++        int buffer_time;
++        snd_pcm_sframes_t frames;
++        snd_pcm_delay  (alsa->handle, &frames);
++        GST_DEBUG_OBJECT(alsa, "%ld frames in alsa buffer", frames);
++        buffer_time = frames * 1000000000LL / alsa->rate;
++        apts -= buffer_time;
++      }
++
++      apts -= alsa->known_delay;
++
++      delay = apts - pcrscr;
++
++      if (labs(delay) / 1000000 > 25) {
++        if (labs(delay - alsa->pending_delay) / 1000000 > 25) {
++          alsa->next_resync = g_timer_elapsed(alsa->tmr_resync, NULL) + 0.1;
++        }
++        alsa->pending_delay = delay;
++      }
++      else {
++        alsa->next_resync = 0;
++        alsa->pending_delay = 0;
++      }
++
++      GST_INFO_OBJECT(alsa, "pcrscr = %" GST_TIME_FORMAT " // apts = %" GST_TIME_FORMAT " // calced_apts = %" GST_TIME_FORMAT " // next_resync = %lf // delay = %" G_GINT64_FORMAT " // known_delay = %" G_GINT64_FORMAT " // pending_delay = %" G_GINT64_FORMAT,
++        GST_TIME_ARGS(pcrscr),
++        GST_TIME_ARGS(apts),
++        GST_TIME_ARGS(alsa->calced_apts),
++        alsa->next_resync,
++        delay / 1000000,
++        alsa->known_delay / 1000000,
++        alsa->pending_delay / 1000000);
++
++      if (alsa->pending_delay && g_timer_elapsed(alsa->tmr_resync, NULL) >= alsa->next_resync) {
++        alsa->known_delay += delay;
++        alsa->next_resync = 0;
++        alsa->pending_delay = 0;
++        g_object_set(G_OBJECT(alsa), "ts-offset", alsa->known_delay, NULL);
++        GST_INFO_OBJECT(alsa, "applying new ts-offset");
++      }
++    }
++  }
++
+   cptr = length / alsa->bpf;
+ 
+-  GST_ALSA_SINK_LOCK (asink);
+   while (cptr > 0) {
+     /* start by doing a blocking wait for free space. Set the timeout
+      * to 4 times the period time */
+@@ -1056,6 +1123,8 @@
+       continue;
+     }
+ 
++    alsa->frames_written += err;
++
+     ptr += snd_pcm_frames_to_bytes (alsa->handle, err);
+     cptr -= err;
+   }
+@@ -1117,6 +1186,15 @@
+   GST_DEBUG_OBJECT (alsa, "prepare");
+   CHECK (snd_pcm_prepare (alsa->handle), prepare_error);
+   GST_DEBUG_OBJECT (alsa, "reset done");
++
++  alsa->known_delay = 0;
++  alsa->pending_delay = 0;
++  alsa->next_resync = 0;
++  alsa->first_apts = GST_CLOCK_TIME_NONE;
++  alsa->calced_apts = GST_CLOCK_TIME_NONE;
++  alsa->frames_written = 0;
++
++  g_object_set(G_OBJECT(alsa), "ts-offset", alsa->known_delay, NULL);
+   GST_ALSA_SINK_UNLOCK (asink);
+ 
+   return;
+@@ -1145,6 +1223,29 @@
+ 
+   alsa = GST_ALSA_SINK (sink);
+ 
++  if (alsa->dream_video_sink_detected) {
++    /* check for discontinuities in input stream */
++    if (alsa->first_apts == GST_CLOCK_TIME_NONE) {
++      alsa->calced_apts = alsa->first_apts = GST_BUFFER_PTS(buf);
++      GST_WARNING_OBJECT(alsa, "first apts %" GST_TIME_FORMAT, GST_TIME_ARGS(alsa->first_apts));
++    }
++    else {
++      gint64 diff = alsa->calced_apts - GST_BUFFER_PTS(buf);
++      GST_INFO_OBJECT(alsa, "apts = %" GST_TIME_FORMAT " // calced_apts = %" GST_TIME_FORMAT " // diff=%" G_GINT64_FORMAT,
++        GST_TIME_ARGS(GST_BUFFER_PTS(buf)),
++        GST_TIME_ARGS(alsa->calced_apts),
++        labs(diff) / 1000000);
++      if (labs(diff) / 1000000 > 5) {
++        GST_OBJECT_LOCK (sink);
++        alsa->first_apts -= diff;
++        alsa->calced_apts -= diff;
++        GST_INFO_OBJECT(alsa, "apts discont... re-aligned");
++        GST_OBJECT_UNLOCK (sink);
++      }
++    }
++    alsa->calced_apts += GST_BUFFER_DURATION(buf);
++  }
++
+   if (alsa->iec958) {
+     GstBuffer *out;
+     gint framesize;
+@@ -1174,3 +1275,106 @@
+ 
+   return gst_buffer_ref (buf);
+ }
++
++static GstStateChangeReturn
++gst_alsasink_change_state (GstElement * element, GstStateChange transition)
++{
++  GstAlsaSink *self = GST_ALSA_SINK (element);
++
++  switch (transition) {
++  case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
++  {
++    GstObject *parent = gst_element_get_parent (element);
++    self->dream_video_sink_detected = FALSE;
++    while (parent) {
++      GstObject *e = parent;
++      GstElementFactory *factory = gst_element_get_factory (GST_ELEMENT(parent));
++      if (factory) {
++        const gchar *name = gst_plugin_feature_get_name(GST_PLUGIN_FEATURE(factory));
++//      GST_INFO_OBJECT(self, "FACTORY '%s'", name);
++        if (!strcmp(name, "playbin")) {
++          GstIterator *iterator = gst_bin_iterate_recurse(GST_BIN(parent));
++          gboolean done = FALSE;
++          GValue item = G_VALUE_INIT;
++          while (!self->dream_video_sink_detected && !done) {
++            switch (gst_iterator_next(iterator, &item)) {
++            case GST_ITERATOR_OK : {
++              GstElement *element = g_value_get_object(&item);
++              const gchar *name = GST_OBJECT_NAME(element);
++//            GST_INFO_OBJECT(self, "OBJ NAME '%s'", name);
++              if (strstr(name, "dreamvideosink") != NULL) {
++                GST_INFO_OBJECT(self, "dreamvideosink detected");
++                self->dream_video_sink_detected = TRUE;
++              }
++              g_value_reset(&item);
++              break;
++            }
++            case GST_ITERATOR_RESYNC :
++              gst_iterator_resync(iterator);
++              done = FALSE;
++              break;
++            case GST_ITERATOR_DONE:
++            case GST_ITERATOR_ERROR:
++            default:
++              done = TRUE;
++            }
++          }
++          g_value_unset(&item);
++          gst_iterator_free(iterator);
++        }
++      }
++      if (!self->dream_video_sink_detected)
++        parent = gst_element_get_parent (GST_ELEMENT(parent));
++      else
++        parent = NULL;
++      gst_object_unref(e);
++    }
++    break;
++  }
++  default:
++    break;
++  }
++
++  return GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
++}
++
++GstClockTime gst_alsasink_aml_get_pcrscr(GstAlsaSink *alsa)
++{
++  FILE*f;
++  char buf[16];
++  GstClockTime pts;
++
++  f = fopen("/sys/class/tsync/pts_video", "r");
++  if (!f) {
++    GST_ERROR_OBJECT(alsa, "cannot open /sys/class/tsync/pts_video");
++    return 0;
++  }
++
++  if (!fgets(buf, sizeof(buf), f)) {
++    GST_ERROR_OBJECT(alsa, "cannot read /sys/class/tsync/pts_video");
++    fclose(f);
++    return 0;
++  }
++  fclose(f);
++
++  pts = strtoul(buf, NULL, 0);
++
++  if (pts) {
++    f = fopen("/sys/class/tsync/pts_pcrscr", "r");
++    if(!f) {
++      GST_ERROR_OBJECT(alsa, "cannot open /sys/class/tsync/pts_pcrscr");
++      return 0;
++    }
++    if(!fgets(buf, sizeof(buf), f)) {
++      GST_ERROR_OBJECT(alsa, "cannot read /sys/class/tsync/pts_pcrscr");
++      fclose(f);
++      return 0;
++    }
++    fclose(f);
++    pts = strtoul(buf, NULL, 0);
++  }
++
++  GST_DEBUG_OBJECT(alsa, "####### pcrscr %lx", pts);
++
++  return pts;
++}
+diff -Naur gst-plugins-base-1.10.4.orig/ext/alsa/gstalsasink.h gst-plugins-base-1.10.4/ext/alsa/gstalsasink.h
+--- gst-plugins-base-1.10.4.orig/ext/alsa/gstalsasink.h	2016-11-04 18:07:05.000000000 +0100
++++ gst-plugins-base-1.10.4/ext/alsa/gstalsasink.h	2019-12-09 01:46:48.914776695 +0100
+@@ -76,6 +76,15 @@
+ 
+   GMutex alsa_lock;
+   GMutex delay_lock;
++
++  gboolean dream_video_sink_detected;
++  GTimer *tmr_resync;
++  gdouble next_resync;
++  gint64 pending_delay;
++  gint64 known_delay;
++  GstClockTime first_apts;
++  snd_pcm_uframes_t frames_written;
++  GstClockTime calced_apts;
+ };
+ 
+ struct _GstAlsaSinkClass {

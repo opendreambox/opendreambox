@@ -5,6 +5,7 @@ SRC_URI += " \
     file://gsttextoverlay-timestamps.patch \
     file://alsasink-lower-rank.patch \
     file://fixed-warnings-caused-by-subtitle-overlay.patch \
+    file://alsasink-dream-specific-av-sync.patch \
     file://appsink-allow-eos-interruption.patch \
     file://appsink-backported-fixes.patch \
 "
