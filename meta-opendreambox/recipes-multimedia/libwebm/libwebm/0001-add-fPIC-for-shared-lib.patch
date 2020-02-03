@@ -1,0 +1,12 @@
+--- a/CMakeLists.txt	2019-11-20 17:32:08.122863000 +0100
++++ b/CMakeLists.txt	2019-11-20 17:44:32.680073072 +0100
+@@ -12,6 +12,9 @@
+ 
+ if (NOT BUILD_SHARED_LIBS)
+   include("${CMAKE_CURRENT_SOURCE_DIR}/build/msvc_runtime.cmake")
++else ()
++  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
++  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+ endif ()
+ 
+ set(LIBWEBM_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
