@@ -21,8 +21,10 @@ DEPENDS += " \
     libpng \
     libsigc++-2.0 \
     libunwind \
+    libwebm \
     libxml2 \
     openssl \
+    pugixml \
     python \
     qtbase \
     qtwebkit \
