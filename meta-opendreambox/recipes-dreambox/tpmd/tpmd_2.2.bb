@@ -1,8 +1,8 @@
 SUMMARY = "Dreambox TPM Daemon"
 DEPENDS = "openssl systemd"
 
-SRC_URI[aarch64.md5sum] = "d3cd1feb340a020ebbf4bc5234e2916a"
-SRC_URI[aarch64.sha256sum] = "7ee74f90ce36d91ae429fef8c89abaf9f9397c2fc4a31e30ca2845297a3cab2b"
+SRC_URI[aarch64.md5sum] = "07b99bfa6634e9e7e2e9f9922634c25d"
+SRC_URI[aarch64.sha256sum] = "50c33c00ba47c508a24e872287bc344be6ceb44bb4103c08af65b127293757e6"
 
 SYSTEMD_SERVICE_${PN} = "tpmd.service"
 
