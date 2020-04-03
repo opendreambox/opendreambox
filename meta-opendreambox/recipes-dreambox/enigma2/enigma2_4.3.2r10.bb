@@ -5,4 +5,7 @@ SRC_URI[mips32el.sha256sum] = "83f560ccf18920c453aac9c67c8f46414eb93aad34b577d0e
 
 require enigma2-bin-4.3.inc
 
-SRC_URI += " file://0001-TemplatedListFonts-actually-add-the-new-Keyboard-fon.patch"
+SRC_URI += " \
+	file://0001-TemplatedListFonts-actually-add-the-new-Keyboard-fon.patch \
+	file://0001-Converter.TemplatedMultiContent-add-missing-SCALE_-i.patch \
+"
