@@ -1,6 +1,6 @@
 SUMMARY = "Dreambox Plugin Translations"
 LICENSE = "CLOSED"
-SRCREV = "${@opendreambox_srcrev('31ab2b78bdd7133ef9353b34fb56caccaa9ea985', d)}"
+SRCREV = "${@opendreambox_srcrev('6152cce472e4c8246bc42677d1924a33f835d9f3', d)}"
 PV = "4.4.1+git${SRCPV}"
 
 GITHUB_PROJECT = "enigma2-plugins-po"
