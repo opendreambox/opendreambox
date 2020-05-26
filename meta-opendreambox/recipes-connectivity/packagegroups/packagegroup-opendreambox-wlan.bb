@@ -7,6 +7,7 @@ DEPENDS = " \
   virtual/kernel \
   ${@base_version_less_or_equal('OLDEST_KERNEL', '3.4', 'r8192c', '',d) } \
   rtl8812au \
+  rtl88x2bu \
 "
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -29,6 +30,7 @@ RRECOMMENDS_${PN} = " \
   kernel-module-rt2800usb \
   kernel-module-rt73usb \
   kernel-module-zd1211rw \
+  kernel-module-rtl88x2bu \
 "
 
 WLAN_PCI_MODULES = " \
