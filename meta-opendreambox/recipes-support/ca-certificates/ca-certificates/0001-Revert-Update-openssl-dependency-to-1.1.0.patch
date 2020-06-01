@@ -1,0 +1,91 @@
+From 941017c2858e935f7edf7089b33fd29dc37b9bb3 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@saftware.de>
+Date: Mon, 1 Jun 2020 19:10:15 +0200
+Subject: [PATCH] Revert "Update openssl dependency to >= 1.1.0"
+
+This reverts commit 1bc87e0b41a04551a93d4e784e158b044c18792a.
+---
+ debian/changelog              | 2 --
+ debian/control                | 2 +-
+ debian/rules                  | 2 +-
+ sbin/update-ca-certificates   | 4 ++--
+ sbin/update-ca-certificates.8 | 4 ++--
+ 5 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/debian/changelog b/debian/changelog
+index 70a6e76..0cd2268 100644
+--- a/debian/changelog
++++ b/debian/changelog
+@@ -76,8 +76,6 @@ ca-certificates (20180409) unstable; urgency=medium
+     Fix lintian file-contains-trailing-whitespace.
+   * debian/{compat,control}:
+     Set to debhelper compat 11.
+-  * Update openssl dependency to >= 1.1.0 to support `openssl rehash` and drop
+-    usage of `c_rehash` script. Closes: #895075
+ 
+   [ Thijs Kinkhorst ]
+   * Remove Christian Perrier from uploaders at his request (closes: #894070).
+diff --git a/debian/control b/debian/control
+index bb97f07..76b1b47 100644
+--- a/debian/control
++++ b/debian/control
+@@ -12,7 +12,7 @@ Vcs-Browser: https://salsa.debian.org/debian/ca-certificates
+ 
+ Package: ca-certificates
+ Architecture: all
+-Depends: openssl (>= 1.1.1), ${misc:Depends}
++Depends: openssl (>= 1.0.0), ${misc:Depends}
+ Enhances: openssl
+ Multi-Arch: foreign
+ Breaks: ca-certificates-java (<<20121112+nmu1)
+diff --git a/debian/rules b/debian/rules
+index cf5542d..a935300 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -60,7 +60,7 @@ install: build
+ 	install -d -m 0755 "$(CURDIR)/debian/ca-certificates-udeb/etc/ssl/certs"
+ 	(cd mozilla; \
+ 	 $(MAKE) install CERTSDIR="$(CURDIR)/debian/ca-certificates-udeb/etc/ssl/certs")
+-	openssl rehash -v "$(CURDIR)/debian/ca-certificates-udeb/etc/ssl/certs"
++	c_rehash -v "$(CURDIR)/debian/ca-certificates-udeb/etc/ssl/certs"
+ 
+ # Build architecture-independent files here.
+ binary-indep: build install
+diff --git a/sbin/update-ca-certificates b/sbin/update-ca-certificates
+index b27c6bd..8f6fa89 100755
+--- a/sbin/update-ca-certificates
++++ b/sbin/update-ca-certificates
+@@ -183,9 +183,9 @@ then
+   done
+   if [ "$verbose" = 0 ]
+   then
+-    openssl rehash . > /dev/null
++    c_rehash . > /dev/null
+   else
+-    openssl rehash -v .
++    c_rehash .
+   fi
+ fi
+ 
+diff --git a/sbin/update-ca-certificates.8 b/sbin/update-ca-certificates.8
+index c60eab1..a76541d 100644
+--- a/sbin/update-ca-certificates.8
++++ b/sbin/update-ca-certificates.8
+@@ -50,7 +50,7 @@ A summary of options is included below.
+ Show summary of options.
+ .TP
+ .B \-v, \-\-verbose
+-Be verbose. Output \fBopenssl rehash\fP.
++Be verbose. Output \fBc_rehash\fP.
+ .TP
+ .B \-f, \-\-fresh
+ Fresh updates.  Remove symlinks in /etc/ssl/certs directory.
+@@ -69,7 +69,7 @@ Directory of CA certificates.
+ .I /usr/local/share/ca-certificates
+ Directory of local CA certificates (with .crt extension).
+ .SH SEE ALSO
+-.BR openssl (1)
++.BR c_rehash (1)
+ .SH AUTHOR
+ This manual page was written by Fumitoshi UKAI <ukai@debian.or.jp>,
+ for the Debian project (but may be used by others).
