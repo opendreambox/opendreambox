@@ -22,6 +22,7 @@ DEPENDS += " \
     libsigc++-2.0 \
     libunwind \
     libwebm \
+    libwebp \
     libxml2 \
     openssl \
     pugixml \
