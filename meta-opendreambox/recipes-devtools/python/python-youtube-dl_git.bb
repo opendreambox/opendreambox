@@ -4,8 +4,8 @@ SECTION = "devel/python"
 LICENSE = "Unlicense"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2"
-SRCREV = "b002bc433a0ba151b7c2f42ab6f1db9a27ed1ecd"
-PV = "2020.05.08+git${SRCPV}"
+SRCREV = "e1723c4bac4e465991789b5a29beb946d872f508"
+PV = "2020.06.06+git${SRCPV}"
 
 SRC_URI = "git://github.com/rg3/youtube-dl.git"
 
