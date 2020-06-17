@@ -30,7 +30,7 @@ RRECOMMENDS_${PN} = " \
   kernel-module-rt2800usb \
   kernel-module-rt73usb \
   kernel-module-zd1211rw \
-  kernel-module-rtl88x2bu \
+  kernel-module-88x2bu \
 "
 
 WLAN_PCI_MODULES = " \
