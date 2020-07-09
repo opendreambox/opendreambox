@@ -3,4 +3,4 @@ SRC_URI[dreamone.sha256sum] = "e102bbe087b6676f3b9a06881232668e5b787da15a4083f36
 
 inherit opendreambox-precompiled-binary
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+require u-boot-bin.inc
