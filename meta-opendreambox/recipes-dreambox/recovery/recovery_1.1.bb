@@ -1,6 +1,6 @@
 require recovery.inc
 
-SRCREV = "${@opendreambox_srcrev('39f463068a80c0e886af96d9eb3771cd81260a70', d)}"
+SRCREV = "${@opendreambox_srcrev('81ff8d40bbe21ec4bff1e397e4afdd2f1f3337e3', d)}"
 
 inherit opendreambox-git
 
