@@ -1,0 +1,26 @@
+From 8d7e3563aa0189fd9480028f967150f8117a025b Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Tue, 28 Jul 2020 12:09:05 +0200
+Subject: [PATCH 08/20] HdmiCec: don't react to received power messages by
+ default (to avoid any kind of "loops of cec horror")
+
+---
+ usr/lib/enigma2/python/Components/HdmiCec.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Components/HdmiCec.py b/usr/lib/enigma2/python/Components/HdmiCec.py
+index 44d9098..c8ae4a6 100644
+--- a/usr/lib/enigma2/python/Components/HdmiCec.py
++++ b/usr/lib/enigma2/python/Components/HdmiCec.py
+@@ -29,7 +29,7 @@ class HdmiCec:
+ 	config.cec.sendpower = ConfigOnOff(default=True)
+ 	config.cec.enable_avr = ConfigOnOff(default=True)
+ 	config.cec.avr_power_explicit = ConfigOnOff(default=False)
+-	config.cec.receivepower = ConfigOnOff(default=True)
++	config.cec.receivepower = ConfigOnOff(default=False)
+ 	config.cec.enable_vendor_quirks = ConfigOnOff(default=True)
+ 	config.cec.enable_experimental_vendor_quirks = ConfigOnOff(default=False)
+ 	config.cec.receive_remotekeys = ConfigOnOff(default=True)
+-- 
+2.1.4
+

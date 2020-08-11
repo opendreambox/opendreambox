@@ -1,0 +1,55 @@
+From 433f4a696d974f1bdb554d420838c69b66437f88 Mon Sep 17 00:00:00 2001
+From: Marcel von Kannen <marcel.von.kannen@dream-property.net>
+Date: Wed, 5 Aug 2020 17:23:03 +0200
+Subject: [PATCH 18/20] VideoSteps: refresh video mode list after (un)plugging
+ hdmi
+
+---
+ usr/lib/enigma2/python/Components/SetupGuide/VideoSteps.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Components/SetupGuide/VideoSteps.py b/usr/lib/enigma2/python/Components/SetupGuide/VideoSteps.py
+index e47d103..2fed82a 100644
+--- a/usr/lib/enigma2/python/Components/SetupGuide/VideoSteps.py
++++ b/usr/lib/enigma2/python/Components/SetupGuide/VideoSteps.py
+@@ -18,6 +18,7 @@ class VideoStepBase(SetupListStep):
+ 		self._timer = eTimer()
+ 		self.__nextTimer_conn = self._timer.timeout.connect(self._next)
+ 		self._hdmiChangedSigConn = eDisplayManager.getInstance().hdmiChanged.connect(self.hdmiChanged)
++		self.active = False
+ 
+ 	def _next(self):
+ 		#temporarily enable list wrapAround for automatic rotation
+@@ -30,23 +31,28 @@ class VideoStepBase(SetupListStep):
+ 		self._timer.startLongTimer(self.NEXT_ITEM_TIMEOUT)
+ 
+ 	def prepare(self):
++		self.active = True
+ 		self._portSelect(self.PORT_HDMI)
+ 		self._timer.startLongTimer(self.NEXT_ITEM_TIMEOUT)
+ 		return True
+ 
+ 	def hdmiChanged(self):
+ 		self._portSelect(self.PORT_HDMI)
+-		self._timer.startLongTimer(self.NEXT_ITEM_TIMEOUT)
++		if self.active:
++			self._list.list = self.listContent
++			self._timer.startLongTimer(self.NEXT_ITEM_TIMEOUT)
+ 
+ 	def onOk(self):
+ 		self._timer.stop()
+ 		config.av.videomode[self.port].value = self.mode
+ 		config.av.videorate[self.mode].value = self.rate
+ 		config.av.save()
++		self.active = False
+ 		return True
+ 
+ 	def cancel(self):
+ 		self._timer.stop()
++		self.active = False
+ 		SetupListStep.cancel(self)
+ 
+ 	def buildfunc(self, key, text):
+-- 
+2.1.4
+

@@ -1,0 +1,110 @@
+From 5d6f8fdf84bc6bca0a174571997bb9430d13df2f Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Thu, 6 Aug 2020 15:24:50 +0200
+Subject: [PATCH 17/20] skin_default: fix dreamtwo display skin
+
+---
+ usr/share/enigma2/skin_default.xml | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/usr/share/enigma2/skin_default.xml b/usr/share/enigma2/skin_default.xml
+index 1bdb16d..b5d0ea4 100644
+--- a/usr/share/enigma2/skin_default.xml
++++ b/usr/share/enigma2/skin_default.xml
+@@ -2067,7 +2067,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)//2,(720-wsizey)//2)
+ 		</widget>
+ 	</screen>
+ 	<screen id="100" name="ChannelSelection_summary" position="0,0" size="240,86">
+-		<widget font="Display;34" foregroundColor="yellow" halign="center" position="0,0" render="Label" size="240,68" source="parent.ServiceEvent" transparent="1" valign="centerOrTop">
++		<widget font="Display;34" foregroundColor="yellow" halign="center" position="0,0" render="Label" size="240,68" source="parent.ServiceEvent" transparent="1" valign="centerOrBottom">
+ 			<convert type="ServiceName">Name</convert>
+ 		</widget>
+ 		<widget backgroundColor="dark" borderWidth="1" pixmap="Default-FHD/skin_default/progress.svg" position="0,68" render="Progress" size="240,18" source="parent.ServiceEvent">
+@@ -2075,7 +2075,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)//2,(720-wsizey)//2)
+ 		</widget>
+ 	</screen>
+ 	<screen id="100" name="InfoBarSummary" position="0,0" size="240,86">
+-		<widget font="Display;34" halign="center" position="0,0" render="Label" size="240,68" source="session.CurrentService" transparent="1" valign="centerOrTop">
++		<widget font="Display;34" halign="center" position="0,0" render="Label" size="240,68" source="session.CurrentService" transparent="1" valign="centerOrBottom">
+ 			<convert type="ServiceName">Name</convert>
+ 		</widget>
+ 		<widget backgroundColor="dark" borderWidth="1" pixmap="Default-FHD/skin_default/progress.svg" position="0,68" render="Progress" size="240,18" source="session.Event_Now">
+@@ -2087,7 +2087,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)//2,(720-wsizey)//2)
+ 		</widget>
+ 	</screen>
+ 	<screen id="100" name="InfoBarMoviePlayerSummary" position="0,0" size="240,86">
+-		<widget font="Display;34" halign="center" position="0,0" render="Label" size="240,68" source="session.CurrentService" transparent="1" valign="centerOrTop">
++		<widget font="Display;34" halign="center" position="0,0" render="Label" size="240,68" source="session.CurrentService" transparent="1" valign="centerOrBottom">
+ 			<convert type="ServiceName">Name</convert>
+ 		</widget>
+ 		<widget backgroundColor="dark" borderWidth="1" pixmap="Default-FHD/skin_default/progress.svg" position="0,68" render="Progress" size="240,18" source="session.CurrentService">
+@@ -2095,13 +2095,13 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)//2,(720-wsizey)//2)
+ 		</widget>
+ 	</screen>
+ 	<screen id="100" name="PluginBrowserSummary" position="0,0" size="240,86">
+-		<widget font="Display;36" halign="center" position="0,0" render="Label" size="240,86" source="parent.pluginlist" transparent="1" valign="centerOrTop">
++		<widget font="Display;36" halign="center" position="0,0" render="Label" size="240,86" source="parent.pluginlist" transparent="1" valign="centerOrBottom">
+ 			<convert type="StringListSelection">1</convert>
+ 		</widget>
+ 	</screen>
+ 
+ 	<screen id="100" name="MoviePlayer_summary" position="0,0" size="240,86">
+-		<widget font="Display;34" halign="center" position="0,0" render="Label" size="240,68" source="session.CurrentService" transparent="1" valign="centerOrTop">
++		<widget font="Display;34" halign="center" position="0,0" render="Label" size="240,68" source="session.CurrentService" transparent="1" valign="centerOrBottom">
+ 			<convert type="ServiceName">Name</convert>
+ 		</widget>
+ 		<widget backgroundColor="dark" borderWidth="1" pixmap="Default-FHD/skin_default/progress.svg" position="0,68" render="Progress" size="240,18" source="session.CurrentService">
+@@ -2109,7 +2109,7 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)//2,(720-wsizey)//2)
+ 		</widget>
+ 	</screen>
+ 	<screen id="100" name="AudioPlayer_summary" position="0,0" size="240,86">
+-		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,70" source="session.CurrentService" transparent="1" valign="centerOrTop">
++		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,70" source="session.CurrentService" transparent="1" valign="centerOrBottom">
+ 			<convert type="ServiceName">Name</convert>
+ 		</widget>
+ 		<widget backgroundColor="dark" borderWidth="1" pixmap="Default-FHD/skin_default/progress.svg" position="0,68" render="Progress" size="240,10" source="session.CurrentService">
+@@ -2117,34 +2117,34 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth)//2,(720-wsizey)//2)
+ 		</widget>
+ 	</screen>
+ 	<screen id="100" name="MediaBrowser_summary" position="0,0" size="240,86">
+-		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,86" source="parent.summary_list" transparent="1" valign="centerOrTop"/>
++		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,86" source="parent.summary_list" transparent="1" valign="centerOrBottom"/>
+ 	</screen>
+ 	<screen id="100" name="NetworkServiceConfig_summary" position="0,0" size="240,86">
+-		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,86" source="parent.summary_list" transparent="1" valign="centerOrTop"/>
++		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,86" source="parent.summary_list" transparent="1" valign="centerOrBottom"/>
+ 	</screen>
+ 		<screen id="100" name="ChoiceBox_summary" position="0,0" size="240,86">
+ 		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,86" source="parent.summary_list" transparent="1"/>
+ 	</screen>
+ 	<screen id="100" name="MessageBox_summary" position="0,0" size="240,86">
+-		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,46" source="parent.Text" transparent="1" valign="centerOrTop"/>
++		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,46" source="parent.Text" transparent="1" valign="centerOrBottom"/>
+ 		<widget font="Display;26" halign="center" position="0,40" render="Label" size="240,46" source="parent.selectedChoice" transparent="1" valign="centerOrBottom"/>
+ 	</screen>
+ 	<screen id="100" name="MenuSummary" position="0,0" size="240,86">
+-		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,36" source="parent.title" transparent="1" valign="centerOrTop"/>
++		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,36" source="parent.title" transparent="1" valign="centerOrBottom"/>
+ 		<widget font="Display;26" halign="center" position="0,40" render="Label" size="240,46" source="parent.menu" transparent="1" valign="centerOrBottom">
+ 			<convert type="StringListSelection"/>
+ 		</widget>
+ 	</screen>
+ 	<screen id="100" name="ServiceScanSummary" position="0,0" size="240,86">
+-		<widget font="Display;34" halign="center" name="Service" position="0,0" render="Label" size="240,68" transparent="1" valign="centerOrTop"/>
++		<widget font="Display;34" halign="center" name="Service" position="0,0" render="Label" size="240,68" transparent="1" valign="centerOrBottom"/>
+ 		<widget backgroundColor="dark" borderWidth="1" name="scan_progress" pixmap="Default-FHD/skin_default/progress.svg" position="0,68" size="240,18" zPosition="1"/>
+ 	</screen>
+ 	<screen id="100" name="SetupSummary" position="0,0" size="240,86">
+-		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,52" source="SetupEntry" transparent="1" valign="centerOrTop"/>
++		<widget font="Display;26" halign="center" position="0,0" render="Label" size="240,52" source="SetupEntry" transparent="1" valign="centerOrBottom"/>
+ 		<widget font="Display;26" halign="center" position="0,53" render="Label" size="240,26" source="SetupValue" transparent="1" valign="centerOrBottom"/>
+ 	</screen>
+ 		<screen id="100" name="SimpleSummary" position="0,0" size="240,86">
+-		<widget font="Display;36" halign="center" position="0,0" render="Label" size="240,86" source="parent.Title" transparent="1" valign="centerOrTop"/>
++		<widget font="Display;36" halign="center" position="0,0" render="Label" size="240,86" source="parent.Title" transparent="1" valign="centerOrBottom"/>
+ 	</screen>
+ 	<screen id="100" name="StandbySummary" position="0,0" size="240,86">
+ 		<widget backgroundColor="#000000" font="Display;72" halign="center" position="0,0" render="Label" size="240,86" source="global.CurrentTime" transparent="0" valign="center">
+-- 
+2.1.4
+
