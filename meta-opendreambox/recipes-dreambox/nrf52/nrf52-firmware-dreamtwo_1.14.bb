@@ -1,6 +1,6 @@
 RDEPENDS_${PN} += "flash-nrf52 (>= 1.8)"
 
-CURRENT_FW = "central-two-noreset-200814-1.13.hex"
+CURRENT_FW = "central-two-noreset-200922-1.14.hex"
 
 include nrf52-firmware.inc
 
