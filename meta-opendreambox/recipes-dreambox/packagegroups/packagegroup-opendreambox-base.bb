@@ -5,6 +5,7 @@ LICENSE = "MIT"
 inherit packagegroup
 
 RDEPENDS_${PN} += " \
+  dreambox-vm-settings \
   killall \
   parted \
   procps \
