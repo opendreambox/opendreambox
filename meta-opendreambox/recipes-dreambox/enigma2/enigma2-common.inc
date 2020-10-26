@@ -16,6 +16,7 @@ RDEPENDS_${PN} += " \
         e2fsprogs-e2fsck \
         e2fsprogs-mke2fs \
         enigma2-autofs \
+        enigma2-po \
         hdparm \
         libpagecache \
         python-argparse \
