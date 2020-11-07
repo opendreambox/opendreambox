@@ -6,11 +6,12 @@ PRIORITY = "required"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PACKAGES =+ "${PN}-firmware ${PN}-lcd ${PN}-stb-core"
+PACKAGES =+ "${PN}-firmware ${PN}-fp ${PN}-lcd ${PN}-stb-core"
 
-RDEPENDS_${PN} = "${PN}-stb-core"
+RDEPENDS_${PN} = "${PN}-fp ${PN}-stb-core"
 RDEPENDS_${PN}-firmware = "${PN}-firmware"
-RDEPENDS_${PN}-lcd = "${PN}-stb-core"
+RDEPENDS_${PN}-fp = "${PN}-stb-core"
+RDEPENDS_${PN}-lcd = "${PN}-fp ${PN}-stb-core"
 RRECOMMENDS_${PN} = "${PN}-firmware ${PN}-lcd dreambox-dvb-modules-systemd"
 
 FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
@@ -18,7 +19,13 @@ FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
 
 FILES_${PN}-firmware = "/lib/firmware"
 
-FILES_${PN}-lcd = "${sysconfdir}/modules-load.d/02-${BPN}-lcd.conf \
+# XXX: Remove this line once a binary package is available
+ALLOW_EMPTY_${PN}-fp = "1"
+FILES_${PN}-fp = "${sysconfdir}/modules-load.d/*-${BPN}-fp.conf \
+                   /lib/modules/${DM_LOCALVERSION}/extra/fp/fp-dev.ko"
+
+FILES_${PN}-lcd = "${sysconfdir}/modules-load.d/*-${BPN}-lcd.conf \
+                   /lib/modules/${DM_LOCALVERSION}/extra/lcd/lcd.ko \
                    /lib/modules/${DM_LOCALVERSION}/extra/lcd.ko"
 
 FILES_${PN}-stb-core = "${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf \
