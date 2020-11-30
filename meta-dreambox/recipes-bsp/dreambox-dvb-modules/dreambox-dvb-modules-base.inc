@@ -8,11 +8,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES =+ "${PN}-firmware ${PN}-fp ${PN}-lcd ${PN}-stb-core"
 
-RDEPENDS_${PN} = "${PN}-fp ${PN}-stb-core"
+RDEPENDS_${PN} = "${PN}-fp ${PN}-lcd ${PN}-stb-core"
 RDEPENDS_${PN}-firmware = "${PN}-firmware"
 RDEPENDS_${PN}-fp = "${PN}-stb-core"
 RDEPENDS_${PN}-lcd = "${PN}-fp ${PN}-stb-core"
-RRECOMMENDS_${PN} = "${PN}-firmware ${PN}-lcd dreambox-dvb-modules-systemd"
+RRECOMMENDS_${PN} = "${PN}-firmware dreambox-dvb-modules-systemd"
 
 FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
                /lib/modules/${DM_LOCALVERSION}/extra/"
@@ -24,6 +24,7 @@ ALLOW_EMPTY_${PN}-fp = "1"
 FILES_${PN}-fp = "${sysconfdir}/modules-load.d/*-${BPN}-fp.conf \
                    /lib/modules/${DM_LOCALVERSION}/extra/fp/fp-dev.ko"
 
+ALLOW_EMPTY_${PN}-lcd = "1"
 FILES_${PN}-lcd = "${sysconfdir}/modules-load.d/*-${BPN}-lcd.conf \
                    /lib/modules/${DM_LOCALVERSION}/extra/lcd/lcd.ko \
                    /lib/modules/${DM_LOCALVERSION}/extra/lcd.ko"
