@@ -1,0 +1,25 @@
+From 6523d8e62fa147234cf4194d438729bebb7fe09c Mon Sep 17 00:00:00 2001
+From: ghost <andreas.monzner@dream-property.net>
+Date: Tue, 1 Dec 2020 15:51:28 +0100
+Subject: [PATCH] add missing comma
+
+---
+ usr/lib/enigma2/python/Components/Converter/DreamboxModel.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Components/Converter/DreamboxModel.py b/usr/lib/enigma2/python/Components/Converter/DreamboxModel.py
+index 9831efd..d55fcb0 100644
+--- a/usr/lib/enigma2/python/Components/Converter/DreamboxModel.py
++++ b/usr/lib/enigma2/python/Components/Converter/DreamboxModel.py
+@@ -8,7 +8,7 @@ class DreamboxModel(Converter):
+ 		"dm900"  : "DM900 ultraHD",
+ 		"dm920"  : "DM920 ultraHD",
+ 		"dm7080" : "DM7080 HD",
+-		"one" : "Dreambox One UltraHD"
++		"one" : "Dreambox One UltraHD",
+ 		"two" : "Dreambox Two UltraHD"
+ 	}
+ 
+-- 
+2.1.4
+
