@@ -10,8 +10,15 @@ PACKAGES =+ "${PN}-firmware ${PN}-fp ${PN}-lcd ${PN}-stb-core"
 
 RDEPENDS_${PN} = "${PN}-fp ${PN}-lcd ${PN}-stb-core"
 RDEPENDS_${PN}-firmware = "${PN}-firmware"
+
 RDEPENDS_${PN}-fp = "${PN}-stb-core"
+RREPLACES_${PN}-fp = "${PN} (< 4.9-20201130r0-r0.0)"
+RBREAKS_${PN}-fp = "${PN} (< 4.9-20201130r0-r0.0)"
+
 RDEPENDS_${PN}-lcd = "${PN}-fp ${PN}-stb-core"
+RREPLACES_${PN}-lcd = "${PN} (< 4.9-20201130r0-r0.0)"
+RBREAKS_${PN}-lcd = "${PN} (< 4.9-20201130r0-r0.0)"
+
 RRECOMMENDS_${PN} = "${PN}-firmware dreambox-dvb-modules-systemd"
 
 FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
