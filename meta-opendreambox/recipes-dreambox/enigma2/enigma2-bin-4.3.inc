@@ -21,6 +21,7 @@ DEPENDS += " \
     libpng \
     libsigc++-2.0 \
     libunwind \
+    libwebp \
     libxml2 \
     openssl \
     python \
