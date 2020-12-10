@@ -11,4 +11,5 @@ SRC_URI += "file://0001-Autoresolution-be-compatible-to-new-DisplayHardware-.pat
             file://0005-yttrailer-remove-remnants-of-tpm-check.patch \
             file://0006-webinterface-remove-tpm-check.patch \
             file://0007-AutoResolution-fixed-wrongly-displayed-mode-after-au.patch \
+            file://0008-Autoresolution-fixed-handling-for-enigma2-4.5.1r3.patch \
 "
