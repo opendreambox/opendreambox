@@ -1,0 +1,53 @@
+From 93754e4667448d568141365f261715344cd4565e Mon Sep 17 00:00:00 2001
+From: Colin Wee <cwee@tesla.com>
+Date: Thu, 28 Jan 2021 19:41:53 +0100
+Subject: [PATCH] dnsproxy: Add length checks to prevent buffer overflow
+
+Fixes: CVE-2021-26675
+(cherry picked from commit e4079a20f617a4b076af503f6e4e8b0304c9f2cb)
+---
+ src/dnsproxy.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/src/dnsproxy.c b/src/dnsproxy.c
+index f3ebcf0e..9e097654 100644
+--- a/src/dnsproxy.c
++++ b/src/dnsproxy.c
+@@ -1751,6 +1751,7 @@ static char *uncompress(int16_t field_count, char *start, char *end,
+ 			char **uncompressed_ptr)
+ {
+ 	char *uptr = *uncompressed_ptr; /* position in result buffer */
++	char * const uncomp_end = uncompressed + uncomp_len - 1;
+ 
+ 	DBG("count %d ptr %p end %p uptr %p", field_count, ptr, end, uptr);
+ 
+@@ -1771,12 +1772,15 @@ static char *uncompress(int16_t field_count, char *start, char *end,
+ 		 * tmp buffer.
+ 		 */
+ 
+-		ulen = strlen(name);
+-		strncpy(uptr, name, uncomp_len - (uptr - uncompressed));
+-
+ 		DBG("pos %d ulen %d left %d name %s", pos, ulen,
+ 			(int)(uncomp_len - (uptr - uncompressed)), uptr);
+ 
++		ulen = strlen(name);
++		if ((uptr + ulen + 1) > uncomp_end) {
++			goto out;
++		}
++		strncpy(uptr, name, uncomp_len - (uptr - uncompressed));
++
+ 		uptr += ulen;
+ 		*uptr++ = '\0';
+ 
+@@ -1786,6 +1790,10 @@ static char *uncompress(int16_t field_count, char *start, char *end,
+ 		 * We copy also the fixed portion of the result (type, class,
+ 		 * ttl, address length and the address)
+ 		 */
++		if ((uptr + NS_RRFIXEDSZ) > uncomp_end) {
++			DBG("uncompressed data too large for buffer");
++			goto out;
++		}
+ 		memcpy(uptr, ptr, NS_RRFIXEDSZ);
+ 
+ 		dns_type = uptr[0] << 8 | uptr[1];
