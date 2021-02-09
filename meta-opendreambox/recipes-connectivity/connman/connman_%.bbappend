@@ -2,6 +2,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 
 SRC_URI += "file://connmand-nfsroot.in \
             file://0001-device-inet-Create-read-only-devices-instead-of-igno.patch \
+            file://0002-gdhcp-Avoid-reading-invalid-data-in-dhcp_get_option.patch \
+            file://0003-gdhcp-Avoid-leaking-stack-data-via-unitiialized-vari.patch \
             file://main.conf"
 
 do_install_append() {
