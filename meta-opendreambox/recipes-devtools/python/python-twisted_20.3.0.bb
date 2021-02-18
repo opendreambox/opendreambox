@@ -36,16 +36,11 @@ PACKAGES += "\
     ${PN}-core \
 "
 
-PACKAGES =+ "\
-    ${PN}-bin \
-"
-
 DEPENDS += " \
     ${PYTHON_PN}-incremental-native \
 "
 
 RDEPENDS_${PN} = "\
-    ${PN}-bin \
     ${PN}-core \
     ${PN}-conch \
     ${PN}-mail \
@@ -118,6 +113,7 @@ FILES_${PN}-conch = " \
 FILES_${PN}-core = " \
 ${bindir}/manhole \
 ${bindir}/mktap \
+${bindir}/twist \
 ${bindir}/twistd \
 ${bindir}/tap2deb \
 ${bindir}/tap2rpm \
