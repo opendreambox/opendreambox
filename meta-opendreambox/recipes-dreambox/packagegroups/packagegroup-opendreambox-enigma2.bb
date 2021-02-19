@@ -16,7 +16,6 @@ RDEPENDS_${PN} += " \
   enigma2-plugin-extensions-genuinedreambox \
   enigma2-plugin-extensions-mediascanner \
   ${@bb.utils.contains('DREAMBOX_FEATURES', 'ci', 'enigma2-plugin-systemplugins-commoninterfaceassignment', '', d)} \
-  ${@bb.utils.contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
   enigma2-plugin-systemplugins-hotplug \
   enigma2-plugin-systemplugins-softwaremanager \
   ${@bb.utils.contains('DREAMBOX_FEATURES', 'fan', 'enigma2-plugin-systemplugins-tempfancontrol', '', d)} \
@@ -67,6 +66,7 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-extensions-teletext \
   enigma2-plugin-extensions-webbouqueteditor \
   enigma2-plugin-extensions-webinterface \
+  ${@bb.utils.contains('DREAMBOX_FEATURES', 'cec', 'enigma2-plugin-systemplugins-hdmicec', '', d)} \
   enigma2-plugin-systemplugins-fsblupdater \
   enigma2-plugin-systemplugins-minidlnasetup \
   enigma2-plugin-systemplugins-mediadatabasemanager \
@@ -78,6 +78,7 @@ RRECOMMENDS_${PN} += " \
   enigma2-plugin-systemplugins-setpasswd \
   enigma2-plugin-systemplugins-skinselector \
   enigma2-plugin-systemplugins-inputdevicemanager \
+  enigma2-plugin-systemplugins-streamservices \
   ${@bb.utils.contains('DREAMBOX_FEATURES', 'encoder', 'enigma2-plugin-systemplugins-streamserver', '', d)} \
   enigma2-plugin-systemplugins-upnp \
   enigma2-plugin-systemplugins-wirelesslan \
