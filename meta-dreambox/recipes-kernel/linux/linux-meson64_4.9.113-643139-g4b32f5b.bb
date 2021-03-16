@@ -6,8 +6,8 @@ require recipes-kernel/linux/linux-dreambox.inc
 
 SRC_URI = "https://dreamboxupdate.com/download/opendreambox/${BPN}/${BPN}-v${PV}.tar.xz"
 
-SRC_URI[md5sum] = "c0250b87218995f4f0b1d9bffd6dd597"
-SRC_URI[sha256sum] = "86eaa6ed3a40178abfea63b6569b5bd1a8e671c180738d7929caf2c8edec1a13"
+SRC_URI[md5sum] = "8cb16514b4ce9be35360b07ddad16180"
+SRC_URI[sha256sum] = "fd02af6e0b23873b7e13b5c06e3167228f89ef32a4d41e1066db4c1ed125ba55"
 
 KERNEL_CC += "${TOOLCHAIN_OPTIONS}"
 KERNEL_LD += "${TOOLCHAIN_OPTIONS}"
