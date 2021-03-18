@@ -5,6 +5,7 @@ SRC_URI += " \
     file://0001-InputDeviceManager-fix-JVC-protocol-parsing-old-dict.patch \
     file://0002-RemoteControlSelection-add-BLE-RCU.patch \
     file://0003-skin_default-add-missing-StreamServicesConfigScreen.patch \
+    file://0001-update-default-favourites-bouquet.patch \
 "
 
 require enigma2-bin-4.3.inc
