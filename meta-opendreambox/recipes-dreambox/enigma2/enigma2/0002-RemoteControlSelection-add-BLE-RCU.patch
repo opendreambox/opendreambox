@@ -1,0 +1,38 @@
+From d38a612d393e84643af660d0600588b80ef6dbd4 Mon Sep 17 00:00:00 2001
+From: reichi <stephan@reichholf.net>
+Date: Thu, 18 Mar 2021 09:00:30 +0100
+Subject: [PATCH 2/3] RemoteControlSelection: add BLE RCU
+
+---
+ .../Plugins/SystemPlugins/RemoteControlSelection/plugin.py  | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/usr/lib/enigma2/python/Plugins/SystemPlugins/RemoteControlSelection/plugin.py b/usr/lib/enigma2/python/Plugins/SystemPlugins/RemoteControlSelection/plugin.py
+index 1d74dc6..efb696c 100644
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/RemoteControlSelection/plugin.py
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/RemoteControlSelection/plugin.py
+@@ -38,7 +38,7 @@ class RemoteControlSelection(Screen):
+ 			})
+ 
+ 		self._pixmaps = []
+-		for i in (0, 1, 2):
++		for i in (0, 1, 2, 3):
+ 			self._pixmaps.append(
+ 				LoadPixmap(
+ 					resolveFilename(SCOPE_SKIN, "skin_default/rc%s.png" % (i))
+@@ -62,10 +62,10 @@ class RemoteControlSelection(Screen):
+ 		self.close()
+ 
+ 	def setCurrentPixmap(self, index):
+-		if index > 2:
++		if index > 3:
+ 			index = 0
+ 		if index < 0:
+-			index = 2
++			index = 3
+ 		self._index = index
+ 		self._pixmap.setPixmap(self._pixmaps[index])
+ 
+-- 
+2.25.1
+

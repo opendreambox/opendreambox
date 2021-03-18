@@ -1,0 +1,26 @@
+From a0e14171cd17c862cd01cdac75a5fda32d04ed2f Mon Sep 17 00:00:00 2001
+From: reichi <stephan@reichholf.net>
+Date: Thu, 18 Mar 2021 08:59:47 +0100
+Subject: [PATCH 1/3] InputDeviceManager: fix JVC protocol parsing (old
+ dictionary key used)
+
+---
+ .../Plugins/SystemPlugins/InputDeviceManager/IrProtocols/JVC.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/usr/lib/enigma2/python/Plugins/SystemPlugins/InputDeviceManager/IrProtocols/JVC.py b/usr/lib/enigma2/python/Plugins/SystemPlugins/InputDeviceManager/IrProtocols/JVC.py
+index 354658d..38a681e 100644
+--- a/usr/lib/enigma2/python/Plugins/SystemPlugins/InputDeviceManager/IrProtocols/JVC.py
++++ b/usr/lib/enigma2/python/Plugins/SystemPlugins/InputDeviceManager/IrProtocols/JVC.py
+@@ -10,7 +10,7 @@ class JVC(object):
+ 	def build(definition):
+ 		proto = IrProtocol.IR_PROTO_JVC;
+ 		keys = []
+-		for key, cmd in definition["keymap"].iteritems():
++		for key, cmd in definition["keys"].iteritems():
+ 			keycode = irdb.mapKey(key)
+ 			if not keycode:
+ 				continue
+-- 
+2.25.1
+
