@@ -18,7 +18,7 @@ SRC_URI[sha256sum] = "bac58aec8d39ac3d22250840fb24830d0e4a0ef05ad8f3f09172dc0cc8
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
-inherit setuptools
+inherit setuptools python-backports-init
 
 DEPENDS += "xz"
 
