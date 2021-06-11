@@ -19,6 +19,7 @@ RDEPENDS_${PN} += " \
         enigma2-po \
         hdparm \
         libpagecache \
+        nrf52-firmware-rcu \
         python-argparse \
         python-codecs \
         python-core \
