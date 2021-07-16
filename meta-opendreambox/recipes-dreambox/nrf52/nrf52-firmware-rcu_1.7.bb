@@ -1,6 +1,6 @@
 LICENSE = "CLOSED"
 
-CURRENT_FW = "update_full20210713-1.7.zip"
+CURRENT_FW = "update_full20210715-1.7.zip"
 SRC_URI = " file://${CURRENT_FW}"
 
 do_compile() {
