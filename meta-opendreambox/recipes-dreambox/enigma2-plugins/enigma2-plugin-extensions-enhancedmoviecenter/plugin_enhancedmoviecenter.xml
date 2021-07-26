@@ -1,0 +1,17 @@
+<default>
+	  <prerequisites>
+                    <tag type="Recording" />
+	  </prerequisites>
+          <info>
+                    <author>Coolman, Betonme, Swiss-MAD</author>
+                    <name>EnhancedMovieCenter</name>
+                    <packagename>enigma2-plugin-extensions-enhancedmoviecenter</packagename>
+                    <shortdescription>EMC is an enhanced movielist replacement for Linux based receivers.</shortdescription>
+                    <description>EMC is an enhanced movielist replacement for Linux based receivers.</description>
+                    <!--screenshot src=".jpg" /-->
+          </info>
+
+	  <files type="package"> <!-- without version, without .ipk -->
+		<file type="package" name="enigma2-plugin-extensions-enhancedmoviecenter" />
+	  </files>
+</default>
