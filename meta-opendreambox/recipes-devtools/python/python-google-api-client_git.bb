@@ -5,9 +5,9 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=94023d14f6b58272fd885e4e3f2f08b3"
 RDEPENDS_${PN} = "python-httplib2 python-uritemplate python-oauth2client python-six"
 
-SRCREV = "31c47b8b13195a04f1f8783e3cec74729d34bc5b"
+SRCREV = "f3dbf96f98e9fe3cfd573bb8456c7ac5d3928765"
 
-SRC_URI = "git://github.com/google/google-api-python-client.git;protocol=git;branch=master"
+SRC_URI = "git://github.com/google/google-api-python-client.git;protocol=git;branch=release-v1.13.0"
 
 S = "${WORKDIR}/git"
 
