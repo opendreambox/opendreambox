@@ -27,6 +27,8 @@ RDEPENDS_${PN} = " \
     python-json \
     python-shell \
     python-twisted-web \
+    python-mutagen \
+    python-requests \
 "
 
 do_install_append() {
