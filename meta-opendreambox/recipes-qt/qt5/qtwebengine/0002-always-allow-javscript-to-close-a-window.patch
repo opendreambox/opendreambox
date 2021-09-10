@@ -1,0 +1,34 @@
+From 00df644718ea90944c9867bff6159fe9a1d4760d Mon Sep 17 00:00:00 2001
+From: reichi <reichi@opendreambox.org>
+Date: Wed, 15 Sep 2021 14:36:36 +0200
+Subject: [PATCH] always allow javscript to close a window
+
+---
+ .../WebKit/Source/core/frame/DOMWindow.cpp            | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/chromium/third_party/WebKit/Source/core/frame/DOMWindow.cpp b/chromium/third_party/WebKit/Source/core/frame/DOMWindow.cpp
+index 6d83f2a337e..1171335bd06 100644
+--- a/chromium/third_party/WebKit/Source/core/frame/DOMWindow.cpp
++++ b/chromium/third_party/WebKit/Source/core/frame/DOMWindow.cpp
+@@ -381,17 +381,6 @@ void DOMWindow::close(ExecutionContext* context) {
+   bool allow_scripts_to_close_windows =
+       settings && settings->GetAllowScriptsToCloseWindows();
+ 
+-  if (!page->OpenedByDOM() && GetFrame()->Client()->BackForwardLength() > 1 &&
+-      !allow_scripts_to_close_windows) {
+-    if (active_document) {
+-      active_document->domWindow()->GetFrameConsole()->AddMessage(
+-          ConsoleMessage::Create(
+-              kJSMessageSource, kWarningMessageLevel,
+-              "Scripts may close only the windows that were opened by it."));
+-    }
+-    return;
+-  }
+-
+   if (!GetFrame()->ShouldClose())
+     return;
+ 
+-- 
+2.17.1
+
