@@ -1,0 +1,83 @@
+From 1c2142512bd20c42a9d8536f634579642575f15e Mon Sep 17 00:00:00 2001
+From: reichi <stephan@reichholf.net>
+Date: Mon, 21 Dec 2020 09:44:13 +0100
+Subject: [PATCH] Map additional keys for dreambox RCU
+
+Change-Id: I79d7192991bd81a92cb92f1892a4d4d692f34f60
+---
+ .../eglconvenience/qeglplatformcontext.cpp    | 19 +------------------
+ .../qevdevkeyboard_defaultmap_p.h             |  4 +++-
+ .../eglfs_mali/qeglfsmaliintegration.cpp      |  2 --
+ 3 files changed, 4 insertions(+), 21 deletions(-)
+
+diff --git a/src/platformsupport/eglconvenience/qeglplatformcontext.cpp b/src/platformsupport/eglconvenience/qeglplatformcontext.cpp
+index f5ba587293..f6509a6452 100644
+--- a/src/platformsupport/eglconvenience/qeglplatformcontext.cpp
++++ b/src/platformsupport/eglconvenience/qeglplatformcontext.cpp
+@@ -382,24 +382,7 @@ bool QEGLPlatformContext::makeCurrent(QPlatformSurface *surface)
+ 
+     const bool ok = eglMakeCurrent(m_eglDisplay, eglSurface, eglSurface, m_eglContext);
+     if (ok) {
+-        if (!m_swapIntervalEnvChecked) {
+-            m_swapIntervalEnvChecked = true;
+-            if (qEnvironmentVariableIsSet("QT_QPA_EGLFS_SWAPINTERVAL")) {
+-                QByteArray swapIntervalString = qgetenv("QT_QPA_EGLFS_SWAPINTERVAL");
+-                bool intervalOk;
+-                const int swapInterval = swapIntervalString.toInt(&intervalOk);
+-                if (intervalOk)
+-                    m_swapIntervalFromEnv = swapInterval;
+-            }
+-        }
+-        const int requestedSwapInterval = m_swapIntervalFromEnv >= 0
+-            ? m_swapIntervalFromEnv
+-            : surface->format().swapInterval();
+-        if (requestedSwapInterval >= 0 && m_swapInterval != requestedSwapInterval) {
+-            m_swapInterval = requestedSwapInterval;
+-            if (eglSurface != EGL_NO_SURFACE) // skip if using surfaceless context
+-                eglSwapInterval(eglDisplay(), m_swapInterval);
+-        }
++        eglSwapInterval(eglDisplay(), 0);
+     } else {
+         qWarning("QEGLPlatformContext: eglMakeCurrent failed: %x", eglGetError());
+     }
+diff --git a/src/platformsupport/input/evdevkeyboard/qevdevkeyboard_defaultmap_p.h b/src/platformsupport/input/evdevkeyboard/qevdevkeyboard_defaultmap_p.h
+index 34f20f462c..ce82f9ddcb 100644
+--- a/src/platformsupport/input/evdevkeyboard/qevdevkeyboard_defaultmap_p.h
++++ b/src/platformsupport/input/evdevkeyboard/qevdevkeyboard_defaultmap_p.h
+@@ -645,6 +645,7 @@ const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {
+     { KEY_POWER,        0xffff, Qt::Key_PowerOff,       0x00, 0x00, 0x0000 },
+     { KEY_PAUSE,        0xffff, Qt::Key_Pause,          0x00, 0x00, 0x0000 },
+     { KEY_STOP,         0xffff, Qt::Key_Stop,           0x00, 0x00, 0x0000 },
++    { KEY_MENU,         0xffff, Qt::Key_Menu,           0x00, 0x00, 0x0000 },
+     { KEY_SETUP,        0xffff, Qt::Key_Settings,       0x00, 0x00, 0x0000 },
+     { KEY_RECORD,       0xffff, Qt::Key_MediaRecord,    0x00, 0x00, 0x0000 },
+     { KEY_REWIND,       0xffff, Qt::Key_AudioRewind,    0x00, 0x00, 0x0000 },
+@@ -654,9 +655,10 @@ const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {
+     { KEY_CANCEL,       0xffff, Qt::Key_Cancel,         0x00, 0x00, 0x0000 },
+     { 248,              0xffff, Qt::Key_MicMute,        0x00, 0x00, 0x0000 },
+     // 0x160 ->
++    { KEY_OK,           0xffff, Qt::Key_Enter,          0x00, 0x00, 0x0000 },
+     { KEY_SELECT,       0xffff, Qt::Key_Select,         0x00, 0x00, 0x0000 },
+     { KEY_CLEAR,        0xffff, Qt::Key_Clear,          0x00, 0x00, 0x0000 },
+-    { KEY_EXIT,         0xffff, Qt::Key_Exit,           0x00, 0x00, 0x0000 },
++    { KEY_EXIT,         0xffff, Qt::Key_Escape,         0x00, 0x00, 0x0000 },
+     { KEY_INFO,         0xffff, Qt::Key_Info,           0x00, 0x00, 0x0000 },
+     { KEY_PROGRAM,      0xffff, Qt::Key_Guide,          0x00, 0x00, 0x0000 },
+     { KEY_CALENDAR,     0xffff, Qt::Key_Calendar,       0x00, 0x00, 0x0000 },
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_mali/qeglfsmaliintegration.cpp b/src/plugins/platforms/eglfs/deviceintegration/eglfs_mali/qeglfsmaliintegration.cpp
+index aeba83f9bf..f0dea1ff2c 100644
+--- a/src/plugins/platforms/eglfs/deviceintegration/eglfs_mali/qeglfsmaliintegration.cpp
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_mali/qeglfsmaliintegration.cpp
+@@ -70,9 +70,7 @@ void QEglFSMaliIntegration::platformInit()
+     vinfo.green.offset     = 8;
+     vinfo.red.offset       = 16;
+     vinfo.transp.offset    = 24;
+-#if 0
+     vinfo.yres_virtual     = 2 * vinfo.yres;
+-#endif
+ 
+     if (ioctl(fd, FBIOPUT_VSCREENINFO, &vinfo) == -1)
+         qErrnoWarning(errno, "Unable to set double buffer mode!");
+-- 
+2.25.1
+
