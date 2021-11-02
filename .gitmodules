@@ -8,8 +8,8 @@
 	branch = obi/pyro
 [submodule "bitbake"]
 	path = bitbake
-	url = git://git.openembedded.org/bitbake
-	branch = 1.34
+	url = https://github.com/opendreambox/bitbake.git
+	branch = pyro
 [submodule "meta-qt5"]
 	path = meta-qt5
 	url = git://github.com/opendreambox/meta-qt5
