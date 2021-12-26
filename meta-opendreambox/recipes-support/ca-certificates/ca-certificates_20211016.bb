@@ -14,18 +14,16 @@ DEPENDS_class-nativesdk = "openssl-native"
 # Need rehash from openssl and run-parts from debianutils
 PACKAGE_WRITE_DEPS += "openssl-native debianutils-native"
 
-SRCREV = "181be7ebd169b4a6fb5d90c3e6dc791e90534144"
+SRCREV = "15229cb234becd05577c87b4e8a4522bab740f2f"
 
-SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https \
+SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https;branch=master \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
            file://0001-update-ca-certificates-don-t-use-Debianisms-in-run-p.patch \
-           file://update-ca-certificates-support-Toybox.patch \
            file://default-sysroot.patch \
-           file://sbindir.patch \
            file://0003-update-ca-certificates-use-relative-symlinks-from-ET.patch \
            file://0001-Revert-Update-openssl-dependency-to-1.1.0.patch \
+           file://0001-Revert-mozilla-certdata2pem.py-print-a-warning-for-e.patch \
            "
-
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+)"
 
 S = "${WORKDIR}/git"
