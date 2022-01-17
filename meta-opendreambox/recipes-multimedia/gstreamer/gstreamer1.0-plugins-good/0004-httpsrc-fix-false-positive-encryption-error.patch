@@ -1,0 +1,29 @@
+diff -Naur gst-plugins-good-1.6.4.orig/ext/soup/gstsouphttpsrc.c gst-plugins-good-1.6.4/ext/soup/gstsouphttpsrc.c
+--- gst-plugins-good-1.6.4.orig/ext/soup/gstsouphttpsrc.c	2022-01-15 00:09:36.000000000 +0100
++++ gst-plugins-good-1.6.4/ext/soup/gstsouphttpsrc.c	2022-01-15 00:15:03.262796972 +0100
+@@ -966,11 +966,7 @@
+     GST_DEBUG_OBJECT (src, "Re-using session");
+   }
+ 
+-  if (src->compress)
+-    soup_session_add_feature_by_type (src->session, SOUP_TYPE_CONTENT_DECODER);
+-  else
+-    soup_session_remove_feature_by_type (src->session,
+-        SOUP_TYPE_CONTENT_DECODER);
++  soup_session_add_feature_by_type (src->session, SOUP_TYPE_CONTENT_DECODER);
+ 
+   return TRUE;
+ }
+@@ -1649,6 +1645,12 @@
+           *cookie);
+     }
+   }
++
++  if (!src->compress) {
++    soup_message_headers_append (src->msg->request_headers, "Accept-Encoding",
++        "identity");
++  }
++
+   src->retry = FALSE;
+ 
+   g_signal_connect (src->msg, "got_headers",
