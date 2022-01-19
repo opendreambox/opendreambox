@@ -1,0 +1,12 @@
+diff -Naur zvbi-0.2.35.orig/src/dvb_demux.c zvbi-0.2.35/src/dvb_demux.c
+--- zvbi-0.2.35.orig/src/dvb_demux.c	2022-01-19 18:20:17.000000000 +0100
++++ zvbi-0.2.35/src/dvb_demux.c	2022-01-19 18:23:27.781411546 +0100
+@@ -937,6 +937,8 @@
+ 			break;
+ 
+ 		case DATA_UNIT_VPS:
++			break; // vps data mixed with ttx data is currently broken... so skip all vps data here (ghost 2022.01.19)
++
+ 			if (NULL == f->sliced_begin)
+ 				break;
+ 

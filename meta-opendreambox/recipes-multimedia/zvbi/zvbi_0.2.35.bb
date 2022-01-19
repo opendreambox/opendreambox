@@ -19,7 +19,10 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/zapping/zvbi/${BP}.tar.bz2 \
            file://0008-caption_command-SF-bug-195-Mid-row-codes-are-set-at-.patch \
            file://0009-parse_28_29-SF-bug-198-Faulty-logic-in-TTX-Level-2.5.patch \
            file://0010-skip-data-with-wrong-framing-code.patch \
-           file://0011-fixed-memory-leak.patch"
+           file://0011-fixed-memory-leak.patch \
+           file://0012-completely-skip-vps-data.patch \
+"
+
 SRC_URI[md5sum] = "95e53eb208c65ba6667fd4341455fa27"
 SRC_URI[sha256sum] = "fc883c34111a487c4a783f91b1b2bb5610d8d8e58dcba80c7ab31e67e4765318"
 
