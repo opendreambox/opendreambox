@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "python-httplib2 python-uritemplate python-oauth2client python-
 
 SRCREV = "f3dbf96f98e9fe3cfd573bb8456c7ac5d3928765"
 
-SRC_URI = "git://github.com/google/google-api-python-client.git;protocol=git;branch=release-v1.13.0"
+SRC_URI = "git://github.com/google/google-api-python-client.git;protocol=https;branch=release-v1.13.0"
 
 S = "${WORKDIR}/git"
 

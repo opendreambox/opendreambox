@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://README.rst;beginline=56;endline=72;md5=cd4ec7c13091e5
 
 SRCREV = "1e780a49412cdbb273e9421974cb91845c124f3f"
 
-SRC_URI = "git://github.com/uri-templates/uritemplate-py.git;protocol=git;branch=master"
+SRC_URI = "git://github.com/uri-templates/uritemplate-py.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
