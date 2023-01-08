@@ -5,7 +5,7 @@ LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=6e8dee932c26f2dab503abf70c96d8bb"
 SRCREV = "5be44a2df762ab1e9b4b3ac31c00f08f920cfcf5"
 
-SRC_URI = "git://chromium.googlesource.com/webm/libwebm;protocol=https \
+SRC_URI = "git://chromium.googlesource.com/webm/libwebm;branch=main;protocol=https \
 	file://0001-add-fPIC-for-shared-lib.patch"
 
 inherit cmake pkgconfig
